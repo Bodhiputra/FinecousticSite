@@ -1,0 +1,98 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_GrwcDU": {
+          "type": "announcement",
+          "settings": {
+            "text": "Welcome to our store",
+            "link": ""
+          }
+        },
+        "announcement-bar-0": {
+          "type": "announcement",
+          "settings": {
+            "text": "Announcement showed here",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement_GrwcDU",
+        "announcement-bar-0"
+      ],
+      "disabled": true,
+      "settings": {
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "color_scheme": "scheme-1",
+        "show_line_separator": true,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    },
+    "header_link_menu_aw8CkQ": {
+      "type": "header-link-menu",
+      "disabled": true,
+      "name": "Header Menu Links",
+      "settings": {
+        "logo_text": "",
+        "menu": "header-menu-links",
+        "text_color": "#000000",
+        "gap": 30
+      }
+    },
+    "custom_liquid_HBtfH3": {
+      "type": "custom-liquid",
+      "disabled": true,
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "<div style=\"background-color: #FFD300; height: 30px; display: flex; justify-content: flex-end; align-items: center; padding-right: 10px; display: flex; flex-direction: row; gap: 5px;\">\n<p style=\"font-weight: 600; color: black\">Powered by</p>\n  <img src=\"https://cdn.shopify.com/s/files/1/0661/0229/6650/files/Fantech_Logo.svg?v=1758181350\" alt=\"Right Image\" style=\"max-height: 40px; height: 11px;\">\n</div>",
+        "color_scheme": "scheme-2",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "header": {
+      "type": "header",
+      "custom_css": [
+        ".header__menu-item span {text-decoration: none !important;}"
+      ],
+      "settings": {
+        "logo_position": "middle-left",
+        "mobile_logo_position": "center",
+        "menu": "main-menu",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "always",
+        "show_line_separator": false,
+        "color_scheme": "scheme-4",
+        "menu_color_scheme": "scheme-2",
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "enable_customer_avatar": true,
+        "margin_bottom": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header_link_menu_aw8CkQ",
+    "custom_liquid_HBtfH3",
+    "header"
+  ]
+}

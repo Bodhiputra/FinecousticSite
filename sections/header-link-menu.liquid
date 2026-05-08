@@ -1,0 +1,107 @@
+{% schema %}
+{
+  "name": "Header",
+  "tag": "section",
+  "class": "shopify-section-header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text",
+      "default": "My Store"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Select Menu"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap Between Links (px)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header Menu Links"
+    }
+  ]
+}
+{% endschema %}
+
+{% style %}
+  .shopify-section-header {
+    align-items: center;
+    padding: 5px 25px;
+    background-color: white;
+  }
+
+  .header-logo {
+    font-weight: bold;
+    font-size: 1.8rem;
+  }
+
+  .header-menu-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 60px !important;
+    font-weight: bold;
+    font-size: 1.8rem;
+  }
+
+  @media (max-width: 768px) {
+    .header-menu-links {
+      flex-direction: row;
+      justify-content: space-evenly;
+      gap: 10px !important;
+    }
+
+    .shopify-section-header {
+      padding: 5px 0;
+    }
+  }
+
+  .header-menu-links a {
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+    color: black;
+  }
+
+  .header-menu-links a:hover {
+    text-decoration: none;
+    transform: scale(1.1);
+    color: #FFD300;
+  }
+{% endstyle %}
+
+
+<div class="shopify-section-header">
+  <div class="header-logo">
+    {{ section.settings.logo_text }}
+  </div>
+
+  <div class="header-menu-links" style="gap: {{ section.settings.gap }}px;">
+    {% if section.settings.menu %}
+      {% for link in linklists[section.settings.menu].links %}
+        <a
+          href="{{ link.url }}"
+        >
+          {{ link.title }}
+        </a>
+      {% endfor %}
+    {% else %}
+      <p style="color: {{ section.settings.text_color }};">No menu selected.</p>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,530 @@
+<section id="tws-features-{{ section.id }}" class="tws-features-section">
+  <div class="container">
+    <aside class="tws-sidebar">
+      <h3 class="tws-heading">{{ section.settings.sidebar_title }}</h3>
+      <p class="tws-subheading">{{ section.settings.sidebar_subtitle }}</p>
+
+      <ul class="tws-feature-list" role="tablist">
+        {% for block in section.blocks %}
+          <li class="tws-feature-item{% if forloop.first %} is-active{% endif %}" data-feature-index="{{ forloop.index0 }}" role="tab" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+            <div class="tws-feature-left">
+              {% if block.settings.icon_image != blank %}
+                <div class="tws-icon">
+                  <img src="{{ block.settings.icon_image | img_url: '100x' }}" alt="{{ block.settings.title }} icon">
+                </div>
+              {% else %}
+                <div class="tws-icon placeholder">🔊</div>
+              {% endif %}
+            </div>
+            <div class="tws-feature-body">
+              <div class="tws-feature-title">{{ block.settings.title }}</div>
+              <div class="tws-feature-sub">{{ block.settings.subtitle }}</div>
+            </div>
+            <div class="tws-feature-dot"></div>
+          </li>
+        {% endfor %}
+      </ul>
+    </aside>
+
+    <main class="tws-hero-area">
+      {% for block in section.blocks %}
+        <article class="tws-hero-card{% if forloop.first %} is-visible{% endif %}" data-feature-panel-index="{{ forloop.index0 }}">
+          <div class="hero-wrapper">
+            <div class="hero-image-wrap">
+              {% if block.settings.hero_image != blank %}
+                <img src="{{ block.settings.hero_image | img_url: '2000x' }}" alt="{{ block.settings.title }} hero">
+              {% else %}
+                <div class="hero-image-placeholder"></div>
+              {% endif %}
+            </div>
+
+            <div class="hero-overlay {{ block.settings.overlay_position }}">
+              {% if block.settings.badge_label != blank %}
+                <span class="hero-badge">{{ block.settings.badge_label }}</span>
+              {% endif %}
+              <h2 class="hero-title">{{ block.settings.hero_heading | default: block.settings.title }}</h2>
+              <p class="hero-desc">{{ block.settings.hero_text }}</p>
+              <div class="hero-controls">
+                {% if block.settings.button_label != blank %}
+                  <a href="{{ block.settings.button_link }}" class="btn btn-play">▶ {{ block.settings.button_label }}</a>
+                {% endif %}
+                {% if block.settings.extra_button_label != blank %}
+                  <a href="{{ block.settings.extra_button_link }}" class="btn btn-outline">{{ block.settings.extra_button_label }}</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-stats-row">
+            <div class="stat">
+              <p class="stat-value">{{ section.settings.stat_1_value }}</p>
+              <p class="stat-label">{{ section.settings.stat_1_label }}</p>
+            </div>
+            <div class="stat">
+              <p class="stat-value">{{ section.settings.stat_2_value }}</p>
+              <p class="stat-label">{{ section.settings.stat_2_label }}</p>
+            </div>
+            <div class="stat">
+              <p class="stat-value">{{ section.settings.stat_3_value }}</p>
+              <p class="stat-label">{{ section.settings.stat_3_label }}</p>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </main>
+  </div>
+
+<style>
+  /* Full-width section */
+  #tws-features-{{ section.id }} {
+    --accent-1: linear-gradient(90deg,#6a5cff,#d03bff);
+    width: 100%;
+    background: #F3F3F3;
+    padding: 60px 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Content wrapper */
+  #tws-features-{{ section.id }} .container {
+    display: flex;
+    gap: 36px;
+    align-items: flex-start;
+    padding: 0 50px;
+    width: 100%;
+    margin: 0;
+    max-width: 90vw;
+  }
+
+  /* Sidebar layout */
+  .tws-sidebar {
+    width: 22.5vw;
+    min-width: 245px;
+    flex-shrink: 0;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tws-heading { font-size: 25px; margin:0 0 8px; font-weight: 800; color: black; }
+  .tws-subheading { margin:0 0 25px; color:#808080; font-weight: 500; }
+
+  /* Make only the feature list scrollable */
+  .tws-feature-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto; /* enable scroll */
+    padding-right: 8px;
+  }
+
+
+  .tws-feature-list::-webkit-scrollbar { width: 6px; }
+  .tws-feature-list::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
+  .tws-feature-list::-webkit-scrollbar-track { background: transparent; }
+
+  .tws-feature-item { background:#fff; border-radius:14px; padding:14px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:transform .25s ease, box-shadow .25s ease; position:relative; }
+  .tws-feature-item.is-active { background: #FFD300; color: #000; border: 2px solid #000; transform: translateX(2px); }
+  .tws-feature-item.is-active .tws-feature-dot { background: #000; }
+
+  .tws-icon { width: 50px; height: 50px; }
+  .tws-icon img { width:100%; height:100%; border-radius:10px; object-fit:cover; }
+  .tws-icon.placeholder { width:100%; height:100%; border-radius:10px; display:flex; align-items:center; justify-content:center; background:#f3f4f6; }
+
+  .tws-feature-title { font-weight:700; font-size: 20px; }
+  .tws-feature-sub { font-size:13px; color: #808080; font-weight: 500; }
+  .tws-feature-dot { width:12px; height:12px; border-radius:50%; background:#c7c7d9; margin-left:auto; }
+
+  /* Hero area */
+  .tws-hero-area { flex:1; }
+  .tws-hero-card { display:none; }
+  .tws-hero-card.is-visible { display:block; }
+
+  .hero-wrapper { display: flex; flex-direction: column; gap: 16px; position: relative; }
+
+  .hero-image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 18px 40px rgba(8,15,31,0.08);
+  }
+  .hero-image-wrap img, .hero-image-placeholder { width:100%; height:100%; object-fit:cover; display:block; }
+
+  .hero-overlay {
+    position: absolute;
+    color: #fff;
+    padding: 20px 20px 0 20px;
+  }
+  /* Overlay positions */
+  .hero-overlay.left-bottom { bottom: 20px; left: 20px; top: auto; text-align: left; }
+  .hero-overlay.left-top { top: 20px; left: 20px; bottom: auto; text-align: left; }
+  .hero-overlay.right-bottom { bottom: 20px; right: 20px; top: auto; left: auto; text-align: right; }
+  .hero-overlay.right-top { top: 20px; right: 20px; bottom: auto; left: auto; text-align: right; }
+
+  .hero-badge { display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(0,0,0,0.1); font-size:13px; margin-bottom:10px; border: 2px solid #696969; color:#111; }
+  .hero-title { font-size:40px; margin:6px 0 8px; font-weight:800; }
+  .hero-desc { font-size:18px; color: #808080; margin:0; font-weight: 500; }
+  .hero-controls { display:flex; gap:12px; margin-top: 15px }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border-radius:10px; text-decoration:none; font-weight:600; }
+  .btn-play { background:#fff; color:#111; }
+  .btn-outline { border:1px solid rgba(255,255,255,0.16); background:transparent; color:#fff; }
+
+  .hero-stats-row { display:flex; gap:18px; margin-top:28px; justify-content:space-between; flex-wrap: wrap; }
+  .stat { flex:1; background:#fff; border-radius:16px; padding: 11px 22px; text-align:center; box-shadow:0 12px 30px rgba(19,24,47,0.05); color: black; }
+  .stat-value { font-weight:700; font-size:30px; margin: 0; }
+  .stat-label { color:#808080; font-weight: 500; margin: 0; }
+
+  .tws-feature-item.is-active::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #000;
+  }
+
+@media (max-width:1700px) {
+  /* Fade edges for scroll area */
+.tws-feature-list {
+  position: relative;
+  overflow-y: auto;
+  padding-right: 8px;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 98.5%, rgba(0,0,0,0) 100%);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 95%, rgba(0,0,0,0) 100%);
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+  }
+}
+
+  /* Between 980px and 1080px */
+@media (min-width:981px) and (max-width:1080px) {
+  .hero-overlay {
+    transform: scale(0.8);
+    transform-origin: inherit; /* fallback */
+  }
+
+  /* Ensure each position keeps its anchor point */
+  .hero-overlay.left-bottom { transform-origin: left bottom; }
+  .hero-overlay.left-top { transform-origin: left top; }
+  .hero-overlay.right-bottom { transform-origin: right bottom; }
+  .hero-overlay.right-top { transform-origin: right top; }
+}
+
+/* Between 720px and 980px */
+@media (min-width:720px) and (max-width:980px) {
+  /* Center the icon inside feature items */
+  .tws-feature-item .tws-icon {
+    margin: 0 auto; /* centers horizontally */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .tws-feature-list {
+    justify-content: space-evenly;
+  }
+
+  /* Hero image max width and centered */
+  .hero-image-wrap {
+    width: 100%;
+    margin: 0 auto; /* centers the image */
+  }
+
+  .hero-overlay {
+    position: absolute !important; /* inside the image */
+    top: auto; /* reset to allow bottom/left/right anchors */
+    bottom: 16px;
+    left: 16px;
+    right: auto;
+    text-align: left;
+    z-index: 2; /* make sure it’s above the image */
+  }
+
+  /* Optional: adjust for other positions if needed */
+  .hero-overlay.left-top { top: 16px; bottom: auto; left: 16px; text-align: left; transform-origin: left top; }
+  .hero-overlay.right-bottom { bottom: 16px; top: auto; right: 16px; left: auto; text-align: right; transform-origin: right bottom; }
+  .hero-overlay.right-top { top: 16px; right: 16px; bottom: auto; left: auto; text-align: right; transform-origin: right top; }
+
+}
+
+@media (max-width:889.5px){
+.tws-feature-list {
+    -webkit-mask-image: linear-gradient(to right,
+      rgba(0,0,0,0) 0%,
+      rgba(0,0,0,1) 10%,
+      rgba(0,0,0,1) 90%,
+      rgba(0,0,0,0) 100%);
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-image: linear-gradient(to right,
+      rgba(0,0,0,0) 0%,
+      rgba(0,0,0,1) 0%,
+      rgba(0,0,0,1) 97.5%,
+      rgba(0,0,0,0) 100%);
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+  }
+}
+  
+/* ------------------ Mobile + Tablet up to 980px ------------------ */
+@media (max-width:980px){
+  .container { 
+    flex-direction: column; 
+    padding:0 50px !important; 
+  }
+
+  /* Sidebar: horizontal scroll */
+  .tws-sidebar { 
+    width:100%; 
+    order:1; 
+    overflow-x:auto; 
+    display:flex; 
+    padding-bottom:12px; 
+  }
+
+  .tws-feature-list { 
+    flex-direction:row; 
+    gap:16px; 
+  }
+
+  .tws-feature-item { 
+    flex:0 0 auto; 
+    min-width:80px; 
+    flex-direction:column; 
+    align-items:center; 
+    text-align:center; 
+    padding:8px; 
+    border-radius:12px; 
+  }
+
+  .tws-feature-title { font-size:14px; margin-top:4px; }
+  .tws-feature-sub { font-size:11px; color:#555; }
+
+  /* Hero area */
+  .tws-hero-area { order:2; width:100%; }
+
+  .hero-wrapper { gap:12px; }
+
+  .hero-overlay { 
+    position: static; 
+    max-width: 100%; 
+    color: #000; 
+    text-align: center; 
+    margin-top: 12px; 
+    padding: 0; 
+  }
+
+  .hero-title { font-size:24px; line-height:1.2; }
+  .hero-desc { font-size:14px; line-height:1.4; margin-bottom:12px; }
+  .hero-badge { font-size:11px; padding:4px 8px; }
+
+  .hero-controls { justify-content:start; gap:8px; }
+
+  /* Hero stats */
+  .hero-stats-row { 
+    margin-top:20px; 
+    gap:8px; 
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+  }
+
+  .hero-stats-row .stat { 
+    flex:1 1 30%; 
+    min-width:0; 
+    padding:8px; 
+  }
+
+  .hero-stats-row .stat-value { font-size:18px; }
+  .hero-stats-row .stat-label { font-size:11px; }
+
+  .tws-feature-item.is-active::after {
+    display: none;
+  }
+}
+
+@media(max-width: 749.5px) {
+.container{
+    padding: 0px 15px !important;
+    }
+}
+
+</style>
+
+<script>
+(function(){
+  const root = document.getElementById('tws-features-{{ section.id }}');
+  if (!root) return;
+
+  const list = root.querySelectorAll('.tws-feature-item');
+  const panels = root.querySelectorAll('.tws-hero-card');
+  const sidebarList = root.querySelector('.tws-feature-list');
+
+  let currentIndex = 0;
+
+  function setActive(idx) {
+    currentIndex = idx; // update current index
+    list.forEach((el, i) => {
+      el.classList.toggle('is-active', i === idx);
+      el.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+    });
+    panels.forEach((p, i) => {
+      p.classList.toggle('is-visible', i === idx);
+    });
+    const visiblePanel = panels[idx];
+    const visibleHeroImage = visiblePanel.querySelector('.hero-image-wrap');
+    if (sidebarList && visibleHeroImage) {
+      sidebarList.style.maxHeight = visibleHeroImage.offsetHeight + 'px';
+    }
+  }
+
+  list.forEach((li, i) => {
+    li.addEventListener('click', () => setActive(i));
+    li.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setActive(i);
+      }
+    });
+  });
+
+  const initialActive = Array.from(list).findIndex(el => el.classList.contains('is-active')) || 0;
+  setActive(initialActive);
+
+  window.addEventListener('resize', () => {
+    const visiblePanel = panels[currentIndex];
+    const visibleHeroImage = visiblePanel.querySelector('.hero-image-wrap');
+    if (sidebarList && visibleHeroImage) {
+      sidebarList.style.maxHeight = visibleHeroImage.offsetHeight + 'px';
+    }
+  });
+
+  // -------- Auto rotate every 5 seconds --------
+  setInterval(() => {
+    const nextIndex = (currentIndex + 1) % list.length;
+    setActive(nextIndex);
+  }, 5000);
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "TWS Features",
+  "settings": [
+    { "type": "text", "id": "sidebar_title", "label": "Sidebar title", "default": "TWS Features" },
+    { "type": "text", "id": "sidebar_subtitle", "label": "Sidebar subtitle", "default": "Explore premium audio capabilities" },
+
+    { "type": "text", "id": "stat_1_value", "label": "Stat 1 value", "default": "45h" },
+    { "type": "text", "id": "stat_1_label", "label": "Stat 1 label", "default": "Battery Life" },
+
+    { "type": "text", "id": "stat_2_value", "label": "Stat 2 value", "default": "-40dB" },
+    { "type": "text", "id": "stat_2_label", "label": "Stat 2 label", "default": "Noise Reduction" },
+
+    { "type": "text", "id": "stat_3_value", "label": "Stat 3 value", "default": "5.3" },
+    { "type": "text", "id": "stat_3_label", "label": "Stat 3 label", "default": "Bluetooth" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "image_picker", "id": "icon_image", "label": "Icon (left list)" },
+        { "type": "text", "id": "title", "label": "List title", "default": "User Profile" },
+        { "type": "text", "id": "subtitle", "label": "List subtitle", "default": "Personalization" },
+
+        { "type": "image_picker", "id": "hero_image", "label": "Hero image" },
+        { "type": "text", "id": "badge_label", "label": "Hero badge", "default": "Personalization" },
+        { "type": "text", "id": "hero_heading", "label": "Hero heading", "default": "User Profile" },
+        { "type": "textarea", "id": "hero_text", "label": "Hero description", "default": "Personalized audio settings and user preferences tailored to your unique listening habits" },
+
+        { "type": "text", "id": "button_label", "label": "Primary button label", "default": "Play Demo" },
+        { "type": "url", "id": "button_link", "label": "Primary button link", "default": "/" },
+        { "type": "text", "id": "extra_button_label", "label": "Secondary button label", "default": "Learn More" },
+        { "type": "url", "id": "extra_button_link", "label": "Secondary button link", "default": "/" },
+
+        {
+          "type": "select",
+          "id": "overlay_position",
+          "label": "Hero Overlay Position",
+          "default": "left-bottom",
+          "options": [
+            { "value": "left-bottom", "label": "Left Bottom" },
+            { "value": "left-top", "label": "Left Top" },
+            { "value": "right-bottom", "label": "Right Bottom" },
+            { "value": "right-top", "label": "Right Top" }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default TWS Features",
+      "category": "Hero",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "User Profile",
+            "subtitle": "Personalization",
+            "badge_label": "Personalization",
+            "hero_heading": "User Profile",
+            "hero_text": "Personalized audio settings and user preferences tailored to your unique listening habits",
+            "overlay_position": "left-bottom"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Battery",
+            "subtitle": "Power Management",
+            "hero_heading": "Battery",
+            "hero_text": "Long battery life and effective power-saving features.",
+            "overlay_position": "left-bottom"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "ENC",
+            "subtitle": "Noise Control",
+            "hero_heading": "ENC (Environmental Noise Cancellation)",
+            "hero_text": "Advanced noise cancellation for clear calls and listening.",
+            "overlay_position": "left-bottom"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Connection",
+            "subtitle": "Connectivity",
+            "hero_heading": "Seamless Connection",
+            "hero_text": "Stable multi-device pairing & fast reconnection.",
+            "overlay_position": "left-bottom"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Spatial Audio",
+            "subtitle": "3D Experience",
+            "hero_heading": "Spatial Audio",
+            "hero_text": "Immersive 3D soundstage for movies and games.",
+            "overlay_position": "left-bottom"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

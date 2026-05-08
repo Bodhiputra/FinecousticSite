@@ -1,0 +1,72 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "rich_text_fHjiQh": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_kQUiJT": {
+          "type": "heading",
+          "settings": {
+            "heading": "Contact Us",
+            "heading_size": "h1"
+          }
+        }
+      },
+      "block_order": [
+        "heading_kQUiJT"
+      ],
+      "custom_css": [
+        "h2.rich-text__heading.rte.inline-richtext.h1.scroll-trigger.animate--slide-in {font-size: 40px; font-weight: 800;}"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-2",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 20
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "custom_css": [
+        ".title {text-align: center; font-weight: 500; color: #808080; font-size: 20px;}",
+        ".contact__button {display: flex; justify-content: center; margin-top: 3rem;}",
+        ".field {margin-bottom: 3rem;}",
+        ".button:before,.button:after {box-shadow: none;}",
+        "button.button {background: none; border: 2px solid black; font-weight: 500; transition: background 0.3s ease, transform 0.2s ease;}",
+        "button.button:hover {background: #ffd300;}",
+        "@media (max-width: 768px) {.contact {max-width: 100vw; } .contact__button {margin-top: 5px; }}"
+      ],
+      "settings": {
+        "heading": "Let us know what we can help",
+        "heading_size": "h2",
+        "color_scheme": "scheme-2",
+        "padding_top": 0,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rich_text_fHjiQh",
+    "form"
+  ]
+}

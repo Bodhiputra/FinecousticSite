@@ -1,0 +1,231 @@
+<div class="productinfo-section-outerdiv">
+  <div class="productinfo-section">
+    <div class="productinfo-grid">
+      
+      <!-- Left Card -->
+      <div class="productinfo-card productinfo-card-white">
+        {% if section.settings.left_icon != blank %}
+          <div class="productinfo-icon">
+            <img src="{{ section.settings.left_icon | image_url: width: 40 }}" alt="icon">
+          </div>
+        {% endif %}
+        <h3 class="productinfo-title">
+          {{ section.settings.left_title }}
+          <p class="productinfo-highlight">{{ section.settings.left_highlight }}</p>
+        </h3>
+        <p class="productinfo-desc">
+          {{ section.settings.left_text }}
+        </p>
+      </div>
+
+      <!-- Right Card -->
+      <div class="productinfo-card productinfo-card-yellow">
+        {% if section.settings.right_icon != blank %}
+          <div class="productinfo-icon">
+            <img src="{{ section.settings.right_icon | image_url: width: 40 }}" alt="icon">
+          </div>
+        {% endif %}
+        <h3 class="productinfo-title">
+          {{ section.settings.right_title }}
+          <p class="productinfo-highlight">{{ section.settings.right_highlight }}</p>
+        </h3>
+        <p class="productinfo-desc">
+          {{ section.settings.right_text }}
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+.productinfo-section {
+  background-color: white;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.productinfo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 90vw;
+  padding: 0 50px;
+}
+
+@media(max-width: 768px) {
+  .productinfo-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+.productinfo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.productinfo-card-white {
+  background: none;
+  box-shadow: none;
+}
+
+.productinfo-card-yellow {
+  background: #F3F3F3; /* light yellow #FFFDE7 */
+}
+
+.productinfo-icon {
+  width: 50px;
+  height: 50px;
+}
+
+.productinfo-icon img {
+  width: 100%;
+  height: 100%;
+}
+
+.productinfo-title {
+  margin: 0;
+  font-weight: 800;
+  font-size: 25px;
+  margin-top: 7.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.productinfo-highlight {
+  color: #FFD300;
+  -webkit-text-stroke: 2.5px #000;
+  paint-order: stroke fill;
+  letter-spacing: 2.5px;
+  margin: 1px 0 0 0;
+  font-size: 23px;
+}
+
+.productinfo-desc {
+  margin: 0;
+  font-weight: 500;
+  color: #808080;
+  font-size: 16px;
+}
+
+/* Responsive scaling */
+@media(max-width: 1200px) {
+  .productinfo-grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .productinfo-card {
+    min-width: 0;
+  }
+}
+
+@media(max-width: 749.5px) {
+  .productinfo-section {
+    padding: 0 15px !important;
+  }
+
+  .productinfo-grid {
+    max-width: 100vw;
+    padding: 0 30px;
+  }
+}
+
+@media(max-width: 600px) {
+  .productinfo-title {
+    font-size: 22px;
+  }
+
+  .productinfo-highlight {
+    font-size: 20px;
+    margin: 0.75px 0 0 0;
+  }
+}
+
+@media(max-width: 480px) {
+  {% comment %} .productinfo-title {
+    font-size: 15px;
+  }
+
+  .productinfo-desc {
+    font-size: 14px;
+  } {% endcomment %}
+
+  .productinfo-highlight {
+    {% comment %} font-size: 13px; {% endcomment %}
+    margin: 1.75px 0 0 0;
+  }
+
+  .productinfo-grid {
+    max-width: 100vw;
+    padding: 0 25px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Product Info Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "left_title",
+      "label": "Left Title",
+      "default": "MOST AFFORDABLE TWS"
+    },
+    {
+      "type": "text",
+      "id": "left_highlight",
+      "label": "Left Highlight",
+      "default": "STRUGGLE"
+    },
+    {
+      "type": "textarea",
+      "id": "left_text",
+      "label": "Left Description",
+      "default": "In the current market, most affordable ANC TWS promise the best deal but compromise on sound quality, battery life, and build quality. We saw an opportunity to close that gap."
+    },
+    {
+      "type": "image_picker",
+      "id": "left_icon",
+      "label": "Left Icon"
+    },
+    {
+      "type": "text",
+      "id": "right_title",
+      "label": "Right Title",
+      "default": "GROOVE ANC FT20"
+    },
+    {
+      "type": "text",
+      "id": "right_highlight",
+      "label": "Right Highlight",
+      "default": "OFFER"
+    },
+    {
+      "type": "textarea",
+      "id": "right_text",
+      "label": "Right Description",
+      "default": "In the current market, most affordable ANC TWS promise the best deal but compromise on sound quality, battery life, and build quality. We saw an opportunity to close that gap."
+    },
+    {
+      "type": "image_picker",
+      "id": "right_icon",
+      "label": "Right Icon"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Info Section",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

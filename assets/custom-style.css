@@ -1,0 +1,228 @@
+.utility-bar {
+    background-color: #FFEFA0;
+}
+
+.announcement-bar__message {
+    font-size: 16px;
+    font-weight: bolder;
+}
+
+.page-width {
+    max-width: 90vw;
+}
+
+.link {
+  color: white;
+}
+
+.link :hover {
+  color: #FFD300;
+}
+
+.header {
+  padding: 5px 0px !important;
+  border-bottom: 1px solid black;
+  border-top: 1px solid black;
+  text-decoration: none;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-color: black;
+}
+
+.header__menu-item,
+.menu-drawer__menu-item {
+  font-size: 1.6rem;
+  text-decoration: none;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.header__menu-item:hover,
+.menu-drawer__menu-item:hover {
+  text-decoration: none !important;
+  transform: scale(1.1);
+  color: #FFD300 !important;
+}
+
+.header__submenu {
+  background-color: #000000d9;
+}
+
+.header__icon {
+  transition: color 0.25s ease;
+}
+
+.header__icon svg {
+  display: block;
+  transition: transform 0.25s ease, filter 0.25s ease, fill 0.25s ease;
+  will-change: transform, filter;
+  /* transform: scale(1.1); */
+  fill: white; /* Fill for solid icons */
+  stroke: white; /* Stroke for line icons */
+  stroke-width: 0.5; /* Thicker lines */
+}
+
+.header__icon:hover {
+  color: #FFD300;
+}
+
+.header__icon:hover svg {
+  transform: scale(1.12);
+  filter: drop-shadow(0 0 1.2px #FFD300);
+   fill: #FFD300; /* Fill for solid icons */
+  stroke: #FFD300; /* Stroke for line icons */
+}
+
+.header__icons {
+    gap: 20px;
+}
+
+.footer-block__details-content a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-block__details-content a:hover {
+  color: #ffd300;
+}
+
+.footer__list-social .list-social__link:hover {
+  color: #ffd300;
+}
+
+.footer__list-social .list-social__link,
+.footer__list-social .svg-wrapper {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer__list-social .svg-wrapper svg {
+  width: 35px;
+  height: 35px;
+  display: block;
+}
+
+.list-social {
+  gap: 20px;
+}
+
+.footer-block__heading {
+  color: #FFD300;
+  font-weight: 600;
+  font-size: 2rem !important;
+}
+
+.footer-block__details-content a {
+  font-size: 1.5rem !important;
+  padding: 0 0 2.5px 0;
+}
+
+.footer__social-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.list-menu--inline {
+  gap: 25px;
+  justify-content: center;
+}
+
+.footer-block--newsletter {
+  width: calc(33.33% - var(--grid-desktop-horizontal-spacing) * 2 / 3);
+  margin: 0 !important;
+  height: 100%;
+}
+
+.footer__content-top .grid {
+  row-gap: 4rem !important;
+}
+
+.footer__content-top {
+  padding: 0;
+}
+
+.footer__content-bottom.scroll-trigger.animate--slide-in {
+  padding: 0;
+}
+
+.collection-hero {
+  display: flex;
+  align-items: center;
+  border-color: black;
+}
+
+details[open]>.header__menu-item {
+  text-decoration: none !important;
+}
+
+.list-menu__item--active {
+  text-decoration: none !important;
+}
+
+.product__view-details {
+  color: black;
+}
+
+.contact {
+  padding-left: 30px;
+  padding-right: 30px;
+  max-width: 50vw;
+}
+
+.content-for-layout {
+  /* background: #f3f3f3; */
+  background: white;
+}
+
+@media (max-width: 768px) {
+    .page-width {
+      max-width: 100vw;
+    }
+
+    .header {
+      padding: 0 20px !important;
+    }
+
+    .footer-block__details-content .list-menu__item--link {
+      padding: 0 !important;
+    }
+
+    .footer__social-wrapper {
+      margin-top: 0;
+    }
+
+    .footer-block--newsletter.scroll-trigger.animate--slide-in {
+        width: fit-content;
+    }
+
+    .footer__content-top {
+      padding: 0 20px !important;
+    }
+
+    .footer-block.grid__item {
+      margin: 0;
+    }
+
+    .menu-drawer__menu-item {
+      color: black !important;
+      background-color: white !important;
+    }
+}
+
+
+body {
+  font-family: 'SFproDisplay', sans-serif !important;
+  font-weight: 400;
+
+  h1, h2, h3, h4, h5, h6, a, button {
+    font-family: 'SFproDisplay', sans-serif !important;
+  }
+}

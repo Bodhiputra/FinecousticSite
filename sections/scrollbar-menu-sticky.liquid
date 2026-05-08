@@ -1,0 +1,189 @@
+{% schema %}
+{
+  "name": "Sticky Product Tabs",
+  "max_blocks": 10,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "tab_item",
+      "name": "Tab Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_label",
+          "label": "Tab Label",
+          "default": "Description"
+        },
+        {
+          "type": "text",
+          "id": "tab_link",
+          "label": "Tab Link (Example: #description)",
+          "default": "#description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky Product Tabs NavBar"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="custom-product-tabs-wrapper">
+  <div class="custom-product-tabs-scroll">
+    <ul class="custom-product-tabs">
+      {% for block in section.blocks %}
+        <li>
+          <a href="{{ block.settings.tab_link | escape }}">
+            {{ block.settings.tab_label | escape }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<style>
+.custom-product-tabs-wrapper {
+  width: 100%;
+  background: #f3f3f3;
+  z-index: 2;
+  padding: 10px 0 5px 0;
+  border-bottom: 1px solid #eee;
+  transition: all 0.3s ease;
+}
+
+.custom-product-tabs-wrapper.sticky {
+  position: fixed;
+  top: 57.5px;
+  left: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.custom-product-tabs-scroll {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 6px;
+  display: flex;
+  justify-content: center; /* desktop default */
+}
+
+/* Mobile: left align for better scroll */
+@media screen and (max-width: 767px) {
+  .custom-product-tabs-scroll {
+    justify-content: flex-start;
+    padding-left: 10px;
+  }
+
+  .custom-product-tabs-wrapper.sticky {
+  top: 47.5px;
+}
+}
+
+/* Visible Scrollbar */
+.custom-product-tabs-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.custom-product-tabs-scroll::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+.custom-product-tabs-scroll::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+.custom-product-tabs-scroll::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+.custom-product-tabs {
+  display: inline-flex;
+  gap: 60px;
+  list-style: none;
+  margin: 0;
+  padding: 0 20px;
+}
+
+.custom-product-tabs li {
+  flex: 0 0 auto;
+}
+
+.custom-product-tabs li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding-bottom: 2px;
+  transition: color 0.3s, border-bottom 0.3s;
+  display: inline-block;
+}
+
+.custom-product-tabs li a.active {
+  color: black;
+  border-bottom: 2px solid #FFD300;
+}
+</style>
+
+<script>
+var wrapper = document.querySelector('.custom-product-tabs-wrapper');
+var tabs = document.querySelectorAll('.custom-product-tabs a');
+var scrollContainer = document.querySelector('.custom-product-tabs-scroll');
+var wrapperOffset = wrapper.offsetTop;
+
+// Smooth horizontal scroll helper
+function scrollTabIntoView(tab) {
+  if (scrollContainer.scrollWidth > scrollContainer.clientWidth) {
+    const scrollLeft = tab.offsetLeft - scrollContainer.clientWidth / 2 + tab.offsetWidth / 2;
+    scrollContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+  }
+}
+
+// Function to handle scroll events
+function onScroll() {
+  // Sticky navbar
+  if (window.scrollY >= wrapperOffset) {
+    wrapper.classList.add('sticky');
+  } else {
+    wrapper.classList.remove('sticky');
+  }
+
+  // Highlight active tab
+  var scrollPos = window.scrollY + 120;
+  for (var i = 0; i < tabs.length; i++) {
+    var tab = tabs[i];
+    var target = document.querySelector(tab.getAttribute('href'));
+    if (target &&
+        target.offsetTop <= scrollPos &&
+        (target.offsetTop + target.offsetHeight) > scrollPos) {
+
+      // Remove active from all tabs
+      for (var j = 0; j < tabs.length; j++) {
+        tabs[j].classList.remove('active');
+      }
+      tab.classList.add('active');
+
+      scrollTabIntoView(tab);
+    }
+  }
+}
+
+// Function to handle tab clicks
+function onTabClick(e) {
+  e.preventDefault();
+  var target = document.querySelector(this.getAttribute('href'));
+  if (target) {
+    // Smooth vertical scroll
+    window.scrollTo({ top: target.offsetTop - 100, behavior: 'smooth' });
+    scrollTabIntoView(this);
+  }
+}
+
+// Attach scroll event
+window.addEventListener('scroll', onScroll);
+
+// Attach click events to tabs
+for (var i = 0; i < tabs.length; i++) {
+  tabs[i].addEventListener('click', onTabClick);
+}
+</script>

@@ -1,0 +1,184 @@
+{% schema %}
+{
+  "name": "Influencer Picks",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Influencer Picks"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "html",
+          "id": "card_embed",
+          "label": "Embed Code",
+          "info": "Paste the full embed code (iframe) from Instagram, Facebook, YouTube, Vimeo, etc."
+        },
+        {
+          "type": "text",
+          "id": "card_text",
+          "label": "Card Text",
+          "default": "Card description here"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Influencer Picks",
+      "category": "Custom Sections",
+      "blocks": [
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<section class="influencer-picks">
+  <div class="container-card-influencer">
+    <h2 class="section-title">{{ section.settings.section_title }}</h2>
+    <div class="cards-wrapper">
+      {% for block in section.blocks %}
+        <div class="card">
+          <div class="card-media">
+            <div class="embed-wrapper">
+              {{ block.settings.card_embed }}
+            </div>
+            <div class="card-text">
+              {{ block.settings.card_text }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+.influencer-picks {
+  padding: 40px 20px;
+  background-color: #F3F3F3;
+  display: flex;
+  justify-content: center;
+}
+
+.container-card-influencer {
+  max-width: 90vw;
+  padding: 0 6rem;
+  width: 100%;
+}
+
+.influencer-picks .section-title {
+  text-align: left;
+  font-size: 40px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.influencer-picks .cards-wrapper {
+  display: flex;
+  gap: 30px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  justify-content: space-between;
+  overflow-x: visible;
+  width: 100%;
+  padding: 0;
+}
+
+.influencer-picks .card {
+  flex: 1 1 30%;
+  display: flex;
+  justify-content: center;
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+.card-media {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+}
+
+/* ✅ Consistent 3:4 aspect ratio */
+.embed-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 133.33%; /* 3:4 ratio = 4 ÷ 3 = 133.33% */
+}
+
+.embed-wrapper iframe,
+.embed-wrapper video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+}
+
+.influencer-picks .card-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  color: #fff;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+/* Tablet */
+@media (max-width: 991px) {
+  .influencer-picks .cards-wrapper {
+    overflow-x: auto;
+    justify-content: flex-start;
+    gap: 15px;
+  }
+
+  .influencer-picks .card {
+    flex: 0 0 45%;
+    max-width: 45%;
+  }
+
+  .container-card-influencer {
+    padding: 0 7rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container-card-influencer {
+    padding: 0 1.5rem;
+  }
+
+  .section-title {
+    font-size: 30px !important;
+  }
+
+  .influencer-picks .card-text {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .influencer-picks .card {
+    flex: 0 0 80%;
+    max-width: 80%;
+  }
+}
+</style>

@@ -1,0 +1,456 @@
+{% schema %}
+{
+  "name": "Bg Section Text",  /* max 25 characters */
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Desktop Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image_mobile",
+      "label": "Mobile Background Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Your Title Here"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "label": "Title Font Size (px)",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "title_margin_top",
+      "label": "Title Margin Top (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "label": "Title Margin Bottom (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "title_margin_left",
+      "label": "Title Margin Left (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "title_margin_right",
+      "label": "Title Margin Right (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Your description goes here."
+    },
+    {
+      "type": "range",
+      "id": "desc_font_size",
+      "label": "Description Font Size (px)",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "desc_margin_top",
+      "label": "Description Margin Top (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "desc_margin_bottom",
+      "label": "Description Margin Bottom (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "desc_margin_left",
+      "label": "Description Margin Left (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "desc_margin_right",
+      "label": "Description Margin Right (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Click Here"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Button Font Size (px)",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_margin_top",
+      "label": "Button Margin Top (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_margin_bottom",
+      "label": "Button Margin Bottom (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_margin_left",
+      "label": "Button Margin Left (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_margin_right",
+      "label": "Button Margin Right (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+
+    {
+      "type": "range",
+      "id": "text_position_left",
+      "label": "Text Horizontal Position (%)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "Left Text Background",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+{% assign bg_image = section.settings.bg_image | img_url: '1920x1080' %}
+{% assign bg_image_mobile = section.settings.bg_image_mobile | img_url: '1080x1920' %}
+
+<section 
+  class="responsive-bg-section" 
+  style="
+    --title-font-size: {{ section.settings.title_font_size }}px;
+    --title-mt: {{ section.settings.title_margin_top }}px;
+    --title-mb: {{ section.settings.title_margin_bottom }}px;
+    --title-ml: {{ section.settings.title_margin_left }}px;
+    --title-mr: {{ section.settings.title_margin_right }}px;
+
+    --desc-font-size: {{ section.settings.desc_font_size }}px;
+    --desc-mt: {{ section.settings.desc_margin_top }}px;
+    --desc-mb: {{ section.settings.desc_margin_bottom }}px;
+    --desc-ml: {{ section.settings.desc_margin_left }}px;
+    --desc-mr: {{ section.settings.desc_margin_right }}px;
+
+    --btn-font-size: {{ section.settings.button_font_size }}px;
+    --btn-mt: {{ section.settings.button_margin_top }}px;
+    --btn-mb: {{ section.settings.button_margin_bottom }}px;
+    --btn-ml: {{ section.settings.button_margin_left }}px;
+    --btn-mr: {{ section.settings.button_margin_right }}px;
+
+    --text-left: {{ section.settings.text_position_left }}%;
+    --bg-desktop: url('{{ bg_image }}');
+    --bg-mobile: url('{{ bg_image_mobile }}');
+  "
+>
+  <div class="text-wrapper">
+    {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+    {% endif %}
+
+    {% if section.settings.description != blank %}
+      <p>{{ section.settings.description }}</p>
+    {% endif %}
+
+    {% if section.settings.button_link != blank and section.settings.button_text != blank %}
+      <a href="{{ section.settings.button_link }}" class="cta-button">
+        {{ section.settings.button_text }}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+.responsive-bg-section {
+  position: relative;
+  width: 100%;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-image: var(--bg-desktop);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  color: white;
+  aspect-ratio: 16/9;
+}
+
+.responsive-bg-section .text-wrapper {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 400px;
+  color: black;
+}
+
+.responsive-bg-section h2 {
+  font-size: var(--title-font-size);
+  margin: var(--title-mt) var(--title-mr) var(--title-mb) var(--title-ml);
+  font-weight: 650;
+  line-height: 65px;
+}
+
+.responsive-bg-section p {
+  font-size: var(--desc-font-size);
+  margin: var(--desc-mt) var(--desc-mr) var(--desc-mb) var(--desc-ml);
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.responsive-bg-section .cta-button {
+  font-size: var(--btn-font-size);
+  margin: var(--btn-mt) var(--btn-mr) var(--btn-mb) var(--btn-ml);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 450;
+  background-color: transparent;
+  color: black;
+  text-decoration: none;
+  border-radius: 30px;
+  border: 2px solid black;
+  width: 175px;
+  height: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.responsive-bg-section .cta-button:hover {
+  background-color: #FFD300;
+  transform: translateY(-2px);
+}
+
+/* Disable pointer events and text selection on wrapper */
+.responsive-bg-section .text-wrapper {
+  pointer-events: none;
+}
+
+/* Prevent highlighting/selecting text */
+.responsive-bg-section .text-wrapper h2,
+.responsive-bg-section .text-wrapper p {
+  user-select: none;
+}
+
+/* Re-enable pointer events for button only */
+.responsive-bg-section .text-wrapper .cta-button {
+  pointer-events: auto;
+  user-select: none; /* button text unhighlightable */
+}
+
+.text-wrapper{
+  left: var(--text-left);
+}
+
+
+/* Scale up by 1.25x for >1920px */
+@media screen and (min-width: 1921px) {
+  .responsive-bg-section h2 {
+    font-size: calc(var(--title-font-size) * 1.25);
+    margin: calc(var(--title-mt) * 1.25) calc(var(--title-mr) * 1.25) calc(var(--title-mb) * 1.25) calc(var(--title-ml) * 1.25);
+    line-height: 85px;
+  }
+  .responsive-bg-section p {
+    font-size: calc(var(--desc-font-size) * 1.25);
+    margin: calc(var(--desc-mt) * 1.25) calc(var(--desc-mr) * 1.25) calc(var(--desc-mb) * 1.25) calc(var(--desc-ml) * 1.25);
+    margin-top: 15px;
+  }
+  .responsive-bg-section .cta-button {
+    font-size: calc(var(--btn-font-size) * 1.25);
+    margin: calc(var(--btn-mt) * 1.25) calc(var(--btn-mr) * 1.25) calc(var(--btn-mb) * 1.25) calc(var(--btn-ml) * 1.25);
+    width: calc(175px * 1.25);
+    height: calc(40px * 1.25);
+  }
+  .responsive-bg-section .text-wrapper{
+    max-width: 500px;
+  }
+}
+
+/* Scale down by 0.75x for <=1440px */
+@media screen and (max-width: 1440px) {
+  .responsive-bg-section h2 {
+    font-size: calc(var(--title-font-size) * 0.75);
+    margin: calc(var(--title-mt) * 0.75) calc(var(--title-mr) * 0.75) calc(var(--title-mb) * 0.75) calc(var(--title-ml) * 0.75);
+    line-height: 48px;
+  }
+  .responsive-bg-section p {
+    font-size: calc(var(--desc-font-size) * 0.85);
+    margin: calc(var(--desc-mt) * 0.75) calc(var(--desc-mr) * 0.75) calc(var(--desc-mb) * 0.75) calc(var(--desc-ml) * 0.75);
+  }
+  .responsive-bg-section .cta-button {
+    font-size: calc(var(--btn-font-size) * 0.75);
+    margin: calc(var(--btn-mt) * 0.75) calc(var(--btn-mr) * 0.75) calc(var(--btn-mb) * 0.75) calc(var(--btn-ml) * 0.75);
+    width: calc(175px * 0.75);
+    height: calc(40px * 0.75);
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .responsive-bg-section h2 {
+    font-size: calc(var(--title-font-size) * 0.65);
+    margin: calc(var(--title-mt) * 0.65) calc(var(--title-mr) * 0.65) calc(var(--title-mb) * 0.65) calc(var(--title-ml) * 0.65);
+  }
+  .responsive-bg-section p {
+    font-size: calc(var(--desc-font-size) * 0.75);
+    margin: calc(var(--desc-mt) * 0.65) calc(var(--desc-mr) * 0.65) calc(var(--desc-mb) * 0.65) calc(var(--desc-ml) * 0.65);
+  }
+  .responsive-bg-section .cta-button {
+    font-size: calc(var(--btn-font-size) * 0.65);
+    margin: calc(var(--btn-mt) * 0.65) calc(var(--btn-mr) * 0.65) calc(var(--btn-mb) * 0.65) calc(var(--btn-ml) * 0.65);
+    width: calc(175px * 0.65);
+    height: calc(40px * 0.65);
+  }
+}
+
+/* Scale down by 0.65x for <=880px */
+@media screen and (max-width: 880px) {
+  .responsive-bg-section h2 {
+    font-size: calc(var(--title-font-size) * 0.55);
+    margin: calc(var(--title-mt) * 0.55) calc(var(--title-mr) * 0.55) calc(var(--title-mb) * 0.55) calc(var(--title-ml) * 0.55);
+    line-height: 40px;
+  }
+  .responsive-bg-section p {
+    font-size: calc(var(--desc-font-size) * 0.65);
+    margin: calc(var(--desc-mt) * 0.55) calc(var(--desc-mr) * 0.55) calc(var(--desc-mb) * 0.55) calc(var(--desc-ml) * 0.55);
+  }
+  .responsive-bg-section .cta-button {
+    font-size: calc(var(--btn-font-size) * 0.55);
+    margin: calc(var(--btn-mt) * 0.55) calc(var(--btn-mr) * 0.55) calc(var(--btn-mb) * 0.55) calc(var(--btn-ml) * 0.55);
+    width: calc(175px * 0.55);
+    height: calc(40px * 0.55);
+  }
+}
+
+
+/* Mobile adjustments */
+@media screen and (max-width: 767px) {
+  .responsive-bg-section {
+    width: 100%;                      /* full width */
+    max-width: 100%;                  /* prevent horizontal overflow */
+    overflow: hidden;                 /* hide any overflow */
+    background-image: var(--bg-mobile);
+    background-size: cover;           /* fill container without stretching */
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 600px;                     /* fixed mobile height */
+    display: flex;
+    justify-content: flex-start;      /* align text to top */
+    align-items: flex-start;          /* sticky top */
+    box-sizing: border-box;           /* include padding in width */
+  }
+
+  .responsive-bg-section .text-wrapper {
+    position: relative;      /* inside section */
+    top: 5%;                 /* stick near top */
+    left: auto !important;   /* disable left positioning */
+    transform: none !important; /* remove translateY centering */
+    text-align: center;      /* center text inside wrapper */
+    max-width: 90%;          /* prevent overflow */
+    margin: 0 auto;          /* center wrapper horizontally */
+    padding: 10px 0;
+    box-sizing: border-box;
+  }
+
+  .responsive-bg-section h2 {
+    font-size: calc(var(--title-font-size) * 0.65);
+    margin: calc(var(--title-mt) * 0.65) calc(var(--title-mr) * 0.65)
+            calc(var(--title-mb) * 0.65) calc(var(--title-ml) * 0.65);
+    line-height: 1.2;
+    width: auto;
+  }
+
+  .responsive-bg-section p {
+    font-size: calc(var(--desc-font-size) * 0.85);
+    margin: calc(var(--desc-mt) * 0.75) calc(var(--desc-mr) * 0.75)
+            calc(var(--desc-mb) * 0.75) calc(var(--desc-ml) * 0.75);
+    line-height: 1.4;
+  }
+
+  .responsive-bg-section .cta-button {
+    font-size: calc(var(--btn-font-size) * 0.75);
+    margin: calc(var(--btn-mt) * 0.75) calc(var(--btn-mr) * 0.75)
+            calc(var(--btn-mb) * 0.75) calc(var(--btn-ml) * 0.75);
+    width: calc(175px * 0.75);
+    height: calc(40px * 0.75);
+  }
+}
+
+{% endstylesheet %}

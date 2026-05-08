@@ -1,0 +1,302 @@
+{%- style -%}
+.section-{{ section.id }}-padding {
+  padding-top: 0px;
+  padding-bottom: 40px;
+}
+
+@media screen and (min-width: 768px) {
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+}
+
+.heading_block {
+  width: 100%;
+  margin: 35px 65px 0;
+}
+
+.heading_text {
+  margin: 0;
+  font-size: 35px;
+  font-weight: 800;
+}
+
+.subheading_text {
+  margin-top: 10px;
+  font-size: 20px;
+  color: white;
+  padding-left: 2px;
+}
+
+.flag_icon {
+  width: 25px;
+  height: auto;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.item_row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.item_col {
+  min-width: 250px;
+  display: flex;
+  flex-direction: row;
+}
+
+.item_img img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.item_title {
+    margin: 0;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.Custom_ImagewithText .item_col {
+    width: 33.33%;
+    display: flex;
+    padding: 0 15px;
+}
+
+.Custom_ImagewithText .item_img {
+    width: 65%;
+}
+
+.download-page_header {
+  padding: 40px 0;
+}
+.download-page_header .page-content__title {
+  margin: 0;
+}
+.Custom_ImagewithText .item_row {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 55px;
+  padding: 0 25px;
+}
+.Custom_ImagewithText .item_col {
+  width: 33.33%;
+  display: flex;
+  padding: 0 15px;
+}
+.Custom_ImagewithText .item_img {
+  width: 65%;
+}
+.Custom_ImagewithText img {
+  vertical-align: middle;
+  height: auto;
+}
+.Custom_ImagewithText .item_text {
+  width: 35%;
+}
+.Custom_ImagewithText .item_title {
+  line-height: 1.13;
+  text-transform: uppercase;
+  padding: 0 0 10px;
+  margin: 0 0 10px;
+  border-bottom: 2px solid black;
+  color: black;
+  /* -webkit-text-stroke: 1.5px #000;
+  paint-order: stroke fill;
+  letter-spacing: 1.5px; */
+}
+.Custom_ImagewithText .flag_icon {
+  max-width: 31px;
+}
+.Custom_ImagewithText .item_content ul {
+  padding: 0;
+}
+.Custom_ImagewithText .item_content li {
+  list-style: none;
+  font-size: 16px;
+  line-height: 1.2;
+  color: #808080;
+  margin: 0 0 10px;
+  font-weight: 500;
+}
+.Custom_ImagewithText .item_content a {
+  color: #808080;
+  transition: .5s all;
+}
+
+.item_content a{
+    text-decoration: none;
+}
+
+.Custom_ImagewithText .item_content a:hover{
+  color: #FFD300;;
+}
+
+.Custom_ImagewithText{
+  padding-bottom: 50px;
+}
+
+@media (max-width:991px) {
+  .Custom_ImagewithText .item_col {
+    width: 50%;
+    padding: 0 10px;
+  }
+  /* .Custom_ImagewithText .item_content li {
+    font-size: 14px;
+  } */
+}
+@media (max-width:767px) {
+  .Custom_ImagewithText .item_row {
+    margin: 0;
+  }
+  .Custom_ImagewithText .item_col {
+    width: 100%;
+    padding: 0;
+  }
+  .Custom_ImagewithText .item_img,
+  .Custom_ImagewithText .item_text {
+    width: 50%;
+  }
+}
+@media (max-width:480px) {
+  .heading_block{
+    margin: 35px 35px 0;
+  }
+}
+{%- endstyle -%}
+
+
+<div class="Custom_ImagewithText{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %} section-{{ section.id }}-padding">
+  <div class="container">
+    <div class="item_row">
+      {%- for block in section.blocks -%}
+        {% case block.type %}
+          {% when 'Heading' %}
+            <div class="heading_block" style="text-align: {{ block.settings.text_align }};">
+              <{{ block.settings.heading_tag | default: 'h2' }} class="heading_text">
+                {{ block.settings.heading_text }}
+              </{{ block.settings.heading_tag | default: 'h2' }}>
+              {% if block.settings.subheading_text != blank %}
+                <p class="subheading_text">{{ block.settings.subheading_text }}</p>
+              {% endif %}
+            </div>
+
+          {% when 'Text' %}
+            <div class="item_col">
+              {% if block.settings.image != blank %}
+                <div class="item_img">
+                  <img 
+                    src="{{ block.settings.image | img_url: 'original' }}" 
+                    alt="{{ block.settings.image.alt | escape }}">
+                </div>
+              {% endif %}
+              <div class="item_text">
+                {% if block.settings.title != blank %}
+                  <h2 class="item_title">
+                    {{ block.settings.title }}
+                    {% if block.settings.flag_icon != blank %}
+                      <img 
+                        src="{{ block.settings.flag_icon | img_url: 'original' }}" 
+                        class="flag_icon" 
+                        alt="{{ block.settings.flag_icon.alt | escape }}">
+                    {% endif %}
+                  </h2>
+
+                {% endif %}
+                {% if block.settings.content != blank %}
+                  <div class="item_content">{{ block.settings.content }}</div>
+                {% endif %}
+              </div>
+            </div>
+        {% endcase %}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Custom Image with Text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom class"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "Text",
+      "name": "Add Column",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "image_picker", "id": "flag_icon", "label": "Flag icon" },
+        { "type": "richtext", "id": "content", "label": "Content" }
+      ]
+    },
+    {
+      "type": "Heading",
+      "name": "Add Heading",
+      "settings": [
+        { "type": "text", "id": "heading_text", "label": "Heading Text" },
+        { "type": "text", "id": "subheading_text", "label": "Subheading Text" },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading Tag",
+          "default": "h2",
+          "options": [
+            { "value": "h1", "label": "H1" },
+            { "value": "h2", "label": "H2" },
+            { "value": "h3", "label": "H3" },
+            { "value": "h4", "label": "H4" },
+            { "value": "h5", "label": "H5" },
+            { "value": "h6", "label": "H6" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Text Alignment",
+          "default": "left",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Image with Text (download)"
+    }
+  ]
+}
+{% endschema %}

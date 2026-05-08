@@ -1,0 +1,215 @@
+{% schema %}
+{
+  "name": "Dual Specification Table",
+  "settings": [
+    {
+      "type": "text",
+      "id": "table_title",
+      "label": "Table Title",
+      "default": "Specifications"
+    },
+    {
+      "type": "text",
+      "id": "table1_button_label",
+      "label": "Table 1 Button Label",
+      "default": "Table 1"
+    },
+    {
+      "type": "text",
+      "id": "table2_button_label",
+      "label": "Table 2 Button Label",
+      "default": "Table 2"
+    },
+    {
+      "type": "textarea",
+      "id": "specs_table_1",
+      "label": "Table 1 Rows (Type | Value, one per line)",
+      "default": "Drivers | 4.6 mm Drivers\nPlaytime | 9H/45H\nSound | Balanced Sound\nWater Resistance | IPX4\nBluetooth Version | 5.4\nActive Noise Cancellation | Smart ANC Engineered for Sleep\nFast Charging | No\nCalls | Single Mic\nMultipoint Connection | No\nWeight | 3g\nSpecial Features | 3-Stage Snore Masking System\nDesign | In-Ear\nControl | Tap Control"
+    },
+    {
+      "type": "textarea",
+      "id": "specs_table_2",
+      "label": "Table 2 Rows (Type | Value, one per line)",
+      "default": "Battery | 5000mAh\nCharging Time | 2H\nConnectivity | Wi-Fi & Bluetooth\nWarranty | 2 Years\nDimensions | 150 x 75 x 8 mm\nWeight | 180g\nColor Options | Black, White, Blue\nExtra Features | Fast Charge, Wireless Charging\nMaterial | Aluminum"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dual Specification Table",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="dual-spec-section">
+  <div class="dual-spec-wrapper">
+    {% if section.settings.table_title != blank %}
+      <h2 class="dual-spec-title">{{ section.settings.table_title }}</h2>
+    {% endif %}
+
+    <!-- Toggle Text Links -->
+    <div class="dual-spec-buttons">
+      <span class="dual-spec-btn active" data-target="1">{{ section.settings.table1_button_label }}</span>
+      <span class="dual-spec-btn" data-target="2">{{ section.settings.table2_button_label }}</span>
+    </div>
+
+    <!-- Table 1 -->
+    <table class="dual-spec-table" id="dual-spec-table-1">
+      <tbody>
+        {% assign rows1 = section.settings.specs_table_1 | newline_to_br | split: '<br />' %}
+        {% for row in rows1 %}
+          {% assign parts = row | split: ' | ' %}
+          <tr>
+            <td class="dual-spec-type">{{ parts[0] }}</td>
+            <td class="dual-spec-value">{{ parts[1] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Table 2 (hidden initially) -->
+    <table class="dual-spec-table" id="dual-spec-table-2" style="display:none;">
+      <tbody>
+        {% assign rows2 = section.settings.specs_table_2 | newline_to_br | split: '<br />' %}
+        {% for row in rows2 %}
+          {% assign parts = row | split: ' | ' %}
+          <tr>
+            <td class="dual-spec-type">{{ parts[0] }}</td>
+            <td class="dual-spec-value">{{ parts[1] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{% stylesheet %}
+.dual-spec-wrapper {
+  max-width: 90vw;
+  margin: 0 auto;
+  text-align: center;
+  padding: 60px 0;
+}
+
+.dual-spec-title {
+  font-size: 40px;
+  font-weight: 800;
+  margin-bottom: 30px;
+  margin-top: 0;
+}
+
+.dual-spec-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-bottom: 20px;
+}
+
+.dual-spec-btn {
+  font-size: 20px;
+  cursor: pointer;
+  color: rgb(210, 210, 210);
+  font-weight: 500;
+  transition: color 0.2s;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.dual-spec-btn.active {
+  color: #000;
+  font-weight: 700;
+}
+
+.dual-spec-btn:hover {
+  color: #000;
+}
+
+.dual-spec-table {
+  width: 50%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.dual-spec-table td {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 17.5px;
+  box-sizing: border-box;
+}
+
+.dual-spec-table tr:first-child td {
+  border-top: none;
+}
+
+.dual-spec-type,
+.dual-spec-value {
+  width: 50%;
+  font-weight: 600;
+}
+
+.dual-spec-value {
+  font-weight: 400;
+}
+
+/* Responsive */
+@media (max-width: 990px) {
+  .dual-spec-table td {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dual-spec-table {
+    width: 100%;
+  }
+
+  .dual-spec-table tr {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .dual-spec-table td {
+    flex: 1 1 50%;
+    padding: 8px 10px;
+    font-size: 16px;
+  }
+
+  .dual-spec-buttons{
+    gap: 25px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dual-spec-wrapper {
+    padding: 0 1.5rem;
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function() {
+  const buttons = document.querySelectorAll('.dual-spec-btn');
+  const table1 = document.getElementById('dual-spec-table-1');
+  const table2 = document.getElementById('dual-spec-table-2');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (btn.dataset.target === "1") {
+        table1.style.display = '';
+        table2.style.display = 'none';
+      } else {
+        table1.style.display = 'none';
+        table2.style.display = '';
+      }
+    });
+  });
+});
+{% endjavascript %}

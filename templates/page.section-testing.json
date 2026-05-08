@@ -1,0 +1,35 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "square_image_text_eYhk9T": {
+      "type": "square-image-text",
+      "disabled": true,
+      "name": "Image + Text Square",
+      "settings": {
+        "image": "shopify://shop_images/GROOVE_OWS_FT21_ENC_Square.png",
+        "title": "Your Title Here",
+        "description": "Your description text goes here."
+      }
+    }
+  },
+  "order": [
+    "main",
+    "square_image_text_eYhk9T"
+  ]
+}

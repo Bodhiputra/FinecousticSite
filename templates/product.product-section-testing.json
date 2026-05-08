@@ -1,0 +1,420 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "disabled": true,
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "disabled": true,
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "disabled": true,
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "description"
+      ],
+      "custom_css": [
+        "@media screen and (min-width: 750px) {.product__column-sticky {top: 10rem; } .product__info-wrapper {padding-left: 15rem; }}",
+        "@media screen and (min-width: 750px) and (max-width: 1080px) {.product__info-wrapper {padding-left: 5rem; }}",
+        "@media screen and (max-width: 750px) {product-info#MainProduct-template--17708121456714__main {padding-bottom: 0; } .product__info-wrapper.grid__item.scroll-trigger.animate--slide-in {padding-top: 20px; }}"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-2",
+        "media_size": "small",
+        "constrain_to_viewport": true,
+        "media_fit": "cover",
+        "gallery_layout": "thumbnail_slider",
+        "mobile_thumbnails": "show",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "scrollbar_menu_sticky_DKpcRb": {
+      "type": "scrollbar-menu-sticky",
+      "blocks": {
+        "tab_item_qH7kdJ": {
+          "type": "tab_item",
+          "settings": {
+            "tab_label": "Overview",
+            "tab_link": ".productinfo-section-outerdiv"
+          }
+        },
+        "tab_item_LyKqVL": {
+          "type": "tab_item",
+          "settings": {
+            "tab_label": "Features",
+            "tab_link": ".scrollable-banner-section"
+          }
+        },
+        "tab_item_tzt8BR": {
+          "type": "tab_item",
+          "settings": {
+            "tab_label": "Specifications",
+            "tab_link": ".spec-table"
+          }
+        },
+        "tab_item_Kkmkz6": {
+          "type": "tab_item",
+          "settings": {
+            "tab_label": "Video",
+            "tab_link": ".video-section"
+          }
+        },
+        "tab_item_hiEiLz": {
+          "type": "tab_item",
+          "settings": {
+            "tab_label": "Package",
+            "tab_link": "#shopify-section-template--18093868482634__flexible_image_banner_TNy9Nf"
+          }
+        }
+      },
+      "block_order": [
+        "tab_item_qH7kdJ",
+        "tab_item_LyKqVL",
+        "tab_item_tzt8BR",
+        "tab_item_Kkmkz6",
+        "tab_item_hiEiLz"
+      ],
+      "name": "Sticky Product Tabs NavBar",
+      "settings": {}
+    },
+    "struggle_and_offer_section_wGKRgH": {
+      "type": "struggle-and-offer-section",
+      "custom_css": [
+        ".productinfo-section {padding: 60px 0 0;}"
+      ],
+      "name": "Product Info Section",
+      "settings": {
+        "left_title": "Market Challange",
+        "left_highlight": "",
+        "left_text": "Many conventional earbuds are prone to slipping during movement, can cause discomfort over extended wear, and often have short battery life. — Leaving users frustrated and limiting their listening experience.",
+        "right_title": "How We Fill It",
+        "right_highlight": "",
+        "right_text": "We addresses these challenges with a secure, lightweight design for all-day comfort, intuitive touch controls for seamless operation, and extended battery performance of up to 45 hours. — Delivering a reliable audio experience for modern lifestyles."
+      }
+    },
+    "custom_text_image_slide_banner_UNJccb": {
+      "type": "custom-text-image-slide-banner",
+      "blocks": {
+        "banner_image_9pEKyA": {
+          "type": "banner_image",
+          "settings": {
+            "image": "shopify://shop_images/GROOVE_OWS_FT21_ENC.jpg",
+            "alt": "Banner image"
+          }
+        }
+      },
+      "block_order": [
+        "banner_image_9pEKyA"
+      ],
+      "custom_css": [
+        ".scroll-controls-wrapper {display: none;}",
+        "@media (max-width: 768px) {.scroll-container {display: flex; flex-direction: column-reverse; } .scrollable-banner-section {padding: 40px 0 0; } .section-title {font-size: 25px; }}",
+        "@media (max-width: 480px) {.scroll-container {padding: 0 36px; } .section-description {margin-bottom: 1rem; }}"
+      ],
+      "name": "Scrollable Banner Section with Dots + Arrows",
+      "settings": {
+        "title": "AI-Optimized Clear Calls",
+        "description": "Enjoy uninterrupted calls with AI-enhanced noise reduction, ensuring your voice stays clear and  natural in every moment."
+      }
+    },
+    "50_text_50_picture_e4Hxwb": {
+      "type": "50-text-50-picture",
+      "custom_css": [
+        ".image-section-description p {margin-bottom: 0;}"
+      ],
+      "name": "Text + Image Split with Features",
+      "settings": {
+        "eyebrow": "",
+        "title": "Always On and Secure",
+        "description": "<p>Move with confidence and comfort—the open-ear design keeps you aware of your surroundings, ensuring safety during workouts or quick runs.</p>",
+        "image": "shopify://shop_images/GROOVE_OWS_FT21_AWARENESS.jpg",
+        "badge": "",
+        "button_label": "",
+        "button_link": "",
+        "reverse": true,
+        "feature_1_text": "",
+        "feature_2_text": "",
+        "feature_3_text": "",
+        "feature_4_text": ""
+      }
+    },
+    "50_text_50_picture_JyWi8d": {
+      "type": "50-text-50-picture",
+      "custom_css": [
+        ".image-section-description p {margin-bottom: 0;}"
+      ],
+      "name": "Text + Image Split with Features",
+      "settings": {
+        "eyebrow": "",
+        "title": "Energizing Bass",
+        "description": "<p>The powerful 16mm dynamic driver delivers deep, full-bodied sound that fuels your energy—bringing every beat to life for a truly immersive and motivating listening experience.</p>",
+        "image": "shopify://shop_images/GROOVE_OWS_FT21_DRIVER.jpg",
+        "badge": "",
+        "button_label": "",
+        "button_link": "",
+        "reverse": false,
+        "feature_1_text": "",
+        "feature_2_text": "",
+        "feature_3_text": "",
+        "feature_4_text": ""
+      }
+    },
+    "50_text_50_picture_f9TVeE": {
+      "type": "50-text-50-picture",
+      "custom_css": [
+        ".image-section-description p {margin-bottom: 0;}"
+      ],
+      "name": "Text + Image Split with Features",
+      "settings": {
+        "eyebrow": "",
+        "title": "Power in Every Steps",
+        "description": "<p>Boasting an 8-hour battery life, the GROOVE ENC powers you through long runs, intense gym sessions, or a full day of training on a single charge</p>",
+        "image": "shopify://shop_images/GROOVE_OWS_FT21_BATTERY_LIFE.jpg",
+        "badge": "",
+        "button_label": "",
+        "button_link": "",
+        "reverse": true,
+        "feature_1_text": "",
+        "feature_2_text": "",
+        "feature_3_text": "",
+        "feature_4_text": ""
+      }
+    },
+    "square_image_text_3zt8g8": {
+      "type": "square-image-text",
+      "name": "Image + Text Square",
+      "settings": {
+        "image": "shopify://shop_images/GROOVE_OWS_FT21_ENC_Square.png",
+        "title": "Your Title Here",
+        "description": "Your description text goes here. Your description text goes here. Your description text goes here. Your description text goes here. Your description text goes here.",
+        "swap_position": true
+      }
+    },
+    "square_image_text_VKharG": {
+      "type": "square-image-text",
+      "name": "Image + Text Square",
+      "settings": {
+        "image": "shopify://shop_images/GROOVE_OWS_FT21_ENC_Square.png",
+        "title": "Your Title Here",
+        "description": "Your description text goes here. Your description text goes here. Your description text goes here. Your description text goes here. Your description text goes here.",
+        "swap_position": false
+      }
+    },
+    "square_image_text_AHVp3X": {
+      "type": "square-image-text",
+      "name": "Image + Text Square",
+      "settings": {
+        "image": "shopify://shop_images/GROOVE_OWS_FT21_ENC_Square.png",
+        "title": "Your Title Here",
+        "description": "Your description text goes here. Your description text goes here. Your description text goes here. Your description text goes here. Your description text goes here.",
+        "swap_position": true
+      }
+    },
+    "full_width_image_only_qmrtXR": {
+      "type": "full-width-image-only",
+      "name": "Full Width 16:9 Banner",
+      "settings": {
+        "banner_image": "shopify://shop_images/GROOVE_OWS_FT21_ENC.jpg"
+      }
+    },
+    "specification_table_section_tycFKr": {
+      "type": "specification-table-section",
+      "custom_css": [
+        ".spec-table-container {padding: 60px 60px 0;}"
+      ],
+      "name": "Specification Table",
+      "settings": {
+        "title": "Specifications",
+        "rows": "Frequency Response | 20 Hz - 20 kHz\nEarbuds Type | Open Wearable Earbuds\nConnectivity | Wireless (Bluetooth)\nBT Version | 6.0\nBT Range | 10 m\nDriver Size | 16 mm\nTouch Controls | Yes\nEarbud Battery Type | 35 mAh LiPo Each\nCharging Case Battery Type | 260 mAh LiPo\nWorking Time | Up to 45 Hours\nStandby Time | Up to 180 Day\nCharging Time | Approx. 1.5 Hours\nCharging Interface | USB-C\nWeight | 56 ± 2 g"
+      }
+    },
+    "switching_specification_table_eQTNcb": {
+      "type": "switching-specification-table",
+      "name": "Dual Specification Table",
+      "settings": {
+        "table_title": "Specifications",
+        "table1_button_label": "Acoustic & Electrics",
+        "table2_button_label": "Mechanicals",
+        "specs_table_1": "Drivers | 4.6 mm Drivers\nPlaytime | 9H/45H\nSound | Balanced Sound\nWater Resistance | IPX4\nBluetooth Version | 5.4\nActive Noise Cancellation | Smart ANC Engineered for Sleep\nFast Charging | No\nCalls | Single Mic\nMultipoint Connection | No\nWeight | 3g\nSpecial Features | 3-Stage Snore Masking System\nDesign | In-Ear\nControl | Tap Control",
+        "specs_table_2": "Battery | 5000mAh\nCharging Time | 2H\nConnectivity | Wi-Fi & Bluetooth\nWarranty | 2 Years\nDimensions | 150 x 75 x 8 mm\nWeight | 180g\nColor Options | Black, White, Blue\nExtra Features | Fast Charge, Wireless Charging\nMaterial | Aluminum"
+      }
+    },
+    "video_eBBtmm": {
+      "type": "video",
+      "custom_css": [
+        ".page-width {padding: 12rem 5rem 10rem;}",
+        "img,video {border-radius: 12px;}",
+        "@media (max-width: 768px) {.video-section {padding: 80px 3.5rem 40px !important; }}"
+      ],
+      "name": "t:sections.video.presets.name",
+      "settings": {
+        "heading": "",
+        "heading_size": "h1",
+        "enable_video_looping": false,
+        "video": "shopify://files/videos/ProductVideo_GROOVE_OWS_FT21.mp4",
+        "video_url": "",
+        "description": "",
+        "full_width": false,
+        "color_scheme": "scheme-2",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "in_the_box_section_APx7RG": {
+      "type": "in-the-box-section",
+      "disabled": true,
+      "custom_css": [
+        ".text-title-section {padding: 0 10px;}"
+      ],
+      "name": "In The Box Section",
+      "settings": {
+        "background_color": "#f3f3f3",
+        "desktop_section_padding": 50,
+        "desktop_gap_between_columns": 20,
+        "desktop_title_width": 20,
+        "desktop_title_font_size": 40,
+        "desktop_icon_width": 150,
+        "desktop_icon_gap": 50,
+        "desktop_icon_text_font_size": 18,
+        "mobile_section_padding": 20,
+        "mobile_gap_between_columns": 30,
+        "mobile_title_font_size": 30,
+        "mobile_icon_width": 120,
+        "mobile_icon_gap": 16,
+        "mobile_icon_text_font_size": 14
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "disabled": true,
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-2",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    },
+    "flexible_image_banner_TNy9Nf": {
+      "type": "flexible-image-banner",
+      "name": "Flexible Text Banner",
+      "settings": {
+        "background_image": "shopify://shop_images/GROOVE_OWS_FT21_What_In_The_Box.jpg",
+        "subheading": "",
+        "heading": "",
+        "text_color": "#ffffff",
+        "text_align": "center",
+        "text_position": "center",
+        "text_align_mobile": "center",
+        "text_position_mobile": "center",
+        "subheading_font_size_desktop": 24,
+        "subheading_font_size_mobile": 20,
+        "subheading_margin_desktop": "0 0 10px 0",
+        "subheading_margin_mobile": "0 0 8px 0",
+        "heading_font_size_desktop": 32,
+        "heading_font_size_mobile": 28,
+        "heading_margin_desktop": "0",
+        "heading_margin_mobile": "0",
+        "button_label": "Shop Now",
+        "button_link": "",
+        "button_bg": "#000000",
+        "button_text_color": "#ffffff",
+        "button_border_color": "#000000",
+        "button_border_width": 2,
+        "button_border_radius": 4,
+        "button_padding_x_mobile": 28,
+        "button_padding_y_mobile": 12,
+        "button_font_size_mobile": 16,
+        "button_width_mobile": "auto",
+        "button_height_mobile": "auto",
+        "button_padding_x_desktop": 32,
+        "button_padding_y_desktop": 14,
+        "button_font_size_desktop": 18,
+        "button_width_desktop": "auto",
+        "button_height_desktop": "auto"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "scrollbar_menu_sticky_DKpcRb",
+    "struggle_and_offer_section_wGKRgH",
+    "custom_text_image_slide_banner_UNJccb",
+    "50_text_50_picture_e4Hxwb",
+    "50_text_50_picture_JyWi8d",
+    "50_text_50_picture_f9TVeE",
+    "square_image_text_3zt8g8",
+    "square_image_text_VKharG",
+    "square_image_text_AHVp3X",
+    "full_width_image_only_qmrtXR",
+    "specification_table_section_tycFKr",
+    "switching_specification_table_eQTNcb",
+    "video_eBBtmm",
+    "in_the_box_section_APx7RG",
+    "related-products",
+    "flexible_image_banner_TNy9Nf"
+  ]
+}

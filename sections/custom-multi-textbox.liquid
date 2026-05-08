@@ -1,0 +1,123 @@
+<section class="info-{{ section.id }}" style="margin:0; background:{{ section.settings.bg_color }}; padding:{{ section.settings.section_padding_y }}px {{ section.settings.section_padding_x }}px; display:flex; flex-direction:column; gap:{{ section.settings.block_gap }}px;">
+  <div class="blocks-group-wrapper">
+    {% for block in section.blocks %}
+    <div class="info-{{ section.id }}__row">
+      <!-- Left column -->
+      <div class="info-{{ section.id }}__left" style="gap:{{ section.settings.left_column_gap }}px;">
+        <p class="info-{{ section.id }}__h1">{{ block.settings.heading }}</p>
+        <p class="info-{{ section.id }}__h2">{{ block.settings.subheading }}</p>
+        <p class="info-{{ section.id }}__desc">{{ block.settings.description }}</p>
+      </div>
+
+      <!-- Divider -->
+      <span class="info-{{ section.id }}__divider" aria-hidden="true"></span>
+
+      <!-- Right column -->
+      <div class="info-{{ section.id }}__right">
+        <p class="info-{{ section.id }}__content">{{ block.settings.content }}</p>
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+  
+
+  <style>
+    .info-{{ section.id }}__row{
+      display:flex;
+      flex-direction:row;
+      gap:{{ section.settings.column_gap }}px;
+      border:{{ section.settings.border_thickness }}px solid {{ section.settings.border_color }};
+      padding:{{ section.settings.box_padding }}px;
+      align-items:stretch;
+      background:transparent;
+    }
+    .info-{{ section.id }}__left{
+      display:flex; flex-direction:column; width:40%;
+    }
+    .info-{{ section.id }}__right{
+      display:flex; justify-content:flex-start; align-items:center; text-align:left; width:60%;
+    }
+    .info-{{ section.id }} p{ margin:0; }
+    .info-{{ section.id }}__h1{ font-size:{{ section.settings.heading_size }}px; font-weight:700; }
+    .info-{{ section.id }}__h2{ font-size:{{ section.settings.subheading_size }}px; }
+    .info-{{ section.id }}__desc{ font-size:{{ section.settings.desc_size }}px; }
+    .info-{{ section.id }}__content{ font-size:{{ section.settings.content_size }}px; }
+
+    /* Divider */
+    .info-{{ section.id }}__divider{
+      width:0;
+      border-left:{{ section.settings.border_thickness }}px solid {{ section.settings.border_color }};
+      align-self:stretch;
+      display:block;
+    }
+
+    /* Mobile: stack layout */
+    @media (max-width: 768px){
+      .info-{{ section.id }}__row{
+        flex-direction:column; 
+        gap:{{ section.settings.mobile_block_gap }}px; 
+        padding:{{ section.settings.mobile_box_padding }}px;
+      }
+      .info-{{ section.id }}__left{
+        width:100%; 
+        gap:{{ section.settings.mobile_left_column_gap }}px;
+      }
+      .info-{{ section.id }}__right{ width:100%; }
+      .info-{{ section.id }}__h1{ font-size:{{ section.settings.mobile_heading_size }}px; }
+      .info-{{ section.id }}__h2{ font-size:{{ section.settings.mobile_subheading_size }}px; }
+      .info-{{ section.id }}__desc{ font-size:{{ section.settings.mobile_desc_size }}px; }
+      .info-{{ section.id }}__content{ font-size:{{ section.settings.mobile_content_size }}px; }
+      .info-{{ section.id }}__divider{
+        width:100%;
+        border-left:0;
+        border-top:{{ section.settings.border_thickness }}px solid {{ section.settings.border_color }};
+      }
+    }
+  </style>
+</section>
+
+{% schema %}
+{
+  "name": "Custom Info Blocks",
+  "settings": [
+    /* Desktop Settings */
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#f3f3f3" },
+    { "type": "color", "id": "border_color", "label": "Border color", "default": "#ffd300" },
+    { "type": "range", "id": "border_thickness", "label": "Border thickness (px)", "min":1, "max":10, "step":1, "default":2 },
+    { "type": "range", "id": "section_padding_x", "label": "Section horizontal padding (px)", "min":0, "max":200, "step":5, "default":50 },
+    { "type": "range", "id": "section_padding_y", "label": "Section vertical padding (px)", "min":0, "max":200, "step":5, "default":50 },
+    { "type": "range", "id": "box_padding", "label": "Box inner padding (px)", "min":0, "max":100, "step":5, "default":30 },
+    { "type": "range", "id": "column_gap", "label": "Gap between columns (px)", "min":0, "max":200, "step":5, "default":100 },
+    { "type": "range", "id": "block_gap", "label": "Gap between blocks (px)", "min":0, "max":200, "step":5, "default":60 },
+    { "type": "range", "id": "left_column_gap", "label": "Gap between heading, subheading, desc (px)", "min":0, "max":100, "step":1, "default":10 },
+    { "type": "range", "id": "heading_size", "label": "Heading font size (px)", "min":10, "max":100, "step":1, "default":50 },
+    { "type": "range", "id": "subheading_size", "label": "Subheading font size (px)", "min":10, "max":100, "step":1, "default":40 },
+    { "type": "range", "id": "desc_size", "label": "Description font size (px)", "min":10, "max":100, "step":1, "default":25 },
+    { "type": "range", "id": "content_size", "label": "Content font size (px)", "min":10, "max":100, "step":1, "default":25 },
+
+    /* Mobile Settings */
+    { "type": "range", "id": "mobile_box_padding", "label": "Mobile box padding (px)", "min":0, "max":100, "step":1, "default":20 },
+    { "type": "range", "id": "mobile_block_gap", "label": "Mobile gap between blocks (px)", "min":0, "max":100, "step":1, "default":24 },
+    { "type": "range", "id": "mobile_left_column_gap", "label": "Mobile gap between heading, subheading, desc (px)", "min":0, "max":50, "step":1, "default":8 },
+    { "type": "range", "id": "mobile_heading_size", "label": "Mobile heading font size (px)", "min":10, "max":100, "step":1, "default":36 },
+    { "type": "range", "id": "mobile_subheading_size", "label": "Mobile subheading font size (px)", "min":10, "max":100, "step":1, "default":28 },
+    { "type": "range", "id": "mobile_desc_size", "label": "Mobile description font size (px)", "min":10, "max":100, "step":1, "default":20 },
+    { "type": "range", "id": "mobile_content_size", "label": "Mobile content font size (px)", "min":10, "max":100, "step":1, "default":18 }
+  ],
+  "blocks": [
+    {
+      "type": "info_block",
+      "name": "Info Block",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "this is heading" },
+        { "type": "text", "id": "subheading", "label": "Subheading", "default": "this is subheading" },
+        { "type": "text", "id": "description", "label": "Description", "default": "this is description" },
+        { "type": "textarea", "id": "content", "label": "Content", "default": "Lorem ipsum dolor sit amet, consectetur adipisicing elit..." }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Custom Info Blocks", "blocks": [{ "type": "info_block" }, { "type": "info_block" }] }
+  ]
+}
+{% endschema %}

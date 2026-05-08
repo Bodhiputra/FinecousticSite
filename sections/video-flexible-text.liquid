@@ -1,0 +1,128 @@
+{% stylesheet %}
+.video-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.video-wrapper {
+  position: relative;
+  z-index: 1; /* base layer for video */
+}
+
+.video-section video {
+  width: 100%;
+  height: 720px;
+  display: block;
+  object-fit: cover;
+}
+
+/* Overlay on top of video */
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  color: white;
+  z-index: 2; /* ensure it's above video */
+  pointer-events: none; /* prevent blocking video interactions */
+}
+
+.video-overlay__text {
+  font-size: 4rem;
+  font-weight: 400;
+  padding: 1rem 2rem;
+  max-width: 100%;
+  pointer-events: auto;
+
+}
+
+.video-overlay__text p{
+  margin: 0;
+  line-height: 60px;
+}
+
+/* Alignment presets */
+.align-top-left    { justify-content: flex-start; align-items: flex-start; text-align: left; }
+.align-top-center  { justify-content: center; align-items: flex-start; text-align: center; }
+.align-top-right   { justify-content: flex-end; align-items: flex-start; text-align: right; }
+
+.align-middle-left   { justify-content: flex-start; align-items: center; text-align: left; }
+.align-middle-center { justify-content: center; align-items: center; text-align: center; }
+.align-middle-right  { justify-content: flex-end; align-items: center; text-align: right; }
+
+.align-bottom-left   { justify-content: flex-start; align-items: flex-end; text-align: left; }
+.align-bottom-center { justify-content: center; align-items: flex-end; text-align: center; }
+.align-bottom-right  { justify-content: flex-end; align-items: flex-end; text-align: right; }
+
+@media screen and (max-width: 600px) {
+  .video-overlay__text{
+    font-size: 3rem;
+  }
+}
+{% endstylesheet %}
+
+<section class="video-section section-{{ section.id }}">
+  <div class="video-wrapper">
+    {% if section.settings.video != blank %}
+      {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true }}
+    {% else %}
+      <div style="background:#000; height:400px; display:flex; align-items:center; justify-content:center; color:white;">
+        Upload a video in the section settings
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="video-overlay {{ section.settings.text_position }}">
+    <div class="video-overlay__text">
+      {{ section.settings.overlay_text }}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Video with Text Overlay",
+  "settings": [
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify-hosted video"
+    },
+    {
+      "type": "richtext",
+      "id": "overlay_text",
+      "label": "Overlay Text",
+      "default": "<p>Your overlay text here</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Text Position",
+      "default": "align-middle-center",
+      "options": [
+        { "label": "Top Left", "value": "align-top-left" },
+        { "label": "Top Center", "value": "align-top-center" },
+        { "label": "Top Right", "value": "align-top-right" },
+        { "label": "Middle Left", "value": "align-middle-left" },
+        { "label": "Middle Center", "value": "align-middle-center" },
+        { "label": "Middle Right", "value": "align-middle-right" },
+        { "label": "Bottom Left", "value": "align-bottom-left" },
+        { "label": "Bottom Center", "value": "align-bottom-center" },
+        { "label": "Bottom Right", "value": "align-bottom-right" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video with Text Overlay",
+      "category": "Video"
+    }
+  ]
+}
+{% endschema %}

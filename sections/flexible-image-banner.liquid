@@ -1,0 +1,550 @@
+<div class="custom-max-height flexible-text-banner" style="position: relative; width: 100%; height: 100%;">
+
+  {% if section.settings.background_image != blank or section.settings.banner_image_mobile != blank %}
+    <picture class="flexible-banner-picture">
+      {% if section.settings.background_image != blank %}
+        <!-- Ultra-wide desktop -->
+        <source 
+          media="(min-width: 1920px)" 
+          srcset="{{ section.settings.background_image | image_url: width: 2560 }}"
+          sizes="100vw"
+        >
+        <!-- Desktop -->
+        <source 
+          media="(min-width: 1200px)" 
+          srcset="{{ section.settings.background_image | image_url: width: 1920 }}"
+          sizes="100vw"
+        >
+        <!-- Tablet -->
+        <source 
+          media="(min-width: 768px)" 
+          srcset="{{ section.settings.background_image | image_url: width: 1200 }}"
+          sizes="100vw"
+        >
+      {% endif %}
+
+      <!-- Mobile -->
+      {% if section.settings.banner_image_mobile != blank %}
+        <source 
+          media="(max-width: 767px)" 
+          srcset="{{ section.settings.banner_image_mobile | image_url: width: 768 }}"
+          sizes="100vw"
+        >
+      {% endif %}
+
+      <!-- Fallback -->
+      <img 
+        src="{{ section.settings.background_image | default: section.settings.banner_image_mobile | image_url: width: 1920 }}" 
+        alt=""
+        class="flexible-banner-img"
+        loading="lazy"
+        decoding="async"
+      >
+    </picture>
+  {% endif %}
+
+  <div
+    class="flexible-text-banner-content"
+    data-desktop-position="{{ section.settings.text_position }}"
+    data-desktop-align="{{ section.settings.text_align }}"
+    data-mobile-position="{{ section.settings.text_position_mobile }}"
+    data-mobile-align="{{ section.settings.text_align_mobile }}"
+    style="color: {{ section.settings.text_color }};"
+  >
+    <p class="subheading">{{ section.settings.subheading }}</p>
+    <p class="heading">{{ section.settings.heading }}</p>
+
+    {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+      <a 
+        href="{{ section.settings.button_link }}" 
+        class="button flexible-banner-btn"
+      >
+        {{ section.settings.button_label }}
+      </a>
+    {% endif %}
+  </div>
+
+  <style>
+    /* ================== IMAGE HANDLING ================== */
+    .flexible-banner-picture,
+    .flexible-banner-img {
+      width: 100%;
+      height: 100%;
+      max-height: inherit;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: object-fit 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Ultra-wide screens */
+    @media (min-width: 1920px) {
+  .flexible-banner-img {
+    object-fit: cover; /* cover entire container */
+    object-position: center;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+
+    /* ================== TEXT STYLES ================== */
+    .flexible-text-banner .subheading {
+      margin: {{ section.settings.subheading_margin_mobile }};
+      font-size: {{ section.settings.subheading_font_size_mobile }}px;
+    }
+
+    .flexible-text-banner .heading {
+      margin: {{ section.settings.heading_margin_mobile }};
+      font-size: {{ section.settings.heading_font_size_mobile }}px;
+      font-weight: bold;
+    }
+
+    .flexible-text-banner .flexible-banner-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 15px;
+      padding: {{ section.settings.button_padding_y_mobile | default: 12 }}px {{ section.settings.button_padding_x_mobile | default: 28 }}px;
+      background: {{ section.settings.button_bg | default: '#000' }};
+      color: {{ section.settings.button_text_color | default: '#fff' }};
+      text-decoration: none;
+      font-weight: 600;
+      font-size: {{ section.settings.button_font_size_mobile | default: 16 }}px;
+      border: {{ section.settings.button_border_width | default: 2 }}px solid {{ section.settings.button_border_color | default: '#000' }};
+      border-radius: {{ section.settings.button_border_radius | default: 4 }}px;
+      width: {{ section.settings.button_width_mobile | default: 'auto' }};
+      height: {{ section.settings.button_height_mobile | default: 'auto' }};
+      transition: all 0.3s ease;
+    }
+
+    .flexible-text-banner .flexible-banner-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    @media (min-width: 768px) {
+      .flexible-text-banner .subheading {
+        margin: {{ section.settings.subheading_margin_desktop }};
+        font-size: {{ section.settings.subheading_font_size_desktop }}px;
+      }
+
+      .flexible-text-banner .heading {
+        margin: {{ section.settings.heading_margin_desktop }};
+        font-size: {{ section.settings.heading_font_size_desktop }}px;
+      }
+
+      .flexible-text-banner .flexible-banner-btn {
+        padding: {{ section.settings.button_padding_y_desktop | default: 14 }}px {{ section.settings.button_padding_x_desktop | default: 32 }}px;
+        font-size: {{ section.settings.button_font_size_desktop | default: 18 }}px;
+        width: {{ section.settings.button_width_desktop | default: 'auto' }};
+        height: {{ section.settings.button_height_desktop | default: 'auto' }};
+      }
+    }
+
+    /* ================== POSITION + ALIGNMENT ================== */
+    .flexible-text-banner-content {
+      position: absolute;
+      max-width: 90%;
+      padding: 0 20px;
+      font-family: sans-serif;
+    }
+
+    /* Desktop alignment */
+    @media (min-width: 768px) {
+      .flexible-text-banner-content[data-desktop-align="left"] { text-align: left; }
+      .flexible-text-banner-content[data-desktop-align="center"] { text-align: center; }
+      .flexible-text-banner-content[data-desktop-align="right"] { text-align: right; }
+
+      .flexible-text-banner-content[data-desktop-position="top-left"]   { top:0; left:0; transform:translate(0,0); }
+      .flexible-text-banner-content[data-desktop-position="top-center"] { top:0; left:50%; transform:translate(-50%,0); }
+      .flexible-text-banner-content[data-desktop-position="top-right"]  { top:0; right:0; transform:translate(0,0); }
+      .flexible-text-banner-content[data-desktop-position="center-left"] { top:50%; left:2.5%; transform:translate(0,-50%); }
+      .flexible-text-banner-content[data-desktop-position="center"] { top:50%; left:50%; transform:translate(-50%,-50%); }
+      .flexible-text-banner-content[data-desktop-position="center-right"] { top:50%; right:0; transform:translate(0,-50%); }
+      .flexible-text-banner-content[data-desktop-position="bottom-left"] { bottom:0; left:0; transform:translate(0,0); }
+      .flexible-text-banner-content[data-desktop-position="bottom-center"] { bottom:0; left:50%; transform:translate(-50%,0); }
+      .flexible-text-banner-content[data-desktop-position="bottom-right"] { bottom:0; right:0; transform:translate(0,0); }
+    }
+
+    /* Mobile alignment */
+    @media (max-width: 767px) {
+      .flexible-text-banner-content {
+      width: max-content;
+    }
+
+      .flexible-text-banner-content[data-mobile-align="left"] { text-align: left; }
+      .flexible-text-banner-content[data-mobile-align="center"] { text-align: center; }
+      .flexible-text-banner-content[data-mobile-align="right"] { text-align: right; }
+
+      .flexible-text-banner-content[data-mobile-position="top-left"]   { top:0; left:0; transform:translate(0,0); }
+      .flexible-text-banner-content[data-mobile-position="top-center"] { top:0; left:50%; transform:translate(-50%,0); }
+      .flexible-text-banner-content[data-mobile-position="top-right"]  { top:0; right:0; transform:translate(0,0); }
+      .flexible-text-banner-content[data-mobile-position="center-left"] { top:50%; left:0; transform:translate(0,-50%); }
+      .flexible-text-banner-content[data-mobile-position="center"] { top:50%; left:50%; transform:translate(-50%,-50%); }
+      .flexible-text-banner-content[data-mobile-position="center-right"] { top:50%; right:0; transform:translate(0,-50%); }
+      .flexible-text-banner-content[data-mobile-position="bottom-left"] { bottom:0; left:0; transform:translate(0,0); }
+      .flexible-text-banner-content[data-mobile-position="bottom-center"] { bottom:0; left:50%; transform:translate(-50%,0); }
+      .flexible-text-banner-content[data-mobile-position="bottom-right"] { bottom:0; right:0; transform:translate(0,0); }
+    }
+
+    /* ================== SCALE DOWN BETWEEN MOBILE AND LARGE DESKTOP ================== */
+@media (min-width: 768px) and (max-width: 1080px) {
+  /* Subheading */
+  .flexible-text-banner .subheading {
+    margin: calc({{ section.settings.subheading_margin_desktop }} * 0.75);
+    font-size: calc({{ section.settings.subheading_font_size_desktop }}px * 0.75);
+  }
+
+  /* Heading */
+  .flexible-text-banner .heading {
+    margin: calc({{ section.settings.heading_margin_desktop }} * 0.75);
+    font-size: calc({{ section.settings.heading_font_size_desktop }}px * 0.75);
+  }
+
+  /* Button */
+  .flexible-text-banner .flexible-banner-btn {
+    padding: calc({{ section.settings.button_padding_y_desktop | default: 14 }}px * 0.75)
+             calc({{ section.settings.button_padding_x_desktop | default: 32 }}px * 0.75);
+    font-size: calc({{ section.settings.button_font_size_desktop | default: 18 }}px * 0.85);
+    width: calc({{ section.settings.button_width_desktop | default: 'auto' }} * 0.75);
+    height: calc({{ section.settings.button_height_desktop | default: 'auto' }} * 0.75);
+    border-width: calc({{ section.settings.button_border_width | default: 2 }}px * 0.75);
+    border-radius: calc({{ section.settings.button_border_radius | default: 4 }}px * 0.75);
+  }
+}
+
+
+    /* ================== HEIGHT HANDLING ================== */
+    .custom-max-height {
+      max-height: 85vh;
+      aspect-ratio: 16/9; /* keeps 16:9 ratio */
+    }
+
+    @media (max-width: 767px) {
+      .custom-max-height {
+        max-height: 600px;
+        aspect-ratio: auto;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .custom-max-height {
+        max-height: 85vh;
+        aspect-ratio: 16/9;
+      }
+    }
+  </style>
+</div>
+
+{% schema %}
+{
+  "name": "Flexible Text Banner",
+  "tag": "section",
+  "class": "flexible-text-banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image_mobile",
+      "label": "Banner Image (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading Text",
+      "default": "Hear More, Go Further"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main Heading Text",
+      "default": "GROOVE FT20"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+
+    /* Desktop text align + position */
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text Alignment (Desktop)",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Text Position (Desktop)",
+      "options": [
+        { "value": "top-left", "label": "Top Left" },
+        { "value": "top-center", "label": "Top Center" },
+        { "value": "top-right", "label": "Top Right" },
+        { "value": "center-left", "label": "Center Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "center-right", "label": "Center Right" },
+        { "value": "bottom-left", "label": "Bottom Left" },
+        { "value": "bottom-center", "label": "Bottom Center" },
+        { "value": "bottom-right", "label": "Bottom Right" }
+      ],
+      "default": "center"
+    },
+
+    /* Mobile text align + position */
+    {
+      "type": "select",
+      "id": "text_align_mobile",
+      "label": "Text Alignment (Mobile)",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "text_position_mobile",
+      "label": "Text Position (Mobile)",
+      "options": [
+        { "value": "top-left", "label": "Top Left" },
+        { "value": "top-center", "label": "Top Center" },
+        { "value": "top-right", "label": "Top Right" },
+        { "value": "center-left", "label": "Center Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "center-right", "label": "Center Right" },
+        { "value": "bottom-left", "label": "Bottom Left" },
+        { "value": "bottom-center", "label": "Bottom Center" },
+        { "value": "bottom-right", "label": "Bottom Right" }
+      ],
+      "default": "center"
+    },
+
+    /* Subheading controls */
+    {
+      "type": "range",
+      "id": "subheading_font_size_desktop",
+      "label": "Subheading Font Size (Desktop)",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size_mobile",
+      "label": "Subheading Font Size (Mobile)",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "subheading_margin_desktop",
+      "label": "Subheading Margin (Desktop)",
+      "default": "0 0 10px 0"
+    },
+    {
+      "type": "text",
+      "id": "subheading_margin_mobile",
+      "label": "Subheading Margin (Mobile)",
+      "default": "0 0 8px 0"
+    },
+
+    /* Heading controls */
+    {
+      "type": "range",
+      "id": "heading_font_size_desktop",
+      "label": "Heading Font Size (Desktop)",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "default": 32,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "label": "Heading Font Size (Mobile)",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "default": 28,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "heading_margin_desktop",
+      "label": "Heading Margin (Desktop)",
+      "default": "0"
+    },
+    {
+      "type": "text",
+      "id": "heading_margin_mobile",
+      "label": "Heading Margin (Mobile)",
+      "default": "0"
+    },
+
+    /* Button basics */
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Button Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "label": "Button Border Width (px)",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 2,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button Border Radius (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 4,
+      "unit": "px"
+    },
+
+    /* Button Mobile */
+    {
+      "type": "range",
+      "id": "button_padding_x_mobile",
+      "label": "Button Padding X (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 28,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_y_mobile",
+      "label": "Button Padding Y (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size_mobile",
+      "label": "Button Font Size (Mobile)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "button_width_mobile",
+      "label": "Button Width (Mobile)",
+      "default": "auto"
+    },
+    {
+      "type": "text",
+      "id": "button_height_mobile",
+      "label": "Button Height (Mobile)",
+      "default": "auto"
+    },
+
+    /* Button Desktop */
+    {
+      "type": "range",
+      "id": "button_padding_x_desktop",
+      "label": "Button Padding X (Desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 32,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_y_desktop",
+      "label": "Button Padding Y (Desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size_desktop",
+      "label": "Button Font Size (Desktop)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "button_width_desktop",
+      "label": "Button Width (Desktop)",
+      "default": "auto"
+    },
+    {
+      "type": "text",
+      "id": "button_height_desktop",
+      "label": "Button Height (Desktop)",
+      "default": "auto"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flexible Text Banner",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

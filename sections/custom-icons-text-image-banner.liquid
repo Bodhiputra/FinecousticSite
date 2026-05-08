@@ -1,0 +1,595 @@
+<section class="interactive-icon-selector">
+  <!-- ICON ROW -->
+  <div class="icon-row-wrapper">
+    <div class="icon-row">
+      {% for block in section.blocks %}
+        <div class="icon-card" data-block-id="{{ block.id }}">
+          <div class="icon-img-wrapper">
+            {% if block.settings.icon != blank %}
+              <img class="icon-img" src="{{ block.settings.icon | image_url }}" alt="">
+            {% endif %}
+          </div>
+          <div class="icon-text-wrapper">
+            <p class="icon-text">{{ block.settings.icon_text }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="icon-content-wrapper">
+    <div id="icon-content" class="icon-content">
+      <div class="content-carousel">
+        {% for block in section.blocks %}
+          <div class="content-block {% if forloop.first %}active{% endif %}" id="content-{{ block.id }}">
+            {% if block.settings.banner != blank %}
+              <div class="content-banner-wrapper">
+                <img class="content-banner" src="{{ block.settings.banner | image_url }}" alt="">
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Bullet Indicators -->
+      <div class="carousel-bullets">
+        {% for block in section.blocks %}
+          <span class="bullet {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}"></span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.interactive-icon-selector { 
+  margin: 0; 
+  background: {{ section.settings.bg_color }}; 
+  padding: clamp(15px, 2vw, {{ section.settings.section_padding }}px); 
+  display: flex; 
+  flex-direction: column; 
+  gap: clamp(10px, 2vw, {{ section.settings.section_gap }}px);
+}
+
+/* ICON ROW */
+.icon-row-wrapper { display: flex; justify-content: center; width: 100%; }
+.icon-row { 
+  display: flex; 
+  justify-content: flex-start; 
+  gap: clamp(8px, 1.5vw, {{ section.settings.icon_gap }}px); 
+  overflow-x: auto; 
+  -webkit-overflow-scrolling: touch; 
+  scroll-snap-type: x mandatory; 
+  scrollbar-width: none; 
+  padding-bottom: 10px; 
+}
+.icon-row::-webkit-scrollbar { display: none; }
+
+.icon-card { 
+  flex: 0 0 auto; 
+  scroll-snap-align: center; 
+  min-width: clamp(80px, 20vw, {{ section.settings.icon_min_width }}px); 
+  max-width: {{ section.settings.icon_max_width }}px; 
+  background: {{ section.settings.icon_bg }}; 
+  border-radius: {{ section.settings.icon_radius }}px; 
+  border: 2px solid transparent; 
+  display: flex; 
+  flex-direction: column; 
+  cursor: pointer; 
+  padding: clamp(6px, 1.2vw, {{ section.settings.icon_padding }}px); 
+  transition: border 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.icon-card .icon-img-wrapper, 
+.icon-card .icon-text-wrapper { 
+  flex: 1 1 auto; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  padding: clamp(4px, 1vw, {{ section.settings.icon_inner_gap }}px); 
+  text-align: center; 
+}
+
+.icon-card .icon-img-wrapper img { 
+  max-width: 100%; 
+  width: clamp(40px, 8vw, {{ section.settings.icon_image_size }}px); 
+  height: auto; 
+  user-select: none; 
+  -webkit-user-drag: none; 
+}
+
+.icon-card .icon-text-wrapper p { 
+  margin: 0; 
+  font-size: clamp(12px, 2vw, {{ section.settings.icon_font_size }}px); 
+  font-weight: bold; 
+  line-height: 1.3; 
+}
+
+/* CONTENT AREA */
+.icon-content-wrapper { display: flex; justify-content: center; width: 100%; }
+.icon-content { overflow: hidden; flex: 1; max-width: 75%; }
+.content-carousel { display: flex; transition: transform 0.5s ease; user-select: none; }
+
+.content-block {
+  flex: 0 0 100%;
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+  position: relative;
+  padding: {{ section.settings.icon_inner_gap }}px; /* linked */
+}
+
+.content-banner-wrapper {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  width: 100%;
+}
+
+.content-banner {
+  width: auto;            
+  max-width: 100%;        
+  height: auto;           
+  max-height: clamp(200px, 50vh, {{ section.settings.banner_max_height }}px);
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Bullet indicators */
+.carousel-bullets { display: flex; justify-content: center; margin-top: 10px; gap: 8px; }
+.bullet { width: 10px; height: 10px; background-color: rgba(0,0,0,0.3); border-radius: 50%; cursor: pointer; transition: background-color 0.3s ease; }
+.bullet.active { background-color: {{ section.settings.active_border_color }}; }
+
+/* Active state */
+.icon-card.active { border: 2px solid {{ section.settings.active_border_color }}; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+
+/* ---------------- MOBILE OVERRIDES ---------------- */
+@media(max-width: 768px){
+  .icon-row { 
+    gap: clamp(6px, 2vw, {{ section.settings.icon_gap_mobile }}px); 
+    justify-content: flex-start; /* keeps horizontal scroll natural */
+  }
+
+  .icon-card { 
+    min-width: clamp(80px, 30vw, {{ section.settings.icon_min_width }}px);
+    max-width: 45vw; /* prevents icons from being oversized */
+  }
+
+  .icon-content { 
+    max-width: 100%; /* make content full width on mobile */
+  }
+
+  .content-block {
+    padding: clamp(8px, 2vw, {{ section.settings.icon_inner_gap_mobile }}px);
+  }
+
+  .content-banner {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-height: {{ section.settings.banner_max_height_mobile }}px;
+  }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  const iconCards = document.querySelectorAll(".icon-card");
+  const carousel = document.querySelector(".content-carousel");
+  const bullets = document.querySelectorAll(".bullet");
+  let activeIndex = 0;
+  let autoScrollInterval;
+  const autoScrollDelay = 5000; // 5 seconds
+
+  let startX = 0, startY = 0;
+  let currentTranslate = 0;
+  let prevTranslate = 0;
+  let isDragging = false;
+  let isScrollingVertically = false;
+
+  function showContent(index){
+    if(index < 0) index = iconCards.length - 1;
+    if(index >= iconCards.length) index = 0;
+
+    carousel.style.transition = "transform 0.5s ease";
+    carousel.style.transform = `translateX(-${index * 100}%)`;
+    iconCards.forEach((c,i)=>c.classList.toggle("active", i===index));
+    bullets.forEach((b,i)=>b.classList.toggle("active", i===index));
+    activeIndex = index;
+  }
+
+  function startAutoScroll(){ 
+    stopAutoScroll(); 
+    autoScrollInterval = setInterval(()=> showContent(activeIndex+1), autoScrollDelay); 
+  }
+  function stopAutoScroll(){ 
+    if(autoScrollInterval) clearInterval(autoScrollInterval); 
+  }
+
+  // Icon & bullet click
+  iconCards.forEach((c,i)=>c.addEventListener("click",()=> { showContent(i); startAutoScroll(); }));
+  bullets.forEach((b,i)=>b.addEventListener("click",()=> { showContent(i); startAutoScroll(); }));
+
+  // Pointer events (desktop)
+  carousel.addEventListener("pointerdown", e => {
+    isDragging = true;
+    isScrollingVertically = false;
+    startX = e.clientX;
+    startY = e.clientY;
+    prevTranslate = -activeIndex * carousel.clientWidth;
+    carousel.style.transition = "none";
+    stopAutoScroll();
+    e.preventDefault();
+  });
+
+  carousel.addEventListener("pointermove", e => {
+    if(!isDragging) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    // detect vertical vs horizontal
+    if(!isScrollingVertically && Math.abs(dy) > Math.abs(dx)){
+      isScrollingVertically = true; // let page scroll
+      return;
+    }
+
+    if(isScrollingVertically) return;
+
+    currentTranslate = prevTranslate + dx;
+    carousel.style.transform = `translateX(${currentTranslate}px)`;
+  });
+
+  carousel.addEventListener("pointerup", e => {
+    if(!isDragging) return;
+    isDragging = false;
+
+    if(isScrollingVertically){ 
+      isScrollingVertically = false;
+      startAutoScroll(); // ✅ resume autoplay even if vertical
+      return; 
+    }
+
+    const movedBy = e.clientX - startX;
+    if(movedBy > 50) showContent(activeIndex-1);
+    else if(movedBy < -50) showContent(activeIndex+1);
+    else showContent(activeIndex);
+
+    startAutoScroll(); // ✅ always restart autoplay
+  });
+
+  carousel.addEventListener("pointerleave", e => { 
+    if(isDragging) carousel.dispatchEvent(new Event('pointerup')); 
+  });
+
+  // Touch support (mobile)
+  carousel.addEventListener("touchstart", e => { 
+    startX = e.changedTouches[0].screenX; 
+    startY = e.changedTouches[0].screenY;
+    stopAutoScroll(); 
+  });
+
+  carousel.addEventListener("touchend", e => {
+    const dx = e.changedTouches[0].screenX - startX;
+    const dy = e.changedTouches[0].screenY - startY;
+
+    if(Math.abs(dy) > Math.abs(dx)) { 
+      startAutoScroll(); // ✅ resume autoplay even on vertical scroll
+      return; 
+    }
+
+    if(Math.abs(dx) > 50){
+      dx > 0 ? showContent(activeIndex-1) : showContent(activeIndex+1);
+    }
+    startAutoScroll(); // ✅ always restart autoplay
+  });
+
+  // Pause autoplay on hover
+  const wrapper = document.querySelector(".icon-content-wrapper");
+  wrapper.addEventListener("mouseenter", stopAutoScroll);
+  wrapper.addEventListener("mouseleave", startAutoScroll);
+
+  showContent(0);
+  startAutoScroll();
+});
+</script>
+
+
+
+{% schema %}
+{
+  "name": "Interactive Icon Selector",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background Color",
+      "default": "#f3f3f3"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section Padding (Desktop)",
+      "default": 60,
+      "min": 0,
+      "max": 200,
+      "step": 2
+    },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "Gap Between Icon Row & Content (Desktop)",
+      "default": 40,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "icon_gap",
+      "label": "Gap Between Icons (Desktop)",
+      "default": 20,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "color",
+      "id": "icon_bg",
+      "label": "Icon Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "icon_width",
+      "label": "Icon Width (%)",
+      "default": 10,
+      "min": 5,
+      "max": 50,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "icon_min_width",
+      "label": "Icon Min Width (px)",
+      "default": 120,
+      "min": 50,
+      "max": 400,
+      "step": 5
+    },
+    {
+      "type": "range",
+      "id": "icon_max_width",
+      "label": "Icon Max Width (px)",
+      "default": 220,
+      "min": 100,
+      "max": 600,
+      "step": 10
+    },
+    {
+      "type": "range",
+      "id": "icon_padding",
+      "label": "Icon Padding (Desktop)",
+      "default": 20,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "icon_inner_gap",
+      "label": "Gap Inside Icon Card (Desktop)",
+      "default": 10,
+      "min": 0,
+      "max": 50,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "icon_radius",
+      "label": "Icon Border Radius (Desktop)",
+      "default": 10,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "icon_image_size",
+      "label": "Icon Image Size (px, Desktop)",
+      "default": 50,
+      "min": 20,
+      "max": 200,
+      "step": 2
+    },
+    {
+      "type": "range",
+      "id": "icon_font_size",
+      "label": "Icon Text Size (px, Desktop)",
+      "default": 16,
+      "min": 10,
+      "max": 40,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Font Size (px, Desktop)",
+      "default": 24,
+      "min": 14,
+      "max": 60,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "desc_size",
+      "label": "Description Font Size (px, Desktop)",
+      "default": 18,
+      "min": 12,
+      "max": 40,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "banner_max_height",
+      "label": "Banner Max Height (px, Desktop)",
+      "default": 720,
+      "min": 200,
+      "max": 2000,
+      "step": 20
+    },
+    {
+      "type": "color",
+      "id": "active_border_color",
+      "label": "Active Icon Border Color",
+      "default": "#333333"
+    },
+
+    /* ---------------- MOBILE SETTINGS ---------------- */
+    {
+      "type": "range",
+      "id": "section_padding_mobile",
+      "label": "Section Padding (Mobile)",
+      "default": 30,
+      "min": 0,
+      "max": 200,
+      "step": 2
+    },
+    {
+      "type": "range",
+      "id": "section_gap_mobile",
+      "label": "Gap Between Icon Row & Content (Mobile)",
+      "default": 20,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "icon_gap_mobile",
+      "label": "Gap Between Icons (Mobile)",
+      "default": 10,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "icon_padding_mobile",
+      "label": "Icon Padding (Mobile)",
+      "default": 15,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "icon_inner_gap_mobile",
+      "label": "Gap Inside Icon Card (Mobile)",
+      "default": 8,
+      "min": 0,
+      "max": 50,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "icon_radius_mobile",
+      "label": "Icon Border Radius (Mobile)",
+      "default": 8,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "icon_image_size_mobile",
+      "label": "Icon Image Size (px, Mobile)",
+      "default": 40,
+      "min": 20,
+      "max": 200,
+      "step": 2
+    },
+    {
+      "type": "range",
+      "id": "icon_font_size_mobile",
+      "label": "Icon Text Size (px, Mobile)",
+      "default": 14,
+      "min": 10,
+      "max": 40,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Heading Font Size (px, Mobile)",
+      "default": 20,
+      "min": 14,
+      "max": 60,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "desc_size_mobile",
+      "label": "Description Font Size (px, Mobile)",
+      "default": 16,
+      "min": 12,
+      "max": 40,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "banner_max_height_mobile",
+      "label": "Banner Max Height (px, Mobile)",
+      "default": 400,
+      "min": 200,
+      "max": 2000,
+      "step": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "icon_set",
+      "name": "Icon + Content",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "icon_text",
+          "label": "Icon Label",
+          "default": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "This is heading"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Lorem ipsum dolor sit amet consectetur adipisicing elit..."
+        },
+        {
+          "type": "image_picker",
+          "id": "banner",
+          "label": "Banner Image"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Interactive Icon Selector",
+      "category": "Custom Sections"
+    }
+  ]
+}
+{% endschema %}

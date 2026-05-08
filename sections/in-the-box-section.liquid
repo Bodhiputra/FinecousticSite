@@ -1,0 +1,285 @@
+{% schema %}
+{
+  "name": "In The Box Section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f3f3f3"
+    },
+
+    /* ===== DESKTOP SETTINGS ===== */
+    {
+      "type": "header",
+      "content": "Desktop Settings"
+    },
+    {
+      "type": "range",
+      "id": "desktop_section_padding",
+      "label": "Section Padding (Desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "desktop_gap_between_columns",
+      "label": "Gap Between Columns (Desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "desktop_title_width",
+      "label": "Title Width (%) - Desktop",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "desktop_title_font_size",
+      "label": "Title Font Size (px) - Desktop",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "desktop_icon_width",
+      "label": "Icon Container Width (px) - Desktop",
+      "min": 50,
+      "max": 500,
+      "step": 10,
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "desktop_icon_gap",
+      "label": "Gap Between Icons (px) - Desktop",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "desktop_icon_text_font_size",
+      "label": "Icon Text Font Size (px) - Desktop",
+      "min": 8,
+      "max": 50,
+      "step": 1,
+      "default": 16
+    },
+
+    /* ===== MOBILE SETTINGS ===== */
+    {
+      "type": "header",
+      "content": "Mobile Settings"
+    },
+    {
+      "type": "range",
+      "id": "mobile_section_padding",
+      "label": "Section Padding (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_gap_between_columns",
+      "label": "Gap Between Columns (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mobile_title_font_size",
+      "label": "Title Font Size (px) - Mobile",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_width",
+      "label": "Icon Container Width (px) - Mobile",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_gap",
+      "label": "Gap Between Icons (px) - Mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_text_font_size",
+      "label": "Icon Text Font Size (px) - Mobile",
+      "min": 8,
+      "max": 50,
+      "step": 1,
+      "default": 14
+    }
+  ],
+  "blocks": [
+    {
+      "type": "icon",
+      "name": "Icon Block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "icon_text",
+          "label": "Icon Text",
+          "default": "Icon Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "In The Box Section"
+    }
+  ]
+}
+{% endschema %}
+
+<section 
+  class="icon-grid-section-{{ section.id }}" 
+  style="background-color: {{ section.settings.background_color }}; display: flex; justify-content: center;"
+>
+  <div class="text-title-section-{{ section.id }}">
+    <!-- Title -->
+    <p class="in-the-box-title-{{ section.id }}">
+      In The Box
+    </p>
+
+    <!-- Icons -->
+    <div class="in-the-box-icon-group-{{ section.id }}">
+      {% for block in section.blocks %}
+        <div class="icon-item-{{ section.id }}">
+          {% if block.settings.icon_image %}
+            <img src="{{ block.settings.icon_image | img_url: 'master' }}" alt="">
+          {% endif %}
+          <p class="text-description-icons-{{ section.id }}">
+            {{ block.settings.icon_text }}
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ===== DESKTOP STYLES ===== */
+  .icon-grid-section-{{ section.id }} {
+    padding: 90px {{ section.settings.desktop_section_padding }}px 0;
+  }
+
+  .text-title-section-{{ section.id }} {
+    display: flex;
+    flex-direction: column; /* stacked vertically like mobile */
+    gap: {{ section.settings.desktop_gap_between_columns }}px;
+    align-items: center; /* optional: center everything */
+    max-width: 90vw;
+    width: 100%;
+    padding: 0 60px;
+  }
+
+  .in-the-box-title-{{ section.id }} {
+    width: 100%; /* full width like mobile */
+    font-size: {{ section.settings.desktop_title_font_size }}px;
+    margin: 0;
+    text-align: left; /* same as mobile */
+    color: black;
+    font-weight: 800;
+  }
+
+  .in-the-box-icon-group-{{ section.id }} {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: {{ section.settings.desktop_icon_gap }}px;
+  }
+
+  .icon-item-{{ section.id }} {
+    width: {{ section.settings.desktop_icon_width }}px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .icon-item-{{ section.id }} img {
+    width: {{ section.settings.desktop_icon_width }}px;
+    height: {{ section.settings.desktop_icon_width }}px;
+    padding: 20px;
+  }
+
+  .text-description-icons-{{ section.id }} {
+    font-size: {{ section.settings.desktop_icon_text_font_size }}px;
+    font-weight: 500;
+    color: #808080;
+  }
+
+  /* ===== MOBILE STYLES ===== */
+  @media (max-width: 768px) {
+    .icon-grid-section-{{ section.id }} {
+      padding: {{ section.settings.mobile_section_padding }}px;
+    }
+
+    .text-title-section-{{ section.id }} {
+      flex-direction: column;
+      gap: {{ section.settings.mobile_gap_between_columns }}px;
+      max-width: 100vw;
+      padding: 0 25px;
+    }
+
+    .in-the-box-title-{{ section.id }} {
+      width: 100% !important;
+      text-align: left;
+      font-size: {{ section.settings.mobile_title_font_size }}px;
+    }
+
+    .in-the-box-icon-group-{{ section.id }} {
+      width: 100% !important;
+      justify-content: center;
+      gap: {{ section.settings.mobile_icon_gap }}px;
+    }
+
+    .icon-item-{{ section.id }} {
+      width: {{ section.settings.mobile_icon_width }}px;
+    }
+
+    .icon-item-{{ section.id }} img {
+      width: {{ section.settings.mobile_icon_width }}px;
+      height: {{ section.settings.mobile_icon_width }}px;
+    }
+
+    .text-description-icons-{{ section.id }} {
+      font-size: {{ section.settings.mobile_icon_text_font_size }}px;
+    }
+  }
+</style>

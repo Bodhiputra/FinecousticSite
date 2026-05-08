@@ -1,0 +1,150 @@
+{% schema %}
+{
+  "name": "Image + Text Split",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Left Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Your Title Here"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Your description text goes here."
+    },
+    {
+      "type": "checkbox",
+      "id": "swap_position",
+      "label": "Swap Image & Text (Right ↔ Left)",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image + Text Square"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="image-text-split">
+  <div class="split-container {% if section.settings.swap_position %}swap-enabled{% endif %}">
+    
+    <!-- LEFT IMAGE -->
+    <div class="split-image">
+      {% if section.settings.image %}
+        <div class="square-wrapper">
+          <img 
+            src="{{ section.settings.image | img_url: '720x720', scale: 2 }}" 
+            alt="{{ section.settings.title | escape }}"
+            loading="lazy"
+          >
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- RIGHT TEXT -->
+    <div class="split-text">
+      <h2>{{ section.settings.title }}</h2>
+      <p>{{ section.settings.description }}</p>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.image-text-split{
+  padding: 60px 0;
+}
+
+.image-text-split .split-container {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  max-width: 90vw;
+  padding: 0 50px;
+  margin: 0 auto;
+  justify-content: space-between;
+}
+
+/* Swap image and text on desktop when toggle is enabled */
+.image-text-split .split-container.swap-enabled {
+  flex-direction: row-reverse;
+}
+
+/* Force 1:1 image container */
+.image-text-split .square-wrapper {
+  width: 100%;
+  max-width: 720px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.image-text-split .square-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-text-split .split-text {
+  flex: 1;
+}
+
+.image-text-split .split-text h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #332F2F;
+  margin: 0;
+  line-height: 1.3;
+  margin-bottom: 15px;
+}
+
+.image-text-split .split-text p {
+  font-size: 18px;
+  color: #808080;
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.image-text-split .split-image,
+.image-text-split .split-text {
+  flex: 1 1 50%;
+  max-width: 50%;
+}
+
+@media (min-width: 2000px){
+.image-text-split .square-wrapper{
+max-width: 1080px;
+}
+}
+
+/* MOBILE: always image above text */
+@media (max-width: 768px) {
+  .image-text-split .split-container,
+  .image-text-split .split-container.swap-enabled {
+    flex-direction: column;
+    text-align: left;
+    gap: 24px;
+    padding: 0 15px;
+  }
+
+  .image-text-split .split-text h2 {
+    font-size: 26px;
+  }
+
+  .image-text-split .split-image,
+  .image-text-split .split-text {
+    max-width: 100%;
+  }
+}
+</style>
