@@ -6,77 +6,6 @@
   padding: 0;
 }
 
-/* ── CAROUSEL HEADER ── */
-.fc-dl-header {
-  padding: clamp(10px, 1.5vw, 16px) clamp(12px, 2vw, 24px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  overflow: hidden;
-}
-.fc-dl-header .fc-title-viewport {
-  flex: 1;
-  min-width: 0;
-  max-width: min(700px, calc(100vw - 40px));
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
-  cursor: grab;
-}
-.fc-dl-header .fc-title-viewport:active { cursor: grabbing; }
-.fc-dl-header .fc-title-track {
-  display: flex;
-  align-items: center;
-}
-.fc-dl-header .fc-title-item {
-  flex-shrink: 0;
-  min-width: clamp(100px, 14vw, 200px);
-  text-align: center;
-  padding: 0 clamp(6px, 1.5vw, 12px);
-  font-family: 'Alte Haas Grotesk', sans-serif;
-  font-size: clamp(20px, 5.5vw, 48px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: rgba(255,255,255,0.18);
-  white-space: nowrap;
-  transition: color 0.4s ease, transform 0.4s ease;
-  transform: scale(0.72);
-  transform-origin: center;
-  user-select: none;
-}
-.fc-dl-header .fc-title-item.fc-title-active {
-  color: #ffffff;
-  transform: scale(1);
-  cursor: default;
-}
-.fc-dl-header .fc-title-item:not(.fc-title-active) { cursor: pointer; }
-@keyframes fc-dl-arrow-prev {
-  0%, 100% { transform: translateX(0); }
-  50%       { transform: translateX(-10px); }
-}
-@keyframes fc-dl-arrow-next {
-  0%, 100% { transform: translateX(0); }
-  50%       { transform: translateX(10px); }
-}
-.fc-dl-header .fc-dl-arrow {
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.35);
-  font-size: clamp(18px, 3vw, 30px);
-  cursor: pointer;
-  padding: 0 8px;
-  line-height: 1;
-  transition: color 0.15s;
-  flex-shrink: 0;
-  z-index: 1;
-}
-.fc-dl-header .fc-dl-prev { animation: fc-dl-arrow-prev 2.5s ease-in-out infinite; }
-.fc-dl-header .fc-dl-next { animation: fc-dl-arrow-next 2.5s ease-in-out infinite; }
-@media (hover: hover) {
-  .fc-dl-header .fc-dl-arrow:hover { color: #FFD300; }
-}
-
 /* ── GRID ── */
 .fc-dl-grid {
   display: grid;
@@ -181,8 +110,8 @@
 <div class="fc-dl-section{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}">
 
   {%- comment -%} Carousel header {%- endcomment -%}
-  <div class="fc-dl-header" id="fc-dl-header">
-    <button class="fc-dl-arrow fc-dl-prev" type="button" aria-label="Previous">&#171;</button>
+  <div class="fc-carousel-header" id="fc-dl-header">
+    <button class="fc-carousel-arrow fc-filter-nav__prev" type="button" aria-label="Previous">&#171;</button>
     <div class="fc-title-viewport" id="fc-dl-title-viewport">
       <div class="fc-title-track" id="fc-dl-title-track">
         <span class="fc-title-item">Microphones</span>
@@ -192,7 +121,7 @@
         <span class="fc-title-item">All</span>
       </div>
     </div>
-    <button class="fc-dl-arrow fc-dl-next" type="button" aria-label="Next">&#187;</button>
+    <button class="fc-carousel-arrow fc-filter-nav__next" type="button" aria-label="Next">&#187;</button>
   </div>
 
   {%- comment -%} Download grid {%- endcomment -%}
@@ -259,148 +188,19 @@
     { key: 'earbuds',     label: 'Earbuds' },
     { key: 'microphones', label: 'Microphones' },
   ];
-  const N = FILTERS.length;
-  let filterIdx = 0;
-  let domIdx    = 1;
-  let sliding   = false;
-
-  let track, viewport;
-
-  function getItems() { return Array.from(track.querySelectorAll('.fc-title-item')); }
-
-  function getCurrentTx() {
-    const t = window.getComputedStyle(track).transform;
-    if (!t || t === 'none') return 0;
-    const m = t.match(/matrix\([^,]+,[^,]+,[^,]+,[^,]+,([^,]+),/);
-    return m ? parseFloat(m[1]) : 0;
-  }
-
-  function offsetForDom(i) {
-    const items = getItems();
-    const item = items[i];
-    if (!item || !viewport) return 0;
-    const vpRect   = viewport.getBoundingClientRect();
-    const itemRect = item.getBoundingClientRect();
-    const tx       = getCurrentTx();
-    return tx + (vpRect.left + vpRect.width / 2) - (itemRect.left + itemRect.width / 2);
-  }
-
-  function snapToDom(i) {
-    track.style.transition = 'none';
-    track.style.transform = `translateX(${offsetForDom(i)}px)`;
-    track.getBoundingClientRect();
-  }
-
-  function slideToDom(i, onEnd) {
-    track.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
-    track.style.transform = `translateX(${offsetForDom(i)}px)`;
-    track.addEventListener('transitionend', function h() {
-      track.removeEventListener('transitionend', h);
-      if (onEnd) onEnd();
-      sliding = false;
-    }, { once: true });
-  }
-
-  function slideByDir(dir) {
-    if (sliding) return;
-    sliding = true;
-    const target = domIdx + dir;
-    const items  = getItems();
-    items.forEach((el, i) => el.classList.toggle('fc-title-active', i === target));
-    filterIdx = target === 0 ? N - 1 : target === N + 1 ? 0 : target - 1;
-    slideToDom(target, () => {
-      if (target === 0 || target === N + 1) {
-        domIdx = target === 0 ? N : 1;
-        track.style.opacity = '0';
-        getItems().forEach(el => { el.style.transition = 'none'; });
-        snapToDom(domIdx);
-        getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === domIdx));
-        track.getBoundingClientRect();
-        requestAnimationFrame(() => {
-          getItems().forEach(el => { el.style.transition = ''; });
-          track.style.opacity = '1';
-        });
-      } else {
-        domIdx = target;
-      }
-    });
-    applyFilter(FILTERS[filterIdx].key);
-  }
 
   function init() {
-    track    = document.getElementById('fc-dl-title-track');
-    viewport = document.getElementById('fc-dl-title-viewport');
-    const header = document.getElementById('fc-dl-header');
-    if (!track) return;
-
-    filterIdx = 0; domIdx = 1; sliding = false;
-    getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === 1));
-    track.style.opacity = '0';
-
-    if (header) {
-      header.querySelector('.fc-dl-prev')?.addEventListener('click', () => slideByDir(-1));
-      header.querySelector('.fc-dl-next')?.addEventListener('click', () => slideByDir(+1));
-    }
-
-    let draggedTitle = false;
-
-    track.addEventListener('click', e => {
-      if (draggedTitle) { draggedTitle = false; return; }
-      const item = e.target.closest('.fc-title-item');
-      if (!item) return;
-      const idx = getItems().indexOf(item);
-      if (idx === domIdx) return;
-      slideByDir(idx > domIdx ? 1 : -1);
-    });
-
-    if (viewport) {
-      // Touch (mobile title)
-      let touchX = 0;
-      viewport.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
-      viewport.addEventListener('touchend', e => {
-        const dx = e.changedTouches[0].clientX - touchX;
-        if (Math.abs(dx) > 40) slideByDir(dx < 0 ? 1 : -1);
-      }, { passive: true });
-
-      // Mouse drag (desktop title)
-      let mouseStartX = 0, mouseDragging = false;
-      viewport.addEventListener('mousedown', e => { mouseStartX = e.clientX; mouseDragging = true; draggedTitle = false; });
-      viewport.addEventListener('mousemove', e => { if (mouseDragging && Math.abs(e.clientX - mouseStartX) > 5) draggedTitle = true; });
-      const endDrag = e => {
-        if (!mouseDragging) return;
-        mouseDragging = false;
-        const dx = e.clientX - mouseStartX;
-        if (Math.abs(dx) > 40) slideByDir(dx < 0 ? 1 : -1);
-      };
-      viewport.addEventListener('mouseup', endDrag);
-      viewport.addEventListener('mouseleave', endDrag);
-    }
-
-    // Touch swipe on the grid (mobile body)
-    const grid = document.getElementById('fc-dl-grid');
-    if (grid) {
-      let gridTouchX = 0;
-      grid.addEventListener('touchstart', e => { gridTouchX = e.touches[0].clientX; }, { passive: true });
-      grid.addEventListener('touchend', e => {
-        const dx = e.changedTouches[0].clientX - gridTouchX;
-        if (Math.abs(dx) > 40) slideByDir(dx < 0 ? 1 : -1);
-      }, { passive: true });
-    }
-
-    window.addEventListener('resize', () => {
-      requestAnimationFrame(() => {
-        if (!track) return;
-        track.style.transition = 'none';
-        track.style.transform = `translateX(${offsetForDom(domIdx)}px)`;
-        track.getBoundingClientRect();
-      });
-    });
-
-    requestAnimationFrame(() => {
-      snapToDom(1);
-      applyFilter('all');
-      track.style.opacity = '1';
-    });
+    if (!window.FcCarousel) return;
+    window.FcCarousel({
+      trackId:      'fc-dl-title-track',
+      viewportId:   'fc-dl-title-viewport',
+      prevSelector: '.fc-filter-nav__prev',
+      nextSelector: '.fc-filter-nav__next',
+      extraSwipeId: 'fc-dl-grid',
+      N: FILTERS.length,
+      onSlide: function (logIdx) { applyFilter(FILTERS[logIdx].key); },
+      getInitialIdx: function () { return 0; }
+    }).init();
   }
 
   init();

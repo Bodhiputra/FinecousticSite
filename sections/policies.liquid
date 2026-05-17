@@ -1,77 +1,5 @@
 {%- style -%}
 
-/* ── CAROUSEL HEADER ── */
-.fc-collection-header {
-  padding: clamp(10px, 1.5vw, 16px) clamp(12px, 2vw, 24px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  overflow: hidden;
-}
-.fc-title-viewport {
-  flex: 1;
-  min-width: 0;
-  max-width: min(700px, calc(100vw - 40px));
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
-  cursor: grab;
-}
-.fc-title-viewport:active { cursor: grabbing; }
-.fc-title-track {
-  display: flex;
-  align-items: center;
-}
-.fc-title-item {
-  flex-shrink: 0;
-  min-width: clamp(100px, 14vw, 200px);
-  text-align: center;
-  padding: 0 clamp(6px, 1.5vw, 12px);
-  font-family: 'Alte Haas Grotesk', sans-serif;
-  font-size: clamp(20px, 5.5vw, 48px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: rgba(255,255,255,0.18);
-  white-space: nowrap;
-  transition: color 0.4s ease, transform 0.4s ease;
-  transform: scale(0.72);
-  transform-origin: center;
-  user-select: none;
-}
-.fc-title-item.fc-title-active {
-  color: #ffffff;
-  transform: scale(1);
-  cursor: default;
-}
-.fc-title-item:not(.fc-title-active) { cursor: pointer; }
-
-@keyframes fc-arrow-prev {
-  0%, 100% { transform: translateX(0); }
-  50%       { transform: translateX(-4px); }
-}
-@keyframes fc-arrow-next {
-  0%, 100% { transform: translateX(0); }
-  50%       { transform: translateX(4px); }
-}
-.fc-collection-header__arrow {
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.35);
-  font-size: clamp(18px, 3vw, 30px);
-  cursor: pointer;
-  padding: 0 8px;
-  line-height: 1;
-  transition: color 0.15s;
-  flex-shrink: 0;
-  z-index: 1;
-}
-.fc-filter-nav__prev { animation: fc-arrow-prev 2.5s ease-in-out infinite; }
-.fc-filter-nav__next { animation: fc-arrow-next 2.5s ease-in-out infinite; }
-@media (hover: hover) {
-  .fc-collection-header__arrow:hover { color: #FFD300; }
-}
-
 /* ── POLICY CONTENT ── */
 .fc-policy-wrap {
   max-width: 780px;
@@ -213,48 +141,6 @@
     { key: 'refund-policy',        id: 'fc-pol-refund'   },
     { key: 'terms-and-conditions', id: 'fc-pol-terms'    },
   ];
-  const N = POLICIES.length; // 4
-
-  let polIdx  = 0;
-  let domIdx  = 1;
-  let sliding = false;
-
-  let track, viewport, prevBtn, nextBtn;
-
-  function getItems() { return Array.from(track.querySelectorAll('.fc-title-item')); }
-
-  function getCurrentTx() {
-    const t = window.getComputedStyle(track).transform;
-    if (!t || t === 'none') return 0;
-    const m = t.match(/matrix\([^,]+,[^,]+,[^,]+,[^,]+,([^,]+),/);
-    return m ? parseFloat(m[1]) : 0;
-  }
-
-  function offsetForDom(di) {
-    const items   = getItems();
-    const item    = items[di];
-    if (!item || !viewport) return 0;
-    const vpRect   = viewport.getBoundingClientRect();
-    const itemRect = item.getBoundingClientRect();
-    const tx       = getCurrentTx();
-    return tx + (vpRect.left + vpRect.width / 2) - (itemRect.left + itemRect.width / 2);
-  }
-
-  function snapToDom(di) {
-    track.style.transition = 'none';
-    track.style.transform  = `translateX(${offsetForDom(di)}px)`;
-    track.getBoundingClientRect();
-  }
-
-  function slideToDom(di, onEnd) {
-    track.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
-    track.style.transform  = `translateX(${offsetForDom(di)}px)`;
-    track.addEventListener('transitionend', function h() {
-      track.removeEventListener('transitionend', h);
-      if (onEnd) onEnd();
-      sliding = false;
-    }, { once: true });
-  }
 
   function applyPolicy(key) {
     document.querySelectorAll('.fc-policy-panel').forEach(panel => {
@@ -270,107 +156,21 @@
     history.pushState(null, '', url.toString());
   }
 
-  function slideByDir(dir) {
-    if (sliding) return;
-    sliding = true;
-    const targetDom = domIdx + dir;
-    const items = getItems();
-
-    items.forEach((el, i) => el.classList.toggle('fc-title-active', i === targetDom));
-    polIdx = targetDom === 0 ? N - 1 : targetDom === N + 1 ? 0 : targetDom - 1;
-
-    slideToDom(targetDom, () => {
-      if (targetDom === 0 || targetDom === N + 1) {
-        domIdx = targetDom === 0 ? N : 1;
-        track.style.opacity = '0';
-        getItems().forEach(el => { el.style.transition = 'none'; });
-        snapToDom(domIdx);
-        getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === domIdx));
-        track.getBoundingClientRect();
-        requestAnimationFrame(() => {
-          getItems().forEach(el => { el.style.transition = ''; });
-          track.style.opacity = '1';
-        });
-      } else {
-        domIdx = targetDom;
-      }
-    });
-
-    applyPolicy(POLICIES[polIdx].key);
-  }
-
-  function attachCarouselClicks() {
-    track.addEventListener('click', e => {
-      const item = e.target.closest('.fc-title-item');
-      if (!item) return;
-      const clickedDomIdx = getItems().indexOf(item);
-      if (clickedDomIdx === domIdx) return;
-      slideByDir(clickedDomIdx > domIdx ? 1 : -1);
-    });
-  }
-
   function init() {
-    track    = document.getElementById('fc-pol-track');
-    viewport = document.getElementById('fc-pol-viewport');
-    prevBtn  = document.querySelector('.fc-filter-nav__prev');
-    nextBtn  = document.querySelector('.fc-filter-nav__next');
-
-    if (!track) return;
-
-    polIdx  = 0;
-    domIdx  = 1;
-    sliding = false;
-
-    getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === 1));
-    attachCarouselClicks();
-
-    track.style.opacity = '0';
-
-    requestAnimationFrame(() => {
-      const urlPolicy    = new URLSearchParams(window.location.search).get('policy');
-      const urlMatchIdx  = urlPolicy ? POLICIES.findIndex(p => p.key === urlPolicy) : -1;
-
-      if (urlMatchIdx > 0) {
-        polIdx = urlMatchIdx;
-        domIdx = urlMatchIdx + 1;
-        getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === domIdx));
-        snapToDom(domIdx);
-        applyPolicy(POLICIES[polIdx].key);
-      } else {
-        polIdx = 0;
-        domIdx = 1;
-        snapToDom(1);
-        applyPolicy('privacy-policy');
+    if (!window.FcCarousel) return;
+    window.FcCarousel({
+      trackId:      'fc-pol-track',
+      viewportId:   'fc-pol-viewport',
+      prevSelector: '.fc-filter-nav__prev',
+      nextSelector: '.fc-filter-nav__next',
+      N: POLICIES.length,
+      onSlide: function (logIdx) { applyPolicy(POLICIES[logIdx].key); },
+      getInitialIdx: function () {
+        var urlPolicy = new URLSearchParams(window.location.search).get('policy');
+        var idx = urlPolicy ? POLICIES.findIndex(function (p) { return p.key === urlPolicy; }) : -1;
+        return idx > 0 ? idx : 0;
       }
-
-      track.style.opacity = '1';
-    });
-
-    if (prevBtn) prevBtn.addEventListener('click', () => slideByDir(-1));
-    if (nextBtn) nextBtn.addEventListener('click', () => slideByDir(+1));
-
-    let touchX = 0;
-    if (viewport) {
-      viewport.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
-      viewport.addEventListener('touchend', e => {
-        const dx = e.changedTouches[0].clientX - touchX;
-        if (Math.abs(dx) > 40) slideByDir(dx < 0 ? 1 : -1);
-      }, { passive: true });
-    }
-
-    let resizing = false;
-    window.addEventListener('resize', () => {
-      if (resizing) return;
-      resizing = true;
-      requestAnimationFrame(() => {
-        if (track) {
-          track.style.transition = 'none';
-          track.style.transform  = `translateX(${offsetForDom(domIdx)}px)`;
-          track.getBoundingClientRect();
-        }
-        resizing = false;
-      });
-    });
+    }).init();
   }
 
   init();

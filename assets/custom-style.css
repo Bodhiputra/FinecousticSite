@@ -1059,3 +1059,69 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 .fc-section-appear {
   animation: fc-section-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+/* ── FC CAROUSEL TITLE (shared across all carousel pages) ── */
+.fc-carousel-header {
+  padding: clamp(10px, 1.5vw, 16px) clamp(12px, 2vw, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  overflow: hidden;
+}
+.fc-title-viewport {
+  flex: 1;
+  min-width: 0;
+  max-width: min(700px, calc(100vw - 40px));
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+  cursor: grab;
+}
+.fc-title-viewport:active { cursor: grabbing; }
+.fc-title-track { display: flex; align-items: center; }
+.fc-title-item {
+  flex-shrink: 0;
+  min-width: clamp(100px, 14vw, 200px);
+  text-align: center;
+  padding: 0 clamp(6px, 1.5vw, 12px);
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(20px, 5.5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgba(255,255,255,0.18);
+  white-space: nowrap;
+  transition: color 0.4s ease, transform 0.4s ease;
+  transform: scale(0.72);
+  transform-origin: center;
+  user-select: none;
+}
+.fc-title-item.fc-title-active { color: #ffffff; transform: scale(1); cursor: default; }
+.fc-title-item:not(.fc-title-active) { cursor: pointer; }
+@keyframes fc-arrow-prev {
+  0%, 100% { transform: translateX(0); }
+  50%       { transform: translateX(-4px); }
+}
+@keyframes fc-arrow-next {
+  0%, 100% { transform: translateX(0); }
+  50%       { transform: translateX(4px); }
+}
+.fc-carousel-arrow,
+.fc-collection-header__arrow {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.35);
+  font-size: clamp(18px, 3vw, 30px);
+  cursor: pointer;
+  padding: 0 8px;
+  line-height: 1;
+  transition: color 0.15s;
+  flex-shrink: 0;
+  z-index: 1;
+}
+.fc-filter-nav__prev { animation: fc-arrow-prev 2.5s ease-in-out infinite; }
+.fc-filter-nav__next { animation: fc-arrow-next 2.5s ease-in-out infinite; }
+@media (hover: hover) {
+  .fc-carousel-arrow:hover,
+  .fc-collection-header__arrow:hover { color: #FFD300; }
+}

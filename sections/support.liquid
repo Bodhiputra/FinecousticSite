@@ -1,62 +1,5 @@
 {%- style -%}
 
-/* ── CAROUSEL HEADER ── */
-.fc-collection-header {
-  padding: clamp(10px, 1.5vw, 16px) clamp(12px, 2vw, 24px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  overflow: hidden;
-}
-.fc-title-viewport {
-  flex: 1;
-  min-width: 0;
-  max-width: min(700px, calc(100vw - 40px));
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
-  cursor: grab;
-}
-.fc-title-viewport:active { cursor: grabbing; }
-.fc-title-track { display: flex; align-items: center; }
-.fc-title-item {
-  flex-shrink: 0;
-  min-width: clamp(100px, 14vw, 200px);
-  text-align: center;
-  padding: 0 clamp(6px, 1.5vw, 12px);
-  font-family: 'Alte Haas Grotesk', sans-serif;
-  font-size: clamp(20px, 5.5vw, 48px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: rgba(255,255,255,0.18);
-  white-space: nowrap;
-  transition: color 0.4s ease, transform 0.4s ease;
-  transform: scale(0.72);
-  transform-origin: center;
-  user-select: none;
-}
-.fc-title-item.fc-title-active { color: #ffffff; transform: scale(1); cursor: default; }
-.fc-title-item:not(.fc-title-active) { cursor: pointer; }
-
-@keyframes fc-arrow-prev { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-4px); } }
-@keyframes fc-arrow-next { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
-.fc-collection-header__arrow {
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.35);
-  font-size: clamp(18px, 3vw, 30px);
-  cursor: pointer;
-  padding: 0 8px;
-  line-height: 1;
-  transition: color 0.15s;
-  flex-shrink: 0;
-  z-index: 1;
-}
-.fc-filter-nav__prev { animation: fc-arrow-prev 2.5s ease-in-out infinite; }
-.fc-filter-nav__next { animation: fc-arrow-next 2.5s ease-in-out infinite; }
-@media (hover: hover) { .fc-collection-header__arrow:hover { color: #FFD300; } }
-
 /* ── SUPPORT CONTENT WRAP ── */
 .fc-support-wrap {
   max-width: 780px;
@@ -618,44 +561,6 @@
     { key: 'support', id: 'fc-sup-support'     },
     { key: 'track',   id: 'fc-sup-trackorder'  },
   ];
-  const N = TABS.length;
-
-  let tabIdx  = 0;
-  let domIdx  = 1;
-  let sliding = false;
-  let track, viewport, prevBtn, nextBtn;
-
-  function getItems() { return Array.from(track.querySelectorAll('.fc-title-item')); }
-
-  function getCurrentTx() {
-    const t = window.getComputedStyle(track).transform;
-    if (!t || t === 'none') return 0;
-    const m = t.match(/matrix\([^,]+,[^,]+,[^,]+,[^,]+,([^,]+),/);
-    return m ? parseFloat(m[1]) : 0;
-  }
-
-  function offsetForDom(di) {
-    const items = getItems(), item = items[di];
-    if (!item || !viewport) return 0;
-    const vr = viewport.getBoundingClientRect(), ir = item.getBoundingClientRect(), tx = getCurrentTx();
-    return tx + (vr.left + vr.width / 2) - (ir.left + ir.width / 2);
-  }
-
-  function snapToDom(di) {
-    track.style.transition = 'none';
-    track.style.transform  = `translateX(${offsetForDom(di)}px)`;
-    track.getBoundingClientRect();
-  }
-
-  function slideToDom(di, onEnd) {
-    track.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
-    track.style.transform  = `translateX(${offsetForDom(di)}px)`;
-    track.addEventListener('transitionend', function h() {
-      track.removeEventListener('transitionend', h);
-      if (onEnd) onEnd();
-      sliding = false;
-    }, { once: true });
-  }
 
   function applyTab(key) {
     document.querySelectorAll('.fc-support-panel').forEach(panel => {
@@ -665,39 +570,6 @@
     const url = new URL(window.location.href);
     key === 'faq' ? url.searchParams.delete('tab') : url.searchParams.set('tab', key);
     history.pushState(null, '', url.toString());
-  }
-
-  function slideByDir(dir) {
-    if (sliding) return;
-    sliding = true;
-    const targetDom = domIdx + dir;
-    const items = getItems();
-    items.forEach((el, i) => el.classList.toggle('fc-title-active', i === targetDom));
-    tabIdx = targetDom === 0 ? N - 1 : targetDom === N + 1 ? 0 : targetDom - 1;
-    slideToDom(targetDom, () => {
-      if (targetDom === 0 || targetDom === N + 1) {
-        domIdx = targetDom === 0 ? N : 1;
-        track.style.opacity = '0';
-        getItems().forEach(el => { el.style.transition = 'none'; });
-        snapToDom(domIdx);
-        getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === domIdx));
-        track.getBoundingClientRect();
-        requestAnimationFrame(() => { getItems().forEach(el => { el.style.transition = ''; }); track.style.opacity = '1'; });
-      } else {
-        domIdx = targetDom;
-      }
-    });
-    applyTab(TABS[tabIdx].key);
-  }
-
-  function attachCarouselClicks() {
-    track.addEventListener('click', e => {
-      const item = e.target.closest('.fc-title-item');
-      if (!item) return;
-      const ci = getItems().indexOf(item);
-      if (ci === domIdx) return;
-      slideByDir(ci > domIdx ? 1 : -1);
-    });
   }
 
   /* ── FAQ CATEGORIES ── */
@@ -880,62 +752,27 @@
 
   /* ── INIT ── */
   function init() {
-    track    = document.getElementById('fc-sup-track');
-    viewport = document.getElementById('fc-sup-viewport');
-    prevBtn  = document.querySelector('.fc-filter-nav__prev');
-    nextBtn  = document.querySelector('.fc-filter-nav__next');
+    if (!document.getElementById('fc-sup-track')) return;
+    if (!window.FcCarousel) return;
+    window.FcCarousel({
+      trackId:      'fc-sup-track',
+      viewportId:   'fc-sup-viewport',
+      prevSelector: '.fc-filter-nav__prev',
+      nextSelector: '.fc-filter-nav__next',
+      N: TABS.length,
+      onSlide: function (logIdx) { applyTab(TABS[logIdx].key); },
+      getInitialIdx: function () {
+        var urlTab = new URLSearchParams(window.location.search).get('tab');
+        var idx = urlTab ? TABS.findIndex(function (t) { return t.key === urlTab; }) : -1;
+        return idx > 0 ? idx : 0;
+      }
+    }).init();
 
-    if (!track) return;
-
-    tabIdx = 0; domIdx = 1; sliding = false;
-
-    getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === 1));
-    attachCarouselClicks();
     initFaqCategories();
     initFaq();
     initSmartForm();
     initFileUpload();
     initTrackOrder();
-
-    track.style.opacity = '0';
-
-    requestAnimationFrame(() => {
-      const urlTab      = new URLSearchParams(window.location.search).get('tab');
-      const urlMatchIdx = urlTab ? TABS.findIndex(t => t.key === urlTab) : -1;
-      if (urlMatchIdx > 0) {
-        tabIdx = urlMatchIdx; domIdx = urlMatchIdx + 1;
-        getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === domIdx));
-        snapToDom(domIdx);
-        applyTab(TABS[tabIdx].key);
-      } else {
-        tabIdx = 0; domIdx = 1;
-        snapToDom(1);
-        applyTab('faq');
-      }
-      track.style.opacity = '1';
-    });
-
-    if (prevBtn) prevBtn.addEventListener('click', () => slideByDir(-1));
-    if (nextBtn) nextBtn.addEventListener('click', () => slideByDir(+1));
-
-    let touchX = 0;
-    if (viewport) {
-      viewport.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
-      viewport.addEventListener('touchend', e => {
-        const dx = e.changedTouches[0].clientX - touchX;
-        if (Math.abs(dx) > 40) slideByDir(dx < 0 ? 1 : -1);
-      }, { passive: true });
-    }
-
-    let resizing = false;
-    window.addEventListener('resize', () => {
-      if (resizing) return;
-      resizing = true;
-      requestAnimationFrame(() => {
-        if (track) { track.style.transition = 'none'; track.style.transform = `translateX(${offsetForDom(domIdx)}px)`; track.getBoundingClientRect(); }
-        resizing = false;
-      });
-    });
   }
 
   init();
