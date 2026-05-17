@@ -15,13 +15,22 @@
 }
 
 :root {
-  --font-body-family: 'Alte Haas Grotesk', sans-serif;
+  --font-body-family: var(--fc-font);
   --font-body-style: normal;
   --font-body-weight: 400;
   --font-body-weight-bold: 700;
-  --font-heading-family: 'Alte Haas Grotesk', sans-serif;
+  --font-heading-family: var(--fc-font);
   --font-heading-style: normal;
   --font-heading-weight: 700;
+
+  /* Finecoustic design tokens */
+  --fc-yellow: #FFD300;
+  --fc-black: #000000;
+  --fc-font: 'Alte Haas Grotesk', sans-serif;
+  --fc-text-muted: rgba(255,255,255,0.6);
+  --fc-text-dim: rgba(255,255,255,0.18);
+  --fc-surface-dark: rgba(0,0,0,0.92);
+  --fc-border-subtle: rgba(255,255,255,0.1);
 }
 
 /* Display hero — 56–72px */
@@ -100,7 +109,7 @@ body {
 }
 
 .link :hover {
-  color: #FFD300;
+  color: var(--fc-yellow);
 }
 
 .header {
@@ -123,7 +132,7 @@ body {
 .header__menu-item:hover,
 .menu-drawer__menu-item:hover {
   text-decoration: none !important;
-  color: #FFD300 !important;
+  color: var(--fc-yellow) !important;
 }
 
 .header__submenu {
@@ -144,12 +153,12 @@ body {
 }
 
 .header__icon:hover {
-  color: #FFD300;
+  color: var(--fc-yellow);
 }
 
 .header__icon:hover svg {
-  fill: #FFD300;
-  stroke: #FFD300;
+  fill: var(--fc-yellow);
+  stroke: var(--fc-yellow);
   transform: none !important;
   filter: none !important;
 }
@@ -168,11 +177,11 @@ body {
 }
 
 .footer-block__details-content a:hover {
-  color: #ffd300;
+  color: var(--fc-yellow);
 }
 
 .footer__list-social .list-social__link:hover {
-  color: #ffd300;
+  color: var(--fc-yellow);
 }
 
 .footer__list-social .list-social__link,
@@ -195,7 +204,7 @@ body {
 }
 
 .footer-block__heading {
-  color: #FFD300;
+  color: var(--fc-yellow);
   font-weight: 600;
   font-size: 2rem !important;
 }
@@ -351,8 +360,8 @@ details[open]>.header__menu-item {
   transition: fill 0.2s, stroke 0.2s;
 }
 .menu-drawer__close-button:hover svg {
-  fill: #FFD300;
-  stroke: #FFD300;
+  fill: var(--fc-yellow);
+  stroke: var(--fc-yellow);
 }
 .menu-drawer__menu-item {
   color: #ffffff !important;
@@ -362,7 +371,7 @@ details[open]>.header__menu-item {
   padding: 14px 0 14px 20px !important;
 }
 .menu-drawer__menu-item:hover {
-  color: #FFD300 !important;
+  color: var(--fc-yellow) !important;
 }
 .menu-drawer__utility-links {
   background-color: #000000 !important;
@@ -379,7 +388,7 @@ details[open]>.header__menu-item {
 }
 .menu-drawer__utility-links a:hover,
 .menu-drawer__utility-links button:hover {
-  color: #FFD300;
+  color: var(--fc-yellow);
 }
 /* Suppress the white 50%-opacity overlay Dawn places below the hamburger button
    via ::before — it bleeds through the gap between navbar and drawer. */
@@ -424,11 +433,11 @@ header-drawer #menu-drawer {
 
 
 body {
-  font-family: 'Alte Haas Grotesk', sans-serif !important;
+  font-family: var(--fc-font) !important;
   font-weight: 400;
 
   h1, h2, h3, h4, h5, h6, a, button {
-    font-family: 'Alte Haas Grotesk', sans-serif !important;
+    font-family: var(--fc-font) !important;
   }
 }
 
@@ -527,7 +536,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 
 /* Footer "Follow Us" heading — keep consistent with other footer headings */
 .footer__heading.footer-block__heading {
-  color: #FFD300;
+  color: var(--fc-yellow);
 }
 
 /* Seamless section flow — no gaps or dividers between sections */
@@ -541,7 +550,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 }
 
 .cart-drawer__empty-content .button {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-weight: 700;
   letter-spacing: -0.04em;
   border-radius: 2px;
@@ -577,7 +586,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 }
 
 .fc-footer__brand-by {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(1.2rem, 2vw, 1.5rem);
   color: rgba(255,255,255,0.5);
   letter-spacing: 0.05em;
@@ -617,7 +626,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 }
 
 .fc-footer__social-heading {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(3rem, 5vw, 5rem);
   font-weight: 700;
   color: #ffffff;
@@ -648,7 +657,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 }
 
 .fc-footer__social .list-social__link:hover {
-  color: #FFD300;
+  color: var(--fc-yellow);
 }
 
 .fc-footer__social .list-social__item .icon,
@@ -675,7 +684,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 }
 
 .fc-footer__newsletter-heading {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(3rem, 5vw, 5rem);
   font-weight: 700;
   color: #ffffff;
@@ -684,7 +693,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 }
 
 .fc-footer__newsletter-sub {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(1.4rem, 1.5vw, 1.6rem);
   color: rgba(255,255,255,0.4);
   letter-spacing: -0.01em;
@@ -707,7 +716,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   border-right: none;
   border-radius: 2px 0 0 2px;
   color: #ffffff;
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 1.5rem;
   letter-spacing: -0.01em;
   padding: 0 16px;
@@ -727,7 +736,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   height: 52px;
   padding: 0 18px;
   flex-shrink: 0;
-  background: #FFD300;
+  background: var(--fc-yellow);
   border: none;
   border-radius: 0 2px 2px 0;
   cursor: pointer;
@@ -735,7 +744,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   align-items: center;
   justify-content: center;
   transition: opacity 0.2s ease;
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 1.4rem;
   font-weight: 700;
   color: #000000;
@@ -754,7 +763,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 }
 
 .fc-footer__form-msg {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 1.2rem;
   letter-spacing: -0.01em;
   margin: 8px 0 0;
@@ -785,7 +794,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(1.2rem, 1.4vw, 1.6rem);
   color: rgba(255,255,255,0.25);
   letter-spacing: 0.01em;
@@ -794,7 +803,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 }
 
 .fc-footer__bottom-link {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(1.5rem, 1.8vw, 2rem);
   color: rgba(255,255,255,0.55);
   text-decoration: none;
@@ -802,7 +811,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   transition: color 0.2s ease;
 }
 
-.fc-footer__bottom-link:hover { color: #FFD300; }
+.fc-footer__bottom-link:hover { color: var(--fc-yellow); }
 
 @media (max-width: 749px) {
   .fc-footer {
@@ -1031,8 +1040,8 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   bottom: auto;
   transform: none;
   background: transparent;
-  color: #FFD300;
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  color: var(--fc-yellow);
+  font-family: var(--fc-font);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1085,7 +1094,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   min-width: clamp(100px, 14vw, 200px);
   text-align: center;
   padding: 0 clamp(6px, 1.5vw, 12px);
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(20px, 5.5vw, 48px);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1123,7 +1132,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 .fc-filter-nav__next { animation: fc-arrow-next 2.5s ease-in-out infinite; }
 @media (hover: hover) {
   .fc-carousel-arrow:hover,
-  .fc-collection-header__arrow:hover { color: #FFD300; }
+  .fc-collection-header__arrow:hover { color: var(--fc-yellow); }
 }
 
 /* ── FC PRICE TAG (shared component — shop grid + PDP floating card) ── */
@@ -1131,7 +1140,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: #FFD300;
+  background: var(--fc-yellow);
   border-radius: 3px;
   margin: 8px auto 0;
   padding: 5px 27px 6px 10px;
@@ -1149,7 +1158,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   .fc-card__tag:hover:not(.fc-tag-active):not(.fc-tag--oos) { opacity: 0.75; }
 }
 .fc-card__price {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(9px, 0.85vw, 11px);
   font-weight: 700;
   color: #000000;
@@ -1165,7 +1174,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   margin-right: 2px;
 }
 .fc-card__name {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(11px, 1.1vw, 13px);
   font-weight: 700;
   color: #000000;
@@ -1192,7 +1201,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   display: block;
 }
 .fc-card__barcode-num {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 6px;
   font-weight: 400;
   color: #000000;
@@ -1220,7 +1229,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   position: absolute;
   top: 50%;
   left: 50%;
-  background: #FFD300;
+  background: var(--fc-yellow);
   border-radius: 1px;
   transform: translate(-50%, -50%);
   transition: opacity 0.15s ease;
@@ -1231,10 +1240,10 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 .fc-card__atc-plus.fc-active::after { opacity: 0; }
 .fc-qty-label {
   display: none;
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(7px, 0.8vw, 10px);
   font-weight: 700;
-  color: #FFD300;
+  color: var(--fc-yellow);
   letter-spacing: -0.02em;
   line-height: 1;
   pointer-events: none;
@@ -1285,7 +1294,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 .fc-tag-fragment {
   flex: none;
   width: 60px;
-  background: #FFD300;
+  background: var(--fc-yellow);
   clip-path: polygon(5% 0%,100% 0%,100% 100%,5% 100%,7% 82%,3% 68%,8% 55%,3% 41%,8% 27%,3% 13%,5% 0%);
   transform: rotate(0.8deg) translateY(1px);
   display: flex;
@@ -1296,7 +1305,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   filter: drop-shadow(-3px 0 4px rgba(0,0,0,0.3));
 }
 .fc-tag-fragment__label {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(6px, 0.6vw, 8px);
   font-weight: 700;
   color: #000;
