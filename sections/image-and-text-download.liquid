@@ -1,222 +1,413 @@
 {%- style -%}
-.section-{{ section.id }}-padding {
-  padding-top: 0px;
-  padding-bottom: 40px;
-}
 
-@media screen and (min-width: 768px) {
-  .section-{{ section.id }}-padding {
-    padding-top: {{ section.settings.padding_top }}px;
-    padding-bottom: {{ section.settings.padding_bottom }}px;
-  }
-}
-
-.heading_block {
-  width: 100%;
-  margin: 35px 65px 0;
-}
-
-.heading_text {
-  margin: 0;
-  font-size: 35px;
-  font-weight: 800;
-}
-
-.subheading_text {
-  margin-top: 10px;
-  font-size: 20px;
-  color: white;
-  padding-left: 2px;
-}
-
-.flag_icon {
-  width: 25px;
-  height: auto;
-  margin-left: 8px;
-  vertical-align: middle;
-}
-
-.item_row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-}
-
-.item_col {
-  min-width: 250px;
-  display: flex;
-  flex-direction: row;
-}
-
-.item_img img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-.item_title {
-    margin: 0;
-    font-weight: 600;
-    font-size: 18px;
-}
-
-.Custom_ImagewithText .item_col {
-    width: 33.33%;
-    display: flex;
-    padding: 0 15px;
-}
-
-.Custom_ImagewithText .item_img {
-    width: 65%;
-}
-
-.download-page_header {
-  padding: 40px 0;
-}
-.download-page_header .page-content__title {
-  margin: 0;
-}
-.Custom_ImagewithText .item_row {
-  display: flex;
-  flex-wrap: wrap;
-  row-gap: 55px;
-  padding: 0 25px;
-}
-.Custom_ImagewithText .item_col {
-  width: 33.33%;
-  display: flex;
-  padding: 0 15px;
-}
-.Custom_ImagewithText .item_img {
-  width: 65%;
-}
-.Custom_ImagewithText img {
-  vertical-align: middle;
-  height: auto;
-}
-.Custom_ImagewithText .item_text {
-  width: 35%;
-}
-.Custom_ImagewithText .item_title {
-  line-height: 1.13;
-  text-transform: uppercase;
-  padding: 0 0 10px;
-  margin: 0 0 10px;
-  border-bottom: 2px solid black;
-  color: black;
-  /* -webkit-text-stroke: 1.5px #000;
-  paint-order: stroke fill;
-  letter-spacing: 1.5px; */
-}
-.Custom_ImagewithText .flag_icon {
-  max-width: 31px;
-}
-.Custom_ImagewithText .item_content ul {
+/* ── SECTION ── */
+.fc-dl-section {
+  background: transparent;
   padding: 0;
 }
-.Custom_ImagewithText .item_content li {
-  list-style: none;
-  font-size: 16px;
+
+/* ── CAROUSEL HEADER ── */
+.fc-dl-header {
+  padding: clamp(10px, 1.5vw, 16px) clamp(12px, 2vw, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  overflow: hidden;
+}
+.fc-dl-header .fc-title-viewport {
+  flex: 1;
+  min-width: 0;
+  max-width: min(700px, calc(100vw - 40px));
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+  cursor: grab;
+}
+.fc-dl-header .fc-title-viewport:active { cursor: grabbing; }
+.fc-dl-header .fc-title-track {
+  display: flex;
+  align-items: center;
+}
+.fc-dl-header .fc-title-item {
+  flex-shrink: 0;
+  min-width: clamp(100px, 14vw, 200px);
+  text-align: center;
+  padding: 0 clamp(6px, 1.5vw, 12px);
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(20px, 5.5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgba(255,255,255,0.18);
+  white-space: nowrap;
+  transition: color 0.4s ease, transform 0.4s ease;
+  transform: scale(0.72);
+  transform-origin: center;
+  user-select: none;
+}
+.fc-dl-header .fc-title-item.fc-title-active {
+  color: #ffffff;
+  transform: scale(1);
+  cursor: default;
+}
+.fc-dl-header .fc-title-item:not(.fc-title-active) { cursor: pointer; }
+@keyframes fc-dl-arrow-prev {
+  0%, 100% { transform: translateX(0); }
+  50%       { transform: translateX(-10px); }
+}
+@keyframes fc-dl-arrow-next {
+  0%, 100% { transform: translateX(0); }
+  50%       { transform: translateX(10px); }
+}
+.fc-dl-header .fc-dl-arrow {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.35);
+  font-size: clamp(18px, 3vw, 30px);
+  cursor: pointer;
+  padding: 0 8px;
+  line-height: 1;
+  transition: color 0.15s;
+  flex-shrink: 0;
+  z-index: 1;
+}
+.fc-dl-header .fc-dl-prev { animation: fc-dl-arrow-prev 2.5s ease-in-out infinite; }
+.fc-dl-header .fc-dl-next { animation: fc-dl-arrow-next 2.5s ease-in-out infinite; }
+@media (hover: hover) {
+  .fc-dl-header .fc-dl-arrow:hover { color: #FFD300; }
+}
+
+/* ── GRID ── */
+.fc-dl-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 350px));
+  justify-content: center;
+  gap: clamp(24px, 4vw, 50px) clamp(16px, 3vw, 50px);
+  margin: 0 auto 48px;
+  padding: 0 clamp(0px, 5vw, 50px);
+  box-sizing: border-box;
+}
+
+/* ── CARD ── */
+.fc-dl-card {
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  position: relative;
+  min-width: 0;
+}
+.fc-dl-card__image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: transparent;
+  position: relative;
+}
+.fc-dl-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.fc-dl-card:hover .fc-dl-card__img { transform: scale(1.07); }
+
+/* ── CARD INFO ── */
+.fc-dl-card-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  text-align: center;
+}
+.fc-dl-card-name {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(11px, 1.1vw, 14px);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0;
   line-height: 1.2;
-  color: #808080;
-  margin: 0 0 10px;
-  font-weight: 500;
 }
-.Custom_ImagewithText .item_content a {
-  color: #808080;
-  transition: .5s all;
+.fc-dl-guide-link {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(11px, 1vw, 13px);
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.2s ease;
+}
+.fc-dl-guide-link::before {
+  content: '↓';
+  color: #FFD300;
+  font-size: 12px;
+}
+@media (hover: hover) {
+  .fc-dl-guide-link:hover { color: #FFD300; }
 }
 
-.item_content a{
-    text-decoration: none;
+/* ── HIDDEN / FILTER APPEAR ── */
+.fc-dl-card.fc-hidden { display: none; }
+@keyframes fc-dl-card-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+.fc-dl-card-appear {
+  animation: fc-dl-card-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.Custom_ImagewithText .item_content a:hover{
-  color: #FFD300;;
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .fc-dl-grid { grid-template-columns: repeat(3, minmax(0, 350px)); }
+}
+@media (max-width: 749px) {
+  .fc-dl-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 0 16px;
+  }
 }
 
-.Custom_ImagewithText{
-  padding-bottom: 50px;
-}
-
-@media (max-width:991px) {
-  .Custom_ImagewithText .item_col {
-    width: 50%;
-    padding: 0 10px;
-  }
-  /* .Custom_ImagewithText .item_content li {
-    font-size: 14px;
-  } */
-}
-@media (max-width:767px) {
-  .Custom_ImagewithText .item_row {
-    margin: 0;
-  }
-  .Custom_ImagewithText .item_col {
-    width: 100%;
-    padding: 0;
-  }
-  .Custom_ImagewithText .item_img,
-  .Custom_ImagewithText .item_text {
-    width: 50%;
-  }
-}
-@media (max-width:480px) {
-  .heading_block{
-    margin: 35px 35px 0;
-  }
-}
 {%- endstyle -%}
 
+<div class="fc-dl-section{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}">
 
-<div class="Custom_ImagewithText{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %} section-{{ section.id }}-padding">
-  <div class="container">
-    <div class="item_row">
-      {%- for block in section.blocks -%}
-        {% case block.type %}
-          {% when 'Heading' %}
-            <div class="heading_block" style="text-align: {{ block.settings.text_align }};">
-              <{{ block.settings.heading_tag | default: 'h2' }} class="heading_text">
-                {{ block.settings.heading_text }}
-              </{{ block.settings.heading_tag | default: 'h2' }}>
-              {% if block.settings.subheading_text != blank %}
-                <p class="subheading_text">{{ block.settings.subheading_text }}</p>
-              {% endif %}
-            </div>
-
-          {% when 'Text' %}
-            <div class="item_col">
-              {% if block.settings.image != blank %}
-                <div class="item_img">
-                  <img 
-                    src="{{ block.settings.image | img_url: 'original' }}" 
-                    alt="{{ block.settings.image.alt | escape }}">
-                </div>
-              {% endif %}
-              <div class="item_text">
-                {% if block.settings.title != blank %}
-                  <h2 class="item_title">
-                    {{ block.settings.title }}
-                    {% if block.settings.flag_icon != blank %}
-                      <img 
-                        src="{{ block.settings.flag_icon | img_url: 'original' }}" 
-                        class="flag_icon" 
-                        alt="{{ block.settings.flag_icon.alt | escape }}">
-                    {% endif %}
-                  </h2>
-
-                {% endif %}
-                {% if block.settings.content != blank %}
-                  <div class="item_content">{{ block.settings.content }}</div>
-                {% endif %}
-              </div>
-            </div>
-        {% endcase %}
-      {%- endfor -%}
+  {%- comment -%} Carousel header {%- endcomment -%}
+  <div class="fc-dl-header" id="fc-dl-header">
+    <button class="fc-dl-arrow fc-dl-prev" type="button" aria-label="Previous">&#171;</button>
+    <div class="fc-title-viewport" id="fc-dl-title-viewport">
+      <div class="fc-title-track" id="fc-dl-title-track">
+        <span class="fc-title-item">Microphones</span>
+        <span class="fc-title-item fc-title-active">All</span>
+        <span class="fc-title-item">Earbuds</span>
+        <span class="fc-title-item">Microphones</span>
+        <span class="fc-title-item">All</span>
+      </div>
     </div>
+    <button class="fc-dl-arrow fc-dl-next" type="button" aria-label="Next">&#187;</button>
   </div>
+
+  {%- comment -%} Download grid {%- endcomment -%}
+  <div class="fc-dl-grid" id="fc-dl-grid">
+    {%- assign dl_category = '' -%}
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'Heading' -%}
+          {%- assign dl_category = block.settings.heading_text | downcase -%}
+        {%- when 'Text' -%}
+          {%- assign dl_product = all_products[block.settings.product_handle] -%}
+          <div class="fc-dl-card" data-category="{{ dl_category }}">
+
+            <div class="fc-dl-card__image">
+              {%- if block.settings.product_handle != blank and dl_product != blank and dl_product.featured_image -%}
+                {{ dl_product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-dl-card__img', alt: block.settings.title }}
+              {%- elsif block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 400 | image_tag: loading: 'lazy', class: 'fc-dl-card__img', alt: block.settings.title | escape }}
+              {%- endif -%}
+            </div>
+
+            <div class="fc-dl-card-info">
+              {%- if block.settings.title != blank -%}
+                <p class="fc-dl-card-name">{{ block.settings.title }}</p>
+              {%- endif -%}
+              {%- if block.settings.download_url != blank -%}
+                <a class="fc-dl-guide-link" href="{{ block.settings.download_url }}" target="_blank" rel="noopener">Quick Start Guide</a>
+              {%- endif -%}
+            </div>
+
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+
 </div>
 
+<script>
+(function () {
+
+  /* ── filter ── */
+  function applyFilter(filter) {
+    let visIdx = 0;
+    document.querySelectorAll('#fc-dl-grid .fc-dl-card').forEach(card => {
+      card.classList.remove('fc-dl-card-appear');
+      const show = filter === 'all' || card.dataset.category === filter;
+      if (!show) {
+        card.classList.add('fc-hidden');
+      } else {
+        card.classList.remove('fc-hidden');
+        const delay = visIdx * 90;
+        visIdx++;
+        requestAnimationFrame(() => {
+          card.style.animationDelay = delay + 'ms';
+          card.classList.add('fc-dl-card-appear');
+        });
+      }
+    });
+  }
+
+  /* ── carousel ── */
+  const FILTERS = [
+    { key: 'all',         label: 'All' },
+    { key: 'earbuds',     label: 'Earbuds' },
+    { key: 'microphones', label: 'Microphones' },
+  ];
+  const N = FILTERS.length;
+  let filterIdx = 0;
+  let domIdx    = 1;
+  let sliding   = false;
+
+  let track, viewport;
+
+  function getItems() { return Array.from(track.querySelectorAll('.fc-title-item')); }
+
+  function getCurrentTx() {
+    const t = window.getComputedStyle(track).transform;
+    if (!t || t === 'none') return 0;
+    const m = t.match(/matrix\([^,]+,[^,]+,[^,]+,[^,]+,([^,]+),/);
+    return m ? parseFloat(m[1]) : 0;
+  }
+
+  function offsetForDom(i) {
+    const items = getItems();
+    const item = items[i];
+    if (!item || !viewport) return 0;
+    const vpRect   = viewport.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    const tx       = getCurrentTx();
+    return tx + (vpRect.left + vpRect.width / 2) - (itemRect.left + itemRect.width / 2);
+  }
+
+  function snapToDom(i) {
+    track.style.transition = 'none';
+    track.style.transform = `translateX(${offsetForDom(i)}px)`;
+    track.getBoundingClientRect();
+  }
+
+  function slideToDom(i, onEnd) {
+    track.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
+    track.style.transform = `translateX(${offsetForDom(i)}px)`;
+    track.addEventListener('transitionend', function h() {
+      track.removeEventListener('transitionend', h);
+      if (onEnd) onEnd();
+      sliding = false;
+    }, { once: true });
+  }
+
+  function slideByDir(dir) {
+    if (sliding) return;
+    sliding = true;
+    const target = domIdx + dir;
+    const items  = getItems();
+    items.forEach((el, i) => el.classList.toggle('fc-title-active', i === target));
+    filterIdx = target === 0 ? N - 1 : target === N + 1 ? 0 : target - 1;
+    slideToDom(target, () => {
+      if (target === 0 || target === N + 1) {
+        domIdx = target === 0 ? N : 1;
+        track.style.opacity = '0';
+        getItems().forEach(el => { el.style.transition = 'none'; });
+        snapToDom(domIdx);
+        getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === domIdx));
+        track.getBoundingClientRect();
+        requestAnimationFrame(() => {
+          getItems().forEach(el => { el.style.transition = ''; });
+          track.style.opacity = '1';
+        });
+      } else {
+        domIdx = target;
+      }
+    });
+    applyFilter(FILTERS[filterIdx].key);
+  }
+
+  function init() {
+    track    = document.getElementById('fc-dl-title-track');
+    viewport = document.getElementById('fc-dl-title-viewport');
+    const header = document.getElementById('fc-dl-header');
+    if (!track) return;
+
+    filterIdx = 0; domIdx = 1; sliding = false;
+    getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === 1));
+    track.style.opacity = '0';
+
+    if (header) {
+      header.querySelector('.fc-dl-prev')?.addEventListener('click', () => slideByDir(-1));
+      header.querySelector('.fc-dl-next')?.addEventListener('click', () => slideByDir(+1));
+    }
+
+    let draggedTitle = false;
+
+    track.addEventListener('click', e => {
+      if (draggedTitle) { draggedTitle = false; return; }
+      const item = e.target.closest('.fc-title-item');
+      if (!item) return;
+      const idx = getItems().indexOf(item);
+      if (idx === domIdx) return;
+      slideByDir(idx > domIdx ? 1 : -1);
+    });
+
+    if (viewport) {
+      // Touch (mobile title)
+      let touchX = 0;
+      viewport.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+      viewport.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) > 40) slideByDir(dx < 0 ? 1 : -1);
+      }, { passive: true });
+
+      // Mouse drag (desktop title)
+      let mouseStartX = 0, mouseDragging = false;
+      viewport.addEventListener('mousedown', e => { mouseStartX = e.clientX; mouseDragging = true; draggedTitle = false; });
+      viewport.addEventListener('mousemove', e => { if (mouseDragging && Math.abs(e.clientX - mouseStartX) > 5) draggedTitle = true; });
+      const endDrag = e => {
+        if (!mouseDragging) return;
+        mouseDragging = false;
+        const dx = e.clientX - mouseStartX;
+        if (Math.abs(dx) > 40) slideByDir(dx < 0 ? 1 : -1);
+      };
+      viewport.addEventListener('mouseup', endDrag);
+      viewport.addEventListener('mouseleave', endDrag);
+    }
+
+    // Touch swipe on the grid (mobile body)
+    const grid = document.getElementById('fc-dl-grid');
+    if (grid) {
+      let gridTouchX = 0;
+      grid.addEventListener('touchstart', e => { gridTouchX = e.touches[0].clientX; }, { passive: true });
+      grid.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - gridTouchX;
+        if (Math.abs(dx) > 40) slideByDir(dx < 0 ? 1 : -1);
+      }, { passive: true });
+    }
+
+    window.addEventListener('resize', () => {
+      requestAnimationFrame(() => {
+        if (!track) return;
+        track.style.transition = 'none';
+        track.style.transform = `translateX(${offsetForDom(domIdx)}px)`;
+        track.getBoundingClientRect();
+      });
+    });
+
+    requestAnimationFrame(() => {
+      snapToDom(1);
+      applyFilter('all');
+      track.style.opacity = '1';
+    });
+  }
+
+  init();
+  document.addEventListener('shopify:section:load', init);
+
+})();
+</script>
 
 {% schema %}
 {
@@ -226,70 +417,24 @@
       "type": "text",
       "id": "custom_class",
       "label": "Custom class"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "label": "Padding top",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "label": "Padding bottom",
-      "default": 0
     }
   ],
   "blocks": [
     {
       "type": "Text",
-      "name": "Add Column",
+      "name": "Add Product",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Image" },
-        { "type": "text", "id": "title", "label": "Title" },
-        { "type": "image_picker", "id": "flag_icon", "label": "Flag icon" },
-        { "type": "richtext", "id": "content", "label": "Content" }
+        { "type": "text",         "id": "product_handle", "label": "Product Handle (e.g. groove-anc-ft20)" },
+        { "type": "text",         "id": "title",          "label": "Product Display Name" },
+        { "type": "text",         "id": "download_url",   "label": "Quick Start Guide PDF URL" },
+        { "type": "image_picker", "id": "image",          "label": "Fallback Image (if product handle is blank)" }
       ]
     },
     {
       "type": "Heading",
-      "name": "Add Heading",
+      "name": "Add Category",
       "settings": [
-        { "type": "text", "id": "heading_text", "label": "Heading Text" },
-        { "type": "text", "id": "subheading_text", "label": "Subheading Text" },
-        {
-          "type": "select",
-          "id": "heading_tag",
-          "label": "Heading Tag",
-          "default": "h2",
-          "options": [
-            { "value": "h1", "label": "H1" },
-            { "value": "h2", "label": "H2" },
-            { "value": "h3", "label": "H3" },
-            { "value": "h4", "label": "H4" },
-            { "value": "h5", "label": "H5" },
-            { "value": "h6", "label": "H6" }
-          ]
-        },
-        {
-          "type": "select",
-          "id": "text_align",
-          "label": "Text Alignment",
-          "default": "left",
-          "options": [
-            { "value": "left", "label": "Left" },
-            { "value": "center", "label": "Center" },
-            { "value": "right", "label": "Right" }
-          ]
-        }
+        { "type": "text", "id": "heading_text", "label": "Category (e.g. Earbuds, Microphones)" }
       ]
     }
   ],

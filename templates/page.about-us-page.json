@@ -1,92 +1,11 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "main-page",
-      "disabled": true,
-      "settings": {
-        "padding_top": 28,
-        "padding_bottom": 28
-      }
-    },
-    "video_flexible_text_bGXhDB": {
-      "type": "video-flexible-text",
-      "name": "Video with Text Overlay",
-      "settings": {
-        "video": "shopify://files/videos/ProductVideo_GROOVE_ANC_FT20_Loop.mp4",
-        "overlay_text": "<p>Future Awaits<br/><strong>Hear More, Go Further</strong></p>",
-        "text_position": "align-bottom-left"
-      }
-    },
-    "rich_text_y7NGVp": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_YXJTPG": {
-          "type": "heading",
-          "settings": {
-            "heading": "<strong>Experience Sound Without Boundaries</strong>",
-            "heading_size": "h1"
-          }
-        },
-        "text_XRjRmx": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Finecoustic was founded with a simple yet powerful vision — to redefine how people experience sound. Great audio is more than what you hear; it’s what you feel, create, and discover through every note.</p>"
-          }
-        },
-        "text_4Bb7aN": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Blending refined acoustic engineering with modern design, Finecoustic delivers sound that moves and inspires. It’s not just about listening — it’s about living the sound.</p>"
-          }
-        },
-        "button_94WJY3": {
-          "type": "button",
-          "settings": {
-            "button_label": "Browse Our Products",
-            "button_link": "shopify://collections/all",
-            "button_style_secondary": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_YXJTPG",
-        "text_XRjRmx",
-        "text_4Bb7aN",
-        "button_94WJY3"
-      ],
-      "custom_css": [
-        ".rich-text__blocks {max-width: 75%;}",
-        "a.button.button--secondary {font-weight: 500;}",
-        "a.button.button--secondary:hover {background-color: #ffd300;}",
-        ".rich-text__text p {font-size: 17px; font-weight: 500; color: #808080;}",
-        "@media (max-width: 1200px) {.rich-text__blocks {max-width: 75vw; } .rich-text__text p {font-size: 16px; }}"
-      ],
-      "name": "t:sections.rich-text.presets.name",
-      "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "scheme-2",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 52
-      }
+    "about-us": {
+      "type": "about-us",
+      "settings": {}
     }
   },
   "order": [
-    "main",
-    "video_flexible_text_bGXhDB",
-    "rich_text_y7NGVp"
+    "about-us"
   ]
 }

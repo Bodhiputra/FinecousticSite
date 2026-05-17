@@ -1,0 +1,987 @@
+{%- style -%}
+
+/* ── CAROUSEL HEADER ── */
+.fc-collection-header {
+  padding: clamp(10px, 1.5vw, 16px) clamp(12px, 2vw, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  overflow: hidden;
+}
+.fc-title-viewport {
+  flex: 1;
+  min-width: 0;
+  max-width: min(700px, calc(100vw - 40px));
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+  cursor: grab;
+}
+.fc-title-viewport:active { cursor: grabbing; }
+.fc-title-track { display: flex; align-items: center; }
+.fc-title-item {
+  flex-shrink: 0;
+  min-width: clamp(100px, 14vw, 200px);
+  text-align: center;
+  padding: 0 clamp(6px, 1.5vw, 12px);
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(20px, 5.5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgba(255,255,255,0.18);
+  white-space: nowrap;
+  transition: color 0.4s ease, transform 0.4s ease;
+  transform: scale(0.72);
+  transform-origin: center;
+  user-select: none;
+}
+.fc-title-item.fc-title-active { color: #ffffff; transform: scale(1); cursor: default; }
+.fc-title-item:not(.fc-title-active) { cursor: pointer; }
+
+@keyframes fc-arrow-prev { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-4px); } }
+@keyframes fc-arrow-next { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+.fc-collection-header__arrow {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.35);
+  font-size: clamp(18px, 3vw, 30px);
+  cursor: pointer;
+  padding: 0 8px;
+  line-height: 1;
+  transition: color 0.15s;
+  flex-shrink: 0;
+  z-index: 1;
+}
+.fc-filter-nav__prev { animation: fc-arrow-prev 2.5s ease-in-out infinite; }
+.fc-filter-nav__next { animation: fc-arrow-next 2.5s ease-in-out infinite; }
+@media (hover: hover) { .fc-collection-header__arrow:hover { color: #FFD300; } }
+
+/* ── SUPPORT CONTENT WRAP ── */
+.fc-support-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 12px clamp(16px, 4vw, 40px) clamp(64px, 8vw, 120px);
+}
+.fc-support-panel { display: none; }
+.fc-support-panel.fc-sup-active {
+  display: block;
+  animation: fc-sup-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes fc-sup-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SHARED TYPOGRAPHY ── */
+.fc-sup-eyebrow { font-family: 'Alte Haas Grotesk', sans-serif; font-size: 11px; font-weight: 700; color: #FFD300; letter-spacing: -0.01em; margin: 0 0 12px; text-transform: uppercase; }
+
+/* ── FAQ CATEGORY CARDS ── */
+.fc-faq-cats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.fc-faq-cat-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 18px 14px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.2s, background 0.2s;
+}
+@media (hover: hover) {
+  .fc-faq-cat-card:hover {
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.05);
+  }
+}
+.fc-faq-cat-card.fc-cat-active {
+  border-color: #FFD300;
+  background: rgba(255,211,0,0.04);
+}
+.fc-faq-cat-icon {
+  width: 20px;
+  height: 20px;
+  color: rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+.fc-faq-cat-card.fc-cat-active .fc-faq-cat-icon { color: #FFD300; }
+.fc-faq-cat-name {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(11px, 1vw, 13px);
+  font-weight: 700;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.fc-faq-cat-card.fc-cat-active .fc-faq-cat-name { color: #ffffff; }
+@media (max-width: 600px) { .fc-faq-cats { grid-template-columns: repeat(2, 1fr); } }
+
+/* ── FAQ LIST ── */
+.fc-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition: opacity 0.2s;
+}
+.fc-faq-list.fc-faq-switching { opacity: 0; }
+.fc-faq-item { border-top: 1px solid rgba(255,255,255,0.08); }
+.fc-faq-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+.fc-faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  cursor: pointer;
+  gap: 16px;
+}
+.fc-faq-q-text {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(14px, 1.2vw, 16px);
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  transition: color 0.2s;
+}
+@media (hover: hover) {
+  .fc-faq-q:hover .fc-faq-q-text { color: #FFD300; }
+  .fc-faq-q:hover .fc-faq-icon { color: #FFD300; }
+}
+.fc-faq-item.open .fc-faq-q-text { color: #ffffff; }
+
+/* ── CHEVRON ICON ── */
+.fc-faq-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  color: rgba(255,255,255,0.3);
+  transition: color 0.2s, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fc-faq-icon::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  border-radius: 1px;
+  transform: translate(-50%, -65%) rotate(45deg);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fc-faq-item.open .fc-faq-icon { color: #FFD300; transform: rotate(180deg); }
+.fc-faq-item.open .fc-faq-icon::before { transform: translate(-50%, -35%) rotate(45deg); }
+
+.fc-faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.fc-faq-a-inner {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(14px, 1.2vw, 15px);
+  color: rgba(255,255,255,0.5);
+  line-height: 1.75;
+  letter-spacing: -0.01em;
+  padding: 0 32px 20px 0;
+}
+.fc-faq-a-short {
+  color: rgba(255,255,255,0.8);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.fc-faq-a-detail { margin-bottom: 0; }
+.fc-faq-item.open .fc-faq-a { max-height: 800px; }
+
+/* ── FORMS ── */
+.fc-form { display: flex; flex-direction: column; gap: 20px; }
+.fc-field { display: flex; flex-direction: column; gap: 8px; }
+.fc-field label { font-family: 'Alte Haas Grotesk', sans-serif; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); letter-spacing: -0.01em; text-transform: uppercase; }
+.fc-field label .fc-label-opt { color: rgba(255,255,255,0.25); font-weight: 400; text-transform: none; }
+.fc-field input, .fc-field select, .fc-field textarea {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(14px, 1.1vw, 15px);
+  font-weight: 400;
+  color: #ffffff;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0;
+  padding: 14px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.fc-field input::placeholder, .fc-field textarea::placeholder { color: rgba(255,255,255,0.2); }
+.fc-field input:focus, .fc-field select:focus, .fc-field textarea:focus { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.06); }
+.fc-select-wrap { position: relative; width: 100%; }
+.fc-select-wrap::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid rgba(255,255,255,0.4);
+  border-bottom: 1.5px solid rgba(255,255,255,0.4);
+  border-radius: 1px;
+  transform: translateY(-65%) rotate(45deg);
+  pointer-events: none;
+}
+.fc-field select { padding-right: 40px; cursor: pointer; }
+.fc-field select option { background: #111111; color: #ffffff; }
+.fc-field textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
+.fc-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.fc-submit {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #000000;
+  background: #FFD300;
+  border: none;
+  min-width: 12rem;
+  min-height: 4.5rem;
+  padding: 0 32px;
+  cursor: pointer;
+  margin-top: 8px;
+  align-self: flex-end;
+  transition: opacity 0.15s;
+}
+.fc-submit:hover { opacity: 0.8; }
+.fc-field-error-msg { font-family: 'Alte Haas Grotesk', sans-serif; font-size: 11px; color: rgba(255,90,90,0.9); letter-spacing: -0.01em; margin: 2px 0 0; display: none; }
+
+/* ── SMART FORM ── */
+.fc-sup-field--hidden { display: none !important; }
+@keyframes fc-field-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.fc-sup-field--visible { animation: fc-field-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+.fc-sup-field-note { font-family: 'Alte Haas Grotesk', sans-serif; font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: -0.01em; margin: 4px 0 0; line-height: 1.6; }
+
+/* ── SUCCESS STATE ── */
+.fc-sup-success { text-align: center; padding: 80px 0 40px; }
+.fc-sup-success__check { width: 44px; height: 44px; border: 2px solid #FFD300; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #FFD300; font-size: 20px; margin-bottom: 28px; }
+.fc-sup-success__title { font-family: 'Alte Haas Grotesk', sans-serif; font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: #ffffff; letter-spacing: -0.02em; margin: 0 0 12px; }
+.fc-sup-success__body { font-family: 'Alte Haas Grotesk', sans-serif; font-size: clamp(13px, 1.1vw, 15px); color: rgba(255,255,255,0.45); margin: 0; line-height: 1.8; }
+
+@media (max-width: 600px) { .fc-form-row { grid-template-columns: 1fr; } }
+
+{%- endstyle -%}
+
+<div class="fc-collection-header">
+  <button class="fc-collection-header__arrow fc-filter-nav__prev" type="button">&#171;</button>
+  <div class="fc-title-viewport" id="fc-sup-viewport">
+    <div class="fc-title-track" id="fc-sup-track">
+      <span class="fc-title-item">Track Order</span>
+      <span class="fc-title-item fc-title-active">FAQ</span>
+      <span class="fc-title-item">Contact Us</span>
+      <span class="fc-title-item">Aftersales Service</span>
+      <span class="fc-title-item">Track Order</span>
+      <span class="fc-title-item">FAQ</span>
+    </div>
+  </div>
+  <button class="fc-collection-header__arrow fc-filter-nav__next" type="button">&#187;</button>
+</div>
+
+<div class="fc-support-wrap">
+
+  {%- comment -%} ── FAQ ── {%- endcomment -%}
+  <div class="fc-support-panel" id="fc-sup-faq" data-tab="faq">
+
+    <div class="fc-faq-cats" id="fc-faq-cats">
+
+      <button class="fc-faq-cat-card fc-cat-active" data-cat="returns" type="button">
+        <svg class="fc-faq-cat-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10a7 7 0 1 0 1.5-4.3"/>
+          <polyline points="1 4 3.5 6.5 6 4"/>
+        </svg>
+        <span class="fc-faq-cat-name">Orders &amp; Returns</span>
+      </button>
+
+      <button class="fc-faq-cat-card" data-cat="shipping" type="button">
+        <svg class="fc-faq-cat-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="6" width="16" height="11" rx="1"/>
+          <path d="M6 6V4a4 4 0 0 1 8 0v2"/>
+        </svg>
+        <span class="fc-faq-cat-name">Shipping &amp; Delivery</span>
+      </button>
+
+      <button class="fc-faq-cat-card" data-cat="warranty" type="button">
+        <svg class="fc-faq-cat-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 2L3 5v5c0 4.4 3 8.3 7 9.3 4-1 7-4.9 7-9.3V5l-7-3z"/>
+          <polyline points="7 10 9 12 13 8"/>
+        </svg>
+        <span class="fc-faq-cat-name">Warranty &amp; Repairs</span>
+      </button>
+
+    </div>
+
+    <div class="fc-faq-list" id="fc-faq-list">
+
+      {%- comment -%} Orders & Returns {%- endcomment -%}
+      <div class="fc-faq-item" data-cat="returns">
+        <div class="fc-faq-q">
+          <span class="fc-faq-q-text">How do I request a refund or return?</span>
+          <span class="fc-faq-icon"></span>
+        </div>
+        <div class="fc-faq-a">
+          <div class="fc-faq-a-inner">
+            <p class="fc-faq-a-short">Submit a Refund Request through our Support page with your order number and a photo link.</p>
+            <p class="fc-faq-a-detail">Head to our <a href="/pages/support?tab=support&type=refund" style="color:#FFD300;">Support page</a> and select "Refund Request". Fill in your order number, describe the issue, and provide a photo link (Google Drive, iCloud, or OneDrive). Our team will review and respond within 3 business days. Returns are only accepted for verified defects, wrong items received, or manufacturing faults.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fc-faq-item" data-cat="returns">
+        <div class="fc-faq-q">
+          <span class="fc-faq-q-text">I received the wrong item — what should I do?</span>
+          <span class="fc-faq-icon"></span>
+        </div>
+        <div class="fc-faq-a">
+          <div class="fc-faq-a-inner">
+            <p class="fc-faq-a-short">Submit a return request within 7 days of delivery with photos and your order details.</p>
+            <p class="fc-faq-a-detail">Go to our <a href="/pages/support?tab=support&type=refund" style="color:#FFD300;">Support page</a> within 7 days of receiving your order. Provide photos of the item received, your tracking number, and order details. Upload photos to Google Drive, iCloud, or OneDrive and share the link. We'll arrange a replacement or refund once verified.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fc-faq-item" data-cat="returns">
+        <div class="fc-faq-q">
+          <span class="fc-faq-q-text">Can I cancel my order after it's been placed?</span>
+          <span class="fc-faq-icon"></span>
+        </div>
+        <div class="fc-faq-a">
+          <div class="fc-faq-a-inner">
+            <p class="fc-faq-a-short">Yes — within 12 hours of purchase and only before the order ships.</p>
+            <p class="fc-faq-a-detail">Cancellations must be requested within 12 hours of purchase through our <a href="/pages/support?tab=support" style="color:#FFD300;">Support page</a>. Once the order has shipped, cancellation is no longer possible and any returns will be the customer's responsibility. We process orders quickly — reach out immediately if you need to cancel.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fc-faq-item" data-cat="returns">
+        <div class="fc-faq-q">
+          <span class="fc-faq-q-text">Do you accept returns for personal preference reasons?</span>
+          <span class="fc-faq-icon"></span>
+        </div>
+        <div class="fc-faq-a">
+          <div class="fc-faq-a-inner">
+            <p class="fc-faq-a-short">No — returns are only accepted for defects, wrong items received, or manufacturing faults.</p>
+            <p class="fc-faq-a-detail">We do not accept returns based on personal preference, including dissatisfaction with sound signature, comfort, or fit, where the product is functioning as described. If your product has a genuine defect or you received the wrong item, submit a request through our <a href="/pages/support?tab=support&type=refund" style="color:#FFD300;">Support page</a> and we'll make it right.</p>
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} Shipping & Delivery {%- endcomment -%}
+      <div class="fc-faq-item" data-cat="shipping">
+        <div class="fc-faq-q">
+          <span class="fc-faq-q-text">How do I track my order?</span>
+          <span class="fc-faq-icon"></span>
+        </div>
+        <div class="fc-faq-a">
+          <div class="fc-faq-a-inner">
+            <p class="fc-faq-a-short">Check your dispatch email for your tracking number, then enter it on our Track Order page.</p>
+            <p class="fc-faq-a-detail">Once your order ships, you'll receive a confirmation email with your Yanwen tracking number. Enter it on our <a href="/pages/support?tab=track" style="color:#FFD300;">Track Order page</a> to monitor your shipment in real time. If you haven't received a tracking email within 3 business days of ordering, check your spam folder or contact us through the Support page.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fc-faq-item" data-cat="shipping">
+        <div class="fc-faq-q">
+          <span class="fc-faq-q-text">Can I change my shipping address after ordering?</span>
+          <span class="fc-faq-icon"></span>
+        </div>
+        <div class="fc-faq-a">
+          <div class="fc-faq-a-inner">
+            <p class="fc-faq-a-short">Only before your order is dispatched — contact us immediately through the Support page.</p>
+            <p class="fc-faq-a-detail">Address changes must be requested before a tracking number has been issued. Once dispatched, the address cannot be changed and the package may be returned if undeliverable, with return shipping costs the customer's responsibility. Reach out through our <a href="/pages/support?tab=support" style="color:#FFD300;">Support page</a> as soon as possible.</p>
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} Warranty & Repairs {%- endcomment -%}
+      <div class="fc-faq-item" data-cat="warranty">
+        <div class="fc-faq-q">
+          <span class="fc-faq-q-text">What does the warranty cover?</span>
+          <span class="fc-faq-icon"></span>
+        </div>
+        <div class="fc-faq-a">
+          <div class="fc-faq-a-inner">
+            <p class="fc-faq-a-short">Manufacturing defects and hardware faults under normal use — not physical damage, liquid damage, or misuse.</p>
+            <p class="fc-faq-a-detail">The warranty covers manufacturing defects and hardware faults that occur under normal use. It does not cover physical damage from drops or impacts, liquid damage, unauthorized modifications, or wear and tear on consumable parts. If you're unsure whether your issue is covered, submit a Warranty Claim through our <a href="/pages/support?tab=support&type=warranty" style="color:#FFD300;">Support page</a> and our team will assess it.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fc-faq-item" data-cat="warranty">
+        <div class="fc-faq-q">
+          <span class="fc-faq-q-text">My product arrived damaged — what should I do?</span>
+          <span class="fc-faq-icon"></span>
+        </div>
+        <div class="fc-faq-a">
+          <div class="fc-faq-a-inner">
+            <p class="fc-faq-a-short">Keep the original packaging and submit a Warranty Claim with photos through our Support page.</p>
+            <p class="fc-faq-a-detail">Do not discard the original packaging — it may be needed for the return. Submit a Warranty Claim through our <a href="/pages/support?tab=support&type=warranty" style="color:#FFD300;">Support page</a> with your order number and photos of the damage (uploaded to Google Drive, iCloud, or OneDrive). Our team will review your claim and arrange a replacement or repair as quickly as possible.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fc-faq-item" data-cat="warranty">
+        <div class="fc-faq-q">
+          <span class="fc-faq-q-text">How do I make a warranty claim?</span>
+          <span class="fc-faq-icon"></span>
+        </div>
+        <div class="fc-faq-a">
+          <div class="fc-faq-a-inner">
+            <p class="fc-faq-a-short">Go to our Support page, select "Warranty Claim", and fill in your order number and defect description.</p>
+            <p class="fc-faq-a-detail">Head to our <a href="/pages/support?tab=support&amp;type=warranty" style="color:#FFD300;">Support page</a> and select "Warranty Claim" from the request type dropdown. Provide your order number, describe the defect in detail, and include a photo link (Google Drive, iCloud, or OneDrive) showing the issue. Our team will confirm eligibility and guide you through the next steps within 3 business days.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {%- comment -%} ── CONTACT US ── {%- endcomment -%}
+  <div class="fc-support-panel" id="fc-sup-contact" data-tab="contact">
+
+    <div id="fc-contact-success-msg" class="fc-sup-success" style="display:none;">
+      <div class="fc-sup-success__check">&#10003;</div>
+      <p class="fc-sup-success__title">Message sent.</p>
+      <p class="fc-sup-success__body">We'll be in touch within 3 business days.</p>
+    </div>
+
+    <form class="fc-form" id="fc-contact-form" action="/contact#fc-contact-form" method="post" accept-charset="UTF-8">
+      <input type="hidden" name="form_type" value="contact">
+      <input type="hidden" name="utf8" value="✓">
+      <input type="hidden" name="redirect_to" value="/pages/support?tab=contact&inquiry_posted=true">
+
+      <div class="fc-form-row">
+        <div class="fc-field">
+          <label for="contact-name">Name</label>
+          <input type="text" id="contact-name" name="contact[name]" placeholder="Your name" autocomplete="name" required>
+        </div>
+        <div class="fc-field">
+          <label for="contact-email">Email</label>
+          <input type="email" id="contact-email" name="contact[email]" placeholder="your@email.com" autocomplete="email" required>
+        </div>
+      </div>
+
+      <div class="fc-field">
+        <label for="contact-inquiry">Inquiry Type</label>
+        <div class="fc-select-wrap">
+          <select id="contact-inquiry" name="contact[inquiry_type]" required>
+            <option value="" disabled selected>Select inquiry type</option>
+            <option value="Press &amp; Media">Press &amp; Media</option>
+            <option value="Partnership">Partnership</option>
+            <option value="Wholesale / B2B">Wholesale / B2B</option>
+            <option value="Collaboration">Collaboration</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fc-field fc-contact-field-other fc-sup-field--hidden">
+        <label for="contact-other-topic">Specify Topic</label>
+        <input type="text" id="contact-other-topic" name="contact[other_topic]" placeholder="What is your inquiry about?">
+      </div>
+
+      <div class="fc-field">
+        <label for="contact-company">Company / Organization <span class="fc-label-opt">(optional)</span></label>
+        <input type="text" id="contact-company" name="contact[company]" placeholder="Your company or organization">
+      </div>
+
+      <div class="fc-field">
+        <label for="contact-message">Message</label>
+        <textarea id="contact-message" name="contact[body]" placeholder="Tell us about your inquiry..." required></textarea>
+      </div>
+
+      <button type="submit" class="fc-submit">Send Message</button>
+    </form>
+
+  </div>
+
+  {%- comment -%} ── SUPPORT FORM ── {%- endcomment -%}
+  <div class="fc-support-panel" id="fc-sup-support" data-tab="support">
+
+    <div id="fc-sup-success-msg" class="fc-sup-success" style="display:none;">
+      <div class="fc-sup-success__check">&#10003;</div>
+      <p class="fc-sup-success__title">Request received.</p>
+      <p class="fc-sup-success__body">We'll get back to you within 3 business days.<br>We reply in the order requests are received.</p>
+    </div>
+
+    <form class="fc-form" id="contact_form" action="/contact#contact_form" method="post" accept-charset="UTF-8">
+      <input type="hidden" name="form_type" value="contact">
+      <input type="hidden" name="utf8" value="✓">
+      <input type="hidden" name="redirect_to" value="/pages/support?tab=support&contact_posted=true">
+
+      <div class="fc-form-row">
+        <div class="fc-field">
+          <label for="support-name">Name</label>
+          <input type="text" id="support-name" name="contact[name]" placeholder="Your name" autocomplete="name" required>
+        </div>
+        <div class="fc-field">
+          <label for="support-email">Email</label>
+          <input type="email" id="support-email" name="contact[email]" placeholder="your@email.com" autocomplete="email" required>
+        </div>
+      </div>
+
+      <div class="fc-field">
+        <label for="support-type">Request Type</label>
+        <div class="fc-select-wrap">
+          <select id="support-type" name="contact[request_type]" required>
+            <option value="" disabled selected>Select a request type</option>
+            <option value="refund">Refund Request</option>
+            <option value="warranty">Warranty Claim</option>
+            <option value="technical">Technical Issue</option>
+            <option value="complaint">Complaint</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fc-field fc-sup-field-other fc-sup-field--hidden">
+        <label for="support-other-topic">Specify Topic</label>
+        <input type="text" id="support-other-topic" name="contact[other_topic]" placeholder="What is your inquiry about?">
+      </div>
+
+      <div class="fc-field fc-sup-field-product fc-sup-field--hidden">
+        <label for="support-product">Product</label>
+        <div class="fc-select-wrap">
+          <select id="support-product" name="contact[product]">
+            <option value="" disabled selected>Select your product</option>
+            <option value="Groove ANC FT20">Groove ANC FT20</option>
+            <option value="Groove OWS FT21">Groove OWS FT21</option>
+            <option value="Sonara UFM1">Sonara UFM1</option>
+            <option value="Resono WFM1">Resono WFM1</option>
+            <option value="Hako Nomad FBS1">Hako Nomad FBS1</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fc-field fc-sup-field-order fc-sup-field--hidden">
+        <label for="support-order">Order Number</label>
+        <input type="text" id="support-order" name="contact[order_number]" placeholder="e.g. #1234">
+        <p class="fc-field-error-msg" id="fc-order-error">Order number is required.</p>
+      </div>
+
+      <div class="fc-field">
+        <label for="support-message" id="fc-message-label">Describe your issue</label>
+        <textarea id="support-message" name="contact[body]" placeholder="Please describe your issue in detail..."></textarea>
+      </div>
+
+      <div class="fc-field fc-sup-field-photo fc-sup-field--hidden">
+        <label for="support-photo">Photo Evidence</label>
+        <p class="fc-sup-field-note" style="margin:0 0 6px;">Upload your photos to Google Drive, iCloud, or OneDrive and paste the shared link below. Set sharing to "Anyone with the link can view".</p>
+        <input type="text" id="support-photo" name="contact[photo_link]" placeholder="Google Drive, iCloud, or OneDrive shared link">
+        <p class="fc-field-error-msg" id="fc-photo-error">Please provide a photo link.</p>
+      </div>
+
+      <div class="fc-field fc-sup-field-video fc-sup-field--hidden">
+        <label for="support-video">Video Evidence <span class="fc-label-opt">(optional)</span></label>
+        <input type="text" id="support-video" name="contact[video_link]" placeholder="Google Drive, iCloud, or OneDrive shared link">
+        <p class="fc-sup-field-note">Upload your video to Google Drive, iCloud, or OneDrive. Set sharing to "Anyone with the link can view".</p>
+      </div>
+
+      <div class="fc-field fc-sup-field-media-opt fc-sup-field--hidden">
+        <label>Photos &amp; Video <span class="fc-label-opt">(optional)</span></label>
+        <p class="fc-sup-field-note" style="margin:0 0 6px;">Upload files to Google Drive, iCloud, or OneDrive and paste the shared links below. Set sharing to "Anyone with the link can view".</p>
+        <input type="text" id="support-photo-opt" name="contact[photo_link_opt]" placeholder="Photo link — Google Drive, iCloud, or OneDrive">
+        <input type="text" id="support-video-opt" name="contact[video_link_opt]" placeholder="Video link — Google Drive, iCloud, or OneDrive">
+      </div>
+
+      <button type="submit" class="fc-submit">Submit Request</button>
+    </form>
+
+  </div>
+
+  {%- comment -%} ── TRACK ORDER ── {%- endcomment -%}
+  <div class="fc-support-panel" id="fc-sup-trackorder" data-tab="track">
+    <form class="fc-form" id="fc-track-form">
+      <div class="fc-field">
+        <label for="fc-track-input">Tracking Number</label>
+        <input type="text" id="fc-track-input" placeholder="Enter your Yanwen tracking number" autocomplete="off">
+        <p class="fc-sup-field-note">Your tracking number is included in your dispatch confirmation email.</p>
+      </div>
+      <button type="submit" class="fc-submit">Track Shipment</button>
+    </form>
+  </div>
+
+</div>
+
+<script>
+(function () {
+
+  const TABS = [
+    { key: 'faq',     id: 'fc-sup-faq'        },
+    { key: 'contact', id: 'fc-sup-contact'     },
+    { key: 'support', id: 'fc-sup-support'     },
+    { key: 'track',   id: 'fc-sup-trackorder'  },
+  ];
+  const N = TABS.length;
+
+  let tabIdx  = 0;
+  let domIdx  = 1;
+  let sliding = false;
+  let track, viewport, prevBtn, nextBtn;
+
+  function getItems() { return Array.from(track.querySelectorAll('.fc-title-item')); }
+
+  function getCurrentTx() {
+    const t = window.getComputedStyle(track).transform;
+    if (!t || t === 'none') return 0;
+    const m = t.match(/matrix\([^,]+,[^,]+,[^,]+,[^,]+,([^,]+),/);
+    return m ? parseFloat(m[1]) : 0;
+  }
+
+  function offsetForDom(di) {
+    const items = getItems(), item = items[di];
+    if (!item || !viewport) return 0;
+    const vr = viewport.getBoundingClientRect(), ir = item.getBoundingClientRect(), tx = getCurrentTx();
+    return tx + (vr.left + vr.width / 2) - (ir.left + ir.width / 2);
+  }
+
+  function snapToDom(di) {
+    track.style.transition = 'none';
+    track.style.transform  = `translateX(${offsetForDom(di)}px)`;
+    track.getBoundingClientRect();
+  }
+
+  function slideToDom(di, onEnd) {
+    track.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
+    track.style.transform  = `translateX(${offsetForDom(di)}px)`;
+    track.addEventListener('transitionend', function h() {
+      track.removeEventListener('transitionend', h);
+      if (onEnd) onEnd();
+      sliding = false;
+    }, { once: true });
+  }
+
+  function applyTab(key) {
+    document.querySelectorAll('.fc-support-panel').forEach(panel => {
+      panel.classList.remove('fc-sup-active');
+      if (panel.dataset.tab === key) panel.classList.add('fc-sup-active');
+    });
+    const url = new URL(window.location.href);
+    key === 'faq' ? url.searchParams.delete('tab') : url.searchParams.set('tab', key);
+    history.pushState(null, '', url.toString());
+  }
+
+  function slideByDir(dir) {
+    if (sliding) return;
+    sliding = true;
+    const targetDom = domIdx + dir;
+    const items = getItems();
+    items.forEach((el, i) => el.classList.toggle('fc-title-active', i === targetDom));
+    tabIdx = targetDom === 0 ? N - 1 : targetDom === N + 1 ? 0 : targetDom - 1;
+    slideToDom(targetDom, () => {
+      if (targetDom === 0 || targetDom === N + 1) {
+        domIdx = targetDom === 0 ? N : 1;
+        track.style.opacity = '0';
+        getItems().forEach(el => { el.style.transition = 'none'; });
+        snapToDom(domIdx);
+        getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === domIdx));
+        track.getBoundingClientRect();
+        requestAnimationFrame(() => { getItems().forEach(el => { el.style.transition = ''; }); track.style.opacity = '1'; });
+      } else {
+        domIdx = targetDom;
+      }
+    });
+    applyTab(TABS[tabIdx].key);
+  }
+
+  function attachCarouselClicks() {
+    track.addEventListener('click', e => {
+      const item = e.target.closest('.fc-title-item');
+      if (!item) return;
+      const ci = getItems().indexOf(item);
+      if (ci === domIdx) return;
+      slideByDir(ci > domIdx ? 1 : -1);
+    });
+  }
+
+  /* ── FAQ CATEGORIES ── */
+  function initFaqCategories() {
+    const catCards = document.querySelectorAll('.fc-faq-cat-card');
+    const list     = document.getElementById('fc-faq-list');
+    if (!catCards.length || !list) return;
+
+    function filterCat(cat) {
+      list.classList.add('fc-faq-switching');
+      setTimeout(() => {
+        list.querySelectorAll('.fc-faq-item').forEach(item => {
+          item.style.display = item.dataset.cat === cat ? '' : 'none';
+        });
+        list.classList.remove('fc-faq-switching');
+      }, 150);
+    }
+
+    catCards.forEach(card => {
+      card.addEventListener('click', () => {
+        catCards.forEach(c => c.classList.remove('fc-cat-active'));
+        card.classList.add('fc-cat-active');
+        filterCat(card.dataset.cat);
+      });
+    });
+
+    /* apply first active card on load */
+    const firstActive = document.querySelector('.fc-faq-cat-card.fc-cat-active');
+    if (firstActive) filterCat(firstActive.dataset.cat);
+  }
+
+  /* ── FAQ ACCORDION ── */
+  function initFaq() {
+    document.querySelectorAll('.fc-faq-item').forEach(item => {
+      item.querySelector('.fc-faq-q').addEventListener('click', () => item.classList.toggle('open'));
+    });
+  }
+
+  /* ── SMART FORM ── */
+  function updateFormFields(type) {
+    const fieldOrder    = document.querySelector('.fc-sup-field-order');
+    const fieldProduct  = document.querySelector('.fc-sup-field-product');
+    const fieldPhoto    = document.querySelector('.fc-sup-field-photo');
+    const fieldVideo    = document.querySelector('.fc-sup-field-video');
+    const fieldMediaOpt = document.querySelector('.fc-sup-field-media-opt');
+    const fieldOther    = document.querySelector('.fc-sup-field-other');
+    const msgLabel      = document.getElementById('fc-message-label');
+    const msgInput      = document.getElementById('support-message');
+
+    if (!fieldOrder) return;
+
+    const show = el => { if (!el) return; el.classList.remove('fc-sup-field--hidden'); el.classList.add('fc-sup-field--visible'); };
+    const hide = el => { if (!el) return; el.classList.add('fc-sup-field--hidden'); el.classList.remove('fc-sup-field--visible'); };
+
+    hide(fieldOrder); hide(fieldProduct); hide(fieldPhoto); hide(fieldVideo); hide(fieldMediaOpt); hide(fieldOther);
+
+    switch (type) {
+      case 'refund':
+        show(fieldOrder); show(fieldPhoto); show(fieldVideo);
+        if (msgLabel) msgLabel.textContent = 'Describe the issue';
+        if (msgInput) msgInput.placeholder = 'Describe the issue — e.g. wrong product received, defective unit...';
+        break;
+      case 'warranty':
+        show(fieldOrder); show(fieldPhoto); show(fieldVideo);
+        if (msgLabel) msgLabel.textContent = 'Describe the defect';
+        if (msgInput) msgInput.placeholder = 'Describe the defect or quality issue in detail...';
+        break;
+      case 'technical':
+        show(fieldProduct); show(fieldMediaOpt);
+        if (msgLabel) msgLabel.textContent = 'Describe the issue';
+        if (msgInput) msgInput.placeholder = 'Describe the technical issue you are experiencing...';
+        break;
+      case 'complaint':
+        show(fieldOrder); show(fieldMediaOpt);
+        if (msgLabel) msgLabel.textContent = 'Tell us what happened';
+        if (msgInput) msgInput.placeholder = 'Tell us what happened and how we can improve...';
+        break;
+      case 'other':
+        show(fieldOther);
+        if (msgLabel) msgLabel.textContent = 'Your message';
+        if (msgInput) msgInput.placeholder = 'How can we help?';
+        break;
+      default:
+        if (msgLabel) msgLabel.textContent = 'Your message';
+        if (msgInput) msgInput.placeholder = 'How can we help?';
+    }
+  }
+
+  function initSmartForm() {
+    const typeSelect = document.getElementById('support-type');
+    if (!typeSelect) return;
+
+    typeSelect.addEventListener('change', () => updateFormFields(typeSelect.value));
+
+    const params  = new URLSearchParams(window.location.search);
+    const urlType = params.get('type');
+    if (urlType && typeSelect.querySelector(`option[value="${urlType}"]`)) {
+      typeSelect.value = urlType;
+      updateFormFields(urlType);
+    }
+
+    if (params.get('contact_posted') === 'true') {
+      const form       = document.getElementById('contact_form');
+      const successMsg = document.getElementById('fc-sup-success-msg');
+      if (form)       form.style.display       = 'none';
+      if (successMsg) successMsg.style.display = 'block';
+    }
+
+    if (params.get('inquiry_posted') === 'true') {
+      const form       = document.getElementById('fc-contact-form');
+      const successMsg = document.getElementById('fc-contact-success-msg');
+      if (form)       form.style.display       = 'none';
+      if (successMsg) successMsg.style.display = 'block';
+    }
+
+    const inquirySelect   = document.getElementById('contact-inquiry');
+    const contactOtherFld = document.querySelector('.fc-contact-field-other');
+    if (inquirySelect && contactOtherFld) {
+      inquirySelect.addEventListener('change', () => {
+        const isOther = inquirySelect.value === 'Other';
+        contactOtherFld.classList.toggle('fc-sup-field--hidden',  !isOther);
+        contactOtherFld.classList.toggle('fc-sup-field--visible',  isOther);
+      });
+
+      // Pre-select inquiry type from URL param (e.g. ?inquiry=Wholesale+%2F+B2B)
+      const urlInquiry = params.get('inquiry');
+      if (urlInquiry) {
+        const matchOpt = Array.from(inquirySelect.options).find(o => o.value === urlInquiry);
+        if (matchOpt) {
+          inquirySelect.value = urlInquiry;
+          if (urlInquiry === 'Other') {
+            contactOtherFld.classList.remove('fc-sup-field--hidden');
+            contactOtherFld.classList.add('fc-sup-field--visible');
+          }
+        }
+      }
+    }
+  }
+
+  /* ── FORM VALIDATION ── */
+  function initFileUpload() {
+    const form = document.getElementById('contact_form');
+    if (!form) return;
+
+    form.addEventListener('submit', e => {
+      const type       = document.getElementById('support-type')?.value;
+      const photoTypes = ['refund', 'warranty'];
+      const orderTypes = ['refund', 'warranty', 'complaint'];
+      const photoError = document.getElementById('fc-photo-error');
+      const orderError = document.getElementById('fc-order-error');
+      const orderInput = document.getElementById('support-order');
+      const photoLink  = document.getElementById('support-photo');
+      let valid = true;
+
+      if (orderTypes.includes(type) && orderInput && !orderInput.value.trim()) {
+        if (orderError) orderError.style.display = 'block';
+        valid = false;
+      } else if (orderError) orderError.style.display = 'none';
+
+      if (photoTypes.includes(type) && photoLink && !photoLink.value.trim()) {
+        if (photoError) photoError.style.display = 'block';
+        valid = false;
+      } else if (photoError) photoError.style.display = 'none';
+
+      if (!valid) e.preventDefault();
+    });
+  }
+
+  /* ── TRACK ORDER ── */
+  function initTrackOrder() {
+    const form  = document.getElementById('fc-track-form');
+    const input = document.getElementById('fc-track-input');
+    if (!form || !input) return;
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const num = input.value.trim();
+      if (num) window.open('https://track.yanwen.com/en/result?bills=' + encodeURIComponent(num), '_blank');
+    });
+  }
+
+  /* ── INIT ── */
+  function init() {
+    track    = document.getElementById('fc-sup-track');
+    viewport = document.getElementById('fc-sup-viewport');
+    prevBtn  = document.querySelector('.fc-filter-nav__prev');
+    nextBtn  = document.querySelector('.fc-filter-nav__next');
+
+    if (!track) return;
+
+    tabIdx = 0; domIdx = 1; sliding = false;
+
+    getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === 1));
+    attachCarouselClicks();
+    initFaqCategories();
+    initFaq();
+    initSmartForm();
+    initFileUpload();
+    initTrackOrder();
+
+    track.style.opacity = '0';
+
+    requestAnimationFrame(() => {
+      const urlTab      = new URLSearchParams(window.location.search).get('tab');
+      const urlMatchIdx = urlTab ? TABS.findIndex(t => t.key === urlTab) : -1;
+      if (urlMatchIdx > 0) {
+        tabIdx = urlMatchIdx; domIdx = urlMatchIdx + 1;
+        getItems().forEach((el, i) => el.classList.toggle('fc-title-active', i === domIdx));
+        snapToDom(domIdx);
+        applyTab(TABS[tabIdx].key);
+      } else {
+        tabIdx = 0; domIdx = 1;
+        snapToDom(1);
+        applyTab('faq');
+      }
+      track.style.opacity = '1';
+    });
+
+    if (prevBtn) prevBtn.addEventListener('click', () => slideByDir(-1));
+    if (nextBtn) nextBtn.addEventListener('click', () => slideByDir(+1));
+
+    let touchX = 0;
+    if (viewport) {
+      viewport.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+      viewport.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) > 40) slideByDir(dx < 0 ? 1 : -1);
+      }, { passive: true });
+    }
+
+    let resizing = false;
+    window.addEventListener('resize', () => {
+      if (resizing) return;
+      resizing = true;
+      requestAnimationFrame(() => {
+        if (track) { track.style.transition = 'none'; track.style.transform = `translateX(${offsetForDom(domIdx)}px)`; track.getBoundingClientRect(); }
+        resizing = false;
+      });
+    });
+  }
+
+  init();
+  document.addEventListener('shopify:section:load', init);
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Aftersales Service",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Support"
+    }
+  ]
+}
+{% endschema %}

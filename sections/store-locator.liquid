@@ -1,0 +1,336 @@
+{%- style -%}
+
+/* ── HEADER ── */
+.fc-collection-header {
+  padding: clamp(10px, 1.5vw, 16px) clamp(12px, 2vw, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.fc-sl-title-viewport {
+  flex: 1;
+  min-width: 0;
+  max-width: min(700px, calc(100vw - 40px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fc-sl-title {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(20px, 5.5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+/* ── SEARCH ── */
+.fc-locator-search-row {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(8px, 1.2vw, 14px) clamp(24px, 5vw, 64px) clamp(20px, 2.5vw, 32px);
+}
+.fc-locator-search-wrap {
+  position: relative;
+  width: clamp(160px, 22vw, 280px);
+}
+.fc-locator-search {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 7px 22px 7px 0;
+  width: 100%;
+  outline: none;
+  letter-spacing: -0.01em;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.fc-locator-search::placeholder { color: rgba(255,255,255,0.18); }
+.fc-locator-search:focus { border-color: #FFD300; }
+.fc-locator-search-icon {
+  position: absolute;
+  right: 0; top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.18);
+  pointer-events: none;
+  width: 12px; height: 12px;
+}
+
+/* ── GRID ── */
+.fc-locator-body {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 64px);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+/* ── CARD ── */
+.fc-locator-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: #111111;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 18px 20px 20px;
+  text-decoration: none;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  box-sizing: border-box;
+}
+.fc-locator-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.16);
+}
+.fc-locator-card--tbd {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.fc-locator-card-country {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFD300;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+  line-height: 1;
+}
+.fc-locator-card-name {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin: 0;
+}
+.fc-locator-card-ig {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.38);
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  align-self: flex-start;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+  margin-top: 6px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.fc-locator-card:hover .fc-locator-card-ig {
+  color: #FFD300;
+  border-color: rgba(255,211,0,0.4);
+}
+.fc-locator-card-ig-arrow {
+  display: inline-block;
+  transition: transform 0.15s;
+}
+.fc-locator-card:hover .fc-locator-card-ig-arrow { transform: translate(2px, -2px); }
+
+.fc-locator-card-tbd {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: rgba(255,255,255,0.25);
+  margin-top: 4px;
+}
+
+/* ── NO RESULTS ── */
+.fc-locator-empty {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 64px) clamp(24px, 5vw, 64px);
+  display: none;
+}
+.fc-locator-empty.visible { display: block; }
+.fc-locator-empty-label {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.18);
+  margin: 0 0 8px;
+}
+.fc-locator-empty-query {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700;
+  color: rgba(255,255,255,0.05);
+  letter-spacing: -0.04em;
+  margin: 0;
+}
+
+/* ── FOOTER CTA ── */
+.fc-locator-footnote {
+  max-width: 1280px;
+  margin: clamp(16px, 2.5vw, 28px) auto 0;
+  padding: 14px clamp(24px, 5vw, 64px) clamp(48px, 6vw, 80px);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.fc-locator-footnote-cta {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFD300;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid rgba(255,211,0,0.22);
+  padding-bottom: 1px;
+  transition: border-color 0.2s;
+}
+.fc-locator-footnote-cta:hover { border-color: #FFD300; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .fc-locator-body { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 800px) {
+  .fc-locator-body { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 560px) {
+  .fc-locator-body { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 360px) {
+  .fc-locator-body { grid-template-columns: 1fr; }
+}
+
+{%- endstyle -%}
+
+<div class="fc-collection-header">
+  <div class="fc-sl-title-viewport">
+    <span class="fc-sl-title">Store Locator</span>
+  </div>
+</div>
+
+<div class="fc-locator-search-row">
+  <div class="fc-locator-search-wrap">
+    <input
+      type="search"
+      class="fc-locator-search"
+      id="fc-locator-search"
+      placeholder="Filter by country…"
+      autocomplete="off"
+      spellcheck="false"
+    >
+    <svg class="fc-locator-search-icon" viewBox="0 0 14 14" fill="none">
+      <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M9.5 9.5L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</div>
+
+<div class="fc-locator-body" id="fc-locator-body">
+
+  <a class="fc-locator-card" href="https://www.instagram.com/fantechworld/" target="_blank" rel="noopener" data-country="indonesia">
+    <span class="fc-locator-card-country">Indonesia</span>
+    <span class="fc-locator-card-name">Fantech</span>
+    <span class="fc-locator-card-ig">@fantechworld <span class="fc-locator-card-ig-arrow">↗</span></span>
+  </a>
+
+  <a class="fc-locator-card" href="https://www.instagram.com/fantechphofficial/" target="_blank" rel="noopener" data-country="philippines">
+    <span class="fc-locator-card-country">Philippines</span>
+    <span class="fc-locator-card-name">Fantech Philippines</span>
+    <span class="fc-locator-card-ig">@fantechphofficial <span class="fc-locator-card-ig-arrow">↗</span></span>
+  </a>
+
+  <a class="fc-locator-card" href="https://www.instagram.com/fantech.th/" target="_blank" rel="noopener" data-country="thailand">
+    <span class="fc-locator-card-country">Thailand</span>
+    <span class="fc-locator-card-name">Fantech Thailand</span>
+    <span class="fc-locator-card-ig">@fantech.th <span class="fc-locator-card-ig-arrow">↗</span></span>
+  </a>
+
+  <a class="fc-locator-card" href="https://www.instagram.com/fantechbangladesh/" target="_blank" rel="noopener" data-country="bangladesh">
+    <span class="fc-locator-card-country">Bangladesh</span>
+    <span class="fc-locator-card-name">Fantech Bangladesh</span>
+    <span class="fc-locator-card-ig">@fantechbangladesh <span class="fc-locator-card-ig-arrow">↗</span></span>
+  </a>
+
+  <a class="fc-locator-card" href="https://www.instagram.com/fantech_esports" target="_blank" rel="noopener" data-country="chile">
+    <span class="fc-locator-card-country">Chile</span>
+    <span class="fc-locator-card-name">Fantech Gaming Chile</span>
+    <span class="fc-locator-card-ig">@fantech_esports <span class="fc-locator-card-ig-arrow">↗</span></span>
+  </a>
+
+  <a class="fc-locator-card" href="https://www.instagram.com/gameak.jo" target="_blank" rel="noopener" data-country="jordan">
+    <span class="fc-locator-card-country">Jordan</span>
+    <span class="fc-locator-card-name">Gamek</span>
+    <span class="fc-locator-card-ig">@gameak.jo <span class="fc-locator-card-ig-arrow">↗</span></span>
+  </a>
+
+  <div class="fc-locator-card fc-locator-card--tbd" data-country="serbia">
+    <span class="fc-locator-card-country">Serbia</span>
+    <span class="fc-locator-card-name">Coming soon</span>
+    <span class="fc-locator-card-tbd">TBD</span>
+  </div>
+
+  <div class="fc-locator-card fc-locator-card--tbd" data-country="cambodia">
+    <span class="fc-locator-card-country">Cambodia</span>
+    <span class="fc-locator-card-name">Coming soon</span>
+    <span class="fc-locator-card-tbd">TBD</span>
+  </div>
+
+</div>
+
+<div class="fc-locator-empty" id="fc-locator-empty">
+  <p class="fc-locator-empty-label">No results for</p>
+  <p class="fc-locator-empty-query" id="fc-locator-empty-query"></p>
+</div>
+
+<div class="fc-locator-footnote">
+  <a href="/pages/support?tab=contact&inquiry=Wholesale+%2F+B2B" class="fc-locator-footnote-cta">Become a distributor &rarr;</a>
+</div>
+
+<script>
+(function () {
+  var searchInput = document.getElementById('fc-locator-search');
+  var cards       = document.querySelectorAll('.fc-locator-card');
+  var emptyState  = document.getElementById('fc-locator-empty');
+  var emptyQuery  = document.getElementById('fc-locator-empty-query');
+
+  if (!searchInput) return;
+
+  searchInput.addEventListener('input', function () {
+    var q = searchInput.value.trim().toLowerCase();
+    var anyVisible = false;
+
+    cards.forEach(function (card) {
+      var match = !q || (card.dataset.country || '').toLowerCase().includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) anyVisible = true;
+    });
+
+    if (emptyState) {
+      emptyState.classList.toggle('visible', !anyVisible && q.length > 0);
+      if (emptyQuery) emptyQuery.textContent = searchInput.value.trim();
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Store Locator",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [],
+  "presets": [
+    {
+      "name": "Store Locator"
+    }
+  ]
+}
+{% endschema %}

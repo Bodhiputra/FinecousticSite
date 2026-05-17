@@ -1,0 +1,87 @@
+{%- style -%}
+
+.fc-about {
+  padding: clamp(48px, 7vw, 96px) clamp(20px, 5vw, 64px) clamp(80px, 10vw, 140px);
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.fc-about-headline {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(18px, 3.3vw, 35px);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  max-width: 600px;
+  margin: 0 auto clamp(48px, 6vw, 80px);
+  text-align: center;
+}
+
+.fc-about-section {
+  margin: 0 0 clamp(16px, 2vw, 28px);
+}
+
+.fc-about-title {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(18px, 3.3vw, 35px);
+  font-weight: 700;
+  color: #FFD300;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin: 0 0 clamp(12px, 1.5vw, 20px);
+  text-align: center;
+}
+
+.fc-about-body {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(12px, 1.8vw, 20px);
+  max-width: 800px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.7;
+  letter-spacing: -0.02em;
+  margin: 0 auto;
+  text-align: left;
+}
+
+{%- endstyle -%}
+
+<div class="fc-about">
+
+  <p class="fc-about-headline">Finecoustic is an audio brand focused on how sound products fit in everyday spaces.</p>
+
+  <div class="fc-about-section">
+    <p class="fc-about-title">Built on Experience.</p>
+    <p class="fc-about-body">Developed through Fantech&rsquo;s experience in immersive technology and consumer electronics, Finecoustic has a practical foundation in audio-related products. While connected to that background, we focus on a more specific direction &mdash; audio designed with context in mind.</p>
+  </div>
+
+  <div class="fc-about-section">
+    <p class="fc-about-title">Designed for Everyday Spaces.</p>
+    <p class="fc-about-body">Each product is developed with attention to how it will be used, how it sounds, and how it interacts with different settings &mdash; in rooms, on desks, or even while moving through daily routines.</p>
+  </div>
+
+  <div class="fc-about-section">
+    <p class="fc-about-title">We&rsquo;re Just Starting.</p>
+    <p class="fc-about-body">We continue to refine our direction through each product we develop, learning how sound, design, and context come together in practice.</p>
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "About Us",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [],
+  "presets": [
+    {
+      "name": "About Us"
+    }
+  ]
+}
+{% endschema %}

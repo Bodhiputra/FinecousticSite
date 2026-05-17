@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "support": {
+      "type": "support",
+      "settings": {
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "support"
+  ]
+}

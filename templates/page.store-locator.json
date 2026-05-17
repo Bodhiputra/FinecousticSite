@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "store-locator": {
+      "type": "store-locator",
+      "settings": {}
+    }
+  },
+  "order": [
+    "store-locator"
+  ]
+}

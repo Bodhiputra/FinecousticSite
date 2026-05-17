@@ -17,84 +17,55 @@
         "padding_bottom": 28
       }
     },
-    "rich_text_3daKJt": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_8mf8LH": {
-          "type": "heading",
-          "settings": {
-            "heading": "Download and Support",
-            "heading_size": "h1"
-          }
-        }
-      },
-      "block_order": [
-        "heading_8mf8LH"
-      ],
-      "custom_css": [
-        "h2.rich-text__heading.rte.inline-richtext.h1.scroll-trigger.animate--slide-in {font-size: 40px; font-weight: 800;}"
-      ],
-      "name": "t:sections.rich-text.presets.name",
-      "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "scheme-2",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 4
-      }
-    },
     "image_and_text_download_qWb4P4": {
       "type": "image-and-text-download",
       "blocks": {
         "heading_BdmcqR": {
           "type": "Heading",
           "settings": {
-            "heading_text": "Earbuds",
-            "subheading_text": "",
-            "heading_tag": "h2",
-            "text_align": "left"
+            "heading_text": "Earbuds"
           }
         },
         "text_PjzVGn": {
           "type": "Text",
           "settings": {
-            "image": "shopify://shop_images/Product_Icon_Groove_OWS_FT21.png",
+            "product_handle": "groove-ows-ft21",
             "title": "GROOVE OWS FT21",
-            "content": "<ul><li><a href=\"https://cdn.shopify.com/s/files/1/0661/0229/6650/files/GROOVE_OWS_FT21_OSG_202509032.pdf?v=1760151795fy.cohttps://cdn.shopify.com/s/files/1/0661/0229/6650/files/GROOVE_OWS_FT21_OSG_202509032.pdf?v=1760151795m/s/files/1/0661/0229/6650/files/GROOVE_ANC_FT20_QSG_20250626.pdf?v=1759915192\" target=\"_blank\" title=\"FT21 Quick Start Guide\">Quick Start Guide</a></li></ul>"
+            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/GROOVE_OWS_FT21_OSG_202509032.pdf?v=1760151795",
+            "image": "shopify://shop_images/Product_Icon_Groove_OWS_FT21.png"
           }
         },
         "text_VwqKwN": {
           "type": "Text",
           "settings": {
-            "image": "shopify://shop_images/Product_Icon_GROOVE_ANC_FT20.png",
+            "product_handle": "groove-anc-ft20",
             "title": "GROOVE ANC FT20",
-            "content": "<ul><li><a href=\"https://cdn.shopify.com/s/files/1/0661/0229/6650/files/GROOVE_ANC_FT20_QSG_20250626.pdf?v=1759915192\" target=\"_blank\" title=\"FT20 Quick Start Guide\">Quick Start Guide</a></li></ul>"
+            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/GROOVE_ANC_FT20_QSG_20250626.pdf?v=1759915192",
+            "image": "shopify://shop_images/Product_Icon_GROOVE_ANC_FT20.png"
           }
         },
         "heading_BaDpLT": {
           "type": "Heading",
           "settings": {
-            "heading_text": "Microphone",
-            "subheading_text": "",
-            "heading_tag": "h2",
-            "text_align": "left"
+            "heading_text": "Microphones"
           }
         },
         "text_QKyYjB": {
           "type": "Text",
           "settings": {
-            "image": "shopify://shop_images/Product_Icon_Resono_WFM1.png",
+            "product_handle": "resono-wfm1",
             "title": "RESONO WFM1",
-            "content": "<ul><li><a href=\"https://cdn.shopify.com/s/files/1/0661/0229/6650/files/WFM1_QSG_20250926.pdf?v=1762999963\" target=\"_blank\" title=\"WFM1 Quick Start Guide\">Quick Start Guide</a></li></ul>"
+            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/WFM1_QSG_20250926.pdf?v=1762999963",
+            "image": "shopify://shop_images/Product_Icon_Resono_WFM1.png"
           }
         },
         "text_JXnx79": {
           "type": "Text",
           "settings": {
-            "image": "shopify://shop_images/Product_Icon_Sonara_UFM1.png",
+            "product_handle": "sonara-ufm1",
             "title": "SONARA UFM1",
-            "content": "<ul><li><a href=\"https://cdn.shopify.com/s/files/1/0661/0229/6650/files/UFM1_QSG_20250926.pdf?v=1762999919\" target=\"_blank\" title=\"UFM1 Quick Start Guide\">Quick Start Guide</a></li></ul>"
+            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/UFM1_QSG_20250926.pdf?v=1762999919",
+            "image": "shopify://shop_images/Product_Icon_Sonara_UFM1.png"
           }
         }
       },
@@ -108,15 +79,12 @@
       ],
       "name": "Custom Image with Text (download)",
       "settings": {
-        "custom_class": "",
-        "padding_top": 0,
-        "padding_bottom": 0
+        "custom_class": ""
       }
     }
   },
   "order": [
     "main",
-    "rich_text_3daKJt",
     "image_and_text_download_qWb4P4"
   ]
 }
