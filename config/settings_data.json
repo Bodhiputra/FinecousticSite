@@ -111,10 +111,10 @@
     "brand_description": "<p></p>",
     "brand_image_width": 100,
     "social_facebook_link": "https://www.facebook.com/profile.php?id=61581152757031",
-    "social_instagram_link": "https://instagram.com/finecoustic_global",
-    "social_youtube_link": "",
+    "social_instagram_link": "https://www.instagram.com/finecoustic_global/",
+    "social_youtube_link": "https://www.youtube.com/@finecoustic",
     "social_tiktok_link": "",
-    "social_twitter_link": "",
+    "social_twitter_link": "https://x.com/finecoustic_",
     "social_snapchat_link": "",
     "social_pinterest_link": "",
     "social_tumblr_link": "",
@@ -123,7 +123,7 @@
     "predictive_search_show_vendor": false,
     "predictive_search_show_price": false,
     "currency_code_enabled": true,
-    "cart_type": "notification",
+    "cart_type": "drawer",
     "show_vendor": false,
     "show_cart_note": false,
     "cart_drawer_collection": "",
@@ -146,24 +146,24 @@
     "color_schemes": {
       "scheme-1": {
         "settings": {
-          "background": "#ffffff",
+          "background": "#000000",
           "background_gradient": "",
-          "text": "#121212",
-          "button": "#121212",
-          "button_label": "#ffffff",
-          "secondary_button_label": "#121212",
-          "shadow": "#121212"
+          "text": "#ffffff",
+          "button": "#ffd300",
+          "button_label": "#000000",
+          "secondary_button_label": "#ffffff",
+          "shadow": "#000000"
         }
       },
       "scheme-2": {
         "settings": {
-          "background": "#ffffff",
+          "background": "#111111",
           "background_gradient": "",
-          "text": "#121212",
+          "text": "#ffffff",
           "button": "#ffd300",
           "button_label": "#000000",
-          "secondary_button_label": "#121212",
-          "shadow": "#121212"
+          "secondary_button_label": "#ffffff",
+          "shadow": "#000000"
         }
       },
       "scheme-3": {
@@ -182,10 +182,10 @@
           "background": "#000000",
           "background_gradient": "",
           "text": "#ffffff",
-          "button": "#ffffff",
-          "button_label": "#ffffff",
+          "button": "#ffd300",
+          "button_label": "#000000",
           "secondary_button_label": "#ffffff",
-          "shadow": "#ffffff"
+          "shadow": "#000000"
         }
       },
       "scheme-5": {
@@ -405,7 +405,7 @@
       "predictive_search_show_vendor": false,
       "predictive_search_show_price": false,
       "currency_code_enabled": true,
-      "cart_type": "notification",
+      "cart_type": "drawer",
       "show_vendor": false,
       "show_cart_note": false,
       "cart_drawer_collection": "",

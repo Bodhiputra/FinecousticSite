@@ -1,5 +1,10 @@
 # Shopify Store Development Rules
 
+## Session Start (Every Session — Required)
+1. Read `context/shopify-context.md` — rolling state, last decisions, in-progress work
+2. Read `context/codebase-summary.md` — semantic map of what every section, snippet, asset, and template does. Load this instead of reading source files cold.
+3. Run full codebase index: `find . -type f | grep -v node_modules | grep -v ".git/" | sort > context/codebase-index.md` — write to file, do NOT dump into context window. Read specific parts from it only when needed.
+
 ## CRITICAL SAFETY RULES
 - NEVER run mutations without asking me first
 - NEVER delete products/collections without approval
@@ -46,6 +51,21 @@
 
 ## Store
 - Store: j5gawi-vu.myshopify.com
+
+## Shopify CSS Placement Rules (Hard Rules)
+
+Shopify enforces a **500-character total limit** on the `custom_css` array per section instance in JSON templates. Violating this causes upload errors.
+
+**Where CSS belongs — always follow this before writing any style:**
+
+| CSS type | Where it goes |
+|---|---|
+| Default styles for a section | `{% stylesheet %}` block inside the section's `.liquid` file |
+| Global overrides across all sections | `assets/custom-style.css` |
+| Targeting one specific section instance by DOM ID | `assets/custom-style.css` using `#shopify-section-[template-id]__[section-id]` |
+| Tiny, instance-specific tweaks only (margin, max-width) | `custom_css` in the JSON template — max ~3 short entries |
+
+**Never put into `custom_css`:** button styles, hover states, media queries, pseudo-elements (`::after`, `::before`), or anything over ~150 characters per entry.
 
 ## When in Doubt: STOP and Ask
 Better to ask than to mess something up.
