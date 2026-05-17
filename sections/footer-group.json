@@ -11,16 +11,6 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
-    "custom_liquid_9b94NX": {
-      "type": "custom-liquid",
-      "name": "t:sections.custom-liquid.presets.name",
-      "settings": {
-        "custom_liquid": "<div style=\"background-color: #FFD300; height: 30px; display: flex; justify-content: flex-end; align-items: center; padding-right: 10px; display: flex; flex-direction: row; gap: 5px;\">\n<p style=\"font-weight: 600; color: black\">Powered by</p>\n  <img src=\"https://cdn.shopify.com/s/files/1/0661/0229/6650/files/Fantech_Logo.svg?v=1758181350\" alt=\"Right Image\" style=\"max-height: 40px; height: 11px;\">\n</div>",
-        "color_scheme": "scheme-2",
-        "padding_top": 0,
-        "padding_bottom": 0
-      }
-    },
     "footer": {
       "type": "footer",
       "blocks": {
@@ -34,14 +24,14 @@
         "link_list_jYXh7y": {
           "type": "link_list",
           "settings": {
-            "heading": "Company",
+            "heading": "Brand",
             "menu": "footer-menu-company"
           }
         },
         "link_list_37fRVB": {
           "type": "link_list",
           "settings": {
-            "heading": "Products",
+            "heading": "Shop",
             "menu": "footer"
           }
         },
@@ -70,12 +60,12 @@
         ".footer-block__details-content a {color: white; text-decoration: none; transition: color 0.3s ease;}",
         ".footer-block__details-content a:hover {color: #ffd300;}",
         ".footer__list-social .list-social__link:hover {color: #ffd300;}",
-        ".footer__social-wrapper {display: none;}"
+        ".footer__social-wrapper {display: flex; align-items: center; margin-top: 16px;}"
       ],
       "settings": {
         "color_scheme": "scheme-4",
         "newsletter_enable": true,
-        "newsletter_heading": "Subscribe to our emails",
+        "newsletter_heading": "Join our newsletter",
         "enable_follow_on_shop": true,
         "show_social": true,
         "enable_country_selector": true,
@@ -83,25 +73,12 @@
         "payment_enable": true,
         "show_policy": false,
         "margin_top": 0,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "padding_top": 12,
+        "padding_bottom": 20
       }
     },
-    "custom_liquid_TfH3wj": {
-      "type": "custom-liquid",
-      "disabled": true,
-      "name": "t:sections.custom-liquid.presets.name",
-      "settings": {
-        "custom_liquid": "<div style=\"background-color: #FFD300; height: 30px; display: flex; justify-content: flex-end; align-items: center; padding-right: 10px; display: flex; flex-direction: row; gap: 5px;\">\n<p style=\"font-weight: 600; color: black\">Powered by</p>\n  <img src=\"https://cdn.shopify.com/s/files/1/0661/0229/6650/files/Fantech_Logo.svg?v=1758181350\" alt=\"Right Image\" style=\"max-height: 40px; height: 11px;\">\n</div>",
-        "color_scheme": "scheme-2",
-        "padding_top": 0,
-        "padding_bottom": 0
-      }
-    }
   },
   "order": [
-    "custom_liquid_9b94NX",
-    "footer",
-    "custom_liquid_TfH3wj"
+    "footer"
   ]
 }

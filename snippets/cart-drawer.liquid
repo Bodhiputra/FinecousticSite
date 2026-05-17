@@ -10,6 +10,22 @@
 
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
+<script>
+(function() {
+  function setFcHeaderVars() {
+    var newsBar = document.querySelector('.announcement-bar');
+    var navBar = document.querySelector('.header-wrapper');
+    document.documentElement.style.setProperty('--fc-news-height', (newsBar ? newsBar.offsetHeight : 36) + 'px');
+    document.documentElement.style.setProperty('--fc-navbar-height', (navBar ? navBar.offsetHeight : 64) + 'px');
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setFcHeaderVars);
+  } else {
+    setFcHeaderVars();
+  }
+  window.addEventListener('resize', setFcHeaderVars);
+})();
+</script>
 
 <style>
   .drawer {
@@ -42,16 +58,16 @@
                   {{- 'icon-close.svg' | inline_asset_content -}}
                 </span>
               </button>
-              <a href="{{ routes.all_products_collection_url }}" class="button">
-                {{ 'general.continue_shopping' | t }}
-              </a>
-
-              {%- if shop.customer_accounts_enabled and customer == null -%}
-                <p class="cart__login-title h3">{{ 'sections.cart.login.title' | t }}</p>
-                <p class="cart__login-paragraph">
-                  {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
-                </p>
+              {%- if request.path == '/collections/all' -%}
+                <button type="button" class="button" onclick="this.closest('cart-drawer').close()">
+                  {{ 'general.continue_shopping' | t }}
+                </button>
+              {%- else -%}
+                <a href="{{ routes.all_products_collection_url }}" class="button">
+                  {{ 'general.continue_shopping' | t }}
+                </a>
               {%- endif -%}
+
             </div>
           </div>
           {%- if settings.cart_drawer_collection != blank -%}
@@ -62,7 +78,7 @@
         </div>
       {%- endif -%}
       <div class="drawer__header">
-        <h2 class="drawer__heading">{{ 'sections.cart.title' | t }}</h2>
+        <h2 class="drawer__heading">{{ 'sections.cart.title' | t }}<span id="CartDrawer-BagQty" class="drawer__heading-qty"></span></h2>
         <button
           class="drawer__close"
           type="button"
@@ -574,8 +590,61 @@
           >
             {{ 'sections.cart.checkout' | t }}
           </button>
+          <div class="cart-drawer-payment-icons">
+            <ul class="list list-payment" role="list">
+              {%- for type in shop.enabled_payment_types -%}
+                {%- unless type == 'paypal' -%}
+                  <li class="list-payment__item">
+                    {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+                  </li>
+                {%- endunless -%}
+              {%- endfor -%}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </cart-drawer>
+
+<script>
+(function () {
+  function addSwipe(el, onSwipeRight, onSwipeLeft) {
+    var startX, startY;
+    el.addEventListener('touchstart', function (e) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, { passive: true });
+    el.addEventListener('touchend', function (e) {
+      if (startX === undefined) return;
+      var dx = e.changedTouches[0].clientX - startX;
+      var dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        if (dx > 0 && onSwipeRight) onSwipeRight();
+        if (dx < 0 && onSwipeLeft) onSwipeLeft();
+      }
+      startX = startY = undefined;
+    }, { passive: true });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Swipe right → close cart drawer
+    var cartDrawer = document.querySelector('cart-drawer');
+    if (cartDrawer) {
+      addSwipe(cartDrawer, function () {
+        if (typeof cartDrawer.close === 'function') cartDrawer.close();
+      });
+    }
+
+    // Swipe left → close hamburger menu
+    var menuDrawer = document.getElementById('menu-drawer');
+    if (menuDrawer) {
+      addSwipe(menuDrawer, null, function () {
+        var details = document.getElementById('Details-menu-drawer-container');
+        if (details) details.open = false;
+      });
+    }
+  });
+})();
+</script>
+
