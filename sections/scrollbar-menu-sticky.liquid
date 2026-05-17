@@ -48,10 +48,10 @@
 <style>
 .custom-product-tabs-wrapper {
   width: 100%;
-  background: #f3f3f3;
+  background: #000000;
   z-index: 2;
   padding: 10px 0 5px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
   transition: all 0.3s ease;
 }
 
@@ -59,7 +59,7 @@
   position: fixed;
   top: 57.5px;
   left: 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.6);
 }
 
 .custom-product-tabs-scroll {
@@ -87,15 +87,15 @@
   height: 6px;
 }
 .custom-product-tabs-scroll::-webkit-scrollbar-track {
-  background: #f0f0f0;
+  background: #111111;
   border-radius: 4px;
 }
 .custom-product-tabs-scroll::-webkit-scrollbar-thumb {
-  background: #ccc;
+  background: rgba(255,255,255,0.2);
   border-radius: 4px;
 }
 .custom-product-tabs-scroll::-webkit-scrollbar-thumb:hover {
-  background: #999;
+  background: rgba(255,255,255,0.4);
 }
 
 .custom-product-tabs {
@@ -112,15 +112,19 @@
 
 .custom-product-tabs li a {
   text-decoration: none;
-  color: #333;
+  color: rgba(255,255,255,0.6);
   font-weight: 500;
   padding-bottom: 2px;
   transition: color 0.3s, border-bottom 0.3s;
   display: inline-block;
 }
 
+.custom-product-tabs li a:hover {
+  color: #ffffff;
+}
+
 .custom-product-tabs li a.active {
-  color: black;
+  color: #ffffff;
   border-bottom: 2px solid #FFD300;
 }
 </style>
