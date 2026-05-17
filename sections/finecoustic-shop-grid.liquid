@@ -1,0 +1,242 @@
+<div class="fc-shop-section">
+  <div class="fc-shop-inner">
+
+    <div class="fc-shop-header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="fc-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <h2 class="fc-title">{{ section.settings.title }}</h2>
+      {% endif %}
+      {% if section.settings.subtitle != blank %}
+        <p class="fc-subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+    </div>
+
+    {% assign col = section.settings.collection %}
+    {% if col != blank %}
+      <div class="fc-grid">
+        {% for product in col.products limit: section.settings.products_to_show %}
+          <a href="{{ product.url }}" class="fc-card">
+            <div class="fc-card-image">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 800 }}"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  loading="lazy"
+                  width="800">
+              {% else %}
+                <div class="fc-card-image-placeholder"></div>
+              {% endif %}
+            </div>
+            <div class="fc-card-body">
+              {% if product.type != blank %}
+                <p class="fc-card-type">{{ product.type | upcase }}</p>
+              {% endif %}
+              <h3 class="fc-card-name">{{ product.title }}</h3>
+              <p class="fc-card-price">{{ product.price | money }}</p>
+              <span class="fc-card-cta">Shop Now &rarr;</span>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% stylesheet %}
+.fc-shop-section {
+  background: #000000;
+  padding: 48px 0;
+}
+
+.fc-shop-inner {
+  max-width: 90vw;
+  margin: 0 auto;
+}
+
+.fc-shop-header {
+  margin-bottom: 52px;
+}
+
+.fc-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: #FFD300;
+  margin: 0 0 12px;
+}
+
+.fc-title {
+  font-size: 42px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.fc-subtitle {
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+  margin: 0;
+  font-weight: 400;
+}
+
+.fc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.fc-card {
+  display: block;
+  text-decoration: none;
+  background: #111111;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.fc-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.16);
+}
+
+.fc-card-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+.fc-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.fc-card:hover .fc-card-image img {
+  transform: scale(1.04);
+}
+
+.fc-card-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #1a1a1a;
+}
+
+.fc-card-body {
+  padding: 14px 16px 18px;
+}
+
+.fc-card-type {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #FFD300;
+  margin: 0 0 6px;
+}
+
+.fc-card-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 6px;
+  line-height: 1.3;
+}
+
+.fc-card-price {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  margin: 0 0 12px;
+  font-weight: 400;
+}
+
+.fc-card-cta {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  padding-bottom: 2px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.fc-card:hover .fc-card-cta {
+  color: #FFD300;
+  border-color: #FFD300;
+}
+
+@media (max-width: 1024px) {
+  .fc-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .fc-shop-section {
+    padding: 32px 0;
+  }
+  .fc-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .fc-card-body {
+    padding: 10px 12px 14px;
+  }
+  .fc-card-name {
+    font-size: 13px;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Shop Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Our Products"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Built to be seen."
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Meant to be heard."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 6,
+      "label": "Products to show"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop Grid"
+    }
+  ]
+}
+{% endschema %}

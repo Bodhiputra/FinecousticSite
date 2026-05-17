@@ -1,0 +1,408 @@
+<style>
+/* ── OVERLAY ── */
+#fc-search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.97);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  overscroll-behavior: contain;
+}
+#fc-search-overlay.fc-search--open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── TOP BAR ── */
+.fc-search-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: clamp(16px, 2.5vw, 28px) clamp(20px, 4vw, 48px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+.fc-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  caret-color: #FFD300;
+  min-width: 0;
+}
+.fc-search-input::placeholder { color: rgba(255,255,255,0.18); }
+.fc-search-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-top-color: #FFD300;
+  border-radius: 50%;
+  animation: fc-search-spin 0.6s linear infinite;
+  flex-shrink: 0;
+  display: none;
+}
+.fc-search-spinner.active { display: block; }
+@keyframes fc-search-spin { to { transform: rotate(360deg); } }
+.fc-search-close {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.35);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.fc-search-close:hover { color: #ffffff; }
+
+/* ── BODY ── */
+.fc-search-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: clamp(24px, 4vw, 40px) clamp(20px, 4vw, 48px);
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ── SECTION LABEL ── */
+.fc-search-label {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 18px;
+}
+
+/* ── EMPTY STATE GRID ── */
+.fc-search-empty-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(16px, 3vw, 32px);
+}
+.fc-se-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-decoration: none;
+}
+.fc-se-card__img-wrap {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+.fc-se-card__img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.fc-se-card:hover .fc-se-card__img-wrap img { transform: scale(1.06); }
+.fc-se-card__name {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(10px, 0.9vw, 12px);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.2;
+}
+.fc-se-card__price {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  margin: 0;
+}
+
+/* ── LIVE RESULTS ── */
+.fc-search-results { display: none; }
+.fc-search-results.active { display: block; }
+
+.fc-search-section { margin-bottom: 28px; }
+.fc-search-section-head {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* product result rows */
+.fc-sr-prod-list { display: flex; flex-direction: column; gap: 2px; }
+.fc-sr-prod {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 10px;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.12s;
+}
+.fc-sr-prod:hover { background: rgba(255,255,255,0.05); }
+.fc-sr-prod__img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.fc-sr-prod__name {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* page result rows */
+.fc-sr-page-list { display: flex; flex-direction: column; gap: 2px; }
+.fc-sr-page {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 10px;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.12s;
+}
+.fc-sr-page:hover { background: rgba(255,255,255,0.05); }
+.fc-sr-page__title {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.fc-sr-page__arrow {
+  color: rgba(255,255,255,0.25);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* no results */
+.fc-search-no-results {
+  display: none;
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 14px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.fc-search-no-results.active { display: block; }
+.fc-search-no-results em { color: #ffffff; font-style: normal; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 749px) {
+  .fc-search-empty-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+}
+@media (max-width: 480px) {
+  .fc-search-empty-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+
+<div id="fc-search-overlay" role="dialog" aria-modal="true" aria-label="{{ 'general.search.search' | t }}">
+
+  <div class="fc-search-top">
+    <input
+      type="search"
+      id="fc-search-input"
+      class="fc-search-input"
+      placeholder="Search..."
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+    >
+    <div class="fc-search-spinner" id="fc-search-spinner"></div>
+    <button class="fc-search-close" id="fc-search-close" type="button" aria-label="{{ 'accessibility.close' | t }}">&#215;</button>
+  </div>
+
+  <div class="fc-search-body">
+
+    {%- comment -%} Empty state — server-rendered products {%- endcomment -%}
+    <div id="fc-search-empty">
+      <p class="fc-search-label">All Products</p>
+      <div class="fc-search-empty-grid">
+        {%- for product in collections.all.products limit: 10 -%}
+          {%- unless product.title contains 'FBS2' -%}
+            <a class="fc-se-card" href="{{ product.url }}">
+              <div class="fc-se-card__img-wrap">
+                {%- if product.featured_image -%}
+                  {{ product.featured_image | image_url: width: 300 | image_tag: loading: 'lazy', alt: product.title }}
+                {%- endif -%}
+              </div>
+              <p class="fc-se-card__name">{{ product.title }}</p>
+              <p class="fc-se-card__price">{{ product.price | money }}</p>
+            </a>
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- comment -%} Live search results — JS rendered {%- endcomment -%}
+    <div class="fc-search-results" id="fc-search-results">
+
+      <div class="fc-search-section" id="fc-sr-products">
+        <p class="fc-search-section-head">Products</p>
+        <div class="fc-sr-prod-list" id="fc-sr-prod-list"></div>
+      </div>
+
+      <div class="fc-search-section" id="fc-sr-pages">
+        <p class="fc-search-section-head">Pages</p>
+        <div class="fc-sr-page-list" id="fc-sr-page-list"></div>
+      </div>
+
+    </div>
+
+    <p class="fc-search-no-results" id="fc-search-no-results">No results for <em id="fc-sr-no-term"></em></p>
+
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const overlay    = document.getElementById('fc-search-overlay');
+  const input      = document.getElementById('fc-search-input');
+  const closeBtn   = document.getElementById('fc-search-close');
+  const spinner    = document.getElementById('fc-search-spinner');
+  const emptyEl    = document.getElementById('fc-search-empty');
+  const resultsEl  = document.getElementById('fc-search-results');
+  const noResultsEl = document.getElementById('fc-search-no-results');
+  const noTermEl   = document.getElementById('fc-sr-no-term');
+  const prodListEl = document.getElementById('fc-sr-prod-list');
+  const pageListEl = document.getElementById('fc-sr-page-list');
+  const prodSec    = document.getElementById('fc-sr-products');
+  const pageSec    = document.getElementById('fc-sr-pages');
+
+  let debounceTimer = null;
+  let abort = null;
+
+  /* ── open / close ── */
+  function open() {
+    overlay.classList.add('fc-search--open');
+    requestAnimationFrame(() => input.focus());
+  }
+
+  function close() {
+    overlay.classList.remove('fc-search--open');
+    input.value = '';
+    showEmpty();
+  }
+
+  const trigger = document.getElementById('fc-search-trigger');
+  if (trigger) trigger.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  overlay.addEventListener('mousedown', e => { if (e.target === overlay) close(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('fc-search--open')) close();
+  });
+
+  /* ── state ── */
+  function showEmpty() {
+    emptyEl.style.display   = '';
+    resultsEl.classList.remove('active');
+    noResultsEl.classList.remove('active');
+    spinner.classList.remove('active');
+  }
+
+  function showResults(products, pages) {
+    emptyEl.style.display = 'none';
+    noResultsEl.classList.remove('active');
+    resultsEl.classList.add('active');
+
+    if (products.length) {
+      prodSec.style.display = '';
+      prodListEl.innerHTML = products.map(p => `
+        <a class="fc-sr-prod" href="${p.url}">
+          ${p.featured_image ? `<img class="fc-sr-prod__img" src="${p.featured_image.url.replace(/\?.*$/, '')}?width=120" alt="${esc(p.title)}" width="52" height="52" loading="lazy">` : ''}
+          <p class="fc-sr-prod__name">${esc(p.title)}</p>
+        </a>`).join('');
+    } else {
+      prodSec.style.display = 'none';
+    }
+
+    if (pages.length) {
+      pageSec.style.display = '';
+      pageListEl.innerHTML = pages.map(pg => `
+        <a class="fc-sr-page" href="${pg.url}">
+          <p class="fc-sr-page__title">${esc(pg.title)}</p>
+          <span class="fc-sr-page__arrow">→</span>
+        </a>`).join('');
+    } else {
+      pageSec.style.display = 'none';
+    }
+  }
+
+  function showNone(q) {
+    emptyEl.style.display = 'none';
+    resultsEl.classList.remove('active');
+    noTermEl.textContent = q;
+    noResultsEl.classList.add('active');
+  }
+
+  function esc(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ── fetch ── */
+  async function search(q) {
+    if (abort) abort.abort();
+    abort = new AbortController();
+    spinner.classList.add('active');
+    try {
+      const url = `/search/suggest.json?q=${encodeURIComponent(q)}&resources[type]=product,page&resources[limit]=5&resources[options][unavailable_products]=last`;
+      const res = await fetch(url, { signal: abort.signal });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      const r = data?.resources?.results || {};
+      const products = r.products || [];
+      const pages    = r.pages    || [];
+      if (!products.length && !pages.length) showNone(q);
+      else showResults(products, pages);
+    } catch (e) {
+      if (e.name !== 'AbortError') showNone(q);
+    } finally {
+      spinner.classList.remove('active');
+    }
+  }
+
+  /* ── input ── */
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    if (!q) { showEmpty(); return; }
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => search(q), 280);
+  });
+
+  /* ── enter → /search ── */
+  input.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    const q = input.value.trim();
+    if (q) window.location.href = '/search?q=' + encodeURIComponent(q) + '&type=product,page';
+  });
+
+})();
+</script>
