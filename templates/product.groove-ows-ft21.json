@@ -1,86 +1,17 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "main-product",
-      "blocks": {
-        "vendor": {
-          "type": "text",
-          "settings": {
-            "text": "{{ product.vendor }}",
-            "text_style": "uppercase"
-          }
-        },
-        "title": {
-          "type": "title",
-          "settings": {}
-        },
-        "price": {
-          "type": "price",
-          "disabled": true,
-          "settings": {}
-        },
-        "variant_picker": {
-          "type": "variant_picker",
-          "settings": {
-            "picker_type": "button",
-            "swatch_shape": "circle"
-          }
-        },
-        "quantity_selector": {
-          "type": "quantity_selector",
-          "disabled": true,
-          "settings": {}
-        },
-        "buy_buttons": {
-          "type": "buy_buttons",
-          "disabled": true,
-          "settings": {
-            "show_dynamic_checkout": true,
-            "show_gift_card_recipient": true
-          }
-        },
-        "description": {
-          "type": "description",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "vendor",
-        "title",
-        "price",
-        "variant_picker",
-        "quantity_selector",
-        "buy_buttons",
-        "description"
-      ],
-      "custom_css": [
-        "@media screen and (min-width: 750px) {.product__column-sticky {top: 10rem; } .product__info-wrapper {padding-left: 15rem; }}",
-        "@media screen and (min-width: 750px) and (max-width: 1080px) {.product__info-wrapper {padding-left: 5rem; }}",
-        "@media screen and (max-width: 750px) {product-info#MainProduct-template--17708121456714__main {padding-bottom: 0; } .product__info-wrapper.grid__item.scroll-trigger.animate--slide-in {padding-top: 20px; }}"
-      ],
+    "pdp_hero_main": {
+      "type": "pdp-hero",
       "settings": {
-        "enable_sticky_info": true,
-        "color_scheme": "scheme-2",
-        "media_size": "small",
-        "constrain_to_viewport": true,
-        "media_fit": "cover",
-        "gallery_layout": "thumbnail_slider",
-        "mobile_thumbnails": "show",
-        "media_position": "left",
-        "image_zoom": "lightbox",
-        "hide_variants": true,
-        "enable_video_looping": false,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "eyebrow": "EARBUDS"
+      }
+    },
+    "pdp_fc_main": {
+      "type": "pdp-floating-card",
+      "settings": {
+        "spec_1": "16mm Dynamic Driver",
+        "spec_2": "Open-Wear Design",
+        "spec_3": "Up to 45H Battery"
       }
     },
     "scrollbar_menu_sticky_DKpcRb": {
@@ -169,7 +100,7 @@
       "name": "Scrollable Banner Section with Dots + Arrows",
       "settings": {
         "title": "AI-Optimized Clear Calls",
-        "description": "Enjoy uninterrupted calls with AI-enhanced noise reduction, ensuring your voice stays clear and  natural in every moment."
+        "description": "Enjoy uninterrupted calls with AI-enhanced noise reduction, ensuring your voice stays clear and  natural in every moment."
       }
     },
     "50_text_50_picture_e4Hxwb": {
@@ -398,7 +329,8 @@
     }
   },
   "order": [
-    "main",
+    "pdp_hero_main",
+    "pdp_fc_main",
     "scrollbar_menu_sticky_DKpcRb",
     "struggle_and_offer_section_wGKRgH",
     "custom_text_image_slide_banner_UNJccb",

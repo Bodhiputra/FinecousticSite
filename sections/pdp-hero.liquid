@@ -1,0 +1,101 @@
+{%- assign hero_img = section.settings.hero_image | default: product.featured_image -%}
+
+<section class="pdp-hero" id="pdp-hero-{{ section.id }}">
+  {%- if hero_img != blank -%}
+    {{- hero_img | image_url: width: 2000 | image_tag:
+      class: 'pdp-hero__img',
+      loading: 'eager',
+      fetchpriority: 'high',
+      widths: '750, 1100, 1500, 2000',
+      sizes: '100vw'
+    -}}
+  {%- endif -%}
+  <div class="pdp-hero__overlay"></div>
+  <div class="pdp-hero__content">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="pdp-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    <h1 class="pdp-hero__title">{{ product.title }}</h1>
+  </div>
+</section>
+
+{% stylesheet %}
+.pdp-hero {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 500px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+.pdp-hero__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.pdp-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.1) 0%,
+    rgba(0,0,0,0.05) 40%,
+    rgba(0,0,0,0.65) 75%,
+    rgba(0,0,0,0.9) 100%
+  );
+}
+.pdp-hero__content {
+  position: relative;
+  z-index: 1;
+  padding: clamp(40px,6vw,80px) clamp(24px,5vw,80px);
+  width: 100%;
+}
+.pdp-hero__eyebrow {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(11px, 1.2vw, 13px);
+  font-weight: 700;
+  color: #FFD300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+}
+.pdp-hero__title {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(42px, 7vw, 100px);
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.93;
+  margin: 0;
+  max-width: 900px;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "PDP Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image (optional — defaults to product featured image)"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "EARBUDS"
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Hero"
+    }
+  ]
+}
+{% endschema %}

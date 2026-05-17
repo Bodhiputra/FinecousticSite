@@ -1,86 +1,17 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "main-product",
-      "blocks": {
-        "vendor": {
-          "type": "text",
-          "settings": {
-            "text": "{{ product.vendor }}",
-            "text_style": "uppercase"
-          }
-        },
-        "title": {
-          "type": "title",
-          "settings": {}
-        },
-        "price": {
-          "type": "price",
-          "disabled": true,
-          "settings": {}
-        },
-        "variant_picker": {
-          "type": "variant_picker",
-          "settings": {
-            "picker_type": "button",
-            "swatch_shape": "circle"
-          }
-        },
-        "quantity_selector": {
-          "type": "quantity_selector",
-          "disabled": true,
-          "settings": {}
-        },
-        "buy_buttons": {
-          "type": "buy_buttons",
-          "disabled": true,
-          "settings": {
-            "show_dynamic_checkout": true,
-            "show_gift_card_recipient": true
-          }
-        },
-        "description": {
-          "type": "description",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "vendor",
-        "title",
-        "price",
-        "variant_picker",
-        "quantity_selector",
-        "buy_buttons",
-        "description"
-      ],
-      "custom_css": [
-        "@media screen and (min-width: 750px) {.product__column-sticky {top: 10rem; } .product__info-wrapper {padding-left: 15rem; }}",
-        "@media screen and (min-width: 750px) and (max-width: 1080px) {.product__info-wrapper {padding-left: 5rem; }}",
-        "@media screen and (max-width: 750px) {product-info#MainProduct-template--17708121456714__main {padding-bottom: 0; } .product__info-wrapper.grid__item.scroll-trigger.animate--slide-in {padding-top: 20px; }}"
-      ],
+    "pdp_hero_main": {
+      "type": "pdp-hero",
       "settings": {
-        "enable_sticky_info": true,
-        "color_scheme": "scheme-2",
-        "media_size": "small",
-        "constrain_to_viewport": true,
-        "media_fit": "cover",
-        "gallery_layout": "thumbnail_slider",
-        "mobile_thumbnails": "show",
-        "media_position": "left",
-        "image_zoom": "lightbox",
-        "hide_variants": true,
-        "enable_video_looping": false,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "eyebrow": "MICROPHONE"
+      }
+    },
+    "pdp_fc_main": {
+      "type": "pdp-floating-card",
+      "settings": {
+        "spec_1": "3 Polar Patterns",
+        "spec_2": "24-bit / 48kHz",
+        "spec_3": "USB-C & 2.4GHz"
       }
     },
     "scrollbar_menu_sticky_jJgUMn": {
@@ -151,7 +82,7 @@
       "name": "Full Width 16:9 Banner",
       "settings": {
         "banner_heading": "Made to Fit Every Moment",
-        "banner_description": "Whether it’s mobile streaming, Video calls, or studio recording, this . microphone keeps up with your lifestyle. Versatile, portable and ready for any device",
+        "banner_description": "Whether it's mobile streaming, Video calls, or studio recording, this . microphone keeps up with your lifestyle. Versatile, portable and ready for any device",
         "banner_image": "shopify://shop_images/Sonara_UFM1_Fit_Every_Moment.jpg"
       }
     },
@@ -311,7 +242,8 @@
     }
   },
   "order": [
-    "main",
+    "pdp_hero_main",
+    "pdp_fc_main",
     "scrollbar_menu_sticky_jJgUMn",
     "square_image_text_7dJPdw",
     "full_width_image_only_aCCMta",

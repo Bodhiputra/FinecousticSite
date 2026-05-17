@@ -1,0 +1,488 @@
+{%- assign variant = product.selected_or_first_available_variant -%}
+{%- assign thumb = product.featured_image -%}
+{%- assign is_available = variant.available -%}
+
+<!-- Desktop floating card -->
+<div class="pdp-fc" id="pdp-fc-{{ section.id }}">
+  <div class="pdp-fc__img-wrap">
+    {%- if thumb != blank -%}
+      {{- thumb | image_url: width: 200 | image_tag: class: 'pdp-fc__img', loading: 'lazy' -}}
+    {%- endif -%}
+  </div>
+  {%- if section.settings.spec_1 != blank or section.settings.spec_2 != blank or section.settings.spec_3 != blank -%}
+    <ul class="pdp-fc__specs">
+      {%- if section.settings.spec_1 != blank -%}<li>{{ section.settings.spec_1 }}</li>{%- endif -%}
+      {%- if section.settings.spec_2 != blank -%}<li>{{ section.settings.spec_2 }}</li>{%- endif -%}
+      {%- if section.settings.spec_3 != blank -%}<li>{{ section.settings.spec_3 }}</li>{%- endif -%}
+    </ul>
+  {%- endif -%}
+
+  {%- if is_available -%}
+  <div class="fc-card__tag pdp-fc__tag" data-variant-id="{{ variant.id }}">
+    <div class="fc-card__tag-body">
+      <span class="fc-card__price">{{ variant.price | money }}</span>
+      <h3 class="fc-card__name pdp-tag__name">{{ product.title }}</h3>
+      <div class="fc-card__barcode">
+        <svg class="fc-card__barcode-svg" viewBox="0 0 200 16" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0"   width="4" height="16" fill="#000"/>
+          <rect x="8"   width="6" height="16" fill="#000"/>
+          <rect x="17"  width="2" height="16" fill="#000"/>
+          <rect x="26"  width="6" height="16" fill="#000"/>
+          <rect x="34"  width="4" height="16" fill="#000"/>
+          <rect x="45"  width="6" height="16" fill="#000"/>
+          <rect x="53"  width="2" height="16" fill="#000"/>
+          <rect x="60"  width="8" height="16" fill="#000"/>
+          <rect x="70"  width="4" height="16" fill="#000"/>
+          <rect x="80"  width="2" height="16" fill="#000"/>
+          <rect x="85"  width="8" height="16" fill="#000"/>
+          <rect x="95"  width="4" height="16" fill="#000"/>
+          <rect x="105" width="2" height="16" fill="#000"/>
+          <rect x="112" width="6" height="16" fill="#000"/>
+          <rect x="120" width="4" height="16" fill="#000"/>
+          <rect x="131" width="2" height="16" fill="#000"/>
+          <rect x="137" width="8" height="16" fill="#000"/>
+          <rect x="147" width="4" height="16" fill="#000"/>
+          <rect x="156" width="6" height="16" fill="#000"/>
+          <rect x="165" width="2" height="16" fill="#000"/>
+          <rect x="172" width="4" height="16" fill="#000"/>
+          <rect x="179" width="6" height="16" fill="#000"/>
+          <rect x="187" width="4" height="16" fill="#000"/>
+          <rect x="194" width="6" height="16" fill="#000"/>
+        </svg>
+      </div>
+    </div>
+    <span class="fc-tag-rip"></span>
+    <button class="fc-card__atc-plus" data-variant-id="{{ variant.id }}" type="button" aria-label="Add to cart">
+      <span class="fc-qty-label"></span>
+    </button>
+  </div>
+  {%- else -%}
+  <div class="fc-tag-oos-wrap pdp-fc__tag">
+    <div class="fc-card__tag fc-tag--oos">
+      <div class="fc-card__tag-body">
+        <span class="fc-card__price">{{ variant.price | money }}</span>
+        <h3 class="fc-card__name pdp-tag__name">{{ product.title }}</h3>
+        <div class="fc-card__barcode">
+          <svg class="fc-card__barcode-svg" viewBox="0 0 200 16" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0"   width="4" height="16" fill="#000"/>
+            <rect x="8"   width="6" height="16" fill="#000"/>
+            <rect x="17"  width="2" height="16" fill="#000"/>
+            <rect x="26"  width="6" height="16" fill="#000"/>
+            <rect x="34"  width="4" height="16" fill="#000"/>
+            <rect x="45"  width="6" height="16" fill="#000"/>
+            <rect x="53"  width="2" height="16" fill="#000"/>
+            <rect x="60"  width="8" height="16" fill="#000"/>
+            <rect x="70"  width="4" height="16" fill="#000"/>
+            <rect x="80"  width="2" height="16" fill="#000"/>
+            <rect x="85"  width="8" height="16" fill="#000"/>
+            <rect x="95"  width="4" height="16" fill="#000"/>
+            <rect x="105" width="2" height="16" fill="#000"/>
+            <rect x="112" width="6" height="16" fill="#000"/>
+            <rect x="120" width="4" height="16" fill="#000"/>
+            <rect x="131" width="2" height="16" fill="#000"/>
+            <rect x="137" width="8" height="16" fill="#000"/>
+            <rect x="147" width="4" height="16" fill="#000"/>
+            <rect x="156" width="6" height="16" fill="#000"/>
+            <rect x="165" width="2" height="16" fill="#000"/>
+            <rect x="172" width="4" height="16" fill="#000"/>
+            <rect x="179" width="6" height="16" fill="#000"/>
+            <rect x="187" width="4" height="16" fill="#000"/>
+            <rect x="194" width="6" height="16" fill="#000"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="fc-tag-fragment" aria-hidden="true">
+      <span class="fc-tag-fragment__label">OUT OF STOCK</span>
+    </div>
+  </div>
+  {%- endif -%}
+</div>
+
+<!-- Mobile bottom bar -->
+<div class="pdp-fc-bar" id="pdp-fc-bar-{{ section.id }}">
+  <div class="pdp-fc-bar__info">
+    {%- if thumb != blank -%}
+      {{- thumb | image_url: width: 80 | image_tag: class: 'pdp-fc-bar__img', loading: 'lazy' -}}
+    {%- endif -%}
+    <span class="pdp-fc-bar__name">{{ product.title }}</span>
+  </div>
+  {%- if is_available -%}
+  <div class="fc-card__tag pdp-fc-bar__tag" data-variant-id="{{ variant.id }}">
+    <div class="fc-card__tag-body">
+      <span class="fc-card__price">{{ variant.price | money }}</span>
+      <h3 class="fc-card__name pdp-tag__name--bar">{{ product.title }}</h3>
+    </div>
+    <span class="fc-tag-rip"></span>
+    <button class="fc-card__atc-plus" data-variant-id="{{ variant.id }}" type="button" aria-label="Add to cart">
+      <span class="fc-qty-label"></span>
+    </button>
+  </div>
+  {%- else -%}
+  <div class="fc-tag-oos-wrap pdp-fc-bar__tag">
+    <div class="fc-card__tag fc-tag--oos">
+      <div class="fc-card__tag-body">
+        <span class="fc-card__price">{{ variant.price | money }}</span>
+        <h3 class="fc-card__name pdp-tag__name--bar">{{ product.title }}</h3>
+      </div>
+    </div>
+    <div class="fc-tag-fragment" aria-hidden="true">
+      <span class="fc-tag-fragment__label">OUT OF STOCK</span>
+    </div>
+  </div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+/* ── PRICE TAG (shared component — also in shop grid) ── */
+.fc-card__tag {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #FFD300;
+  border-radius: 3px;
+  margin: 8px auto 0;
+  padding: 5px 27px 6px 10px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  width: fit-content;
+}
+.fc-card__tag-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+@media (hover: hover) {
+  .fc-card__tag:hover:not(.fc-tag-active):not(.fc-tag--oos) { opacity: 0.75; }
+}
+.fc-card__price {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(9px, 0.85vw, 11px);
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.fc-card__price-from {
+  display: inline;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  margin-right: 2px;
+}
+.fc-card__name {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(11px, 1.1vw, 13px);
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 140px;
+  display: block;
+}
+.fc-card__barcode {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 80px;
+}
+.fc-card__barcode-svg {
+  width: 100%;
+  height: 16px;
+  display: block;
+}
+.fc-card__atc-plus {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(18px, 2.2vw, 24px);
+  height: clamp(18px, 2.2vw, 24px);
+  border-radius: 50%;
+  background: #000;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fc-card__atc-plus::before,
+.fc-card__atc-plus::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #FFD300;
+  border-radius: 1px;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.15s ease;
+}
+.fc-card__atc-plus::before { width: 45%; height: 2px; }
+.fc-card__atc-plus::after  { width: 2px; height: 45%; }
+.fc-card__atc-plus.fc-active::before,
+.fc-card__atc-plus.fc-active::after { opacity: 0; }
+.fc-qty-label {
+  display: none;
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(7px, 0.8vw, 10px);
+  font-weight: 700;
+  color: #FFD300;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  pointer-events: none;
+}
+.fc-card__atc-plus.fc-active .fc-qty-label {
+  display: block;
+  animation: fc-qty-pop 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes fc-qty-pop {
+  0%   { transform: scale(0.2); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.fc-tag-rip {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left center;
+  width: 13px;
+  height: 3px;
+  background: #000;
+  border-radius: 1px;
+}
+.fc-card__tag.fc-tag-active .fc-tag-rip {
+  animation: fc-rip-tear 0.22s linear forwards;
+}
+@keyframes fc-rip-tear {
+  0%   { transform: translateY(-50%) scaleX(0); }
+  100% { transform: translateY(-50%) scaleX(1); }
+}
+.fc-tag-oos-wrap {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 8px auto 0;
+  width: fit-content;
+}
+.fc-tag-oos-wrap .fc-card__tag.fc-tag--oos {
+  flex: none;
+  width: 117px;
+  padding: 5px 5px 6px 10px;
+  margin: 0;
+  cursor: default;
+  clip-path: polygon(0% 0%,93% 0%,90% 13%,95% 27%,89% 41%,94% 55%,89% 68%,94% 82%,91% 100%,0% 100%);
+  border-radius: 3px 0 0 3px;
+}
+.fc-tag-oos-wrap .fc-card__name { width: 102px; }
+.fc-tag-fragment {
+  flex: none;
+  width: 60px;
+  background: #FFD300;
+  clip-path: polygon(5% 0%,100% 0%,100% 100%,5% 100%,7% 82%,3% 68%,8% 55%,3% 41%,8% 27%,3% 13%,5% 0%);
+  transform: rotate(0.8deg) translateY(1px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 0 3px 3px 0;
+  filter: drop-shadow(-3px 0 4px rgba(0,0,0,0.3));
+}
+.fc-tag-fragment__label {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: clamp(6px, 0.6vw, 8px);
+  font-weight: 700;
+  color: #000;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* ── Desktop floating card ── */
+.pdp-fc {
+  position: fixed;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 500;
+  width: 220px;
+  background: rgba(0,0,0,0.92);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+}
+@media (max-width: 749px) { .pdp-fc { display: none; } }
+
+.pdp-fc__img-wrap {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.04);
+}
+.pdp-fc__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.pdp-fc__specs {
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.pdp-fc__specs li {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.04em;
+  padding-left: 14px;
+  position: relative;
+}
+.pdp-fc__specs li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: #FFD300;
+  font-size: 10px;
+}
+
+/* tag inside the floating card: reset the auto-margin */
+.pdp-fc .fc-card__tag,
+.pdp-fc .fc-tag-oos-wrap { margin: 0; }
+
+/* name width overrides for the floating card context */
+.pdp-tag__name { width: 120px; }
+.pdp-tag__name--bar { width: 80px; }
+
+/* ── Mobile bottom bar ── */
+.pdp-fc-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+  background: rgba(0,0,0,0.96);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(16px);
+  padding: 10px 20px;
+  align-items: center;
+  gap: 12px;
+}
+@media (max-width: 749px) { .pdp-fc-bar { display: flex; } }
+
+.pdp-fc-bar__info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+.pdp-fc-bar__img {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+}
+.pdp-fc-bar__name {
+  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pdp-fc-bar__tag { flex-shrink: 0; margin: 0; }
+.pdp-fc-bar .fc-tag-oos-wrap { margin: 0; }
+{% endstylesheet %}
+
+<script>
+(function() {
+  var sId = {{ section.id | json }};
+  var variantId = {{ variant.id | json }};
+
+  async function addToCart(varId, qty) {
+    try {
+      await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: varId, quantity: qty })
+      });
+      var cartTrigger = document.getElementById('cart-icon-bubble');
+      if (cartTrigger) cartTrigger.click();
+    } catch(e) {}
+  }
+
+  function wireTag(tag) {
+    if (!tag || tag.classList.contains('fc-tag--oos')) return;
+    var tagQty = 0;
+    tag.addEventListener('click', async function(e) {
+      e.stopPropagation();
+      tagQty++;
+      tag.classList.add('fc-tag-active');
+      var plusBtn = tag.querySelector('.fc-card__atc-plus');
+      var qtyLabel = tag.querySelector('.fc-qty-label');
+      if (plusBtn) plusBtn.classList.add('fc-active');
+      if (qtyLabel) qtyLabel.textContent = tagQty;
+      await addToCart(variantId, 1);
+    });
+  }
+
+  wireTag(document.querySelector('#pdp-fc-' + sId + ' .pdp-fc__tag'));
+  wireTag(document.querySelector('#pdp-fc-bar-' + sId + ' .pdp-fc-bar__tag'));
+})();
+</script>
+
+{% schema %}
+{
+  "name": "PDP Floating Card",
+  "settings": [
+    {
+      "type": "text",
+      "id": "spec_1",
+      "label": "Key spec 1"
+    },
+    {
+      "type": "text",
+      "id": "spec_2",
+      "label": "Key spec 2"
+    },
+    {
+      "type": "text",
+      "id": "spec_3",
+      "label": "Key spec 3"
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Floating Card"
+    }
+  ]
+}
+{% endschema %}
