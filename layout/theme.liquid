@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="">
     <link rel="canonical" href="{{ canonical_url }}">
+    <script>if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }</script>
 
-    {%- if settings.favicon != blank -%}
-      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
-    {%- endif -%}
+    <link rel="icon" type="image/png" href="{{ 'FLogo-icon.png' | asset_url }}">
+    <link rel="preload" as="image" href="{{ 'FinecouBG.webp' | asset_url }}" type="image/webp">
 
     {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
@@ -246,6 +246,11 @@
         font-family: var(--font-body-family);
         font-style: var(--font-body-style);
         font-weight: var(--font-body-weight);
+        background-image: url('{{ "FinecouBG.png" | asset_url }}');
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
       }
 
       @media screen and (min-width: 750px) {
@@ -310,6 +315,23 @@
 
     {% sections 'header-group' %}
 
+    {%- style -%}
+      body.gradient {
+        background-image: url('{{ 'FinecouBG.webp' | asset_url }}') !important;
+        background-color: transparent !important;
+        background-size: cover !important;
+        background-position: center top !important;
+        background-repeat: no-repeat !important;
+        background-attachment: fixed !important;
+      }
+      .header-wrapper::before {
+        background-image: url('{{ 'FinecouBG.webp' | asset_url }}');
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+      }
+    {%- endstyle -%}
+
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
@@ -373,5 +395,95 @@
     {%- if settings.cart_type == 'drawer' -%}
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
+
+    {%- render 'fc-search-overlay' -%}
+
+    <script>
+      /* Mirror Dawn's shopify-section-header-hidden class to body.nav-hidden
+         so the scrollbar-menu and other elements can respond to nav state. */
+      (function () {
+        function watchHeader() {
+          var header = document.querySelector('.section-header');
+          if (!header) return;
+          new MutationObserver(function () {
+            document.body.classList.toggle(
+              'nav-hidden',
+              header.classList.contains('shopify-section-header-hidden')
+            );
+          }).observe(header, { attributes: true, attributeFilter: ['class'] });
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', watchHeader);
+        } else {
+          watchHeader();
+        }
+      })();
+    </script>
+
+    <script>
+      /* Announcement bar marquee — duplicate text for seamless mobile loop */
+      (function () {
+        function initMarquee() {
+          if (window.innerWidth > 749) return;
+          var msg = document.querySelector('.announcement-bar__message');
+          if (!msg || msg.dataset.marquee) return;
+          msg.dataset.marquee = '1';
+          var span = msg.querySelector('span');
+          if (!span) return;
+          var text = span.textContent.trim();
+          var sep = '  ·   ';
+          var copy = text + sep;
+          msg.innerHTML = '<span>' + copy + copy + '</span>';
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initMarquee);
+        } else {
+          initMarquee();
+        }
+      })();
+    </script>
+
+    <script>
+      /* Scroll lock — never touch html overflow (combining clip+hidden on html
+         clips fixed-position elements in some browsers, hiding the drawer).
+         Instead use the body position:fixed trick which works universally. */
+      (function () {
+        var html = document.documentElement;
+        var body = document.body;
+        var savedY = 0;
+        var locked = false;
+
+        function lock() {
+          if (locked) return;
+          locked = true;
+          savedY = window.scrollY;
+          body.style.position = 'fixed';
+          body.style.top = '-' + savedY + 'px';
+          body.style.width = '100%';
+          body.style.overflowY = 'hidden';
+        }
+
+        function unlock() {
+          if (!locked) return;
+          locked = false;
+          body.style.position = '';
+          body.style.top = '';
+          body.style.width = '';
+          body.style.overflowY = '';
+          window.scrollTo(0, savedY);
+        }
+
+        function sync() {
+          var shouldLock = html.classList.contains('overflow-hidden') ||
+                           body.classList.contains('overflow-hidden-mobile') ||
+                           body.classList.contains('overflow-hidden-tablet') ||
+                           body.classList.contains('overflow-hidden-desktop');
+          shouldLock ? lock() : unlock();
+        }
+
+        new MutationObserver(sync).observe(html, { attributes: true, attributeFilter: ['class'] });
+        new MutationObserver(sync).observe(body, { attributes: true, attributeFilter: ['class'] });
+      })();
+    </script>
   </body>
 </html>
