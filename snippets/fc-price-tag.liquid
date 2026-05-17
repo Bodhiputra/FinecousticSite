@@ -1,0 +1,87 @@
+{%- if available -%}
+<div class="fc-card__tag {{ tag_class }}" data-variant-id="{{ variant_id }}">
+  <div class="fc-card__tag-body">
+    <span class="fc-card__price">
+      {%- if price_varies -%}<span class="fc-card__price-from">From</span> {%- endif -%}
+      {{ price | money }}
+    </span>
+    <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
+    {%- if show_barcode -%}
+    <div class="fc-card__barcode">
+      <svg class="fc-card__barcode-svg" viewBox="0 0 200 16" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0"   width="4" height="16" fill="#000"/>
+        <rect x="8"   width="6" height="16" fill="#000"/>
+        <rect x="17"  width="2" height="16" fill="#000"/>
+        <rect x="26"  width="6" height="16" fill="#000"/>
+        <rect x="34"  width="4" height="16" fill="#000"/>
+        <rect x="45"  width="6" height="16" fill="#000"/>
+        <rect x="53"  width="2" height="16" fill="#000"/>
+        <rect x="60"  width="8" height="16" fill="#000"/>
+        <rect x="70"  width="4" height="16" fill="#000"/>
+        <rect x="80"  width="2" height="16" fill="#000"/>
+        <rect x="85"  width="8" height="16" fill="#000"/>
+        <rect x="95"  width="4" height="16" fill="#000"/>
+        <rect x="105" width="2" height="16" fill="#000"/>
+        <rect x="112" width="6" height="16" fill="#000"/>
+        <rect x="120" width="4" height="16" fill="#000"/>
+        <rect x="131" width="2" height="16" fill="#000"/>
+        <rect x="137" width="8" height="16" fill="#000"/>
+        <rect x="147" width="4" height="16" fill="#000"/>
+        <rect x="156" width="6" height="16" fill="#000"/>
+        <rect x="165" width="2" height="16" fill="#000"/>
+        <rect x="172" width="4" height="16" fill="#000"/>
+        <rect x="179" width="6" height="16" fill="#000"/>
+        <rect x="187" width="4" height="16" fill="#000"/>
+        <rect x="194" width="6" height="16" fill="#000"/>
+      </svg>
+    </div>
+    {%- endif -%}
+  </div>
+  <span class="fc-tag-rip"></span>
+  <button class="fc-card__atc-plus" data-variant-id="{{ variant_id }}" type="button" aria-label="Add to cart">
+    <span class="fc-qty-label"></span>
+  </button>
+</div>
+{%- else -%}
+<div class="fc-tag-oos-wrap {{ tag_class }}">
+  <div class="fc-card__tag fc-tag--oos">
+    <div class="fc-card__tag-body">
+      <span class="fc-card__price">{{ price | money }}</span>
+      <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
+      {%- if show_barcode -%}
+      <div class="fc-card__barcode">
+        <svg class="fc-card__barcode-svg" viewBox="0 0 200 16" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0"   width="4" height="16" fill="#000"/>
+          <rect x="8"   width="6" height="16" fill="#000"/>
+          <rect x="17"  width="2" height="16" fill="#000"/>
+          <rect x="26"  width="6" height="16" fill="#000"/>
+          <rect x="34"  width="4" height="16" fill="#000"/>
+          <rect x="45"  width="6" height="16" fill="#000"/>
+          <rect x="53"  width="2" height="16" fill="#000"/>
+          <rect x="60"  width="8" height="16" fill="#000"/>
+          <rect x="70"  width="4" height="16" fill="#000"/>
+          <rect x="80"  width="2" height="16" fill="#000"/>
+          <rect x="85"  width="8" height="16" fill="#000"/>
+          <rect x="95"  width="4" height="16" fill="#000"/>
+          <rect x="105" width="2" height="16" fill="#000"/>
+          <rect x="112" width="6" height="16" fill="#000"/>
+          <rect x="120" width="4" height="16" fill="#000"/>
+          <rect x="131" width="2" height="16" fill="#000"/>
+          <rect x="137" width="8" height="16" fill="#000"/>
+          <rect x="147" width="4" height="16" fill="#000"/>
+          <rect x="156" width="6" height="16" fill="#000"/>
+          <rect x="165" width="2" height="16" fill="#000"/>
+          <rect x="172" width="4" height="16" fill="#000"/>
+          <rect x="179" width="6" height="16" fill="#000"/>
+          <rect x="187" width="4" height="16" fill="#000"/>
+          <rect x="194" width="6" height="16" fill="#000"/>
+        </svg>
+      </div>
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="fc-tag-fragment" aria-hidden="true">
+    <span class="fc-tag-fragment__label">OUT OF STOCK</span>
+  </div>
+</div>
+{%- endif -%}
