@@ -43,7 +43,7 @@
   .shopify-section-header {
     align-items: center;
     padding: 5px 25px;
-    background-color: white;
+    background-color: #000000;
   }
 
   .header-logo {
@@ -75,7 +75,7 @@
   .header-menu-links a {
     text-decoration: none;
     transition: color 0.3s ease, transform 0.3s ease;
-    color: black;
+    color: #ffffff;
   }
 
   .header-menu-links a:hover {
@@ -97,7 +97,7 @@
         <a
           href="{{ link.url }}"
         >
-          {{ link.title }}
+          {%- if link.title == 'Products' -%}Shop{%- else -%}{{ link.title }}{%- endif -%}
         </a>
       {% endfor %}
     {% else %}

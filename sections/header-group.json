@@ -17,28 +17,23 @@
         "announcement_GrwcDU": {
           "type": "announcement",
           "settings": {
-            "text": "Welcome to our store",
-            "link": ""
-          }
-        },
-        "announcement-bar-0": {
-          "type": "announcement",
-          "settings": {
-            "text": "Announcement showed here",
+            "text": "Free shipping on orders over $50 · Built to be seen, Meant to be heard",
             "link": ""
           }
         }
       },
       "block_order": [
-        "announcement_GrwcDU",
-        "announcement-bar-0"
+        "announcement_GrwcDU"
       ],
-      "disabled": true,
+      "custom_css": [
+        ".announcement-bar {background-color: #FFD300 !important;}",
+        ".announcement-bar * {color: #000000 !important; font-weight: 600;}"
+      ],
       "settings": {
         "auto_rotate": false,
         "change_slides_speed": 5,
         "color_scheme": "scheme-1",
-        "show_line_separator": true,
+        "show_line_separator": false,
         "show_social": false,
         "enable_country_selector": false,
         "enable_language_selector": false
@@ -72,11 +67,11 @@
         ".header__menu-item span {text-decoration: none !important;}"
       ],
       "settings": {
-        "logo_position": "middle-left",
+        "logo_position": "middle-center",
         "mobile_logo_position": "center",
         "menu": "main-menu",
         "menu_type_desktop": "dropdown",
-        "sticky_header_type": "always",
+        "sticky_header_type": "on-scroll-up",
         "show_line_separator": false,
         "color_scheme": "scheme-4",
         "menu_color_scheme": "scheme-2",
@@ -84,8 +79,8 @@
         "enable_language_selector": true,
         "enable_customer_avatar": true,
         "margin_bottom": 0,
-        "padding_top": 20,
-        "padding_bottom": 20
+        "padding_top": 12,
+        "padding_bottom": 12
       }
     }
   },
