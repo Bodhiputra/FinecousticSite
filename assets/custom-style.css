@@ -81,11 +81,19 @@ small, .caption, .caption-with-letter-spacing {
 /* ── Global background: FinecouBG via body::before (theme.liquid) ── */
 body {
   background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
 }
 html,
 body {
   overflow-x: clip; /* clips horizontal overflow without creating a scroll container — viewport stays as scroll anchor, window.scrollY works, fixed elements are unaffected */
   max-width: 100%;
+}
+
+/* Main content grows to fill available space — keeps footer pinned to bottom */
+#MainContent {
+  flex: 1;
 }
 
 .utility-bar {
@@ -112,8 +120,24 @@ body {
   color: var(--fc-yellow);
 }
 
+/* Finecoustic button typography — applies to all Dawn .button instances */
+.button {
+  font-family: var(--fc-font);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+/* Fixed nav — overlays all content; Dawn's top-toggle hide/show still works unchanged */
+.shopify-section-group-header-group {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
 .header {
-  padding: 5px 0 !important;
+  padding: 12px 0 !important;
   background: transparent !important;
   border: none;
   text-decoration: none;
@@ -124,7 +148,7 @@ body {
 
 .header__menu-item,
 .menu-drawer__menu-item {
-  font-size: 1.6rem;
+  font-size: clamp(1.5rem, 1.8vw, 2rem);
   text-decoration: none;
   transition: transform 0.25s ease, color 0.25s ease;
 }
@@ -277,8 +301,13 @@ details[open]>.header__menu-item {
 }
 
 .content-for-layout {
-  padding-top: 0 !important;
+  padding-top: var(--header-height, 80px);
   padding-bottom: 50px;
+}
+
+/* Homepage hero bleeds under the transparent fixed nav — no push needed */
+body.template-index .content-for-layout {
+  padding-top: 0;
 }
 
 #MainContent .gradient,
@@ -526,7 +555,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 /* Nav links */
 .header__menu-item span {
   letter-spacing: -0.02em;
-  font-size: 1.6rem;
+  font-size: clamp(1.5rem, 1.8vw, 2rem);
 }
 
 /* Nav links — color only on hover, no underline */
@@ -971,8 +1000,8 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 /* ── Header — full width with side padding ── */
 .header.page-width {
   max-width: 100% !important;
-  padding-left: clamp(0px, 2vw, 24px) !important;
-  padding-right: clamp(0px, 2vw, 24px) !important;
+  padding-left: clamp(20px, 4vw, 48px) !important;
+  padding-right: clamp(20px, 4vw, 48px) !important;
 }
 
 /* ── Logo — truly centered on every page and viewport ── */
@@ -1070,7 +1099,8 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 }
 
 /* ── FC CAROUSEL TITLE (shared across all carousel pages) ── */
-.fc-carousel-header {
+.fc-carousel-header,
+.fc-collection-header {
   padding: clamp(10px, 1.5vw, 16px) clamp(12px, 2vw, 24px);
   display: flex;
   align-items: center;
