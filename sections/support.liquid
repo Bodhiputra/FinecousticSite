@@ -17,7 +17,7 @@
 }
 
 /* ── SHARED TYPOGRAPHY ── */
-.fc-sup-eyebrow { font-family: 'Alte Haas Grotesk', sans-serif; font-size: 11px; font-weight: 700; color: #FFD300; letter-spacing: -0.01em; margin: 0 0 12px; text-transform: uppercase; }
+.fc-sup-eyebrow { font-family: var(--fc-font); font-size: 11px; font-weight: 700; color: var(--fc-yellow); letter-spacing: -0.01em; margin: 0 0 12px; text-transform: uppercase; }
 
 /* ── FAQ CATEGORY CARDS ── */
 .fc-faq-cats {
@@ -44,7 +44,7 @@
   }
 }
 .fc-faq-cat-card.fc-cat-active {
-  border-color: #FFD300;
+  border-color: var(--fc-yellow);
   background: rgba(255,211,0,0.04);
 }
 .fc-faq-cat-icon {
@@ -53,9 +53,9 @@
   color: rgba(255,255,255,0.3);
   flex-shrink: 0;
 }
-.fc-faq-cat-card.fc-cat-active .fc-faq-cat-icon { color: #FFD300; }
+.fc-faq-cat-card.fc-cat-active .fc-faq-cat-icon { color: var(--fc-yellow); }
 .fc-faq-cat-name {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(11px, 1vw, 13px);
   font-weight: 700;
   color: rgba(255,255,255,0.55);
@@ -84,7 +84,7 @@
   gap: 16px;
 }
 .fc-faq-q-text {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(14px, 1.2vw, 16px);
   font-weight: 700;
   color: rgba(255,255,255,0.85);
@@ -93,8 +93,8 @@
   transition: color 0.2s;
 }
 @media (hover: hover) {
-  .fc-faq-q:hover .fc-faq-q-text { color: #FFD300; }
-  .fc-faq-q:hover .fc-faq-icon { color: #FFD300; }
+  .fc-faq-q:hover .fc-faq-q-text { color: var(--fc-yellow); }
+  .fc-faq-q:hover .fc-faq-icon { color: var(--fc-yellow); }
 }
 .fc-faq-item.open .fc-faq-q-text { color: #ffffff; }
 
@@ -120,12 +120,12 @@
   transform: translate(-50%, -65%) rotate(45deg);
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.fc-faq-item.open .fc-faq-icon { color: #FFD300; transform: rotate(180deg); }
+.fc-faq-item.open .fc-faq-icon { color: var(--fc-yellow); transform: rotate(180deg); }
 .fc-faq-item.open .fc-faq-icon::before { transform: translate(-50%, -35%) rotate(45deg); }
 
 .fc-faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
 .fc-faq-a-inner {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(14px, 1.2vw, 15px);
   color: rgba(255,255,255,0.5);
   line-height: 1.75;
@@ -143,10 +143,10 @@
 /* ── FORMS ── */
 .fc-form { display: flex; flex-direction: column; gap: 20px; }
 .fc-field { display: flex; flex-direction: column; gap: 8px; }
-.fc-field label { font-family: 'Alte Haas Grotesk', sans-serif; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); letter-spacing: -0.01em; text-transform: uppercase; }
+.fc-field label { font-family: var(--fc-font); font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); letter-spacing: -0.01em; text-transform: uppercase; }
 .fc-field label .fc-label-opt { color: rgba(255,255,255,0.25); font-weight: 400; text-transform: none; }
 .fc-field input, .fc-field select, .fc-field textarea {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(14px, 1.1vw, 15px);
   font-weight: 400;
   color: #ffffff;
@@ -195,13 +195,13 @@
 @keyframes fc-field-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .fc-sup-field--visible { animation: fc-field-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
-.fc-sup-field-note { font-family: 'Alte Haas Grotesk', sans-serif; font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: -0.01em; margin: 4px 0 0; line-height: 1.6; }
+.fc-sup-field-note { font-family: var(--fc-font); font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: -0.01em; margin: 4px 0 0; line-height: 1.6; }
 
 /* ── SUCCESS STATE ── */
 .fc-sup-success { text-align: center; padding: 80px 0 40px; }
-.fc-sup-success__check { width: 44px; height: 44px; border: 2px solid #FFD300; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #FFD300; font-size: 20px; margin-bottom: 28px; }
-.fc-sup-success__title { font-family: 'Alte Haas Grotesk', sans-serif; font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: #ffffff; letter-spacing: -0.02em; margin: 0 0 12px; }
-.fc-sup-success__body { font-family: 'Alte Haas Grotesk', sans-serif; font-size: clamp(13px, 1.1vw, 15px); color: rgba(255,255,255,0.45); margin: 0; line-height: 1.8; }
+.fc-sup-success__check { width: 44px; height: 44px; border: 2px solid var(--fc-yellow); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: var(--fc-yellow); font-size: 20px; margin-bottom: 28px; }
+.fc-sup-success__title { font-family: var(--fc-font); font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: #ffffff; letter-spacing: -0.02em; margin: 0 0 12px; }
+.fc-sup-success__body { font-family: var(--fc-font); font-size: clamp(13px, 1.1vw, 15px); color: rgba(255,255,255,0.45); margin: 0; line-height: 1.8; }
 
 @media (max-width: 600px) { .fc-form-row { grid-template-columns: 1fr; } }
 
@@ -266,7 +266,7 @@
         <div class="fc-faq-a">
           <div class="fc-faq-a-inner">
             <p class="fc-faq-a-short">Submit a Refund Request through our Support page with your order number and a photo link.</p>
-            <p class="fc-faq-a-detail">Head to our <a href="/pages/support?tab=support&type=refund" style="color:#FFD300;">Support page</a> and select "Refund Request". Fill in your order number, describe the issue, and provide a photo link (Google Drive, iCloud, or OneDrive). Our team will review and respond within 3 business days. Returns are only accepted for verified defects, wrong items received, or manufacturing faults.</p>
+            <p class="fc-faq-a-detail">Head to our <a href="/pages/support?tab=support&type=refund" style="color:var(--fc-yellow);">Support page</a> and select "Refund Request". Fill in your order number, describe the issue, and provide a photo link (Google Drive, iCloud, or OneDrive). Our team will review and respond within 3 business days. Returns are only accepted for verified defects, wrong items received, or manufacturing faults.</p>
           </div>
         </div>
       </div>
@@ -278,7 +278,7 @@
         <div class="fc-faq-a">
           <div class="fc-faq-a-inner">
             <p class="fc-faq-a-short">Submit a return request within 7 days of delivery with photos and your order details.</p>
-            <p class="fc-faq-a-detail">Go to our <a href="/pages/support?tab=support&type=refund" style="color:#FFD300;">Support page</a> within 7 days of receiving your order. Provide photos of the item received, your tracking number, and order details. Upload photos to Google Drive, iCloud, or OneDrive and share the link. We'll arrange a replacement or refund once verified.</p>
+            <p class="fc-faq-a-detail">Go to our <a href="/pages/support?tab=support&type=refund" style="color:var(--fc-yellow);">Support page</a> within 7 days of receiving your order. Provide photos of the item received, your tracking number, and order details. Upload photos to Google Drive, iCloud, or OneDrive and share the link. We'll arrange a replacement or refund once verified.</p>
           </div>
         </div>
       </div>
@@ -290,7 +290,7 @@
         <div class="fc-faq-a">
           <div class="fc-faq-a-inner">
             <p class="fc-faq-a-short">Yes — within 12 hours of purchase and only before the order ships.</p>
-            <p class="fc-faq-a-detail">Cancellations must be requested within 12 hours of purchase through our <a href="/pages/support?tab=support" style="color:#FFD300;">Support page</a>. Once the order has shipped, cancellation is no longer possible and any returns will be the customer's responsibility. We process orders quickly — reach out immediately if you need to cancel.</p>
+            <p class="fc-faq-a-detail">Cancellations must be requested within 12 hours of purchase through our <a href="/pages/support?tab=support" style="color:var(--fc-yellow);">Support page</a>. Once the order has shipped, cancellation is no longer possible and any returns will be the customer's responsibility. We process orders quickly — reach out immediately if you need to cancel.</p>
           </div>
         </div>
       </div>
@@ -302,7 +302,7 @@
         <div class="fc-faq-a">
           <div class="fc-faq-a-inner">
             <p class="fc-faq-a-short">No — returns are only accepted for defects, wrong items received, or manufacturing faults.</p>
-            <p class="fc-faq-a-detail">We do not accept returns based on personal preference, including dissatisfaction with sound signature, comfort, or fit, where the product is functioning as described. If your product has a genuine defect or you received the wrong item, submit a request through our <a href="/pages/support?tab=support&type=refund" style="color:#FFD300;">Support page</a> and we'll make it right.</p>
+            <p class="fc-faq-a-detail">We do not accept returns based on personal preference, including dissatisfaction with sound signature, comfort, or fit, where the product is functioning as described. If your product has a genuine defect or you received the wrong item, submit a request through our <a href="/pages/support?tab=support&type=refund" style="color:var(--fc-yellow);">Support page</a> and we'll make it right.</p>
           </div>
         </div>
       </div>
@@ -316,7 +316,7 @@
         <div class="fc-faq-a">
           <div class="fc-faq-a-inner">
             <p class="fc-faq-a-short">Check your dispatch email for your tracking number, then enter it on our Track Order page.</p>
-            <p class="fc-faq-a-detail">Once your order ships, you'll receive a confirmation email with your Yanwen tracking number. Enter it on our <a href="/pages/support?tab=track" style="color:#FFD300;">Track Order page</a> to monitor your shipment in real time. If you haven't received a tracking email within 3 business days of ordering, check your spam folder or contact us through the Support page.</p>
+            <p class="fc-faq-a-detail">Once your order ships, you'll receive a confirmation email with your Yanwen tracking number. Enter it on our <a href="/pages/support?tab=track" style="color:var(--fc-yellow);">Track Order page</a> to monitor your shipment in real time. If you haven't received a tracking email within 3 business days of ordering, check your spam folder or contact us through the Support page.</p>
           </div>
         </div>
       </div>
@@ -328,7 +328,7 @@
         <div class="fc-faq-a">
           <div class="fc-faq-a-inner">
             <p class="fc-faq-a-short">Only before your order is dispatched — contact us immediately through the Support page.</p>
-            <p class="fc-faq-a-detail">Address changes must be requested before a tracking number has been issued. Once dispatched, the address cannot be changed and the package may be returned if undeliverable, with return shipping costs the customer's responsibility. Reach out through our <a href="/pages/support?tab=support" style="color:#FFD300;">Support page</a> as soon as possible.</p>
+            <p class="fc-faq-a-detail">Address changes must be requested before a tracking number has been issued. Once dispatched, the address cannot be changed and the package may be returned if undeliverable, with return shipping costs the customer's responsibility. Reach out through our <a href="/pages/support?tab=support" style="color:var(--fc-yellow);">Support page</a> as soon as possible.</p>
           </div>
         </div>
       </div>
@@ -342,7 +342,7 @@
         <div class="fc-faq-a">
           <div class="fc-faq-a-inner">
             <p class="fc-faq-a-short">Manufacturing defects and hardware faults under normal use — not physical damage, liquid damage, or misuse.</p>
-            <p class="fc-faq-a-detail">The warranty covers manufacturing defects and hardware faults that occur under normal use. It does not cover physical damage from drops or impacts, liquid damage, unauthorized modifications, or wear and tear on consumable parts. If you're unsure whether your issue is covered, submit a Warranty Claim through our <a href="/pages/support?tab=support&type=warranty" style="color:#FFD300;">Support page</a> and our team will assess it.</p>
+            <p class="fc-faq-a-detail">The warranty covers manufacturing defects and hardware faults that occur under normal use. It does not cover physical damage from drops or impacts, liquid damage, unauthorized modifications, or wear and tear on consumable parts. If you're unsure whether your issue is covered, submit a Warranty Claim through our <a href="/pages/support?tab=support&type=warranty" style="color:var(--fc-yellow);">Support page</a> and our team will assess it.</p>
           </div>
         </div>
       </div>
@@ -354,7 +354,7 @@
         <div class="fc-faq-a">
           <div class="fc-faq-a-inner">
             <p class="fc-faq-a-short">Keep the original packaging and submit a Warranty Claim with photos through our Support page.</p>
-            <p class="fc-faq-a-detail">Do not discard the original packaging — it may be needed for the return. Submit a Warranty Claim through our <a href="/pages/support?tab=support&type=warranty" style="color:#FFD300;">Support page</a> with your order number and photos of the damage (uploaded to Google Drive, iCloud, or OneDrive). Our team will review your claim and arrange a replacement or repair as quickly as possible.</p>
+            <p class="fc-faq-a-detail">Do not discard the original packaging — it may be needed for the return. Submit a Warranty Claim through our <a href="/pages/support?tab=support&type=warranty" style="color:var(--fc-yellow);">Support page</a> with your order number and photos of the damage (uploaded to Google Drive, iCloud, or OneDrive). Our team will review your claim and arrange a replacement or repair as quickly as possible.</p>
           </div>
         </div>
       </div>
@@ -366,7 +366,7 @@
         <div class="fc-faq-a">
           <div class="fc-faq-a-inner">
             <p class="fc-faq-a-short">Go to our Support page, select "Warranty Claim", and fill in your order number and defect description.</p>
-            <p class="fc-faq-a-detail">Head to our <a href="/pages/support?tab=support&amp;type=warranty" style="color:#FFD300;">Support page</a> and select "Warranty Claim" from the request type dropdown. Provide your order number, describe the defect in detail, and include a photo link (Google Drive, iCloud, or OneDrive) showing the issue. Our team will confirm eligibility and guide you through the next steps within 3 business days.</p>
+            <p class="fc-faq-a-detail">Head to our <a href="/pages/support?tab=support&amp;type=warranty" style="color:var(--fc-yellow);">Support page</a> and select "Warranty Claim" from the request type dropdown. Provide your order number, describe the defect in detail, and include a photo link (Google Drive, iCloud, or OneDrive) showing the issue. Our team will confirm eligibility and guide you through the next steps within 3 business days.</p>
           </div>
         </div>
       </div>

@@ -26,7 +26,7 @@
         "announcement_GrwcDU"
       ],
       "custom_css": [
-        ".announcement-bar {background-color: #FFD300 !important;}",
+        ".announcement-bar {background-color: var(--fc-yellow) !important;}",
         ".announcement-bar * {color: #000000 !important; font-weight: 600;}"
       ],
       "settings": {
@@ -55,7 +55,7 @@
       "disabled": true,
       "name": "t:sections.custom-liquid.presets.name",
       "settings": {
-        "custom_liquid": "<div style=\"background-color: #FFD300; height: 30px; display: flex; justify-content: flex-end; align-items: center; padding-right: 10px; display: flex; flex-direction: row; gap: 5px;\">\n<p style=\"font-weight: 600; color: black\">Powered by</p>\n  <img src=\"https://cdn.shopify.com/s/files/1/0661/0229/6650/files/Fantech_Logo.svg?v=1758181350\" alt=\"Right Image\" style=\"max-height: 40px; height: 11px;\">\n</div>",
+        "custom_liquid": "<div style=\"background-color: var(--fc-yellow); height: 30px; display: flex; justify-content: flex-end; align-items: center; padding-right: 10px; display: flex; flex-direction: row; gap: 5px;\">\n<p style=\"font-weight: 600; color: black\">Powered by</p>\n  <img src=\"https://cdn.shopify.com/s/files/1/0661/0229/6650/files/Fantech_Logo.svg?v=1758181350\" alt=\"Right Image\" style=\"max-height: 40px; height: 11px;\">\n</div>",
         "color_scheme": "scheme-2",
         "padding_top": 0,
         "padding_bottom": 0

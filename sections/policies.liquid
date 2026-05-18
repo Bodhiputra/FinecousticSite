@@ -22,7 +22,7 @@
 .fc-policy-panel h2,
 .fc-policy-panel h3,
 .fc-policy-panel h4 {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.02em;
@@ -34,7 +34,7 @@
 .fc-policy-panel h3 { font-size: clamp(16px, 2vw, 20px); color: rgba(255,255,255,0.85); }
 
 .fc-policy-panel p {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(14px, 1.2vw, 16px);
   color: rgba(255,255,255,0.65);
   line-height: 1.75;
@@ -43,7 +43,7 @@
 }
 .fc-policy-panel ul,
 .fc-policy-panel ol {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(14px, 1.2vw, 16px);
   color: rgba(255,255,255,0.65);
   line-height: 1.75;
@@ -52,12 +52,12 @@
 }
 .fc-policy-panel li { margin-bottom: 8px; }
 .fc-policy-panel a {
-  color: #FFD300;
+  color: var(--fc-yellow);
   text-decoration-color: rgba(255,211,0,0.4);
   text-underline-offset: 3px;
   transition: text-decoration-color 0.2s;
 }
-.fc-policy-panel a:hover { text-decoration-color: #FFD300; }
+.fc-policy-panel a:hover { text-decoration-color: var(--fc-yellow); }
 .fc-policy-panel strong { color: rgba(255,255,255,0.9); }
 .fc-policy-panel hr {
   border: none;
@@ -66,10 +66,10 @@
 }
 
 .fc-policy-eyebrow {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 11px;
   font-weight: 700;
-  color: #FFD300;
+  color: var(--fc-yellow);
   letter-spacing: -0.01em;
   margin: 0 0 32px;
   text-transform: uppercase;

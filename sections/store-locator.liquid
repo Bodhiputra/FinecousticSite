@@ -17,7 +17,7 @@
   justify-content: center;
 }
 .fc-sl-title {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(20px, 5.5vw, 48px);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -38,7 +38,7 @@
   width: clamp(160px, 22vw, 280px);
 }
 .fc-locator-search {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 12px;
   font-weight: 700;
   color: #ffffff;
@@ -53,7 +53,7 @@
   -webkit-appearance: none;
 }
 .fc-locator-search::placeholder { color: rgba(255,255,255,0.18); }
-.fc-locator-search:focus { border-color: #FFD300; }
+.fc-locator-search:focus { border-color: var(--fc-yellow); }
 .fc-locator-search-icon {
   position: absolute;
   right: 0; top: 50%;
@@ -96,16 +96,16 @@
 }
 
 .fc-locator-card-country {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 11px;
   font-weight: 700;
-  color: #FFD300;
+  color: var(--fc-yellow);
   letter-spacing: -0.01em;
   margin: 0 0 4px;
   line-height: 1;
 }
 .fc-locator-card-name {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 15px;
   font-weight: 700;
   color: #ffffff;
@@ -114,7 +114,7 @@
   margin: 0;
 }
 .fc-locator-card-ig {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 12px;
   font-weight: 700;
   color: rgba(255,255,255,0.38);
@@ -129,7 +129,7 @@
   transition: color 0.2s ease, border-color 0.2s ease;
 }
 .fc-locator-card:hover .fc-locator-card-ig {
-  color: #FFD300;
+  color: var(--fc-yellow);
   border-color: rgba(255,211,0,0.4);
 }
 .fc-locator-card-ig-arrow {
@@ -139,7 +139,7 @@
 .fc-locator-card:hover .fc-locator-card-ig-arrow { transform: translate(2px, -2px); }
 
 .fc-locator-card-tbd {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -156,7 +156,7 @@
 }
 .fc-locator-empty.visible { display: block; }
 .fc-locator-empty-label {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -165,7 +165,7 @@
   margin: 0 0 8px;
 }
 .fc-locator-empty-query {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: clamp(28px, 4vw, 48px);
   font-weight: 700;
   color: rgba(255,255,255,0.05);
@@ -182,17 +182,17 @@
   text-align: center;
 }
 .fc-locator-footnote-cta {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 11px;
   font-weight: 700;
-  color: #FFD300;
+  color: var(--fc-yellow);
   text-decoration: none;
   letter-spacing: -0.01em;
   border-bottom: 1px solid rgba(255,211,0,0.22);
   padding-bottom: 1px;
   transition: border-color 0.2s;
 }
-.fc-locator-footnote-cta:hover { border-color: #FFD300; }
+.fc-locator-footnote-cta:hover { border-color: var(--fc-yellow); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 1100px) {

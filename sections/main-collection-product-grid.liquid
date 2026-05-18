@@ -150,15 +150,15 @@
 .fc-exp-close svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
 
 .fc-exp-category {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: #FFD300;
+  color: var(--fc-yellow);
   margin-bottom: 10px;
 }
 .fc-exp-name {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 19px;
   font-weight: 700;
   color: #fff;
@@ -167,7 +167,7 @@
   margin-bottom: 7px;
 }
 .fc-exp-price {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 14px;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -183,7 +183,7 @@
 }
 .fc-exp-colors.hidden { display: none; }
 .fc-exp-color-label {
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -229,7 +229,7 @@
   background: #fff;
   color: #000;
   border: none;
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -241,7 +241,7 @@
   z-index: 2;
   width: 100%;
 }
-.fc-exp-atc-btn:hover { background: #FFD300; }
+.fc-exp-atc-btn:hover { background: var(--fc-yellow); }
 .fc-exp-atc-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .fc-expanded.exp-added .fc-exp-atc-btn { opacity: 0; pointer-events: none; transform: scale(0.95); }
 
@@ -270,7 +270,7 @@
   align-items: center;
   justify-content: center;
   transition: background 0.15s;
-  font-family: 'Alte Haas Grotesk', sans-serif;
+  font-family: var(--fc-font);
   line-height: 1;
 }
 .fc-exp-stepper__btn:hover { background: rgba(255,255,255,0.05); }

@@ -58,8 +58,8 @@
       ],
       "custom_css": [
         ".footer-block__details-content a {color: white; text-decoration: none; transition: color 0.3s ease;}",
-        ".footer-block__details-content a:hover {color: #ffd300;}",
-        ".footer__list-social .list-social__link:hover {color: #ffd300;}",
+        ".footer-block__details-content a:hover {color: var(--fc-yellow);}",
+        ".footer__list-social .list-social__link:hover {color: var(--fc-yellow);}",
         ".footer__social-wrapper {display: flex; align-items: center; margin-top: 16px;}"
       ],
       "settings": {
