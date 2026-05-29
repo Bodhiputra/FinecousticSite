@@ -1,160 +1,51 @@
-{%- style -%}
+<div class="fc-shop-page fc-dl-page{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}">
 
-/* ── SECTION ── */
-.fc-dl-section {
-  background: transparent;
-  padding: 0;
-}
+  {%- render 'fc-title-carousel',
+    id: 'fc-dl',
+    labels: 'All Products|Earphones|Speakers|Microphones',
+    active_index: 0
+  -%}
 
-/* ── GRID ── */
-.fc-dl-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 350px));
-  justify-content: center;
-  gap: clamp(24px, 4vw, 50px) clamp(16px, 3vw, 50px);
-  margin: 0 auto 48px;
-  padding: 0 clamp(0px, 5vw, 50px);
-  box-sizing: border-box;
-}
+  <div class="fc-page-swipe-zone fc-shop-swipe-zone" id="fc-dl-swipe-zone">
+    <div class="fc-grid" id="fc-dl-grid" data-cols="5">
+      {%- assign dl_category = '' -%}
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'Heading' -%}
+            {%- assign dl_category = block.settings.heading_text | downcase -%}
+            {%- if dl_category contains 'earbud' -%}
+              {%- assign dl_category = 'earphones' -%}
+            {%- elsif dl_category contains 'mic' -%}
+              {%- assign dl_category = 'microphones' -%}
+            {%- elsif dl_category contains 'speaker' -%}
+              {%- assign dl_category = 'speakers' -%}
+            {%- endif -%}
+          {%- when 'Text' -%}
+            {%- assign dl_product = all_products[block.settings.product_handle] -%}
+            <div class="fc-card" data-category="{{ dl_category }}" {{ block.shopify_attributes }}>
+              <div class="fc-card__image">
+                {%- if block.settings.product_handle != blank and dl_product != blank and dl_product.featured_image -%}
+                  {{ dl_product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: block.settings.title }}
+                {%- elsif block.settings.image != blank -%}
+                  {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: block.settings.title | escape }}
+                {%- endif -%}
+              </div>
 
-/* ── CARD ── */
-.fc-dl-card {
-  display: flex;
-  flex-direction: column;
-  background: transparent;
-  position: relative;
-  min-width: 0;
-}
-.fc-dl-card__image {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  background: transparent;
-  position: relative;
-}
-.fc-dl-card__img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-.fc-dl-card:hover .fc-dl-card__img { transform: scale(1.07); }
-
-/* ── CARD INFO ── */
-.fc-dl-card-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  margin-top: 12px;
-  text-align: center;
-}
-.fc-dl-card-name {
-  font-family: var(--fc-font);
-  font-size: clamp(11px, 1.1vw, 14px);
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin: 0;
-  line-height: 1.2;
-}
-.fc-dl-guide-link {
-  font-family: var(--fc-font);
-  font-size: clamp(11px, 1vw, 13px);
-  font-weight: 700;
-  color: rgba(255,255,255,0.5);
-  text-decoration: none;
-  letter-spacing: -0.01em;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  transition: color 0.2s ease;
-}
-.fc-dl-guide-link::before {
-  content: '↓';
-  color: var(--fc-yellow);
-  font-size: 12px;
-}
-@media (hover: hover) {
-  .fc-dl-guide-link:hover { color: var(--fc-yellow); }
-}
-
-/* ── HIDDEN / FILTER APPEAR ── */
-.fc-dl-card.fc-hidden { display: none; }
-@keyframes fc-dl-card-in {
-  from { opacity: 0; transform: translateY(12px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0)    scale(1); }
-}
-.fc-dl-card-appear {
-  animation: fc-dl-card-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* ── RESPONSIVE ── */
-@media (max-width: 1024px) {
-  .fc-dl-grid { grid-template-columns: repeat(3, minmax(0, 350px)); }
-}
-@media (max-width: 749px) {
-  .fc-dl-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    padding: 0 16px;
-  }
-}
-
-{%- endstyle -%}
-
-<div class="fc-dl-section{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}">
-
-  {%- comment -%} Carousel header {%- endcomment -%}
-  <div class="fc-carousel-header" id="fc-dl-header">
-    <button class="fc-carousel-arrow fc-filter-nav__prev" type="button" aria-label="Previous">&#171;</button>
-    <div class="fc-title-viewport" id="fc-dl-title-viewport">
-      <div class="fc-title-track" id="fc-dl-title-track">
-        <span class="fc-title-item">Microphones</span>
-        <span class="fc-title-item fc-title-active">All</span>
-        <span class="fc-title-item">Earbuds</span>
-        <span class="fc-title-item">Microphones</span>
-        <span class="fc-title-item">All</span>
-      </div>
-    </div>
-    <button class="fc-carousel-arrow fc-filter-nav__next" type="button" aria-label="Next">&#187;</button>
-  </div>
-
-  {%- comment -%} Download grid {%- endcomment -%}
-  <div class="fc-dl-grid" id="fc-dl-grid">
-    {%- assign dl_category = '' -%}
-    {%- for block in section.blocks -%}
-      {%- case block.type -%}
-        {%- when 'Heading' -%}
-          {%- assign dl_category = block.settings.heading_text | downcase -%}
-        {%- when 'Text' -%}
-          {%- assign dl_product = all_products[block.settings.product_handle] -%}
-          <div class="fc-dl-card" data-category="{{ dl_category }}">
-
-            <div class="fc-dl-card__image">
-              {%- if block.settings.product_handle != blank and dl_product != blank and dl_product.featured_image -%}
-                {{ dl_product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-dl-card__img', alt: block.settings.title }}
-              {%- elsif block.settings.image != blank -%}
-                {{ block.settings.image | image_url: width: 400 | image_tag: loading: 'lazy', class: 'fc-dl-card__img', alt: block.settings.title | escape }}
-              {%- endif -%}
-            </div>
-
-            <div class="fc-dl-card-info">
               {%- if block.settings.title != blank -%}
                 <p class="fc-dl-card-name">{{ block.settings.title }}</p>
               {%- endif -%}
               {%- if block.settings.download_url != blank -%}
-                <a class="fc-dl-guide-link" href="{{ block.settings.download_url }}" target="_blank" rel="noopener">Quick Start Guide</a>
+                {%- render 'fc-guide-tag',
+                  download_url: block.settings.download_url,
+                  title: block.settings.title
+                -%}
               {%- endif -%}
             </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
 
-          </div>
-      {%- endcase -%}
-    {%- endfor -%}
+    <p class="fc-category-soon" id="fc-dl-soon" hidden>Soon.</p>
   </div>
 
 </div>
@@ -162,49 +53,88 @@
 <script>
 (function () {
 
-  /* ── filter ── */
+  const FILTERS = [
+    { key: 'all',         label: 'All Products' },
+    { key: 'earphones',   label: 'Earphones' },
+    { key: 'speakers',    label: 'Speakers' },
+    { key: 'microphones', label: 'Microphones' },
+  ];
+
+  function updateGridColumns(visibleCount) {
+    const grid = document.getElementById('fc-dl-grid');
+    if (!grid) return;
+    const maxCols = parseInt(grid.dataset.cols, 10) || 5;
+    const cols = Math.max(1, Math.min(visibleCount, maxCols));
+    grid.style.setProperty('--fc-visible-cols', String(cols));
+  }
+
   function applyFilter(filter) {
     let visIdx = 0;
-    document.querySelectorAll('#fc-dl-grid .fc-dl-card').forEach(card => {
-      card.classList.remove('fc-dl-card-appear');
+    let visibleCount = 0;
+    document.querySelectorAll('#fc-dl-grid .fc-card').forEach(card => {
+      card.classList.remove('fc-card-appear');
       const show = filter === 'all' || card.dataset.category === filter;
       if (!show) {
         card.classList.add('fc-hidden');
       } else {
+        visibleCount++;
         card.classList.remove('fc-hidden');
         const delay = visIdx * 90;
         visIdx++;
         requestAnimationFrame(() => {
           card.style.animationDelay = delay + 'ms';
-          card.classList.add('fc-dl-card-appear');
+          card.classList.add('fc-card-appear');
         });
+      }
+    });
+    const soonEl = document.getElementById('fc-dl-soon');
+    const zone = document.getElementById('fc-dl-swipe-zone');
+    const showSoon = filter === 'speakers' && visibleCount === 0;
+    if (soonEl) soonEl.hidden = !showSoon;
+    if (zone) zone.classList.toggle('fc-shop-swipe-zone--soon', showSoon);
+    updateGridColumns(visibleCount);
+  }
+
+  function fcFitNames() {
+    document.querySelectorAll('#fc-dl-grid .fc-dl-card-name').forEach(el => {
+      el.style.fontSize = '';
+      let size = parseFloat(getComputedStyle(el).fontSize);
+      while (el.scrollWidth > el.offsetWidth && size > 7) {
+        size -= 0.5;
+        el.style.fontSize = size + 'px';
       }
     });
   }
 
-  /* ── carousel ── */
-  const FILTERS = [
-    { key: 'all',         label: 'All' },
-    { key: 'earbuds',     label: 'Earbuds' },
-    { key: 'microphones', label: 'Microphones' },
-  ];
-
-  function init() {
-    if (!window.FcCarousel) return;
-    window.FcCarousel({
-      trackId:      'fc-dl-title-track',
-      viewportId:   'fc-dl-title-viewport',
-      prevSelector: '.fc-filter-nav__prev',
-      nextSelector: '.fc-filter-nav__next',
-      extraSwipeId: 'fc-dl-grid',
+  function initCarousel() {
+    if (!document.getElementById('fc-dl-header') || !window.FcTitleCarousel) return;
+    window.FcTitleCarousel({
+      id: 'fc-dl',
+      extraSwipeId: 'fc-dl-swipe-zone',
       N: FILTERS.length,
       onSlide: function (logIdx) { applyFilter(FILTERS[logIdx].key); },
       getInitialIdx: function () { return 0; }
     }).init();
   }
 
+  function init() {
+    if (!document.getElementById('fc-dl-header')) return;
+    initCarousel();
+    applyFilter('all');
+    fcFitNames();
+  }
+
   init();
-  document.addEventListener('shopify:section:load', init);
+  document.addEventListener('shopify:section:load', function (evt) {
+    if (!evt.target.querySelector || !evt.target.querySelector('#fc-dl-header')) return;
+    init();
+  });
+
+  let fcFitTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(fcFitTimer);
+    fcFitTimer = setTimeout(fcFitNames, 120);
+  });
 
 })();
 </script>

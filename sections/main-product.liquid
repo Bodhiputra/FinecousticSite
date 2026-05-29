@@ -38,27 +38,35 @@
       }
     }
 
-    .product__title h1{
-      font-weight: 800;
-      color: black;
+    .product__title h1,
+    .product__title .h1 {
+      font-family: var(--fc-font);
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.02em;
     }
 
     ::marker {
-    color: black;
+      color: var(--fc-yellow);
     }
 
     p.product__text.inline-richtext.caption-with-letter-spacing {
-      font-weight: 600;
-      color: #808080;
+      font-family: var(--fc-font);
+      font-weight: 700;
+      color: var(--fc-yellow);
+      letter-spacing: 0.12em;
     }
 
+    .product__description,
     .product__description strong {
-      color: black;
+      font-family: var(--fc-font);
+      color: #ffffff;
     }
 
     .product__description ul {
+      font-family: var(--fc-font);
       font-weight: 500;
-      color: #808080;
+      color: rgba(255, 255, 255, 0.65);
       font-size: 16px;
     }
 

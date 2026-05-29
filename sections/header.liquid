@@ -1,16 +1,12 @@
 <link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'fc-nav-dropdowns.css' | asset_url }}" media="print" onload="this.media='all'">
 <link
   rel="stylesheet"
   href="{{ 'component-cart-notification.css' | asset_url }}"
   media="print"
   onload="this.media='all'"
 >
-
-{%- if settings.predictive_search_enabled -%}
-  <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
-{%- endif -%}
 
 {%- if section.settings.menu_type_desktop == 'mega' -%}
   <link rel="stylesheet" href="{{ 'component-mega-menu.css' | asset_url }}" media="print" onload="this.media='all'">
@@ -19,7 +15,7 @@
 <style>
   header-drawer {
     justify-self: start;
-    margin-left: -1.2rem;
+    margin-left: 0;
   }
 
   {%- if section.settings.sticky_header_type == 'reduce-logo-size' -%}
@@ -166,10 +162,6 @@
       if section.settings.menu != blank
         render 'header-drawer'
       endif
-
-      if section.settings.logo_position == 'top-center' or section.settings.menu == blank
-        render 'header-search', input_id: 'Search-In-Modal-1'
-      endif
     -%}
 
     {%- if section.settings.logo_position != 'middle-center' -%}
@@ -272,8 +264,6 @@
           </localization-form>
         {%- endif -%}
       </div>
-      {% render 'header-search', input_id: 'Search-In-Modal' %}
-
       {%- if shop.customer_accounts_enabled -%}
         <a
           href="{{ routes.account_login_url }}"
@@ -310,12 +300,19 @@
         {%- endcase -%}
       {%- endfor -%}
 
-      <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble" onclick="event.preventDefault(); var d = document.querySelector('cart-drawer'); if (d && typeof d.open === 'function') d.open(this);">
-        {% if cart == empty %}
-          <span class="svg-wrapper">{{ 'icon-cart-empty.svg' | inline_asset_content }}</span>
-        {% else %}
-          <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
-        {% endif %}
+      <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble" aria-expanded="false">
+        <span class="fc-nav-icon-toggle fc-nav-icon-toggle--cart">
+          <span class="fc-nav-icon fc-nav-icon--open svg-wrapper">
+            {% if cart == empty %}
+              {{ 'icon-cart-empty.svg' | inline_asset_content }}
+            {% else %}
+              {{ 'icon-cart.svg' | inline_asset_content }}
+            {% endif %}
+          </span>
+          <span class="fc-nav-icon fc-nav-icon--close svg-wrapper" aria-hidden="true">
+            {{- 'icon-close.svg' | inline_asset_content -}}
+          </span>
+        </span>
         <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
         <div class="cart-count-bubble{% if cart == empty %} hidden{% endif %}">
           <span aria-hidden="true">{% if cart.item_count < 100 %}{{ cart.item_count }}{% endif %}</span>
@@ -440,7 +437,7 @@
 
     closeSearchModal() {
       this.searchModal = this.searchModal || this.header.querySelector('details-modal');
-      this.searchModal.close(false);
+      if (this.searchModal) this.searchModal.close(false);
     }
   }
 

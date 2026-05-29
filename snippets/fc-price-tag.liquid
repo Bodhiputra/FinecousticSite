@@ -1,11 +1,18 @@
 {%- if available -%}
 <div class="fc-card__tag {{ tag_class }}" data-variant-id="{{ variant_id }}">
   <div class="fc-card__tag-body">
+    {%- unless hide_price -%}
     <span class="fc-card__price">
       {%- if price_varies -%}<span class="fc-card__price-from">From</span> {%- endif -%}
       {{ price | money }}
     </span>
-    <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
+    {%- endunless -%}
+    {%- if atc_label != blank -%}
+      <span class="fc-card__atc-label">{{ atc_label }}</span>
+    {%- endif -%}
+    {%- unless hide_name -%}
+      <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
+    {%- endunless -%}
     {%- if show_barcode -%}
     <div class="fc-card__barcode">
       <svg class="fc-card__barcode-svg" viewBox="0 0 200 16" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -47,7 +54,9 @@
   <div class="fc-card__tag fc-tag--oos">
     <div class="fc-card__tag-body">
       <span class="fc-card__price">{{ price | money }}</span>
+      {%- unless hide_name -%}
       <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
+    {%- endunless -%}
       {%- if show_barcode -%}
       <div class="fc-card__barcode">
         <svg class="fc-card__barcode-svg" viewBox="0 0 200 16" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -80,8 +89,8 @@
       {%- endif -%}
     </div>
   </div>
-  <div class="fc-tag-fragment" aria-hidden="true">
-    <span class="fc-tag-fragment__label">OUT OF STOCK</span>
+  <div class="fc-tag-fragment">
+    <span class="fc-tag-fragment__label">Out of stock</span>
   </div>
 </div>
 {%- endif -%}

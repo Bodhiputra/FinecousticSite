@@ -10,6 +10,7 @@
 
     <link rel="icon" type="image/png" href="{{ 'FLogo-icon.png' | asset_url }}">
     <link rel="preload" as="image" href="{{ 'FinecouBG.webp' | asset_url }}" type="image/webp">
+    <link rel="preload" as="image" href="{{ 'FinecouBGLighter.webp' | asset_url }}" type="image/webp">
 
     {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
@@ -32,6 +33,11 @@
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'fc-carousel.js' | asset_url }}"></script>
+    <script src="{{ 'fc-price-tag.js' | asset_url }}"></script>
+    <script src="{{ 'fc-cart.js' | asset_url }}"></script>
+    {%- if template.name == 'product' -%}
+      <script src="{{ 'fc-pdp-dock.js' | asset_url }}"></script>
+    {%- endif -%}
     <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'details-modal.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
@@ -176,6 +182,9 @@
         --drawer-shadow-vertical-offset: {{ settings.drawer_shadow_vertical_offset }}px;
         --drawer-shadow-blur-radius: {{ settings.drawer_shadow_blur }}px;
 
+        --fc-body-bg: url('{{ 'FinecouBG.webp' | asset_url }}');
+        --fc-nav-footer-bg: url('{{ 'FinecouBGLighter.webp' | asset_url }}');
+
         --spacing-sections-desktop: {{ settings.spacing_sections }}px;
         --spacing-sections-mobile: {% if settings.spacing_sections < 24 %}{{ settings.spacing_sections }}{% else %}{{ settings.spacing_sections | times: 0.7 | round | at_least: 20 }}{% endif %}px;
 
@@ -236,10 +245,10 @@
       }
 
       body {
-        display: grid;
-        grid-template-rows: auto auto 1fr auto;
-        grid-template-columns: 100%;
+        display: flex;
+        flex-direction: column;
         min-height: 100%;
+        min-height: 100svh;
         margin: 0;
         font-size: 1.5rem;
         letter-spacing: 0.06rem;
@@ -267,6 +276,7 @@
 
     {%- if settings.cart_type == 'drawer' -%}
       {{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
+      {{ 'fc-nav-dropdowns.css' | asset_url | stylesheet_tag }}
       {{ 'component-cart.css' | asset_url | stylesheet_tag }}
       {{ 'component-totals.css' | asset_url | stylesheet_tag }}
       {{ 'component-price.css' | asset_url | stylesheet_tag }}
@@ -289,15 +299,6 @@
       <script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
-    {%- if settings.predictive_search_enabled -%}
-      <link
-        rel="stylesheet"
-        href="{{ 'component-predictive-search.css' | asset_url }}"
-        media="print"
-        onload="this.media='all'"
-      >
-    {%- endif -%}
-
     <script>
       if (Shopify.designMode) {
         document.documentElement.classList.add('shopify-design-mode');
@@ -318,18 +319,24 @@
 
     {%- style -%}
       body.gradient {
-        background-image: url('{{ 'FinecouBG.webp' | asset_url }}') !important;
+        background-image: var(--fc-body-bg) !important;
         background-color: transparent !important;
         background-size: cover !important;
         background-position: center top !important;
         background-repeat: no-repeat !important;
         background-attachment: fixed !important;
       }
+      @media screen and (max-width: 749px) {
+        body.gradient {
+          background-image: none !important;
+          background-attachment: scroll !important;
+        }
+      }
       .header-wrapper::before {
-        background-image: url('{{ 'FinecouBG.webp' | asset_url }}');
-        background-size: cover;
-        background-position: center top;
-        background-repeat: no-repeat;
+        background-image: var(--fc-nav-footer-bg) !important;
+        background-size: cover !important;
+        background-position: center top !important;
+        background-repeat: no-repeat !important;
       }
     {%- endstyle -%}
 
@@ -389,15 +396,9 @@
       };
     </script>
 
-    {%- if settings.predictive_search_enabled -%}
-      <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
-    {%- endif -%}
-
     {%- if settings.cart_type == 'drawer' -%}
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
-
-    {%- render 'fc-search-overlay' -%}
 
     <script>
       /* Mirror Dawn's shopify-section-header-hidden class to body.nav-hidden
@@ -476,6 +477,7 @@
 
         function sync() {
           var shouldLock = html.classList.contains('overflow-hidden') ||
+                           body.classList.contains('overflow-hidden') ||
                            body.classList.contains('overflow-hidden-mobile') ||
                            body.classList.contains('overflow-hidden-tablet') ||
                            body.classList.contains('overflow-hidden-desktop');

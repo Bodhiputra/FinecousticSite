@@ -51,74 +51,114 @@
         </div>
       {%- endunless -%}
     </div>
-    <deferred-media
-      class="video-section__media deferred-media gradient global-media-settings{% if section.settings.full_width %} global-media-settings--full-width{% endif %}{% if fix_ratio %} media-fit-cover{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+    <div
+      class="video-section__media fc-video-always-on gradient global-media-settings{% if section.settings.full_width %} global-media-settings--full-width{% endif %}{% if fix_ratio %} media-fit-cover{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
       data-media-id="{{ video_id }}"
       {% if poster != null %}
         style="--ratio-percent: {{ 1 | divided_by: poster.aspect_ratio | times: 100 }}%;"
       {% endif %}
     >
-      <button
-        id="Deferred-Poster-Modal-{{ video_id }}"
-        class="video-section__poster media deferred-media__poster media--landscape"
-        type="button"
-        aria-label="{{ alt }}"
-      >
-        {%- if poster != null -%}
-          {{
-            poster
-            | image_url: width: 3840
-            | image_tag: sizes: sizes, widths: '375, 750, 1100, 1500, 1780, 2000, 3000, 3840', alt: alt
-          }}
+      {%- liquid
+        assign fc_video_loop = true
+        unless section.settings.enable_video_looping == false
+          assign fc_video_loop = true
+        endunless
+      -%}
+      {%- if section.settings.video == null and section.settings.video_url != null -%}
+        {%- liquid
+          assign loop_param = '&loop=1&playlist=' | append: video_id
+          unless fc_video_loop
+            assign loop_param = ''
+          endunless
+        -%}
+        {%- if section.settings.video_url.type == 'youtube' -%}
+          <iframe
+            src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&autoplay=1&mute=1{{ loop_param }}"
+            class="js-youtube fc-video-always-on__iframe"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            title="{{ section.settings.description | escape }}"
+          ></iframe>
         {%- else -%}
-          {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
+          <iframe
+            src="https://player.vimeo.com/video/{{ video_id }}?autoplay=1&muted=1{% if fc_video_loop %}&loop=1{% endif %}"
+            class="js-vimeo fc-video-always-on__iframe"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            title="{{ section.settings.description | escape }}"
+          ></iframe>
         {%- endif -%}
-        <span class="deferred-media__poster-button motion-reduce">
-          <span class="svg-wrapper">
-            {{- 'icon-play.svg' | inline_asset_content -}}
-          </span>
-        </span>
-      </button>
-      <template>
-        {%- if section.settings.video == null and section.settings.video_url != null -%}
-          {%- liquid
-            assign loop = ''
-            if section.settings.enable_video_looping
-              assign loop = '&loop=1&playlist=' | append: video_id
-            endif
-          -%}
-          {%- if section.settings.video_url.type == 'youtube' -%}
-            <iframe
-              src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&autoplay=1{{ loop }}"
-              class="js-youtube"
-              allow="autoplay; encrypted-media"
-              allowfullscreen
-              title="{{ section.settings.description | escape }}"
-            ></iframe>
-          {%- else -%}
-            <iframe
-              src="https://player.vimeo.com/video/{{ video_id }}?autoplay=1{{ loop }}"
-              class="js-vimeo"
-              allow="autoplay; encrypted-media"
-              allowfullscreen
-              title="{{ section.settings.description | escape }}"
-            ></iframe>
-          {%- endif -%}
-        {%- else -%}
-          {{
-            section.settings.video
-            | video_tag:
-              image_size: '1100x',
-              autoplay: true,
-              loop: section.settings.enable_video_looping,
-              controls: true,
-              muted: false
-          }}
-        {%- endif -%}
-      </template>
-    </deferred-media>
+      {%- elsif section.settings.video != null -%}
+        {{
+          section.settings.video
+          | video_tag:
+            class: 'fc-video-always-on__video',
+            image_size: '1100x',
+            autoplay: true,
+            loop: fc_video_loop,
+            controls: false,
+            muted: true,
+            playsinline: true,
+            preload: 'auto'
+        }}
+      {%- elsif poster != null -%}
+        {{
+          poster
+          | image_url: width: 3840
+          | image_tag: sizes: sizes, widths: '375, 750, 1100, 1500, 1780, 2000, 3000, 3840', alt: alt
+        }}
+      {%- else -%}
+        {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
+      {%- endif -%}
+    </div>
   </div>
 </div>
+
+{% stylesheet %}
+.fc-video-always-on {
+  position: relative;
+  overflow: hidden;
+}
+
+.fc-video-always-on__video,
+.fc-video-always-on__iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border: none;
+}
+
+.fc-video-always-on__iframe {
+  position: absolute;
+  inset: 0;
+  min-height: 280px;
+}
+{% endstylesheet %}
+
+<script>
+(function () {
+  function keepPlaying(scope) {
+    (scope || document).querySelectorAll('.fc-video-always-on__video').forEach(function (video) {
+      video.muted = true;
+      video.loop = true;
+      video.autoplay = true;
+      var p = video.play();
+      if (p && p.catch) p.catch(function () {});
+      video.addEventListener('pause', function () {
+        if (!video.ended) {
+          var retry = video.play();
+          if (retry && retry.catch) retry.catch(function () {});
+        }
+      });
+    });
+  }
+  keepPlaying();
+  document.addEventListener('shopify:section:load', function (e) {
+    keepPlaying(e.target);
+  });
+})();
+</script>
 
 {% schema %}
 {

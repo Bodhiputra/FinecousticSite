@@ -1,0 +1,288 @@
+{%- if section.blocks.size > 0 -%}
+<details class="fc-pdp-acc fc-pdp-acc--album">
+  <summary class="fc-pdp-acc__summary">Album</summary>
+  <div class="fc-pdp-acc__body">
+<div class="fc-pdp-showcases" id="fc-pdp-showcases-{{ section.id }}">
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign layout = block.settings.layout
+      if layout == blank
+        assign layout = 'split'
+      endif
+      assign has_copy = false
+      if block.settings.title != blank or block.settings.description != blank
+        assign has_copy = true
+      endif
+    -%}
+
+    <article
+      class="fc-pdp-showcase fc-pdp-hero fc-pdp-showcase--{{ layout }}{% if block.settings.reverse %} fc-pdp-showcase--reverse{% endif %}{% unless has_copy %} fc-pdp-showcase--media-only{% endunless %}"
+      {{ block.shopify_attributes }}
+    >
+      {%- if layout == 'image_only' -%}
+        <div class="fc-pdp-showcase__media fc-pdp-showcase__media--cover">
+          {%- if block.settings.image -%}
+            {{
+              block.settings.image
+              | image_url: width: 2400
+              | image_tag:
+                class: 'fc-pdp-showcase__image',
+                loading: 'lazy',
+                sizes: '100vw',
+                widths: '750, 1100, 1500, 2000, 2400',
+                alt: block.settings.image.alt | default: block.settings.title | escape
+            }}
+          {%- else -%}
+            {{ 'hero-apparel-3' | placeholder_svg_tag: 'fc-pdp-showcase__placeholder' }}
+          {%- endif -%}
+        </div>
+
+        {%- if has_copy -%}
+          <div class="fc-pdp-showcase__overlay">
+            <div class="fc-pdp-showcase__copy">
+              {%- if block.settings.title != blank -%}
+                <h2 class="fc-pdp-showcase__title">{{ block.settings.title | escape }}</h2>
+              {%- endif -%}
+              {%- if block.settings.description != blank -%}
+                <div class="fc-pdp-showcase__description rte">{{ block.settings.description }}</div>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        <div class="fc-pdp-showcase__split">
+          <div class="fc-pdp-showcase__copy">
+            {%- if block.settings.title != blank -%}
+              <h2 class="fc-pdp-showcase__title">{{ block.settings.title | escape }}</h2>
+            {%- endif -%}
+            {%- if block.settings.description != blank -%}
+              <div class="fc-pdp-showcase__description rte">{{ block.settings.description }}</div>
+            {%- endif -%}
+          </div>
+
+          <div class="fc-pdp-showcase__media">
+            {%- if block.settings.image -%}
+              {{
+                block.settings.image
+                | image_url: width: 1600
+                | image_tag:
+                  class: 'fc-pdp-showcase__image',
+                  loading: 'lazy',
+                  sizes: '(min-width: 990px) 45vw, 92vw',
+                  widths: '600, 900, 1200, 1600',
+                  alt: block.settings.image.alt | default: block.settings.title | escape
+              }}
+            {%- else -%}
+              {{ 'hero-apparel-3' | placeholder_svg_tag: 'fc-pdp-showcase__placeholder' }}
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </article>
+  {%- endfor -%}
+</div>
+  </div>
+</details>
+{%- endif -%}
+
+{% stylesheet %}
+.fc-pdp-showcase__split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: center;
+  width: min(1200px, 100%);
+  margin: 0 auto;
+}
+
+.fc-pdp-showcase--reverse .fc-pdp-showcase__split {
+  direction: rtl;
+}
+
+.fc-pdp-showcase--reverse .fc-pdp-showcase__split > * {
+  direction: ltr;
+}
+
+.fc-pdp-showcase__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.fc-pdp-showcase__title {
+  font-family: var(--fc-font);
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.fc-pdp-showcase__description {
+  font-family: var(--fc-font);
+  font-size: clamp(14px, 1.6vw, 18px);
+  font-weight: 500;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+}
+
+.fc-pdp-showcase__description p {
+  margin: 0 0 0.75em;
+}
+
+.fc-pdp-showcase__description p:last-child {
+  margin-bottom: 0;
+}
+
+.fc-pdp-showcase__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.fc-pdp-showcase__image,
+.fc-pdp-showcase__placeholder {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(62vh, 560px);
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.fc-pdp-showcase--image_only {
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
+.fc-pdp-showcase--image_only .fc-pdp-showcase__media--cover {
+  position: absolute;
+  inset: 0;
+}
+
+.fc-pdp-showcase--image_only .fc-pdp-showcase__media--cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.2) 45%, rgba(0, 0, 0, 0.05) 100%);
+  pointer-events: none;
+}
+
+.fc-pdp-showcase--image_only .fc-pdp-showcase__image {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.fc-pdp-showcase__overlay {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 48px) clamp(32px, 6vw, 72px);
+  box-sizing: border-box;
+}
+
+.fc-pdp-showcase--image_only.fc-pdp-showcase--media-only .fc-pdp-showcase__media--cover::after {
+  display: none;
+}
+
+@media screen and (max-width: 989px) {
+  .fc-pdp-showcase__split {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    width: 100%;
+  }
+
+  .fc-pdp-showcase--reverse .fc-pdp-showcase__split {
+    direction: ltr;
+  }
+
+  .fc-pdp-showcase--split:not(.fc-pdp-showcase--reverse) .fc-pdp-showcase__media {
+    order: -1;
+  }
+
+  .fc-pdp-showcase__image,
+  .fc-pdp-showcase__placeholder {
+    max-height: min(48vh, 420px);
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FC PDP — Showcases",
+  "tag": "section",
+  "class": "fc-pdp-showcases-section",
+  "max_blocks": 12,
+  "blocks": [
+    {
+      "type": "showcase",
+      "name": "Showcase slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Layout",
+          "default": "split",
+          "options": [
+            {
+              "value": "split",
+              "label": "Text + image split"
+            },
+            {
+              "value": "image_only",
+              "label": "Full-bleed image"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "reverse",
+          "label": "Reverse split (image on left)",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FC PDP — Showcases",
+      "blocks": [
+        {
+          "type": "showcase",
+          "settings": {
+            "layout": "image_only",
+            "title": "Feature headline",
+            "description": "<p>Short supporting copy for this showcase slide.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,161 +1,142 @@
 {% comment %}theme-check-disable UndefinedObject{% endcomment %}
 {{ 'section-footer.css' | asset_url | stylesheet_tag }}
-{{ 'component-newsletter.css' | asset_url | stylesheet_tag }}
-{{ 'component-list-menu.css' | asset_url | stylesheet_tag }}
-{{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
-{{ 'component-list-social.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
-  body:not(.shopify-design-mode) .fc-footer__brand,
-  body:not(.shopify-design-mode) .fc-footer__social-group,
-  body:not(.shopify-design-mode) .fc-footer__newsletter-col,
   body:not(.shopify-design-mode) .fc-footer__bottom-links {
     opacity: 0;
     transform: translateY(24px);
     transition: opacity 1.5s cubic-bezier(0.22,1,0.36,1), transform 1.5s cubic-bezier(0.22,1,0.36,1);
   }
 
-  .fc-footer__social .list-social__item .icon,
-  .fc-footer__social .svg-wrapper svg {
-    width: 30px !important;
-    height: 30px !important;
-  }
-  .fc-footer__social .svg-wrapper {
-    display: flex !important;
-    width: 30px !important;
-    height: 30px !important;
-  }
-  .fc-footer__social .list-social__link {
-    padding: 8px !important;
+  @media screen and (max-width: 749px) {
+    body:not(.shopify-design-mode) .fc-footer__bottom-links {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
   }
 
-  .footer {
+
+  #shopify-section-{{ section.id }} {
+    isolation: isolate;
+    z-index: 2;
+  }
+
+  #shopify-section-{{ section.id }} .footer {
+    position: relative;
     margin-top: {{ section.settings.margin_top | times: 0.75 | round: 0 }}px;
-    background-image: url('{{ 'FinecouBG.webp' | asset_url }}') !important;
-    background-size: cover !important;
-    background-position: center top !important;
-    background-repeat: no-repeat !important;
-    background-attachment: fixed !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  #shopify-section-{{ section.id }} .fc-footer {
+    position: relative;
+    z-index: 1;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
+    padding-top: clamp(12px, 2vw, 20px);
+    padding-bottom: clamp(12px, 2vw, 20px);
+  }
+
+  #shopify-section-{{ section.id }} .fc-footer__bottom-links {
+    position: relative;
+    z-index: 1;
+    height: auto;
   }
 
   .section-{{ section.id }}-padding {
-    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
-    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .fc-footer {
+      height: auto;
+      min-height: 0;
+      max-height: none;
+    }
+
+    #shopify-section-{{ section.id }} .fc-footer__bottom-links {
+      --fc-footer-bar-size: clamp(1.35rem, 3.8vw, 1.75rem);
+      --fc-footer-bar-gap: clamp(12px, 2.8vw, 18px);
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      row-gap: 8px;
+      height: auto;
+      align-content: start;
+    }
+
+    #shopify-section-{{ section.id }} .fc-footer__bottom-nav {
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: center;
+      justify-content: center;
+      width: 100%;
+      flex-wrap: wrap;
+      row-gap: 8px;
+    }
+
+    #shopify-section-{{ section.id }} .fc-footer__bottom-social {
+      grid-column: 1;
+      grid-row: 2;
+      justify-self: center;
+      justify-content: center;
+    }
+
+    #shopify-section-{{ section.id }} .fc-footer__bottom-copy {
+      grid-column: 1;
+      grid-row: 3;
+      justify-self: center;
+      text-align: center;
+    }
   }
 
   @media screen and (min-width: 750px) {
     .footer {
       margin-top: {{ section.settings.margin_top }}px;
     }
-
-    .section-{{ section.id }}-padding {
-      padding-top: {{ section.settings.padding_top }}px;
-      padding-bottom: {{ section.settings.padding_bottom }}px;
-    }
   }
 {%- endstyle -%}
 
 <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
   <div class="fc-footer page-width">
-
-    <div class="fc-footer__brand">
-      <span class="fc-footer__brand-by">By</span>
-      <img src="https://cdn.shopify.com/s/files/1/0661/0229/6650/files/Fantech_Logo.svg?v=1758181350" alt="Fantech" class="fc-footer__brand-logo" width="120" height="32">
-    </div>
-
-    <div class="fc-footer__center">
-
-      <div class="fc-footer__social-group">
-        <p class="fc-footer__social-heading">Our Socials.</p>
-        <div class="fc-footer__social">
-          {%- render 'social-icons', class: 'fc-footer__social-list' -%}
-        </div>
-      </div>
-
-      <div class="fc-footer__right-col">
-
-        <div class="fc-footer__newsletter-col">
-          <h2 class="fc-footer__newsletter-heading">Join our Newsletter.</h2>
-          <p class="fc-footer__newsletter-sub">Get early updates about our products, exclusive offers, and upcoming projects.</p>
-          {%- form 'customer', id: 'ContactFooter', class: 'fc-footer__form' -%}
-            <input type="hidden" name="contact[tags]" value="newsletter">
-            <div class="fc-footer__form-row">
-              <input
-                id="NewsletterForm--{{ section.id }}"
-                type="email"
-                name="contact[email]"
-                class="fc-footer__input"
-                value="{{ form.email }}"
-                aria-required="true"
-                autocorrect="off"
-                autocapitalize="off"
-                autocomplete="email"
-                {% if form.errors %}autofocus aria-invalid="true" aria-describedby="ContactFooter-error"{% elsif form.posted_successfully? %}aria-describedby="ContactFooter-success"{% endif %}
-                placeholder="Your email"
-                required
-              >
-              <button type="submit" class="fc-footer__submit" name="commit" aria-label="{{ 'newsletter.button_label' | t }}">
-                Subscribe
-              </button>
-            </div>
-            {%- if form.errors -%}
-              <small class="fc-footer__form-msg fc-footer__form-msg--error" id="ContactFooter-error">
-                {{- form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email -}}
-              </small>
-            {%- endif -%}
-            {%- if form.posted_successfully? -%}
-              <p class="fc-footer__form-msg fc-footer__form-msg--success" id="ContactFooter-success" tabindex="-1" autofocus>
-                {{- 'newsletter.success' | t }}
-              </p>
-            {%- endif -%}
-          {%- endform -%}
-        </div>
-
-      </div>
-
-    </div>
-
     <div class="fc-footer__bottom-links">
-      <div class="fc-footer__bottom-left">
+      <nav class="fc-footer__bottom-nav" aria-label="Footer">
         <a href="/pages/policies" class="fc-footer__bottom-link">Policies</a>
         <a href="/pages/download-page" class="fc-footer__bottom-link">Downloads &amp; Guides</a>
-      </div>
-      <span class="fc-footer__bottom-copy">&copy; Finecoustic {{ 'now' | date: '%Y' }}</span>
-      <div class="fc-footer__bottom-right">
         <a href="/pages/about-us" class="fc-footer__bottom-link">About Us</a>
         <a href="/pages/support" class="fc-footer__bottom-link">Support</a>
-      </div>
+      </nav>
+      <span class="fc-footer__bottom-copy">&copy; Finecoustic {{ 'now' | date: '%Y' }}</span>
+      {%- render 'fc-social-icons' -%}
     </div>
-
   </div>
 </footer>
 
 <script>
   (function () {
     if (typeof Shopify !== 'undefined' && Shopify.designMode) return;
+    if (window.matchMedia('(max-width: 749px)').matches) return;
 
     var footer = document.querySelector('footer.footer');
     if (!footer) return;
 
-    var items = [
-      footer.querySelector('.fc-footer__brand'),
-      footer.querySelector('.fc-footer__social-group'),
-      footer.querySelector('.fc-footer__newsletter-col'),
-      footer.querySelector('.fc-footer__bottom-links')
-    ].filter(Boolean);
-    if (!items.length) return;
+    var bottomLinks = footer.querySelector('.fc-footer__bottom-links');
+    if (!bottomLinks) return;
 
     var revealed = false;
 
     function reveal(baseDelay) {
       if (revealed) return;
       revealed = true;
-      items.forEach(function (el, i) {
-        setTimeout(function () {
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, baseDelay + i * 150);
-      });
+      setTimeout(function () {
+        bottomLinks.style.opacity = '1';
+        bottomLinks.style.transform = 'translateY(0)';
+      }, baseDelay);
     }
 
     function isInView() {
@@ -168,7 +149,6 @@
       return;
     }
 
-    // Primary: IntersectionObserver fires immediately if footer already in viewport
     var io = new IntersectionObserver(function (entries) {
       if (!entries[0].isIntersecting || revealed) return;
       reveal(0);
@@ -176,7 +156,6 @@
     }, { threshold: 0 });
     io.observe(footer);
 
-    // Safety net: catch cases where IO initial callback may have missed the viewport check
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
         if (!revealed && isInView()) reveal(400);
@@ -184,19 +163,6 @@
     });
     window.addEventListener('load', function () {
       if (!revealed && isInView()) reveal(400);
-    });
-  })();
-</script>
-
-<script>
-  (function () {
-    document.querySelectorAll('.fc-footer__col--menu').forEach(function (col) {
-      var heading = col.querySelector('.fc-footer__col-heading');
-      if (!heading) return;
-      heading.addEventListener('click', function () {
-        if (window.innerWidth >= 750) return;
-        col.classList.toggle('is-open');
-      });
     });
   })();
 </script>
@@ -398,7 +364,7 @@
       "step": 4,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
-      "default": 36
+      "default": 0
     },
     {
       "type": "range",
@@ -408,7 +374,7 @@
       "step": 4,
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
-      "default": 36
+      "default": 0
     }
   ],
   "default": {

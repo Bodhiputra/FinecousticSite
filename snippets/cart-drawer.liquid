@@ -18,12 +18,63 @@
     document.documentElement.style.setProperty('--fc-news-height', (newsBar ? newsBar.offsetHeight : 36) + 'px');
     document.documentElement.style.setProperty('--fc-navbar-height', (navBar ? navBar.offsetHeight : 64) + 'px');
   }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setFcHeaderVars);
-  } else {
-    setFcHeaderVars();
+
+  function positionMenuDropdown() {
+    var pill = document.querySelector('.header-wrapper');
+    if (!pill) return;
+
+    var pillRect = pill.getBoundingClientRect();
+    var dropTop = Math.round(pillRect.bottom);
+
+    document.documentElement.style.setProperty('--fc-nav-drop-top', dropTop + 'px');
+    document.documentElement.style.setProperty('--fc-nav-drop-top-px', dropTop + 'px');
+    document.documentElement.style.setProperty('--header-bottom-position', dropTop + 'px');
+    document.documentElement.style.setProperty('--fc-pill-left', Math.round(pillRect.left) + 'px');
+    document.documentElement.style.setProperty('--fc-pill-width', Math.round(pillRect.width) + 'px');
   }
-  window.addEventListener('resize', setFcHeaderVars);
+
+  function initNavDropdowns() {
+    setFcHeaderVars();
+    positionMenuDropdown();
+
+    var menuDrawer = document.querySelector('header-drawer details');
+    if (menuDrawer) {
+      menuDrawer.addEventListener('toggle', function () {
+        if (menuDrawer.open) {
+          requestAnimationFrame(positionMenuDropdown);
+        }
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNavDropdowns);
+  } else {
+    initNavDropdowns();
+  }
+
+  window.addEventListener('resize', function () {
+    setFcHeaderVars();
+    positionMenuDropdown();
+  });
+  window.addEventListener('scroll', positionMenuDropdown, { passive: true });
+  window.addEventListener('orientationchange', function () {
+    setTimeout(function () {
+      setFcHeaderVars();
+      positionMenuDropdown();
+    }, 100);
+  });
+  window.positionNavDropdowns = positionMenuDropdown;
+
+  document.addEventListener(
+    'click',
+    function (event) {
+      if (event.target.closest('header-drawer .header__icon--menu')) {
+        positionMenuDropdown();
+      }
+    },
+    true
+  );
 })();
 </script>
 
@@ -43,21 +94,39 @@
       aria-label="{{ 'sections.cart.title' | t }}"
       tabindex="-1"
     >
+      <div class="drawer__header">
+        <h2 class="drawer__heading" id="CartDrawer-Heading"{% if cart == empty %} hidden{% endif %}>
+          {{ 'sections.cart.title' | t -}}
+          <span id="CartDrawer-BagQty" class="drawer__heading-qty">
+            {%- if cart.item_count > 0 -%}({{ cart.item_count }}){%- endif -%}
+          </span>
+        </h2>
+        <button
+          class="drawer__close fc-cart-drawer__close"
+          type="button"
+          onclick="this.closest('cart-drawer').close()"
+          aria-label="{{ 'accessibility.close' | t }}"
+        >
+          <span class="svg-wrapper">
+            {{- 'icon-close.svg' | inline_asset_content -}}
+          </span>
+        </button>
+      </div>
       {%- if cart == empty -%}
         <div class="drawer__inner-empty">
+          <button
+            class="drawer__close fc-cart-drawer__close fc-cart-drawer__close--empty"
+            type="button"
+            onclick="this.closest('cart-drawer').close()"
+            aria-label="{{ 'accessibility.close' | t }}"
+          >
+            <span class="svg-wrapper">
+              {{- 'icon-close.svg' | inline_asset_content -}}
+            </span>
+          </button>
           <div class="cart-drawer__warnings center{% if settings.cart_drawer_collection != blank %} cart-drawer__warnings--has-collection{% endif %}">
             <div class="cart-drawer__empty-content">
               <h2 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h2>
-              <button
-                class="drawer__close"
-                type="button"
-                onclick="this.closest('cart-drawer').close()"
-                aria-label="{{ 'accessibility.close' | t }}"
-              >
-                <span class="svg-wrapper">
-                  {{- 'icon-close.svg' | inline_asset_content -}}
-                </span>
-              </button>
               {%- if request.path == '/collections/all' -%}
                 <button type="button" class="button" onclick="this.closest('cart-drawer').close()">
                   {{ 'general.continue_shopping' | t }}
@@ -77,19 +146,6 @@
           {%- endif -%}
         </div>
       {%- endif -%}
-      <div class="drawer__header">
-        <h2 class="drawer__heading">{{ 'sections.cart.title' | t }}<span id="CartDrawer-BagQty" class="drawer__heading-qty"></span></h2>
-        <button
-          class="drawer__close"
-          type="button"
-          onclick="this.closest('cart-drawer').close()"
-          aria-label="{{ 'accessibility.close' | t }}"
-        >
-          <span class="svg-wrapper">
-            {{- 'icon-close.svg' | inline_asset_content -}}
-          </span>
-        </button>
-      </div>
       <cart-drawer-items
         {% if cart == empty %}
           class=" is-empty"
@@ -609,41 +665,64 @@
 
 <script>
 (function () {
-  function addSwipe(el, onSwipeRight, onSwipeLeft) {
-    var startX, startY;
+  function bindSwipeDismiss(opts) {
+    var el = opts.el;
+    var panel = opts.panel;
+    var closeDir = opts.closeDir;
+    var isOpen = opts.isOpen;
+    var onClose = opts.onClose;
+    var startX, startY, dragging;
+
     el.addEventListener('touchstart', function (e) {
+      if (!isOpen()) return;
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
+      dragging = false;
+      panel.style.transition = 'none';
     }, { passive: true });
+
+    el.addEventListener('touchmove', function (e) {
+      if (startX === undefined || !isOpen()) return;
+      var dx = e.touches[0].clientX - startX;
+      var dy = e.touches[0].clientY - startY;
+      if (!dragging && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) dragging = true;
+      if (!dragging) return;
+      var offset = closeDir === 'right' ? Math.max(0, dx) : Math.min(0, dx);
+      panel.style.transform = 'translateX(' + offset + 'px)';
+    }, { passive: true });
+
     el.addEventListener('touchend', function (e) {
       if (startX === undefined) return;
+      panel.style.transition = '';
       var dx = e.changedTouches[0].clientX - startX;
       var dy = e.changedTouches[0].clientY - startY;
-      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-        if (dx > 0 && onSwipeRight) onSwipeRight();
-        if (dx < 0 && onSwipeLeft) onSwipeLeft();
-      }
+      var threshold = 60;
+      var shouldClose =
+        Math.abs(dx) > threshold &&
+        Math.abs(dx) > Math.abs(dy) * 1.5 &&
+        ((closeDir === 'right' && dx > 0) || (closeDir === 'left' && dx < 0));
+      panel.style.transform = '';
+      if (shouldClose && isOpen()) onClose();
       startX = startY = undefined;
+      dragging = false;
     }, { passive: true });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    // Swipe right → close cart drawer
     var cartDrawer = document.querySelector('cart-drawer');
-    if (cartDrawer) {
-      addSwipe(cartDrawer, function () {
-        if (typeof cartDrawer.close === 'function') cartDrawer.close();
+    var cartPanel = cartDrawer && cartDrawer.querySelector('.drawer__inner');
+    if (cartDrawer && cartPanel) {
+      bindSwipeDismiss({
+        el: cartDrawer,
+        panel: cartPanel,
+        closeDir: 'right',
+        isOpen: function () { return cartDrawer.classList.contains('active'); },
+        onClose: function () {
+          if (typeof cartDrawer.close === 'function') cartDrawer.close();
+        }
       });
     }
 
-    // Swipe left → close hamburger menu
-    var menuDrawer = document.getElementById('menu-drawer');
-    if (menuDrawer) {
-      addSwipe(menuDrawer, null, function () {
-        var details = document.getElementById('Details-menu-drawer-container');
-        if (details) details.open = false;
-      });
-    }
   });
 })();
 </script>

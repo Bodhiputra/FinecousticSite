@@ -1,0 +1,169 @@
+{% paginate search.results by section.settings.products_per_page %}
+  <div class="fc-search-page section-{{ section.id }}-padding">
+    <div class="fc-search-page__inner">
+
+      <header class="fc-search-page__header">
+        {%- if search.performed and search.terms != blank -%}
+          <h1 class="fc-search-page__title">
+            {{ 'templates.search.results_with_count_and_term' | t: terms: search.terms, count: search.results_count }}
+          </h1>
+        {%- else -%}
+          <h1 class="fc-search-page__title">{{ 'general.search.search' | t }}</h1>
+        {%- endif -%}
+
+        <form action="{{ routes.search_url }}" method="get" role="search" class="fc-search-page__form">
+          <input type="hidden" name="type" value="product,page">
+          <input type="hidden" name="options[prefix]" value="last">
+          <label class="visually-hidden" for="fc-search-page-input">{{ 'general.search.search' | t }}</label>
+          <input
+            id="fc-search-page-input"
+            class="fc-search-page__input"
+            type="search"
+            name="q"
+            value="{{ search.terms | escape }}"
+            placeholder="{{ 'general.search.search' | t }}"
+            autocomplete="off"
+          >
+          <button type="submit" class="fc-search-page__submit">{{ 'general.search.search' | t }}</button>
+        </form>
+      </header>
+
+      {%- if search.performed -%}
+        {%- if search.results_count > 0 -%}
+          {%- assign fc_has_products = false -%}
+          {%- assign fc_has_pages = false -%}
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' and fc_has_products == false -%}
+              {%- assign fc_has_products = true -%}
+            {%- endif -%}
+            {%- if item.object_type == 'page' and fc_has_pages == false -%}
+              {%- assign fc_has_pages = true -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if fc_has_products -%}
+            <p class="fc-search-page__label">Products</p>
+            <div class="fc-grid fc-search-grid" data-cols="{{ section.settings.columns_desktop }}">
+              {%- for item in search.results -%}
+                {%- if item.object_type == 'product' -%}
+                  {%- unless item.title contains 'FBS2' -%}
+                    {%- liquid
+                      assign fc_variant = item.selected_or_first_available_variant | default: item.variants.first
+                    -%}
+                    <div class="fc-card fc-card--search">
+                      <a href="{{ item.url }}" class="fc-card__media-link" tabindex="-1" aria-hidden="true">
+                        <div class="fc-card__image">
+                          {%- if item.featured_image -%}
+                            {{ item.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: item.title }}
+                          {%- endif -%}
+                        </div>
+                      </a>
+                      {%- render 'fc-price-tag',
+                        variant_id: fc_variant.id,
+                        price: item.price,
+                        price_varies: item.price_varies,
+                        title: item.title,
+                        available: item.available,
+                        show_barcode: true,
+                        name_class: '',
+                        tag_class: ''
+                      -%}
+                    </div>
+                  {%- endunless -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+
+          {%- if fc_has_pages -%}
+            <p class="fc-search-page__label fc-search-page__label--pages">Pages</p>
+            <ul class="fc-search-pages">
+              {%- for item in search.results -%}
+                {%- if item.object_type == 'page' -%}
+                  <li>
+                    <a href="{{ item.url }}" class="fc-search-page-row">
+                      <span class="fc-search-page-row__title">{{ item.title }}</span>
+                      <span class="fc-search-page-row__arrow" aria-hidden="true">→</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+
+          {%- if paginate.pages > 1 -%}
+            <div class="fc-pagination">
+              {%- render 'pagination', paginate: paginate, anchor: '' -%}
+            </div>
+          {%- endif -%}
+        {%- else -%}
+          <p class="fc-search-page__empty">{{ 'templates.search.no_results' | t: terms: search.terms }}</p>
+        {%- endif -%}
+      {%- else -%}
+        <p class="fc-search-page__hint">Enter a term to search products and pages.</p>
+      {%- endif -%}
+
+    </div>
+  </div>
+{% endpaginate %}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: 0;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: 0;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Finecoustic Search",
+  "tag": "section",
+  "class": "section fc-search-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 5,
+      "label": "Columns on desktop"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24,
+      "label": "Results per page"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 48
+    }
+  ]
+}
+{% endschema %}

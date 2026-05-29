@@ -25,7 +25,8 @@
     available: is_available,
     show_barcode: true,
     name_class: 'pdp-tag__name',
-    tag_class: 'pdp-fc__tag'
+    tag_class: 'pdp-fc__tag',
+    product_url: product.url
   -%}
 </div>
 
@@ -45,7 +46,8 @@
     available: is_available,
     show_barcode: false,
     name_class: 'pdp-tag__name--bar',
-    tag_class: 'pdp-fc-bar__tag'
+    tag_class: 'pdp-fc-bar__tag',
+    product_url: product.url
   -%}
 </div>
 
@@ -56,7 +58,7 @@
   right: 32px;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 500;
+  z-index: 900;
   width: 220px;
   background: rgba(0,0,0,0.92);
   border: 1px solid rgba(255,255,255,0.1);
@@ -98,7 +100,7 @@
   font-family: var(--fc-font);
   font-size: 11px;
   color: rgba(255,255,255,0.6);
-  letter-spacing: 0.04em;
+  letter-spacing: -0.01em;
   padding-left: 14px;
   position: relative;
 }
@@ -125,7 +127,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 500;
+  z-index: 900;
   background: rgba(0,0,0,0.96);
   border-top: 1px solid rgba(255,255,255,0.1);
   backdrop-filter: blur(16px);
@@ -155,7 +157,6 @@
   font-size: 11px;
   font-weight: 700;
   color: #ffffff;
-  text-transform: uppercase;
   letter-spacing: 0.07em;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -183,17 +184,10 @@
   }
 
   function wireTag(tag) {
-    if (!tag || tag.classList.contains('fc-tag--oos')) return;
-    var tagQty = 0;
-    tag.addEventListener('click', async function(e) {
-      e.stopPropagation();
-      tagQty++;
-      tag.classList.add('fc-tag-active');
-      var plusBtn = tag.querySelector('.fc-card__atc-plus');
-      var qtyLabel = tag.querySelector('.fc-qty-label');
-      if (plusBtn) plusBtn.classList.add('fc-active');
-      if (qtyLabel) qtyLabel.textContent = tagQty;
-      await addToCart(variantId, 1);
+    if (!tag || !window.fcWirePriceTag) return;
+    window.fcWirePriceTag(tag, {
+      getVariantId: function () { return variantId; },
+      onAdd: addToCart
     });
   }
 

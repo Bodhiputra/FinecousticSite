@@ -1,0 +1,348 @@
+<section class="fc-pdp-specs-inbox fc-pdp-hero fc-pdp-mobile-accordions" id="fc-pdp-specs-inbox-{{ section.id }}">
+  <div class="fc-pdp-specs-inbox__inner">
+    {%- if section.settings.specs_table_1 != blank or section.settings.specs_table_2 != blank -%}
+      <details class="fc-pdp-acc fc-pdp-acc--specs">
+        <summary class="fc-pdp-acc__summary">{{ section.settings.table_title | default: 'Specifications' | escape }}</summary>
+        <div class="fc-pdp-acc__body">
+          <div class="fc-pdp-specs-inbox__specs">
+            <div class="fc-pdp-specs-inbox__toggle" role="tablist" aria-label="Specification tables">
+              {%- if section.settings.specs_table_1 != blank -%}
+                <button
+                  type="button"
+                  class="fc-pdp-specs-inbox__tab is-active"
+                  role="tab"
+                  aria-selected="true"
+                  data-spec-tab="1"
+                >
+                  {{ section.settings.table1_button_label | default: 'Table 1' | escape }}
+                </button>
+              {%- endif -%}
+              {%- if section.settings.specs_table_2 != blank -%}
+                <button
+                  type="button"
+                  class="fc-pdp-specs-inbox__tab{% if section.settings.specs_table_1 == blank %} is-active{% endif %}"
+                  role="tab"
+                  aria-selected="{% if section.settings.specs_table_1 == blank %}true{% else %}false{% endif %}"
+                  data-spec-tab="2"
+                >
+                  {{ section.settings.table2_button_label | default: 'Table 2' | escape }}
+                </button>
+              {%- endif -%}
+            </div>
+
+            {%- if section.settings.specs_table_1 != blank -%}
+              <div class="fc-pdp-specs-inbox__panel is-active" role="tabpanel" data-spec-panel="1">
+                <table class="fc-pdp-specs-inbox__table">
+                  <tbody>
+                    {%- assign rows_1 = section.settings.specs_table_1 | newline_to_br | split: '<br />' -%}
+                    {%- for row in rows_1 -%}
+                      {%- assign pair = row | split: '|' -%}
+                      {%- if pair.size >= 2 -%}
+                        <tr>
+                          <th scope="row">{{ pair[0] | strip | escape }}</th>
+                          <td>{{ pair[1] | strip | escape }}</td>
+                        </tr>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </tbody>
+                </table>
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.specs_table_2 != blank -%}
+              <div
+                class="fc-pdp-specs-inbox__panel{% if section.settings.specs_table_1 == blank %} is-active{% endif %}"
+                role="tabpanel"
+                data-spec-panel="2"
+              >
+                <table class="fc-pdp-specs-inbox__table">
+                  <tbody>
+                    {%- assign rows_2 = section.settings.specs_table_2 | newline_to_br | split: '<br />' -%}
+                    {%- for row in rows_2 -%}
+                      {%- assign pair = row | split: '|' -%}
+                      {%- if pair.size >= 2 -%}
+                        <tr>
+                          <th scope="row">{{ pair[0] | strip | escape }}</th>
+                          <td>{{ pair[1] | strip | escape }}</td>
+                        </tr>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </tbody>
+                </table>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </details>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <details class="fc-pdp-acc fc-pdp-acc--inbox">
+        <summary class="fc-pdp-acc__summary">{{ section.settings.inbox_title | default: 'In The Box' | escape }}</summary>
+        <div class="fc-pdp-acc__body">
+          <div class="fc-pdp-specs-inbox__inbox">
+            <div class="fc-pdp-specs-inbox__icons">
+              {%- for block in section.blocks -%}
+                <div class="fc-pdp-specs-inbox__icon" {{ block.shopify_attributes }}>
+                  <div class="fc-pdp-specs-inbox__icon-frame">
+                    {%- if block.settings.icon_asset != blank -%}
+                      <img
+                        src="{{ block.settings.icon_asset | asset_url }}"
+                        alt="{{ block.settings.icon_text | escape }}"
+                        loading="lazy"
+                        width="120"
+                        height="120"
+                      >
+                    {%- elsif block.settings.icon_image -%}
+                      {{
+                        block.settings.icon_image
+                        | image_url: width: 240
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '120, 180, 240',
+                          alt: block.settings.icon_text | escape
+                      }}
+                    {%- endif -%}
+                  </div>
+                  {%- if block.settings.icon_text != blank -%}
+                    <p class="fc-pdp-specs-inbox__icon-label">{{ block.settings.icon_text | escape }}</p>
+                  {%- endif -%}
+                </div>
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      </details>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+.fc-pdp-specs-inbox__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.fc-pdp-specs-inbox__title,
+.fc-pdp-specs-inbox__inbox-title {
+  display: none;
+}
+
+.fc-pdp-specs-inbox__toggle {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.fc-pdp-specs-inbox__tab {
+  font-family: var(--fc-font);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.55);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.fc-pdp-specs-inbox__tab.is-active {
+  color: #000000;
+  background: var(--fc-yellow);
+  border-color: var(--fc-yellow);
+}
+
+.fc-pdp-specs-inbox__panel {
+  display: none;
+}
+
+.fc-pdp-specs-inbox__panel.is-active {
+  display: block;
+}
+
+.fc-pdp-specs-inbox__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--fc-font);
+}
+
+.fc-pdp-specs-inbox__table th,
+.fc-pdp-specs-inbox__table td {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: left;
+  vertical-align: top;
+  font-size: 13px;
+}
+
+.fc-pdp-specs-inbox__table th {
+  width: 44%;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.fc-pdp-specs-inbox__table td {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.fc-pdp-specs-inbox__icons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: clamp(10px, 2.5vw, 16px) clamp(16px, 4vw, 24px);
+  row-gap: clamp(10px, 2.5vw, 14px);
+}
+
+.fc-pdp-specs-inbox__icon {
+  width: auto;
+  max-width: 100%;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: left;
+  gap: clamp(6px, 1.5vw, 10px);
+  flex: 0 1 auto;
+}
+
+.fc-pdp-specs-inbox__icon-frame {
+  width: clamp(28px, 7vw, 36px);
+  height: clamp(28px, 7vw, 36px);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fc-pdp-specs-inbox__icon-frame img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.fc-pdp-specs-inbox__icon-label {
+  font-family: var(--fc-font);
+  font-size: clamp(12px, 3.2vw, 14px);
+  font-weight: 500;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  white-space: normal;
+}
+
+@media screen and (min-width: 990px) {
+  .fc-pdp-mobile-accordions {
+    display: none !important;
+  }
+}
+{% endstylesheet %}
+
+<script>
+(function () {
+  var root = document.getElementById('fc-pdp-specs-inbox-{{ section.id }}');
+  if (!root) return;
+
+  root.querySelectorAll('[data-spec-tab]').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var target = tab.getAttribute('data-spec-tab');
+      root.querySelectorAll('[data-spec-tab]').forEach(function (btn) {
+        var active = btn.getAttribute('data-spec-tab') === target;
+        btn.classList.toggle('is-active', active);
+        btn.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      root.querySelectorAll('[data-spec-panel]').forEach(function (panel) {
+        panel.classList.toggle('is-active', panel.getAttribute('data-spec-panel') === target);
+      });
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "FC PDP Specs In Box",
+  "tag": "section",
+  "class": "fc-pdp-specs-inbox-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "table_title",
+      "label": "Specifications heading",
+      "default": "Specifications"
+    },
+    {
+      "type": "text",
+      "id": "table1_button_label",
+      "label": "Table 1 tab label",
+      "default": "Audio & Performance"
+    },
+    {
+      "type": "textarea",
+      "id": "specs_table_1",
+      "label": "Table 1 rows",
+      "info": "One row per line. Format: Label | Value"
+    },
+    {
+      "type": "text",
+      "id": "table2_button_label",
+      "label": "Table 2 tab label",
+      "default": "Battery and Charging"
+    },
+    {
+      "type": "textarea",
+      "id": "specs_table_2",
+      "label": "Table 2 rows",
+      "info": "One row per line. Format: Label | Value"
+    },
+    {
+      "type": "text",
+      "id": "inbox_title",
+      "label": "In the box heading",
+      "default": "In The Box"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "inbox_item",
+      "name": "In box item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon image"
+        },
+        {
+          "type": "text",
+          "id": "icon_asset",
+          "label": "Icon asset filename",
+          "info": "Theme assets/ file. Used instead of icon image when set."
+        },
+        {
+          "type": "text",
+          "id": "icon_text",
+          "label": "Label",
+          "default": "Item"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FC PDP Specs In Box"
+    }
+  ]
+}
+{% endschema %}

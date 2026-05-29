@@ -1,0 +1,11 @@
+{% comment %}
+  Finecoustic social links — text labels, same order everywhere.
+  Accepts:
+  - class: {String} extra class on wrapper (optional)
+{% endcomment %}
+
+<div class="fc-footer__bottom-social{% if class != blank %} {{ class }}{% endif %}">
+  {%- if settings.social_instagram_link != blank -%}
+    <a href="{{ settings.social_instagram_link }}" class="fc-footer__bottom-link">Instagram</a>
+  {%- endif -%}
+</div>

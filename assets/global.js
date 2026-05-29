@@ -558,16 +558,80 @@ customElements.define('menu-drawer', MenuDrawer);
 class HeaderDrawer extends MenuDrawer {
   constructor() {
     super();
+    this.bindMenuSwipeDismiss();
+  }
+
+  bindMenuSwipeDismiss() {
+    const panel = this.querySelector('#menu-drawer');
+    const details = this.mainDetailsToggle;
+    if (!panel || !details) return;
+
+    let startX;
+    let startY;
+    let dragging;
+
+    const isMobile = () => window.matchMedia('(max-width: 989px)').matches;
+    const isOpen = () => details.hasAttribute('open');
+
+    const onTouchStart = (e) => {
+      if (!isMobile() || !isOpen() || !panel.contains(e.target)) return;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      dragging = false;
+      panel.style.transition = 'none';
+    };
+
+    const onTouchMove = (e) => {
+      if (startX === undefined || !isOpen()) return;
+      const dx = e.touches[0].clientX - startX;
+      const dy = e.touches[0].clientY - startY;
+      if (!dragging && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) dragging = true;
+      if (!dragging) return;
+      const offset = Math.min(0, dx);
+      panel.style.transform = `translateX(${offset}px)`;
+    };
+
+    const onTouchEnd = (e) => {
+      if (startX === undefined) return;
+      panel.style.transition = '';
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      const threshold = 60;
+      const shouldClose =
+        Math.abs(dx) > threshold && Math.abs(dx) > Math.abs(dy) * 1.5 && dx < 0;
+      panel.style.transform = '';
+      if (shouldClose && isOpen()) {
+        const summary = details.querySelector('summary');
+        if (summary) {
+          this.closeMenuDrawer(e, summary);
+          summary.setAttribute('aria-expanded', 'false');
+        }
+      }
+      startX = startY = undefined;
+      dragging = false;
+    };
+
+    panel.addEventListener('touchstart', onTouchStart, { passive: true });
+    panel.addEventListener('touchmove', onTouchMove, { passive: true });
+    panel.addEventListener('touchend', onTouchEnd, { passive: true });
   }
 
   openMenuDrawer(summaryElement) {
     this.header = this.header || document.querySelector('.section-header');
     this.borderOffset =
       this.borderOffset || this.closest('.header-wrapper').classList.contains('header-wrapper--border-bottom') ? 1 : 0;
-    document.documentElement.style.setProperty(
-      '--header-bottom-position',
-      `${parseInt(this.header.getBoundingClientRect().bottom - this.borderOffset)}px`
-    );
+    if (typeof window.positionNavDropdowns === 'function') {
+      window.positionNavDropdowns();
+    } else {
+      const pill = this.closest('.header-wrapper') || document.querySelector('.header-wrapper');
+      const anchor = pill || this.header;
+      if (anchor) {
+        document.documentElement.style.setProperty(
+          '--header-bottom-position',
+          `${Math.round(anchor.getBoundingClientRect().bottom - (pill ? 0 : this.borderOffset))}px`
+        );
+      }
+    }
     this.header.classList.add('menu-open');
 
     setTimeout(() => {
@@ -588,11 +652,16 @@ class HeaderDrawer extends MenuDrawer {
   }
 
   onResize = () => {
-    this.header &&
+    if (typeof window.positionNavDropdowns === 'function') {
+      window.positionNavDropdowns();
+    } else if (this.header) {
+      const pill = this.closest('.header-wrapper') || document.querySelector('.header-wrapper');
+      const anchor = pill || this.header;
       document.documentElement.style.setProperty(
         '--header-bottom-position',
-        `${parseInt(this.header.getBoundingClientRect().bottom - this.borderOffset)}px`
+        `${Math.round(anchor.getBoundingClientRect().bottom - (pill ? 0 : this.borderOffset))}px`
       );
+    }
     document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
   };
 }

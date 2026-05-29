@@ -6,7 +6,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Background Color",
-      "default": "#f3f3f3"
+      "default": "#000000"
     },
 
     /* ===== DESKTOP SETTINGS ===== */
@@ -150,6 +150,12 @@
         },
         {
           "type": "text",
+          "id": "icon_asset",
+          "label": "Icon asset filename (optional — e.g. FT20.webp)",
+          "info": "Theme assets/ file. Used instead of Icon Image when set."
+        },
+        {
+          "type": "text",
           "id": "icon_text",
           "label": "Icon Text",
           "default": "Icon Text"
@@ -179,9 +185,21 @@
     <div class="in-the-box-icon-group-{{ section.id }}">
       {% for block in section.blocks %}
         <div class="icon-item-{{ section.id }}">
-          {% if block.settings.icon_image %}
-            <img src="{{ block.settings.icon_image | img_url: 'master' }}" alt="">
+          <div class="icon-item__frame-{{ section.id }}">
+          {% if block.settings.icon_asset != blank %}
+            <img
+              src="{{ block.settings.icon_asset | asset_url }}"
+              alt="{{ block.settings.icon_text | escape }}"
+              loading="lazy"
+            >
+          {% elsif block.settings.icon_image %}
+            <img
+              src="{{ block.settings.icon_image | image_url: width: 300 }}"
+              alt="{{ block.settings.icon_text | escape }}"
+              loading="lazy"
+            >
           {% endif %}
+          </div>
           <p class="text-description-icons-{{ section.id }}">
             {{ block.settings.icon_text }}
           </p>
@@ -208,12 +226,14 @@
   }
 
   .in-the-box-title-{{ section.id }} {
-    width: 100%; /* full width like mobile */
+    width: 100%;
     font-size: {{ section.settings.desktop_title_font_size }}px;
     margin: 0;
-    text-align: left; /* same as mobile */
-    color: black;
-    font-weight: 800;
+    text-align: center;
+    color: #ffffff;
+    font-family: var(--fc-font);
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 
   .in-the-box-icon-group-{{ section.id }} {
@@ -232,16 +252,29 @@
     text-align: center;
   }
 
-  .icon-item-{{ section.id }} img {
+  .icon-item__frame-{{ section.id }} {
     width: {{ section.settings.desktop_icon_width }}px;
     height: {{ section.settings.desktop_icon_width }}px;
-    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .icon-item-{{ section.id }} img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
   }
 
   .text-description-icons-{{ section.id }} {
     font-size: {{ section.settings.desktop_icon_text_font_size }}px;
+    font-family: var(--fc-font);
     font-weight: 500;
-    color: #808080;
+    color: rgba(255, 255, 255, 0.6);
   }
 
   /* ===== MOBILE STYLES ===== */
@@ -259,7 +292,7 @@
 
     .in-the-box-title-{{ section.id }} {
       width: 100% !important;
-      text-align: left;
+      text-align: center;
       font-size: {{ section.settings.mobile_title_font_size }}px;
     }
 
@@ -273,7 +306,7 @@
       width: {{ section.settings.mobile_icon_width }}px;
     }
 
-    .icon-item-{{ section.id }} img {
+    .icon-item__frame-{{ section.id }} {
       width: {{ section.settings.mobile_icon_width }}px;
       height: {{ section.settings.mobile_icon_width }}px;
     }

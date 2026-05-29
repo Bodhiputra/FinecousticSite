@@ -1,0 +1,17 @@
+{% doc %}
+  Formats a carousel tab label: non-breaking spaces only inside multi-word phrases that must stay together (e.g. Refund Policy). Other labels use normal spaces so they can wrap.
+
+  @param {string} text - Raw tab label
+{% enddoc %}
+
+{%- liquid
+  assign t = text | strip
+  assign t = t | replace: 'Privacy Policy', 'Privacy Policy'
+  assign t = t | replace: 'Shipping Policy', 'Shipping Policy'
+  assign t = t | replace: 'Return & Refund', 'Return & Refund'
+  assign t = t | replace: 'Refund Policy', 'Refund Policy'
+  assign t = t | replace: 'Terms & Conditions', 'Terms & Conditions'
+  assign t = t | replace: 'Contact Us', 'Contact Us'
+  assign t = t | replace: 'Track Order', 'Track Order'
+  assign t = t | replace: 'All Products', 'All Products'
+-%}{{- t -}}

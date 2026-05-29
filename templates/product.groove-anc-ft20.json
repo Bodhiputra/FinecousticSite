@@ -1,338 +1,88 @@
 {
   "sections": {
-    "pdp_hero_main": {
-      "type": "pdp-hero",
+    "fc_pdp_unified": {
+      "type": "fc-pdp-unified",
       "settings": {
-        "eyebrow": "EARBUDS"
+        "description": "Powerful 13 mm drivers deliver deep bass and clear highs, while Active Noise Cancellation keeps distractions out. ENC technology ensures crisp calls, Bluetooth 5.3 provides stable wireless connection, and all-day battery life keeps you going without interruptions."
       }
     },
-    "pdp_fc_main": {
-      "type": "pdp-floating-card",
-      "settings": {
-        "spec_1": "13mm Dynamic Driver",
-        "spec_2": "Active Noise Cancellation",
-        "spec_3": "Bluetooth 5.3"
-      }
-    },
-    "scrollbar_menu_sticky_7ke7bQ": {
-      "type": "scrollbar-menu-sticky",
+    "fc_pdp_specs_inbox": {
+      "type": "fc-pdp-specs-inbox",
       "blocks": {
-        "tab_item_jUADJM": {
-          "type": "tab_item",
+        "icon_ft20": {
+          "type": "inbox_item",
           "settings": {
-            "tab_label": "Overview",
-            "tab_link": ".productinfo-section-outerdiv"
-          }
-        },
-        "tab_item_79NAY7": {
-          "type": "tab_item",
-          "settings": {
-            "tab_label": "Features",
-            "tab_link": ".scrollable-banner-section"
-          }
-        },
-        "tab_item_hAgDyV": {
-          "type": "tab_item",
-          "settings": {
-            "tab_label": "Specifications",
-            "tab_link": ".dual-spec-section"
-          }
-        },
-        "tab_item_MNnKyq": {
-          "type": "tab_item",
-          "settings": {
-            "tab_label": "Video",
-            "tab_link": ".video-section"
-          }
-        },
-        "tab_item_8dFhQK": {
-          "type": "tab_item",
-          "settings": {
-            "tab_label": "Package",
-            "tab_link": ".icon-grid-section-template--17708121456714__in_the_box_section_Hi9nQw"
-          }
-        }
-      },
-      "block_order": [
-        "tab_item_jUADJM",
-        "tab_item_79NAY7",
-        "tab_item_hAgDyV",
-        "tab_item_MNnKyq",
-        "tab_item_8dFhQK"
-      ],
-      "name": "Sticky Product Tabs NavBar",
-      "settings": {}
-    },
-    "struggle_and_offer_section_VrkcnC": {
-      "type": "struggle-and-offer-section",
-      "custom_css": [
-        ".productinfo-section {padding: 60px 0 0;}"
-      ],
-      "name": "TWS Struggle Offer Section",
-      "settings": {
-        "left_title": "Market Challenge",
-        "left_highlight": "",
-        "left_text": "Modern ANC TWS claim to offer great value but often compromise on sound quality, battery life, and build quality. We identified an opportunity to bridge that gap.",
-        "right_title": "Our Solution",
-        "right_highlight": "",
-        "right_text": "We designed GROOVE ANC with powerful sound, a crystal-clear mic, and all-day comfort—delivering true high-end quality for users."
-      }
-    },
-    "custom_text_image_slide_banner_zFQVGK": {
-      "type": "custom-text-image-slide-banner",
-      "blocks": {
-        "banner_image_6gxWJ4": {
-          "type": "banner_image",
-          "settings": {
-            "image": "shopify://shop_images/GROOVE_ANC_FT20_Banner_Active_Noise_Cancelling.jpg",
-            "alt": "Groove ANC FT20"
-          }
-        }
-      },
-      "block_order": [
-        "banner_image_6gxWJ4"
-      ],
-      "custom_css": [
-        ".scroll-controls-wrapper {display: none;}",
-        "@media (max-width: 768px) {.scroll-container {display: flex; flex-direction: column-reverse; } .scrollable-banner-section {padding: 40px 0 0; } .section-title {font-size: 25px; }}",
-        "@media (max-width: 480px) {.scroll-container {padding: 0 36px; } .section-description {margin-bottom: 1rem; }}"
-      ],
-      "name": "Scrollable Banner Section with Dots",
-      "settings": {
-        "title": "Powerful ANC, Clearer Sound Experience",
-        "description": "Stay immersed in your music or calls as Active Noise Cancellation filters out the distractions around you."
-      }
-    },
-    "50_text_50_picture_BhWnww": {
-      "type": "50-text-50-picture",
-      "custom_css": [
-        ".image-section-description p {margin-bottom: 0;}"
-      ],
-      "name": "Text + Image Split",
-      "settings": {
-        "eyebrow": "",
-        "title": "Bigger Driver, Better Sound",
-        "description": "<p>With its 13mm driver, Groove ANC brings your favorite songs to life—deep bass, clear mids, and crisp highs in every note. Enjoy studio-quality sound wherever you go.</p>",
-        "image": "shopify://shop_images/GROOVE_ANC_FT20_Banner_Desktop_Driver_Size.jpg",
-        "badge": "",
-        "button_label": "",
-        "button_link": "",
-        "reverse": true,
-        "feature_1_text": "",
-        "feature_2_text": "",
-        "feature_3_text": "",
-        "feature_4_text": ""
-      }
-    },
-    "50_text_50_picture_JH7RN7": {
-      "type": "50-text-50-picture",
-      "custom_css": [
-        ".image-section-description p {margin-bottom: 0;}"
-      ],
-      "name": "Text + Image Split",
-      "settings": {
-        "eyebrow": "",
-        "title": "Intelligent Voice Isolation",
-        "description": "<p>Advance ENC technology keeps your voice crisp and clear, even in noisy environments.</p>",
-        "image": "shopify://shop_images/GROOVE_ANC_FT20_Banner_Desktop_ENC.jpg",
-        "badge": "",
-        "button_label": "",
-        "button_link": "",
-        "reverse": false,
-        "feature_1_text": "",
-        "feature_2_text": "",
-        "feature_3_text": "",
-        "feature_4_text": ""
-      }
-    },
-    "50_text_50_picture_rrj97J": {
-      "type": "50-text-50-picture",
-      "custom_css": [
-        ".image-section-description p {margin-bottom: 0;}"
-      ],
-      "name": "Text + Image Split",
-      "settings": {
-        "eyebrow": "",
-        "title": "Next-Gen Wireless Stability",
-        "description": "<p>With Bluetooth 5.3, Groove ANC keeps your connection strong and steady, offering longer battery life and smoother audio performance.</p>",
-        "image": "shopify://shop_images/GROOVE_ANC_FT20_Feature_Banner_Bluetooth_5.3.jpg",
-        "badge": "",
-        "button_label": "",
-        "button_link": "",
-        "reverse": true,
-        "feature_1_text": "",
-        "feature_2_text": "",
-        "feature_3_text": "",
-        "feature_4_text": ""
-      }
-    },
-    "50_text_50_picture_H6K9pn": {
-      "type": "50-text-50-picture",
-      "custom_css": [
-        ".text-image-split {padding: 40px 0 0;}",
-        ".image-section-description p {margin-bottom: 0;}"
-      ],
-      "name": "Text + Image Split",
-      "settings": {
-        "eyebrow": "",
-        "title": "All-Day Playtime",
-        "description": "<p>Extended battery life supports all-day use with a single charge.</p>",
-        "image": "shopify://shop_images/GROOVE_ANC_FT20_Banner_Desktop_Battery_Life.jpg",
-        "badge": "",
-        "button_label": "",
-        "button_link": "",
-        "reverse": false,
-        "feature_1_text": "",
-        "feature_2_text": "",
-        "feature_3_text": "",
-        "feature_4_text": ""
-      }
-    },
-    "switching_specification_table_mNLUK7": {
-      "type": "switching-specification-table",
-      "custom_css": [
-        ".dual-spec-wrapper {padding: 60px 60px 0;}",
-        "@media (max-width: 768px) {.dual-spec-wrapper {padding: 60px 15px 0; }}"
-      ],
-      "name": "Dual Specification Table",
-      "settings": {
-        "table_title": "Specifications",
-        "table1_button_label": "Audio & Performance",
-        "table2_button_label": "Battery, Charging, & Physical",
-        "specs_table_1": "Frequency Response | 20 Hz - 20 kHz\nDriver Size | 13 mm\nEarbuds Type | In-Ear\nConnectivity | Wireless (Bluetooth)\nBT Version | 5.3\nBT Range | 10 m\nTouch Controls | Yes",
-        "specs_table_2": "Earbud Battery Type | 35 mAh LiPo Each\nCharging Case Battery Type | 300 mAh LiPo\nWorking Time | Up to 4 Hours\nStandby Time | Up to 90 Day\nCharging Time | Approx. 1.5 Hours\nCharging Interface | USB-C\nWeight | 30 ± 3 g"
-      }
-    },
-    "video_q6k3T6": {
-      "type": "video",
-      "custom_css": [
-        ".page-width {padding: 12rem 5rem 0;}",
-        "img,video {border-radius: 12px;}",
-        "@media (max-width: 768px) {.video-section {padding: 80px 3.5rem 10px !important; }}"
-      ],
-      "name": "t:sections.video.presets.name",
-      "settings": {
-        "heading": "",
-        "heading_size": "h1",
-        "enable_video_looping": false,
-        "video": "shopify://files/videos/ProductVideo_GROOVE_ANC_FT20.mp4",
-        "video_url": "",
-        "description": "",
-        "full_width": false,
-        "color_scheme": "scheme-2",
-        "padding_top": 40,
-        "padding_bottom": 40
-      }
-    },
-    "in_the_box_section_Hi9nQw": {
-      "type": "in-the-box-section",
-      "blocks": {
-        "icon_fCzPKU": {
-          "type": "icon",
-          "settings": {
-            "icon_image": "shopify://shop_images/In_The_Box_FT20_GROOVE_ANC_FT20.png",
+            "icon_asset": "FT20.webp",
             "icon_text": "GROOVE ANC FT20"
           }
         },
-        "icon_zARiWW": {
-          "type": "icon",
+        "icon_case": {
+          "type": "inbox_item",
           "settings": {
-            "icon_image": "shopify://shop_images/In_The_Box_FT20_Charging_Case.png",
+            "icon_asset": "ChargingCase-FT20.webp",
             "icon_text": "Charging Case"
           }
         },
-        "icon_JYrBKC": {
-          "type": "icon",
+        "icon_tips": {
+          "type": "inbox_item",
           "settings": {
-            "icon_image": "shopify://shop_images/In_The_Box_FT20_Ear_Tips.png",
+            "icon_asset": "Eartips-FT20.webp",
             "icon_text": "Ear Tips (S/M/L)"
           }
         },
-        "icon_tRUh3E": {
-          "type": "icon",
+        "icon_cable": {
+          "type": "inbox_item",
           "settings": {
-            "icon_image": "shopify://shop_images/In_The_Box_FT20_Charging_Cable.png",
+            "icon_asset": "USBtoC.webp",
             "icon_text": "USB-C Charging Cable"
           }
         },
-        "icon_bRDaNi": {
-          "type": "icon",
+        "icon_guide": {
+          "type": "inbox_item",
           "settings": {
-            "icon_image": "shopify://shop_images/In_The_Box_FT20_Quick_Start_Guide.png",
+            "icon_asset": "QuickStartGuide.webp",
             "icon_text": "Quick Start Guide"
           }
         },
-        "icon_qMk9Xq": {
-          "type": "icon",
+        "icon_warranty": {
+          "type": "inbox_item",
           "settings": {
-            "icon_image": "shopify://shop_images/In_The_Box_FT20_Warranty_Card.png",
+            "icon_asset": "WarrantyCard.webp",
             "icon_text": "Warranty Card"
           }
         }
       },
       "block_order": [
-        "icon_fCzPKU",
-        "icon_zARiWW",
-        "icon_JYrBKC",
-        "icon_tRUh3E",
-        "icon_bRDaNi",
-        "icon_qMk9Xq"
+        "icon_ft20",
+        "icon_case",
+        "icon_tips",
+        "icon_cable",
+        "icon_guide",
+        "icon_warranty"
       ],
-      "custom_css": [
-        ".text-title-section {padding: 0 10px;}",
-        ".icon-grid-section-template--17708121456714__in_the_box_section_Hi9nQw {padding-bottom: 60px;}"
-      ],
-      "name": "In The Box Section",
       "settings": {
-        "background_color": "#ffffff",
-        "desktop_section_padding": 50,
-        "desktop_gap_between_columns": 20,
-        "desktop_title_width": 20,
-        "desktop_title_font_size": 40,
-        "desktop_icon_width": 150,
-        "desktop_icon_gap": 50,
-        "desktop_icon_text_font_size": 18,
-        "mobile_section_padding": 20,
-        "mobile_gap_between_columns": 30,
-        "mobile_title_font_size": 30,
-        "mobile_icon_width": 120,
-        "mobile_icon_gap": 16,
-        "mobile_icon_text_font_size": 14
+        "table_title": "Specifications",
+        "table1_button_label": "Audio & Performance",
+        "table2_button_label": "Battery, Charging, & Physical",
+        "specs_table_1": "Frequency Response | 20 Hz - 20 kHz\nDriver Size | 13 mm\nEarbuds Type | In-Ear\nConnectivity | Wireless (Bluetooth)\nBT Version | 5.3\nBT Range | 10 m\nTouch Controls | Yes",
+        "specs_table_2": "Earbud Battery Type | 35 mAh LiPo Each\nCharging Case Battery Type | 300 mAh LiPo\nWorking Time | Up to 4 Hours\nStandby Time | Up to 90 Day\nCharging Time | Approx. 1.5 Hours\nCharging Interface | USB-C\nWeight | 30 ± 3 g",
+        "inbox_title": "In The Box"
       }
     },
-    "related-products": {
-      "type": "related-products",
-      "disabled": true,
+    "fc_pdp_video": {
+      "type": "fc-pdp-video-hero",
       "settings": {
-        "heading": "You may also like",
-        "heading_size": "h2",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "columns_mobile": "2",
-        "color_scheme": "scheme-2",
-        "image_ratio": "square",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "padding_top": 36,
-        "padding_bottom": 28
+        "heading": "",
+        "enable_video_looping": true,
+        "video": "shopify://files/videos/ProductVideo_GROOVE_ANC_FT20.mp4",
+        "video_url": "",
+        "description": "Groove ANC FT20 product video"
       }
     }
   },
   "order": [
-    "pdp_hero_main",
-    "pdp_fc_main",
-    "scrollbar_menu_sticky_7ke7bQ",
-    "struggle_and_offer_section_VrkcnC",
-    "custom_text_image_slide_banner_zFQVGK",
-    "50_text_50_picture_BhWnww",
-    "50_text_50_picture_JH7RN7",
-    "50_text_50_picture_rrj97J",
-    "50_text_50_picture_H6K9pn",
-    "switching_specification_table_mNLUK7",
-    "video_q6k3T6",
-    "in_the_box_section_Hi9nQw",
-    "related-products"
+    "fc_pdp_unified",
+    "fc_pdp_specs_inbox",
+    "fc_pdp_video"
   ]
 }

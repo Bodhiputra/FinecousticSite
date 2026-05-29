@@ -1,0 +1,41 @@
+{%- liquid
+  assign fc_mock_available = false
+  if mock_available
+    assign fc_mock_available = true
+  endif
+
+  assign has_color = false
+  assign color_option_pos = 0
+  for option in product.options
+    if option == 'Color' or option == 'Colour' or option == 'color' or option == 'colour'
+      assign has_color = true
+      assign color_option_pos = forloop.index0
+    endif
+  endfor
+-%}
+<script type="application/json" id="fc-data-{{ product.id }}">
+{
+  "id": {{ product.id }},
+  "title": {{ product.title | json }},
+  "type": {{ product.type | json }},
+  "price": "{{ product.price | money }}",
+  "priceRaw": {{ product.price }},
+  "image": "{{ product.featured_image | image_url: width: 900 }}",
+  "imageAlt": {{ product.featured_image.alt | default: product.title | json }},
+  "url": "{{ product.url }}",
+  "hasColor": {{ has_color }},
+  "variants": [
+    {%- for variant in product.variants -%}
+    {
+      "id": {{ variant.id }},
+      "title": {{ variant.title | json }},
+      "available": {% if fc_mock_available %}true{% else %}{{ variant.available }}{% endif %},
+      "price": "{{ variant.price | money }}",
+      "priceRaw": {{ variant.price }},
+      "color": {% if has_color %}{{ variant.options[color_option_pos] | json }}{% else %}null{% endif %},
+      "image": {% if variant.image %}"{{ variant.image | image_url: width: 900 }}"{% else %}null{% endif %}
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>

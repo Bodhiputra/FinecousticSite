@@ -5,19 +5,29 @@
 /* ── TOOLBAR ── */
 
 
-/* ── GRID ── */
-.fc-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 350px));
-  justify-content: center;
-  gap: clamp(24px, 4vw, 50px) clamp(16px, 3vw, 50px);
-  margin: 0 auto 48px;
-  padding: 0 clamp(0px, 5vw, 50px);
-  box-sizing: border-box;
+/* ── GRID SWIPE ZONE ── */
+.fc-shop-swipe-zone {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
-.fc-grid[data-cols="3"] { grid-template-columns: repeat(3, minmax(0, 350px)); }
-.fc-grid[data-cols="4"] { grid-template-columns: repeat(4, minmax(0, 350px)); }
-.fc-grid[data-cols="5"] { grid-template-columns: repeat(5, minmax(0, 350px)); }
+
+.fc-shop-swipe-zone--soon {
+  flex: 1;
+}
+
+.fc-shop-swipe-zone--soon .fc-grid {
+  margin-bottom: 0;
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+.fc-shop-swipe-zone--soon .fc-category-soon {
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+/* ── GRID (breakpoints live in custom-style.css; --fc-product-cols set by JS) ── */
 
 /* ── CARD ── */
 .fc-card {
@@ -51,6 +61,13 @@
 .fc-card__img.fc-img-active { opacity: 1; }
 .fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover)) .fc-card__img.fc-img-active { transform: scale(1.07); }
 
+/* Product cards — hover image stack only, no IG dot pagination */
+.fc-shop-page .fc-card__image .fc-ig-dots,
+#fc-collection-header + .fc-ig-dots,
+.fc-title-carousel + .fc-ig-dots {
+  display: none !important;
+}
+
 /* ── HIDDEN CARD STATE ── */
 .fc-card.fc-hidden { display: none; }
 
@@ -61,6 +78,21 @@
 }
 .fc-card-appear {
   animation: fc-card-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── CATEGORY PLACEHOLDER ── */
+.fc-category-soon {
+  font-family: var(--fc-font);
+  font-size: clamp(18px, 2.5vw, 28px);
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  margin: clamp(48px, 8vw, 96px) auto;
+  padding: 0 clamp(20px, 5vw, 50px);
+  line-height: 1;
+}
+.fc-category-soon[hidden] {
+  display: none;
 }
 
 /* ── PAGINATION ── */
@@ -288,17 +320,7 @@
 }
 
 /* ── RESPONSIVE ── */
-@media screen and (max-width: 1400px) {
-  .fc-grid { grid-template-columns: repeat(4, minmax(0, 350px)) !important; }
-}
-@media screen and (max-width: 1050px) {
-  .fc-grid { grid-template-columns: repeat(3, minmax(0, 350px)) !important; }
-}
-@media screen and (max-width: 749px) {
-  .fc-grid { grid-template-columns: repeat(2, minmax(0, 350px)) !important; }
-}
 @media screen and (max-width: 600px) {
-  .fc-grid { grid-template-columns: repeat(2, minmax(0, 350px)) !important; }
   .fc-expanded { flex-direction: column; }
   .fc-expanded__image { width: 100%; min-height: 220px; }
   .fc-expanded__info { min-height: auto; }
@@ -311,62 +333,25 @@
 
 {%- comment -%} Embed product data as JSON for JS to consume {%- endcomment -%}
 {%- for product in collection.products -%}
-  {%- comment -%}MOCK STOCK — first product treated as in-stock for testing{%- endcomment -%}
+  {%- render 'fc-exclude-product', product: product -%}
+  {%- if fc_exclude_product -%}{%- continue -%}{%- endif -%}
   {%- assign fc_mock_available = forloop.first -%}
-  {%- assign has_color = false -%}
-  {%- for option in product.options -%}
-    {%- if option == 'Color' or option == 'Colour' or option == 'color' or option == 'colour' -%}
-      {%- assign has_color = true -%}
-      {%- assign color_option_pos = forloop.index0 -%}
-    {%- endif -%}
-  {%- endfor -%}
-  <script type="application/json" id="fc-data-{{ product.id }}">
-  {
-    "id": {{ product.id }},
-    "title": {{ product.title | json }},
-    "type": {{ product.type | json }},
-    "price": "{{ product.price | money }}",
-    "priceRaw": {{ product.price }},
-    "image": "{{ product.featured_image | image_url: width: 900 }}",
-    "imageAlt": {{ product.featured_image.alt | default: product.title | json }},
-    "url": "{{ product.url }}",
-    "hasColor": {{ has_color }},
-    "variants": [
-      {%- for variant in product.variants -%}
-      {
-        "id": {{ variant.id }},
-        "title": {{ variant.title | json }},
-        "available": {% if fc_mock_available %}true{% else %}{{ variant.available }}{% endif %},
-        "price": "{{ variant.price | money }}",
-        "priceRaw": {{ variant.price }},
-        "color": {% if has_color %}{{ variant.options[color_option_pos] | json }}{% else %}null{% endif %},
-        "image": {% if variant.image %}"{{ variant.image | image_url: width: 900 }}"{% else %}null{% endif %}
-      }{%- unless forloop.last -%},{%- endunless -%}
-      {%- endfor -%}
-    ]
-  }
-  </script>
+  {%- render 'fc-product-data', product: product, mock_available: fc_mock_available -%}
 {%- endfor -%}
 
-<div class="fc-collection-header">
-  <button class="fc-collection-header__arrow fc-filter-nav__prev" type="button">&#171;</button>
-  <div class="fc-title-viewport" id="fc-title-viewport">
-    <div class="fc-title-track" id="fc-title-track">
-      <span class="fc-title-item">Microphones</span>
-      <span class="fc-title-item fc-title-active">All Products</span>
-      <span class="fc-title-item">Earphones</span>
-      <span class="fc-title-item">Speakers</span>
-      <span class="fc-title-item">Microphones</span>
-      <span class="fc-title-item">All Products</span>
-    </div>
-  </div>
-  <button class="fc-collection-header__arrow fc-filter-nav__next" type="button">&#187;</button>
-</div>
+<div class="fc-shop-page">
+{%- render 'fc-title-carousel',
+  id: 'fc-collection',
+  labels: 'All Products|Earphones|Speakers|Microphones',
+  active_index: 0
+-%}
 
 {%- comment -%} Product grid {%- endcomment -%}
+<div class="fc-page-swipe-zone fc-shop-swipe-zone" id="fc-shop-swipe-zone">
 <div class="fc-grid" id="fc-grid" data-cols="{{ section.settings.columns_desktop }}">
   {%- for product in collection.products -%}
-    {%- unless product.title contains 'FBS2' -%}
+    {%- render 'fc-exclude-product', product: product -%}
+    {%- unless product.title contains 'FBS2' or fc_exclude_product -%}
     {%- liquid
       assign fc_h = product.handle | downcase
       assign fc_t = product.type | downcase
@@ -418,11 +403,15 @@
   {%- endfor -%}
 </div>
 
+<p class="fc-category-soon" id="fc-grid-soon" hidden>Soon.</p>
+</div>
+
 {%- if paginate.pages > 1 -%}
   <div class="fc-pagination">
     {%- render 'pagination', paginate: paginate, anchor: '' -%}
   </div>
 {%- endif -%}
+</div>
 
 {%- endpaginate -%}
 
@@ -473,139 +462,11 @@
     brown: '#7a5c3a', beige: '#c8b99a',
   };
 
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     MOCK CART — frontend simulation only, no backend calls
-     Set to false and delete this block when real inventory
-     is available and backend is ready for testing.
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  const MOCK_CART = true;
-
-  const mockCartItems = {}; // variantId → { title, price, priceRaw, image, variantTitle, qty }
-
-  function getProductByVariantId(variantId) {
-    const els = document.querySelectorAll('[id^="fc-data-"]');
-    for (const el of els) {
-      try {
-        const data = JSON.parse(el.textContent);
-        const variant = data.variants.find(v => v.id === variantId);
-        if (variant) return { product: data, variant };
-      } catch (e) {}
-    }
-    return null;
+  /* ── cart add (shared with PDP via fc-cart.js) ── */
+  async function addToCart(variantId, qty) {
+    if (window.fcAddToCart) return window.fcAddToCart(variantId, qty);
+    return false;
   }
-
-  function formatMockMoney(cents) {
-    return '$' + (cents / 100).toFixed(2);
-  }
-
-  function renderMockCart() {
-    const cartDrawer   = document.querySelector('cart-drawer');
-    const drawerItems  = document.querySelector('cart-drawer-items');
-    const cartItemsEl  = document.getElementById('CartDrawer-CartItems');
-    const checkoutBtn  = document.getElementById('CartDrawer-Checkout');
-    const totalEl      = document.querySelector('.totals__total-value');
-    const entries      = Object.entries(mockCartItems);
-    const totalQty     = entries.reduce((s, [, i]) => s + i.qty, 0);
-
-    document.querySelectorAll('.cart-count-bubble').forEach(el => {
-      const n = el.querySelector('[aria-hidden="true"]');
-      if (n) n.textContent = totalQty;
-      el.classList.toggle('hidden', totalQty === 0);
-    });
-
-    const bagQty = document.getElementById('CartDrawer-BagQty');
-    if (bagQty) bagQty.textContent = totalQty > 0 ? '(' + totalQty + ')' : '';
-
-    const innerEmpty = document.querySelector('.drawer__inner-empty');
-
-    if (entries.length === 0) {
-      cartDrawer?.classList.add('is-empty');
-      drawerItems?.classList.add('is-empty');
-      if (innerEmpty) innerEmpty.style.display = '';
-      if (cartItemsEl) cartItemsEl.innerHTML = '';
-      if (checkoutBtn) checkoutBtn.disabled = true;
-      return;
-    }
-
-    cartDrawer?.classList.remove('is-empty');
-    drawerItems?.classList.remove('is-empty');
-    if (innerEmpty) innerEmpty.style.display = 'none';
-    if (checkoutBtn) checkoutBtn.disabled = false;
-
-    const totalCents = entries.reduce((s, [, i]) => s + i.priceRaw * i.qty, 0);
-    if (totalEl) totalEl.textContent = formatMockMoney(totalCents);
-
-    if (cartItemsEl) {
-      cartItemsEl.innerHTML = `
-        <div class="fc-receipt-items">
-          ${entries.map(([vid, item]) => `
-            <div class="fc-receipt-item">
-              <div class="fc-receipt-item__img">
-                <img src="${item.image}" alt="${item.title}" width="80" height="80" loading="lazy">
-              </div>
-              <div class="fc-receipt-item__detail">
-                <span class="fc-receipt-item__name">${item.title}</span>
-                <div class="fc-receipt-item__bottom">
-                  <span class="fc-receipt-item__price">${formatMockMoney(item.priceRaw * item.qty)}</span>
-                  <div class="fc-receipt-qty">
-                    <button class="fc-receipt-qty__btn" type="button" data-mock-minus="${vid}">−</button>
-                    <span class="fc-receipt-qty__count">${item.qty}</span>
-                    <button class="fc-receipt-qty__btn" type="button" data-mock-plus="${vid}">+</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `).join('')}
-        </div>`;
-
-      cartItemsEl.querySelectorAll('[data-mock-minus]').forEach(btn =>
-        btn.addEventListener('click', () => {
-          const id = btn.dataset.mockMinus;
-          if (mockCartItems[id]) {
-            mockCartItems[id].qty -= 1;
-            if (mockCartItems[id].qty <= 0) delete mockCartItems[id];
-            renderMockCart();
-          }
-        })
-      );
-      cartItemsEl.querySelectorAll('[data-mock-plus]').forEach(btn =>
-        btn.addEventListener('click', () => {
-          const id = btn.dataset.mockPlus;
-          if (mockCartItems[id]) { mockCartItems[id].qty += 1; renderMockCart(); }
-        })
-      );
-    }
-
-    if (cartDrawer && typeof cartDrawer.open === 'function') {
-      cartDrawer.open();
-    } else {
-      document.querySelector('.drawer')?.classList.add('active');
-    }
-  }
-
-  function mockAddToCart(variantId, qty) {
-    const found = getProductByVariantId(variantId);
-    if (!found) return false;
-    const { product, variant } = found;
-    const key = String(variantId);
-    if (mockCartItems[key]) {
-      mockCartItems[key].qty += qty;
-    } else {
-      mockCartItems[key] = {
-        title:        product.title,
-        price:        variant.price,
-        priceRaw:     variant.priceRaw,
-        image:        variant.image || product.image,
-        variantTitle: variant.title !== 'Default Title' ? variant.title : null,
-        qty:          qty,
-      };
-    }
-    renderMockCart();
-    return true;
-  }
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     END MOCK CART
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
   /* ── state ── */
   let expVariantId = null;
@@ -752,75 +613,19 @@
     }, 280);
   }
 
-  /* ── cart add ── */
-  async function addToCart(variantId, qty) {
-    if (!variantId) return false;
-
-    /* MOCK — skips real API call, remove when backend is ready */
-    if (MOCK_CART) return mockAddToCart(variantId, qty);
-    /* END MOCK */
-
-    try {
-      const cartDrawer = document.querySelector('cart-drawer');
-      const sections = (cartDrawer && typeof cartDrawer.getSectionsToRender === 'function')
-        ? cartDrawer.getSectionsToRender().map(s => s.id)
-        : [];
-
-      const res = await fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: [{ id: variantId, quantity: qty }],
-          sections: sections,
-          sections_url: window.location.pathname,
-        }),
-      });
-
-      if (!res.ok) throw new Error('Cart add failed ' + res.status);
-      const state = await res.json();
-
-      if (cartDrawer && state.sections && typeof cartDrawer.renderContents === 'function') {
-        cartDrawer.renderContents(state);
-      } else {
-        const countRes = await fetch('/cart.js');
-        const cart = await countRes.json();
-        document.querySelectorAll('.cart-count-bubble').forEach(el => {
-          const n = el.querySelector('[aria-hidden="true"]');
-          if (n) n.textContent = cart.item_count;
-          el.classList.remove('hidden');
-        });
-      }
-      return true;
-    } catch (e) {
-      console.error('Add to cart error:', e);
-      return false;
-    }
-  }
-
-  /* ── card click → navigate to product page ── */
+  /* ── image click → product page; + button only → add to cart ── */
   document.querySelectorAll('.fc-card').forEach(card => {
-    card.addEventListener('click', e => {
-      if (e.target.closest('.fc-card__tag')) return;
-      if (e.target.closest('.fc-tag-oos-wrap')) return;
-      const url = card.dataset.url;
-      if (url) window.location.href = url;
-    });
+    const url = card.dataset.url;
+    const image = card.querySelector('.fc-card__image');
+    if (image && url) {
+      image.addEventListener('click', () => {
+        window.location.href = url;
+      });
+    }
 
     const tag = card.querySelector('.fc-card__tag');
-    let tagQty = 0;
-    if (tag) {
-      tag.addEventListener('click', async e => {
-        if (tag.classList.contains('fc-tag--oos')) return;
-        e.stopPropagation();
-        const variantId = Number(tag.dataset.variantId);
-        tagQty++;
-        tag.classList.add('fc-tag-active');
-        const plusBtn = tag.querySelector('.fc-card__atc-plus');
-        const qtyLabel = tag.querySelector('.fc-qty-label');
-        if (plusBtn) plusBtn.classList.add('fc-active');
-        if (qtyLabel) qtyLabel.textContent = tagQty;
-        await addToCart(variantId, 1);
-      });
+    if (tag && window.fcWirePriceTag) {
+      window.fcWirePriceTag(tag, { onAdd: addToCart });
     }
   });
 
@@ -855,15 +660,47 @@
   overlay .addEventListener('click', closeExpanded);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeExpanded(); });
 
+  /* ── grid columns: JS = visible product count; CSS media queries cap 5→4→3→2 ── */
+  function updateGridColumns(visibleCount) {
+    const grid = document.getElementById('fc-grid');
+    if (!grid) return;
+    const settingMax = parseInt(grid.dataset.cols || '5', 10);
+    const cols = Math.max(1, Math.min(visibleCount, settingMax));
+    grid.style.setProperty('--fc-product-cols', String(cols));
+  }
+
+  function syncGridColumns() {
+    const visibleCount = document.querySelectorAll('.fc-card:not(.fc-hidden)').length;
+    updateGridColumns(visibleCount);
+  }
+
+  let currentFilter = 'all';
+
+  function fcClampScroll() {
+    requestAnimationFrame(function () {
+      var maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      if (window.scrollY > maxY) window.scrollTo(0, maxY);
+    });
+  }
+
+  function fcResetShopScroll() {
+    window.scrollTo(0, 0);
+    fcClampScroll();
+  }
+
   /* ── filter shared logic — staggered appear ── */
   function applyFilter(filter) {
+    if (filter !== currentFilter) fcResetShopScroll();
+    currentFilter = filter;
     let visibleIdx = 0;
+    let visibleCount = 0;
     document.querySelectorAll('.fc-card').forEach(card => {
       card.classList.remove('fc-card-appear');
       const visible = filter === 'all' || card.dataset.category === filter;
       if (!visible) {
         card.classList.add('fc-hidden');
       } else {
+        visibleCount++;
         card.classList.remove('fc-hidden');
         const delay = visibleIdx * 90;
         visibleIdx++;
@@ -873,6 +710,13 @@
         });
       }
     });
+    const soonEl = document.getElementById('fc-grid-soon');
+    const showSoon = filter === 'speakers' && visibleCount === 0;
+    if (soonEl) soonEl.hidden = !showSoon;
+    const zone = document.getElementById('fc-shop-swipe-zone');
+    if (zone) zone.classList.toggle('fc-shop-swipe-zone--soon', showSoon);
+    updateGridColumns(visibleCount);
+    fcClampScroll();
   }
 
   /* ── filter carousel ── */
@@ -883,19 +727,35 @@
     { key: 'microphones', label: 'Microphones' },
   ];
 
+  function fcResetCardImageStack(imageWrap) {
+    if (!imageWrap) return;
+    imageWrap.querySelectorAll('.fc-ig-dots').forEach(el => el.remove());
+    imageWrap.classList.remove('fc-ig-viewport', 'is-dragging');
+    delete imageWrap.dataset.fcIgGalleryBound;
+    delete imageWrap.dataset.fcSwipeBound;
+    delete imageWrap.dataset.fcSwiped;
+    const track = imageWrap.querySelector('.fc-ig-track');
+    if (track) {
+      Array.from(track.querySelectorAll('.fc-card__img')).forEach(img => {
+        img.classList.remove('fc-ig-slide', 'is-active');
+        img.style.transform = '';
+        imageWrap.appendChild(img);
+      });
+      track.remove();
+    }
+  }
+
   function fcInitCarousel() {
-    if (!window.FcCarousel) return;
-    window.FcCarousel({
-      trackId:      'fc-title-track',
-      viewportId:   'fc-title-viewport',
-      prevSelector: '.fc-filter-nav__prev',
-      nextSelector: '.fc-filter-nav__next',
+    if (!document.getElementById('fc-collection-header') || !window.FcTitleCarousel) return;
+    window.FcTitleCarousel({
+      id: 'fc-collection',
+      extraSwipeId: 'fc-shop-swipe-zone',
       N: FILTERS.length,
       onSlide: function (logIdx) { applyFilter(FILTERS[logIdx].key); },
       getInitialIdx: function () {
         var urlFilter = new URLSearchParams(window.location.search).get('filter');
         var idx = urlFilter ? FILTERS.findIndex(function (f) { return f.key === urlFilter; }) : -1;
-        return idx > 0 ? idx : 0;
+        return idx >= 0 ? idx : 0;
       }
     }).init();
   }
@@ -904,9 +764,12 @@
     document.querySelectorAll('.fc-card').forEach(card => {
       const imgs   = Array.from(card.querySelectorAll('.fc-card__img'));
       const bottom = card.querySelector('.fc-card__bottom');
+      const imageWrap = card.querySelector('.fc-card__image');
+      fcResetCardImageStack(imageWrap);
       if (!imgs.length) return;
       imgs[0].classList.add('fc-img-active');
       if (imgs.length <= 1) return;
+
       let idx = 0;
       let timer = null;
 
@@ -969,10 +832,26 @@
   let fcFitTimer;
   window.addEventListener('resize', () => {
     clearTimeout(fcFitTimer);
-    fcFitTimer = setTimeout(fcFitNames, 120);
+    fcFitTimer = setTimeout(() => {
+      fcFitNames();
+      syncGridColumns();
+      fcClampScroll();
+    }, 120);
   });
 
-  document.addEventListener('shopify:section:load', () => {
+  syncGridColumns();
+  fcClampScroll();
+
+  let fcScrollClampTimer;
+  window.addEventListener('scroll', function () {
+    clearTimeout(fcScrollClampTimer);
+    fcScrollClampTimer = setTimeout(fcClampScroll, 80);
+  }, { passive: true });
+
+  window.addEventListener('scrollend', fcClampScroll, { passive: true });
+
+  document.addEventListener('shopify:section:load', function (evt) {
+    if (!evt.target.querySelector || !evt.target.querySelector('#fc-collection-track')) return;
     fcInitCarousel();
     fcInitCards();
     fcFitNames();
@@ -981,7 +860,7 @@
   const fcSection = document.getElementById('shopify-section-{{ section.id }}');
   if (fcSection) {
     new MutationObserver(() => {
-      if (document.getElementById('fc-title-track')) {
+      if (document.getElementById('fc-collection-track')) {
         fcInitCarousel();
         fcInitCards();
       }

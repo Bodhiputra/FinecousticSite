@@ -12,9 +12,6 @@
   {%- endif -%}
   <div class="pdp-hero__overlay"></div>
   <div class="pdp-hero__content">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="pdp-hero__eyebrow">{{ section.settings.eyebrow }}</p>
-    {%- endif -%}
     <h1 class="pdp-hero__title">{{ product.title }}</h1>
   </div>
 </section>
@@ -23,8 +20,7 @@
 .pdp-hero {
   position: relative;
   width: 100%;
-  height: 100svh;
-  min-height: 500px;
+  height: clamp(300px, 48svh, 560px);
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -35,7 +31,16 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center center;
+}
+@media screen and (min-width: 990px) {
+  .pdp-hero {
+    height: clamp(380px, 52vh, 620px);
+  }
+  .pdp-hero__img {
+    object-fit: contain;
+    object-position: center bottom;
+  }
 }
 .pdp-hero__overlay {
   position: absolute;
@@ -51,28 +56,18 @@
 .pdp-hero__content {
   position: relative;
   z-index: 1;
-  padding: clamp(40px,6vw,80px) clamp(24px,5vw,80px);
+  padding: clamp(24px, 4vw, 48px) clamp(24px, 5vw, 64px);
   width: 100%;
-}
-.pdp-hero__eyebrow {
-  font-family: var(--fc-font);
-  font-size: clamp(11px, 1.2vw, 13px);
-  font-weight: 700;
-  color: var(--fc-yellow);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  margin: 0 0 14px;
 }
 .pdp-hero__title {
   font-family: var(--fc-font);
-  font-size: clamp(42px, 7vw, 100px);
+  font-size: clamp(32px, 5vw, 72px);
   font-weight: 700;
   color: #ffffff;
-  text-transform: uppercase;
   letter-spacing: -0.01em;
   line-height: 0.93;
   margin: 0;
-  max-width: 900px;
+  max-width: min(900px, 70%);
 }
 {% endstylesheet %}
 
@@ -84,12 +79,6 @@
       "type": "image_picker",
       "id": "hero_image",
       "label": "Hero Image (optional — defaults to product featured image)"
-    },
-    {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow label",
-      "default": "EARBUDS"
     }
   ],
   "presets": [

@@ -32,17 +32,15 @@
 {% endschema %}
 
 <div class="custom-product-tabs-wrapper">
-  <div class="custom-product-tabs-scroll">
-    <ul class="custom-product-tabs">
-      {% for block in section.blocks %}
-        <li>
-          <a href="{{ block.settings.tab_link | escape }}">
-            {{ block.settings.tab_label | escape }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
+  <ul class="custom-product-tabs">
+    {% for block in section.blocks %}
+      <li>
+        <a href="{{ block.settings.tab_link | escape }}">
+          {{ block.settings.tab_label | escape }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
 </div>
 
 <style>
@@ -51,59 +49,43 @@
   background: #000000;
   z-index: 2;
   padding: 10px 0 5px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .custom-product-tabs-wrapper.sticky {
   position: fixed;
   top: 57.5px;
   left: 0;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.6);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
 }
 
-.custom-product-tabs-scroll {
-  overflow-x: auto;
-  white-space: nowrap;
-  padding-bottom: 6px;
-  display: flex;
-  justify-content: center; /* desktop default */
-}
-
-/* Mobile: left align for better scroll */
 @media screen and (max-width: 767px) {
-  .custom-product-tabs-scroll {
-    justify-content: flex-start;
-    padding-left: 10px;
-  }
-
   .custom-product-tabs-wrapper.sticky {
-  top: 47.5px;
-}
-}
-
-/* Visible Scrollbar */
-.custom-product-tabs-scroll::-webkit-scrollbar {
-  height: 6px;
-}
-.custom-product-tabs-scroll::-webkit-scrollbar-track {
-  background: #111111;
-  border-radius: 4px;
-}
-.custom-product-tabs-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.2);
-  border-radius: 4px;
-}
-.custom-product-tabs-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.4);
+    top: 47.5px;
+  }
 }
 
 .custom-product-tabs {
-  display: inline-flex;
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
   gap: 60px;
   list-style: none;
   margin: 0;
-  padding: 0 20px;
+  padding: 0 20px 6px;
+  width: max-content;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 767px) {
+  .custom-product-tabs {
+    justify-content: flex-start;
+    padding-left: 10px;
+  }
 }
 
 .custom-product-tabs li {
@@ -111,9 +93,12 @@
 }
 
 .custom-product-tabs li a {
+  font-family: var(--fc-font);
   text-decoration: none;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.55);
   font-weight: 500;
+  font-size: clamp(13px, 1.4vw, 15px);
+  letter-spacing: -0.01em;
   padding-bottom: 2px;
   transition: color 0.3s, border-bottom 0.3s;
   display: inline-block;
@@ -132,14 +117,12 @@
 <script>
 var wrapper = document.querySelector('.custom-product-tabs-wrapper');
 var tabs = document.querySelectorAll('.custom-product-tabs a');
-var scrollContainer = document.querySelector('.custom-product-tabs-scroll');
 var wrapperOffset = wrapper.offsetTop;
 
-// Smooth horizontal scroll helper
 function scrollTabIntoView(tab) {
-  if (scrollContainer.scrollWidth > scrollContainer.clientWidth) {
-    const scrollLeft = tab.offsetLeft - scrollContainer.clientWidth / 2 + tab.offsetWidth / 2;
-    scrollContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+  if (wrapper.scrollWidth > wrapper.clientWidth) {
+    var scrollLeft = tab.offsetLeft - wrapper.clientWidth / 2 + tab.offsetWidth / 2;
+    wrapper.scrollTo({ left: scrollLeft, behavior: 'smooth' });
   }
 }
 

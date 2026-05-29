@@ -2,9 +2,21 @@
 
 /* ── POLICY CONTENT ── */
 .fc-policy-wrap {
+  width: 100%;
   max-width: 780px;
   margin: 0 auto;
-  padding: 12px clamp(16px, 4vw, 40px) 0;
+  padding: 0 var(--fc-page-gutter-sm, clamp(12px, 3vw, 40px)) 0;
+  box-sizing: border-box;
+}
+
+/* Title lives in the carousel — hide duplicate Shopify policy h1s */
+.fc-policy-panel > h1:first-child {
+  display: none;
+}
+
+/* Same top spacing for every policy (h2/p/etc. first blocks) */
+.fc-policy-panel.fc-pol-active > :first-child {
+  margin-top: 0 !important;
 }
 
 .fc-policy-panel { display: none; }
@@ -13,7 +25,7 @@
   animation: fc-pol-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 @keyframes fc-pol-in {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -65,40 +77,20 @@
   margin: 40px 0;
 }
 
-.fc-policy-eyebrow {
-  font-family: var(--fc-font);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--fc-yellow);
-  letter-spacing: -0.01em;
-  margin: 0 0 32px;
-  text-transform: uppercase;
-}
-
 {%- endstyle -%}
 
-<div class="fc-collection-header">
-  <button class="fc-collection-header__arrow fc-filter-nav__prev" type="button">&#171;</button>
-  <div class="fc-title-viewport" id="fc-pol-viewport">
-    <div class="fc-title-track" id="fc-pol-track">
-      <span class="fc-title-item">Terms &amp; Conditions</span>
-      <span class="fc-title-item fc-title-active">Privacy Policy</span>
-      <span class="fc-title-item">Shipping Policy</span>
-      <span class="fc-title-item">Return &amp; Refund Policy</span>
-      <span class="fc-title-item">Terms &amp; Conditions</span>
-      <span class="fc-title-item">Privacy Policy</span>
-    </div>
-  </div>
-  <button class="fc-collection-header__arrow fc-filter-nav__next" type="button">&#187;</button>
-</div>
+{%- render 'fc-title-carousel',
+  id: 'fc-policies',
+  labels: 'Privacy Policy|Shipping Policy|Return & Refund Policy|Terms & Conditions',
+  active_index: 0
+-%}
 
-<div class="fc-policy-wrap">
+<div class="fc-page-swipe-zone fc-policy-wrap" id="fc-policy-wrap">
 
   <div class="fc-policy-panel" id="fc-pol-privacy" data-policy="privacy-policy">
     {%- if shop.privacy_policy.body != blank -%}
       {{ shop.privacy_policy.body }}
     {%- else -%}
-      <p class="fc-policy-eyebrow">Legal</p>
       <h1>Privacy Policy</h1>
       <p>No privacy policy has been configured yet.</p>
     {%- endif -%}
@@ -124,7 +116,6 @@
     {%- if shop.terms_of_service.body != blank -%}
       {{ shop.terms_of_service.body }}
     {%- else -%}
-      <p class="fc-policy-eyebrow">Legal</p>
       <h1>Terms &amp; Conditions</h1>
       <p>No terms of service has been configured yet.</p>
     {%- endif -%}
@@ -156,25 +147,31 @@
     history.pushState(null, '', url.toString());
   }
 
-  function init() {
-    if (!window.FcCarousel) return;
-    window.FcCarousel({
-      trackId:      'fc-pol-track',
-      viewportId:   'fc-pol-viewport',
-      prevSelector: '.fc-filter-nav__prev',
-      nextSelector: '.fc-filter-nav__next',
+  function initCarousel() {
+    if (!document.getElementById('fc-policies-header') || !window.FcTitleCarousel) return;
+    window.FcTitleCarousel({
+      id: 'fc-policies',
+      extraSwipeId: 'fc-policy-wrap',
       N: POLICIES.length,
       onSlide: function (logIdx) { applyPolicy(POLICIES[logIdx].key); },
       getInitialIdx: function () {
         var urlPolicy = new URLSearchParams(window.location.search).get('policy');
         var idx = urlPolicy ? POLICIES.findIndex(function (p) { return p.key === urlPolicy; }) : -1;
-        return idx > 0 ? idx : 0;
+        return idx >= 0 ? idx : 0;
       }
     }).init();
   }
 
+  function init() {
+    if (!document.getElementById('fc-policies-header')) return;
+    initCarousel();
+  }
+
   init();
-  document.addEventListener('shopify:section:load', init);
+  document.addEventListener('shopify:section:load', function (evt) {
+    if (!evt.target.querySelector || !evt.target.querySelector('#fc-policies-header')) return;
+    init();
+  });
 
   (function titleCaseTerms() {
     const panel = document.getElementById('fc-pol-terms');

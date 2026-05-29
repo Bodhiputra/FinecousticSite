@@ -40,7 +40,7 @@
 
 <style>
 .productinfo-section {
-  background-color: #000000;
+  background-color: transparent;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -91,28 +91,33 @@
 
 .productinfo-title {
   margin: 0;
-  font-weight: 800;
-  font-size: 25px;
+  font-family: var(--fc-font);
+  font-weight: 700;
+  font-size: clamp(22px, 2.5vw, 28px);
   margin-top: 7.5px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
 }
 
 .productinfo-highlight {
+  font-family: var(--fc-font);
   color: var(--fc-yellow);
-  -webkit-text-stroke: 2.5px #000;
-  paint-order: stroke fill;
+  font-weight: 700;
   letter-spacing: -0.02em;
   margin: 1px 0 0 0;
-  font-size: 23px;
+  font-size: clamp(20px, 2.2vw, 26px);
 }
 
 .productinfo-desc {
   margin: 0;
+  font-family: var(--fc-font);
   font-weight: 500;
-  color: rgba(255,255,255,0.6);
-  font-size: 16px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: clamp(15px, 1.5vw, 17px);
+  line-height: 1.65;
 }
 
 /* Responsive scaling */

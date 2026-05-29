@@ -9,18 +9,27 @@ class CartDrawer extends HTMLElement {
 
   setHeaderCartIconAccessibility() {
     const cartLink = document.querySelector('#cart-icon-bubble');
-    if (!cartLink) return;
+    if (!cartLink || cartLink.dataset.fcCartToggleBound === 'true') return;
 
+    cartLink.dataset.fcCartToggleBound = 'true';
     cartLink.setAttribute('role', 'button');
     cartLink.setAttribute('aria-haspopup', 'dialog');
     cartLink.addEventListener('click', (event) => {
       event.preventDefault();
-      this.open(cartLink);
+      if (this.classList.contains('active')) {
+        this.close();
+      } else {
+        this.open(cartLink);
+      }
     });
     cartLink.addEventListener('keydown', (event) => {
       if (event.code.toUpperCase() === 'SPACE') {
         event.preventDefault();
-        this.open(cartLink);
+        if (this.classList.contains('active')) {
+          this.close();
+        } else {
+          this.open(cartLink);
+        }
       }
     });
   }
@@ -40,19 +49,23 @@ class CartDrawer extends HTMLElement {
         const containerToTrapFocusOn = this.classList.contains('is-empty')
           ? this.querySelector('.drawer__inner-empty')
           : document.getElementById('CartDrawer');
-        const focusElement = this.querySelector('.drawer__inner') || this.querySelector('.drawer__close');
+        const focusElement = this.querySelector('.cart__empty-text') || this.querySelector('.drawer__heading') || this.querySelector('.drawer__inner');
         trapFocus(containerToTrapFocusOn, focusElement);
       },
       { once: true }
     );
 
-    document.body.classList.add('overflow-hidden');
+    document.body.classList.add('overflow-hidden', 'fc-cart-open');
+    const cartLink = document.querySelector('#cart-icon-bubble');
+    if (cartLink) cartLink.setAttribute('aria-expanded', 'true');
   }
 
   close() {
     this.classList.remove('active');
     removeTrapFocus(this.activeElement);
-    document.body.classList.remove('overflow-hidden');
+    document.body.classList.remove('overflow-hidden', 'fc-cart-open');
+    const cartLink = document.querySelector('#cart-icon-bubble');
+    if (cartLink) cartLink.setAttribute('aria-expanded', 'false');
   }
 
   setSummaryAccessibility(cartDrawerNote) {
@@ -85,6 +98,7 @@ class CartDrawer extends HTMLElement {
 
     setTimeout(() => {
       this.querySelector('#CartDrawer-Overlay').addEventListener('click', this.close.bind(this));
+      this.setHeaderCartIconAccessibility();
       this.open();
     });
   }

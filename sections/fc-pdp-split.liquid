@@ -1,0 +1,694 @@
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign media_count = product.media.size
+  assign is_available = variant.available
+  assign pdp_has_specs = false
+  if section.settings.spec_1 != blank or section.settings.spec_2 != blank or section.settings.spec_3 != blank
+    assign pdp_has_specs = true
+  endif
+  if section.settings.description != blank
+    assign pdp_description = section.settings.description
+    assign pdp_description_is_override = true
+  else
+    assign pdp_description = product.description
+    assign pdp_description_is_override = false
+    if pdp_has_specs and pdp_description != blank
+      assign pdp_description = pdp_description | split: '<ul' | first | split: '<UL' | first
+    endif
+  endif
+  assign fc_mock_available = false
+  # FT20 UI test — force in-stock ATC. Remove before launch.
+  if product.handle == 'groove-anc-ft20'
+    assign is_available = true
+    assign variant = product.variants.first
+    assign fc_mock_available = true
+  endif
+-%}
+
+{%- render 'fc-product-data', product: product, mock_available: fc_mock_available -%}
+
+<section class="fc-pdp fc-pdp-hero" id="fc-pdp-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="fc-pdp__layout page-width">
+    <div class="fc-pdp__visual">
+      <div class="fc-pdp__gallery" data-fc-pdp-gallery>
+        <div class="fc-pdp__stage">
+          {%- if media_count > 0 -%}
+            {%- for media in product.media -%}
+              <div class="fc-pdp__slide{% if forloop.first %} is-active{% endif %}" data-slide-index="{{ forloop.index0 }}">
+                {%- if media.media_type == 'video' -%}
+                  {{ media | video_tag:
+                    class: 'fc-pdp__slide-media',
+                    autoplay: true,
+                    loop: true,
+                    muted: true,
+                    playsinline: true,
+                    controls: false,
+                    preload: 'auto'
+                  }}
+                {%- else -%}
+                  {{ media | image_url: width: 1200 | image_tag:
+                    class: 'fc-pdp__slide-media',
+                    loading: 'eager',
+                    sizes: '(min-width: 990px) 640px, 92vw',
+                    widths: '600, 800, 1000, 1200',
+                    alt: media.alt | default: product.title | escape
+                  }}
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          {%- elsif product.featured_image -%}
+            <div class="fc-pdp__slide is-active" data-slide-index="0">
+              {{ product.featured_image | image_url: width: 1200 | image_tag:
+                class: 'fc-pdp__slide-media',
+                loading: 'eager',
+                alt: product.title | escape
+              }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-pdp__info">
+      <h1 class="fc-pdp__title">{{ product.title | escape }}</h1>
+
+      <p class="fc-pdp__price" data-fc-pdp-price>
+        {%- if product.price_varies -%}<span class="fc-pdp__price-from">From</span> {%- endif -%}
+        {{ variant.price | money }}
+      </p>
+
+      {%- if pdp_description != blank -%}
+        <div class="fc-pdp__description{% unless pdp_description_is_override %} rte{% endunless %}{% if pdp_has_specs and pdp_description_is_override == false %} fc-pdp__description--specs-split{% endif %}">
+          {%- if pdp_description_is_override -%}
+            <p>{{ pdp_description | escape }}</p>
+          {%- else -%}
+            {{ pdp_description }}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.spec_1 != blank or section.settings.spec_2 != blank or section.settings.spec_3 != blank -%}
+        <ul class="fc-pdp__specs">
+          {%- if section.settings.spec_1 != blank -%}<li>{{ section.settings.spec_1 }}</li>{%- endif -%}
+          {%- if section.settings.spec_2 != blank -%}<li>{{ section.settings.spec_2 }}</li>{%- endif -%}
+          {%- if section.settings.spec_3 != blank -%}<li>{{ section.settings.spec_3 }}</li>{%- endif -%}
+        </ul>
+      {%- endif -%}
+
+      {%- unless product.has_only_default_variant -%}
+        <div class="fc-pdp__variants" data-fc-pdp-variants>
+          <span class="fc-pdp__variants-label">{{ product.options[0] | default: 'Option' | downcase | capitalize }}</span>
+          <div class="fc-pdp__variant-list">
+            {%- for v in product.variants -%}
+              <button
+                type="button"
+                class="fc-pdp__variant{% if v.id == variant.id %} is-selected{% endif %}{% unless v.available %} is-disabled{% endunless %}"
+                data-variant-id="{{ v.id }}"
+                data-variant-price="{{ v.price | money | escape }}"
+                data-variant-available="{{ v.available }}"
+                {% unless v.available %}disabled{% endunless %}
+              >
+                {{ v.title | downcase | capitalize }}
+              </button>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endunless -%}
+
+      <div class="fc-pdp__buy" data-fc-pdp-purchase>
+        {%- if is_available -%}
+          <button type="button" class="fc-pdp__atc" data-variant-id="{{ variant.id }}">
+            Add to bag
+          </button>
+        {%- else -%}
+          <p class="fc-pdp__oos">Out of stock</p>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_shop_grid_link -%}
+        <a href="/collections/all" class="fc-pdp__shop-link">Shop all products</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<div class="fc-pdp__dock" id="fc-pdp-dock-{{ section.id }}" hidden>
+  {%- if is_available -%}
+    <button type="button" class="fc-pdp__atc fc-pdp__atc--dock" data-variant-id="{{ variant.id }}">
+      Add to bag
+    </button>
+  {%- else -%}
+    <p class="fc-pdp__oos fc-pdp__oos--dock">Out of stock</p>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+.fc-pdp.fc-pdp-hero {
+  padding: 0;
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(280px, 480px);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+  justify-content: center;
+  width: min(1280px, 96vw);
+  max-width: none;
+  min-height: min(72vh, 720px);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 48px);
+  box-sizing: border-box;
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__visual {
+  max-width: 640px;
+  width: 100%;
+  min-width: 0;
+  min-height: min(65vh, 620px);
+  margin: 0 auto;
+  background: transparent;
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__gallery {
+  min-height: min(62vh, 600px);
+  width: 100%;
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__stage {
+  min-height: min(60vh, 580px);
+  min-width: 0;
+  width: 100%;
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__slide-media,
+.fc-pdp.fc-pdp-hero .fc-pdp__slide .fc-pdp__slide-media {
+  max-height: min(58vh, 560px);
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__info {
+  height: auto;
+  min-height: 0;
+  align-self: center;
+  width: 100%;
+  max-width: 480px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__title {
+  font-size: clamp(28px, 4.5vw, 52px);
+  margin-bottom: 8px;
+  white-space: normal;
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__price {
+  font-size: clamp(18px, 2vw, 24px);
+  margin-bottom: 10px;
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__description {
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__description,
+.fc-pdp.fc-pdp-hero .fc-pdp__specs li {
+  font-size: clamp(15px, 1.65vw, 18px);
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__specs {
+  gap: 4px;
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__specs li {
+  line-height: 1.35;
+}
+
+.fc-pdp.fc-pdp-hero .fc-pdp__atc {
+  font-size: clamp(14px, 1.2vw, 16px);
+  max-width: 360px;
+}
+
+/* ── Product visual / gallery ── */
+.fc-pdp__visual {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  min-width: 0;
+  width: 100%;
+  max-width: 380px;
+  min-height: 100%;
+}
+
+.fc-pdp__gallery {
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 1vw, 10px);
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.fc-pdp__stage {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  overflow: hidden;
+}
+
+.fc-pdp__stage .fc-ig-track {
+  min-height: inherit;
+}
+
+.fc-pdp__slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+}
+
+.fc-pdp__slide.is-active {
+  opacity: 1;
+}
+
+.fc-pdp__slide-media,
+.fc-pdp__slide .fc-pdp__slide-media {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── Product info ── */
+.fc-pdp__info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  padding-top: 0;
+}
+
+.fc-pdp__title {
+  font-family: var(--fc-font);
+  font-size: clamp(22px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0 0 12px;
+  white-space: nowrap;
+}
+
+.fc-pdp__price {
+  font-family: var(--fc-font);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0 0 16px;
+  line-height: 1;
+}
+
+.fc-pdp__price-from {
+  font-size: inherit;
+  font-weight: inherit;
+  margin-right: 4px;
+}
+
+.fc-pdp__description {
+  font-family: var(--fc-font);
+  font-size: clamp(14px, 1.5vw, 16px);
+  font-weight: 500;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0 0 20px;
+  width: 100%;
+}
+
+.fc-pdp__description p {
+  margin: 0 0 0.75em;
+}
+
+.fc-pdp__description p:last-child {
+  margin-bottom: 0;
+}
+
+.fc-pdp__description--specs-split ul,
+.fc-pdp__description--specs-split ol {
+  display: none;
+}
+
+.fc-pdp__specs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.fc-pdp__specs li {
+  font-family: var(--fc-font);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.65);
+  padding-left: 14px;
+  position: relative;
+}
+
+.fc-pdp__specs li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--fc-yellow);
+  font-size: 1em;
+  line-height: 1.5;
+}
+
+.fc-pdp__variants {
+  margin-bottom: 28px;
+  width: 100%;
+}
+
+.fc-pdp__variants-label {
+  display: block;
+  font-family: var(--fc-font);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 12px;
+}
+
+.fc-pdp__variant-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fc-pdp__variant {
+  font-family: var(--fc-font);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.fc-pdp__variant:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #ffffff;
+}
+
+.fc-pdp__variant.is-selected {
+  border-color: var(--fc-yellow);
+  color: #ffffff;
+}
+
+.fc-pdp__variant.is-disabled,
+.fc-pdp__variant:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.fc-pdp__buy {
+  width: 100%;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.fc-pdp__atc {
+  font-family: var(--fc-font);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #000000;
+  background: var(--fc-yellow);
+  border: none;
+  border-radius: 3px;
+  padding: 16px 32px;
+  min-height: 48px;
+  min-width: 200px;
+  width: 100%;
+  max-width: 320px;
+  box-sizing: border-box;
+  cursor: pointer;
+  line-height: 1;
+  transition: opacity 0.15s ease;
+}
+
+@media (hover: hover) {
+  .fc-pdp__atc:hover {
+    opacity: 0.85;
+  }
+}
+
+.fc-pdp__atc--dock {
+  pointer-events: auto;
+}
+
+.fc-pdp__oos {
+  font-family: var(--fc-font);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+  padding: 12px 0;
+}
+
+.fc-pdp__oos--dock {
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  text-align: center;
+  width: min(100%, 320px);
+}
+
+.fc-pdp__shop-link {
+  font-family: var(--fc-font);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  margin-top: 24px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.fc-pdp__shop-link:hover {
+  color: var(--fc-yellow);
+  border-bottom-color: var(--fc-yellow);
+}
+
+/* Mobile dock — shop tag only, fixed */
+.fc-pdp__dock {
+  display: none;
+}
+
+@media screen and (max-width: 989px) {
+  .fc-pdp.fc-pdp-hero .fc-pdp__layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    width: min(1280px, 96vw);
+    min-height: 0;
+    align-items: start;
+  }
+
+  .fc-pdp.fc-pdp-hero .fc-pdp__info {
+    width: min(100%, 480px);
+    margin: 0 auto;
+  }
+
+  .fc-pdp.fc-pdp-hero .fc-pdp__visual {
+    max-width: min(100%, 520px);
+    min-height: min(44vh, 440px);
+  }
+
+  .fc-pdp.fc-pdp-hero .fc-pdp__gallery {
+    min-height: min(42vh, 420px);
+  }
+
+  .fc-pdp.fc-pdp-hero .fc-pdp__stage {
+    min-height: min(40vh, 400px);
+  }
+
+  .fc-pdp.fc-pdp-hero .fc-pdp__slide-media,
+  .fc-pdp.fc-pdp-hero .fc-pdp__slide .fc-pdp__slide-media {
+    max-height: min(40vh, 400px);
+  }
+
+  .fc-pdp__buy {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .fc-pdp.fc-pdp-hero {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .fc-pdp__dock {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.98) 70%, transparent);
+    pointer-events: none;
+  }
+
+  .fc-pdp__dock .fc-pdp__atc--dock {
+    pointer-events: auto;
+    max-width: min(100%, 320px);
+    width: 100%;
+  }
+
+  .fc-pdp__dock .fc-pdp__oos--dock {
+    pointer-events: auto;
+  }
+}
+{% endstylesheet %}
+
+<script>
+(function () {
+  var root = document.getElementById('fc-pdp-{{ section.id }}');
+  if (!root) return;
+
+  var sId = {{ section.id | json }};
+  var variantId = {{ variant.id | json }};
+  var gallery = root.querySelector('[data-fc-pdp-gallery]');
+  var slides = root.querySelectorAll('.fc-pdp__slide');
+  var total = slides.length;
+
+  function keepVideosPlaying() {
+    root.querySelectorAll('video').forEach(function (video) {
+      video.muted = true;
+      video.loop = true;
+      video.autoplay = true;
+      var playPromise = video.play();
+      if (playPromise && playPromise.catch) playPromise.catch(function () {});
+    });
+  }
+
+  if (gallery && total > 1 && window.FcIgGallery) {
+    window.FcIgGallery({
+      viewport: gallery.querySelector('.fc-pdp__stage'),
+      slideSelector: '.fc-pdp__slide',
+      loop: true,
+      onChange: keepVideosPlaying
+    }).init();
+  } else {
+    keepVideosPlaying();
+  }
+
+  root.querySelectorAll('video').forEach(function (video) {
+    video.addEventListener('pause', function () {
+      if (!video.ended) keepVideosPlaying();
+    });
+  });
+
+  function syncPrices(html) {
+    root.querySelectorAll('[data-fc-pdp-price]').forEach(function (el) {
+      el.innerHTML = html;
+    });
+    root.querySelectorAll('[data-variant-id]').forEach(function (el) {
+      el.dataset.variantId = variantId;
+    });
+    var dock = document.getElementById('fc-pdp-dock-' + sId);
+    if (dock) {
+      dock.querySelectorAll('[data-variant-id]').forEach(function (el) {
+        el.dataset.variantId = variantId;
+      });
+    }
+  }
+
+  root.querySelectorAll('.fc-pdp__variant').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.disabled) return;
+      variantId = parseInt(btn.dataset.variantId, 10);
+      root.querySelectorAll('.fc-pdp__variant').forEach(function (b) {
+        b.classList.toggle('is-selected', b === btn);
+      });
+      if (btn.dataset.variantPrice) syncPrices(btn.dataset.variantPrice);
+    });
+  });
+
+  root.querySelectorAll('.fc-pdp__atc').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (window.fcAddToCart) window.fcAddToCart(variantId, 1);
+    });
+  });
+
+  var dock = document.getElementById('fc-pdp-dock-' + sId);
+  if (dock) dock.hidden = false;
+})();
+</script>
+
+{% schema %}
+{
+  "name": "FC PDP — Split layout",
+  "tag": "section",
+  "class": "fc-pdp-section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Product description",
+      "info": "Overrides the Shopify product description when set."
+    },
+    {
+      "type": "text",
+      "id": "spec_1",
+      "label": "Highlight 1"
+    },
+    {
+      "type": "text",
+      "id": "spec_2",
+      "label": "Highlight 2"
+    },
+    {
+      "type": "text",
+      "id": "spec_3",
+      "label": "Highlight 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shop_grid_link",
+      "label": "Show back to shop link",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "FC PDP — Split layout"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,190 @@
+{%- liquid
+  assign video_id = section.settings.video.id | default: section.settings.video_url.id
+  assign poster = section.settings.video.preview_image | default: section.settings.cover_image
+  assign fc_video_loop = section.settings.enable_video_looping
+-%}
+
+<section class="fc-pdp-video-hero fc-pdp-hero" id="fc-pdp-video-{{ section.id }}">
+  <div class="fc-pdp-video-hero__inner">
+    {%- unless section.settings.heading == blank -%}
+      <h2 class="fc-pdp-video-hero__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endunless -%}
+
+    <div class="fc-pdp-video-hero__media fc-video-always-on">
+      {%- if section.settings.video == null and section.settings.video_url != null -%}
+        {%- liquid
+          assign loop_param = ''
+          if fc_video_loop
+            assign loop_param = '&loop=1&playlist=' | append: video_id
+          endif
+        -%}
+        {%- if section.settings.video_url.type == 'youtube' -%}
+          <iframe
+            src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&autoplay=1&mute=1{{ loop_param }}"
+            class="js-youtube fc-video-always-on__iframe fc-pdp-video-hero__iframe"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            title="{{ section.settings.description | default: section.settings.heading | escape }}"
+          ></iframe>
+        {%- else -%}
+          <iframe
+            src="https://player.vimeo.com/video/{{ video_id }}?autoplay=1&muted=1{% if fc_video_loop %}&loop=1{% endif %}"
+            class="js-vimeo fc-video-always-on__iframe fc-pdp-video-hero__iframe"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            title="{{ section.settings.description | default: section.settings.heading | escape }}"
+          ></iframe>
+        {%- endif -%}
+      {%- elsif section.settings.video != null -%}
+        {{
+          section.settings.video
+          | video_tag:
+            class: 'fc-video-always-on__video fc-pdp-video-hero__video',
+            image_size: '1600x',
+            autoplay: true,
+            loop: fc_video_loop,
+            controls: false,
+            muted: true,
+            playsinline: true,
+            preload: 'auto'
+        }}
+      {%- elsif poster != null -%}
+        {{
+          poster
+          | image_url: width: 2000
+          | image_tag:
+            class: 'fc-pdp-video-hero__poster',
+            loading: 'lazy',
+            sizes: '(min-width: 990px) 80vw, 92vw',
+            widths: '750, 1100, 1500, 2000',
+            alt: section.settings.description | default: section.settings.heading | escape
+        }}
+      {%- else -%}
+        {{ 'hero-apparel-3' | placeholder_svg_tag: 'fc-pdp-video-hero__placeholder' }}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.fc-pdp-video-hero__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(20px, 3vw, 32px);
+  width: min(1200px, 100%);
+  margin: 0 auto;
+}
+
+.fc-pdp-video-hero__heading {
+  font-family: var(--fc-font);
+  font-size: clamp(24px, 3vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+}
+
+.fc-pdp-video-hero__media {
+  width: 100%;
+  max-width: min(960px, 92vw);
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.fc-pdp-video-hero__video,
+.fc-pdp-video-hero__iframe,
+.fc-pdp-video-hero__poster,
+.fc-pdp-video-hero__placeholder {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border: none;
+}
+
+.fc-pdp-video-hero__iframe {
+  position: absolute;
+  inset: 0;
+}
+
+.fc-pdp-video-hero__media.fc-video-always-on {
+  position: relative;
+}
+{% endstylesheet %}
+
+<script>
+(function () {
+  function keepPlaying(scope) {
+    (scope || document).querySelectorAll('.fc-pdp-video-hero .fc-video-always-on__video').forEach(function (video) {
+      video.muted = true;
+      video.loop = {{ section.settings.enable_video_looping | json }};
+      video.autoplay = true;
+      var p = video.play();
+      if (p && p.catch) p.catch(function () {});
+      video.addEventListener('pause', function () {
+        if (!video.ended) {
+          var retry = video.play();
+          if (retry && retry.catch) retry.catch(function () {});
+        }
+      });
+    });
+  }
+  keepPlaying(document.getElementById('fc-pdp-video-{{ section.id }}'));
+  document.addEventListener('shopify:section:load', function (e) {
+    keepPlaying(e.target);
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "FC PDP — Video hero",
+  "tag": "section",
+  "class": "fc-pdp-video-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video"
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "accept": ["youtube", "vimeo"],
+      "label": "Video URL",
+      "info": "Used when no uploaded video is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "Cover image",
+      "info": "Fallback when no video is available."
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Video description (accessibility)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "label": "Loop video",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "FC PDP — Video hero"
+    }
+  ]
+}
+{% endschema %}

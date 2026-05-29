@@ -9,6 +9,17 @@
  */
 {
   "sections": {
+    "website_hero_home": {
+      "type": "website-hero",
+      "name": "Website Hero",
+      "settings": {
+        "image_alt": "Finecoustic",
+        "show_overlay": false,
+        "heading": "",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
     "flexible_image_banner_aARpeR": {
       "type": "flexible-image-banner",
       "disabled": true,
@@ -51,80 +62,6 @@
         "button_height_desktop": "auto"
       }
     },
-    "one_style_main_page_banner_PajXqj": {
-      "type": "one-style-main-page-banner",
-      "custom_css": [
-        ".responsive-bg-section .text-wrapper {max-width: 450px;}",
-        ".text-wrapper h2,.text-wrapper p,.text-wrapper a {color: white;}"
-      ],
-      "name": "Responsive Background Section FT20",
-      "settings": {
-        "bg_image": "shopify://shop_images/Sonara_UFM1_Hero_Banner_Desktop.jpg",
-        "bg_image_mobile": "shopify://shop_images/testingufm1-mobile.jpg",
-        "title": "",
-        "title_font_size": 60,
-        "title_margin_top": 0,
-        "title_margin_bottom": 0,
-        "title_margin_left": 0,
-        "title_margin_right": 0,
-        "description": "",
-        "desc_font_size": 27,
-        "desc_margin_top": 0,
-        "desc_margin_bottom": 0,
-        "desc_margin_left": 5,
-        "desc_margin_right": 0,
-        "button_link": "shopify://products/sonara-ufm1",
-        "button_text": "",
-        "button_font_size": 20,
-        "button_margin_top": 20,
-        "button_margin_bottom": 0,
-        "button_margin_left": 7,
-        "button_margin_right": 0,
-        "text_position_left": 0
-      }
-    },
-    "one_style_main_page_banner_LcDgFg": {
-      "type": "one-style-main-page-banner",
-      "custom_css": [
-        ".responsive-bg-section .text-wrapper {max-width: 450px;}",
-        ".text-wrapper h2,.text-wrapper p,.text-wrapper a {color: white;}"
-      ],
-      "name": "Responsive Background Section FT20",
-      "settings": {
-        "bg_image": "shopify://shop_images/Resono_WFM1_Hero_Banner_Desktop.jpg",
-        "bg_image_mobile": "shopify://shop_images/testingwfm1-mobile.jpg",
-        "title": "",
-        "title_font_size": 60,
-        "title_margin_top": 0,
-        "title_margin_bottom": 0,
-        "title_margin_left": 0,
-        "title_margin_right": 0,
-        "description": "",
-        "desc_font_size": 27,
-        "desc_margin_top": 0,
-        "desc_margin_bottom": 0,
-        "desc_margin_left": 5,
-        "desc_margin_right": 0,
-        "button_link": "shopify://products/resono-wfm1",
-        "button_text": "",
-        "button_font_size": 20,
-        "button_margin_top": 20,
-        "button_margin_bottom": 0,
-        "button_margin_left": 7,
-        "button_margin_right": 0,
-        "text_position_left": 6
-      }
-    },
-    "custom_liquid_PUBjhj": {
-      "type": "custom-liquid",
-      "name": "t:sections.custom-liquid.presets.name",
-      "settings": {
-        "custom_liquid": "<style>\n.section-template--17700538089546__custom_liquid_PUBjhj-padding{\ndisplay: none;\n}\n\ndiv#shopify-section-template--17700538089546__one_style_main_page_banner_PajXqj .text-wrapper {\n  right: 6%;\nleft: unset;\ntext-align: right;\n}\n\n@media screen and (max-width: 1440px) {\n  .responsive-bg-section h2 {\n    margin-bottom: 10px;\n  }\n}\n@media screen and (max-width: 880px) {\n  .responsive-bg-section h2 {\n    margin-bottom: 10px;\n  }\n}\n@media screen and (max-width: 767px) {\n  .responsive-bg-section h2 {\n    margin-bottom: 10px;\n  }\n\ndiv#shopify-section-template--17700538089546__one_style_main_page_banner_PajXqj .text-wrapper {\ntext-align: center;\nleft: unset;\nright: unset;\n}\n}</style>",
-        "color_scheme": "scheme-1",
-        "padding_top": 0,
-        "padding_bottom": 0
-      }
-    },
     "one_style_main_page_banner_79hTJp": {
       "type": "one-style-main-page-banner",
       "disabled": true,
@@ -155,10 +92,8 @@
     }
   },
   "order": [
+    "website_hero_home",
     "flexible_image_banner_aARpeR",
-    "one_style_main_page_banner_PajXqj",
-    "one_style_main_page_banner_LcDgFg",
-    "custom_liquid_PUBjhj",
     "one_style_main_page_banner_79hTJp"
   ]
 }

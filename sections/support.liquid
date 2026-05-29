@@ -2,9 +2,19 @@
 
 /* ── SUPPORT CONTENT WRAP ── */
 .fc-support-wrap {
+  width: 100%;
   max-width: 780px;
   margin: 0 auto;
-  padding: 12px clamp(16px, 4vw, 40px) clamp(64px, 8vw, 120px);
+  padding: 0 var(--fc-page-gutter-sm, clamp(12px, 3vw, 40px)) clamp(48px, 8vw, 120px);
+  box-sizing: border-box;
+}
+.fc-support-wrap .fc-support-panel,
+.fc-support-wrap .fc-form,
+.fc-support-wrap .fc-field,
+.fc-support-wrap .fc-select-wrap,
+.fc-support-wrap .fc-form-row {
+  width: 100%;
+  box-sizing: border-box;
 }
 .fc-support-panel { display: none; }
 .fc-support-panel.fc-sup-active {
@@ -12,24 +22,29 @@
   animation: fc-sup-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 @keyframes fc-sup-in {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Align top spacing across FAQ / forms / track */
+.fc-support-panel.fc-sup-active > .fc-faq-cats,
+.fc-support-panel.fc-sup-active > .fc-form {
+  margin-top: 0;
+}
+
 /* ── SHARED TYPOGRAPHY ── */
-.fc-sup-eyebrow { font-family: var(--fc-font); font-size: 11px; font-weight: 700; color: var(--fc-yellow); letter-spacing: -0.01em; margin: 0 0 12px; text-transform: uppercase; }
 
 /* ── FAQ CATEGORY CARDS ── */
 .fc-faq-cats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 32px;
+  gap: clamp(8px, 2vw, 10px);
+  margin-bottom: clamp(24px, 4vw, 32px);
 }
 .fc-faq-cat-card {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.08);
-  padding: 18px 14px;
+  padding: clamp(14px, 2.5vw, 18px) clamp(12px, 2vw, 14px);
   cursor: pointer;
   text-align: left;
   display: flex;
@@ -143,7 +158,7 @@
 /* ── FORMS ── */
 .fc-form { display: flex; flex-direction: column; gap: 20px; }
 .fc-field { display: flex; flex-direction: column; gap: 8px; }
-.fc-field label { font-family: var(--fc-font); font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); letter-spacing: -0.01em; text-transform: uppercase; }
+.fc-field label { font-family: var(--fc-font); font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); letter-spacing: -0.01em; }
 .fc-field label .fc-label-opt { color: rgba(255,255,255,0.25); font-weight: 400; text-transform: none; }
 .fc-field input, .fc-field select, .fc-field textarea {
   font-family: var(--fc-font);
@@ -198,7 +213,7 @@
 .fc-sup-field-note { font-family: var(--fc-font); font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: -0.01em; margin: 4px 0 0; line-height: 1.6; }
 
 /* ── SUCCESS STATE ── */
-.fc-sup-success { text-align: center; padding: 80px 0 40px; }
+.fc-sup-success { text-align: center; padding: clamp(24px, 4vw, 48px) 0 clamp(16px, 2vw, 24px); }
 .fc-sup-success__check { width: 44px; height: 44px; border: 2px solid var(--fc-yellow); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: var(--fc-yellow); font-size: 20px; margin-bottom: 28px; }
 .fc-sup-success__title { font-family: var(--fc-font); font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: #ffffff; letter-spacing: -0.02em; margin: 0 0 12px; }
 .fc-sup-success__body { font-family: var(--fc-font); font-size: clamp(13px, 1.1vw, 15px); color: rgba(255,255,255,0.45); margin: 0; line-height: 1.8; }
@@ -207,22 +222,13 @@
 
 {%- endstyle -%}
 
-<div class="fc-collection-header">
-  <button class="fc-collection-header__arrow fc-filter-nav__prev" type="button">&#171;</button>
-  <div class="fc-title-viewport" id="fc-sup-viewport">
-    <div class="fc-title-track" id="fc-sup-track">
-      <span class="fc-title-item">Track Order</span>
-      <span class="fc-title-item fc-title-active">FAQ</span>
-      <span class="fc-title-item">Contact Us</span>
-      <span class="fc-title-item">Aftersales Service</span>
-      <span class="fc-title-item">Track Order</span>
-      <span class="fc-title-item">FAQ</span>
-    </div>
-  </div>
-  <button class="fc-collection-header__arrow fc-filter-nav__next" type="button">&#187;</button>
-</div>
+{%- render 'fc-title-carousel',
+  id: 'fc-support',
+  labels: 'FAQ|Contact Us|Aftersales Service|Track Order',
+  active_index: 0
+-%}
 
-<div class="fc-support-wrap">
+<div class="fc-page-swipe-zone fc-support-wrap" id="fc-support-wrap">
 
   {%- comment -%} ── FAQ ── {%- endcomment -%}
   <div class="fc-support-panel" id="fc-sup-faq" data-tab="faq">
@@ -658,8 +664,8 @@
     const urlType = params.get('type');
     if (urlType && typeSelect.querySelector(`option[value="${urlType}"]`)) {
       typeSelect.value = urlType;
-      updateFormFields(urlType);
     }
+    updateFormFields(typeSelect.value || '');
 
     if (params.get('contact_posted') === 'true') {
       const form       = document.getElementById('contact_form');
@@ -740,24 +746,23 @@
     });
   }
 
-  /* ── INIT ── */
-  function init() {
-    if (!document.getElementById('fc-sup-track')) return;
-    if (!window.FcCarousel) return;
-    window.FcCarousel({
-      trackId:      'fc-sup-track',
-      viewportId:   'fc-sup-viewport',
-      prevSelector: '.fc-filter-nav__prev',
-      nextSelector: '.fc-filter-nav__next',
-      N: TABS.length,
-      onSlide: function (logIdx) { applyTab(TABS[logIdx].key); },
-      getInitialIdx: function () {
-        var urlTab = new URLSearchParams(window.location.search).get('tab');
-        var idx = urlTab ? TABS.findIndex(function (t) { return t.key === urlTab; }) : -1;
-        return idx > 0 ? idx : 0;
-      }
-    }).init();
+  function getInitialTabIdx() {
+    var params = new URLSearchParams(window.location.search);
+    var urlTab = params.get('tab');
+    if (urlTab) {
+      var idx = TABS.findIndex(function (t) { return t.key === urlTab; });
+      if (idx >= 0) return idx;
+    }
+    if (params.get('inquiry_posted') === 'true') return 1;
+    if (params.get('contact_posted') === 'true') return 2;
+    if (params.get('type')) return 2;
+    return 0;
+  }
 
+  function initSupportContent() {
+    var wrap = document.getElementById('fc-support-wrap');
+    if (!wrap || wrap.dataset.fcSupportBound === '1') return;
+    wrap.dataset.fcSupportBound = '1';
     initFaqCategories();
     initFaq();
     initSmartForm();
@@ -765,8 +770,31 @@
     initTrackOrder();
   }
 
+  function initCarousel() {
+    if (!document.getElementById('fc-support-header') || !window.FcTitleCarousel) return;
+    window.FcTitleCarousel({
+      id: 'fc-support',
+      extraSwipeId: 'fc-support-wrap',
+      N: TABS.length,
+      onSlide: function (logIdx) { applyTab(TABS[logIdx].key); },
+      getInitialIdx: getInitialTabIdx
+    }).init();
+  }
+
+  function init() {
+    if (!document.getElementById('fc-support-header')) return;
+    initCarousel();
+    initSupportContent();
+  }
+
   init();
-  document.addEventListener('shopify:section:load', init);
+  document.addEventListener('shopify:section:load', function (evt) {
+    var section = evt.target;
+    if (!section || !section.querySelector || !section.querySelector('#fc-support-header')) return;
+    var wrap = section.querySelector('#fc-support-wrap');
+    if (wrap) delete wrap.dataset.fcSupportBound;
+    init();
+  });
 
 })();
 </script>

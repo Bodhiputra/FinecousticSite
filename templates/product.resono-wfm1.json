@@ -1,60 +1,5 @@
 {
   "sections": {
-    "pdp_hero_main": {
-      "type": "pdp-hero",
-      "settings": {
-        "eyebrow": "MICROPHONE"
-      }
-    },
-    "pdp_fc_main": {
-      "type": "pdp-floating-card",
-      "settings": {
-        "spec_1": "Cardioid Condenser",
-        "spec_2": "24-bit / 48kHz",
-        "spec_3": "USB-C & 2.4GHz"
-      }
-    },
-    "scrollbar_menu_sticky_WdPGXV": {
-      "type": "scrollbar-menu-sticky",
-      "blocks": {
-        "tab_item_CX8zK4": {
-          "type": "tab_item",
-          "settings": {
-            "tab_label": "Features",
-            "tab_link": "#shopify-section-template--18576982966346__square_image_text_qm63r9"
-          }
-        },
-        "tab_item_Y3LDey": {
-          "type": "tab_item",
-          "settings": {
-            "tab_label": "Specifications",
-            "tab_link": ".dual-spec-section"
-          }
-        },
-        "tab_item_LkkxUh": {
-          "type": "tab_item",
-          "settings": {
-            "tab_label": "Video",
-            "tab_link": "#shopify-section-template--18576982966346__video_3CpC4R"
-          }
-        },
-        "tab_item_RrK8We": {
-          "type": "tab_item",
-          "settings": {
-            "tab_label": "Package",
-            "tab_link": "#shopify-section-template--18576982966346__flexible_image_banner_ApJFR7"
-          }
-        }
-      },
-      "block_order": [
-        "tab_item_CX8zK4",
-        "tab_item_Y3LDey",
-        "tab_item_LkkxUh",
-        "tab_item_RrK8We"
-      ],
-      "name": "Sticky Product Tabs NavBar",
-      "settings": {}
-    },
     "square_image_text_7dJPdw": {
       "type": "square-image-text",
       "disabled": true,
@@ -81,7 +26,7 @@
       "name": "Full Width 16:9 Banner",
       "settings": {
         "banner_heading": "Made to Fit Every Moment",
-        "banner_description": "Whether it's mobile streaming, Video calls, or studio recording, this . microphone keeps up with your lifestyle. Versatile, portable and ready for any device",
+        "banner_description": "Whether it\u2019s mobile streaming, Video calls, or studio recording, this . microphone keeps up with your lifestyle. Versatile, portable and ready for any device",
         "banner_image": "shopify://shop_images/Sonara_UFM1_Fit_Every_Moment.jpg"
       }
     },
@@ -96,7 +41,7 @@
       "settings": {
         "image": "shopify://shop_images/Resono_WFM1_Cardioid_Polar_Pattern.jpg",
         "title": "True Sound Clarity",
-        "description": "With the cardioid polar pattern, RESONO captures your voice with natural clarity—preserving its true tone for a clean, studio-quality sound.",
+        "description": "With the cardioid polar pattern, RESONO captures your voice with natural clarity\u2014preserving its true tone for a clean, studio-quality sound.",
         "swap_position": true
       }
     },
@@ -169,8 +114,8 @@
         "table_title": "Specifications",
         "table1_button_label": "Core Microphone Specs",
         "table2_button_label": "Features & Connectivity",
-        "specs_table_1": "Model Number | WFM1\nMicrophone Type | Condenser\nLighting Effects | RGB 12 Modes\nCapsule Size | 14 mm\nPolar Pattern | Cardioid\nFrequency Response | 20 Hz - 20 KHz\nS/N Ratio | 75 dB\nMaximum SPL | 112 dB\nSensitivity | -38 ± 3 dB",
-        "specs_table_2": "Sampling Rate | 48 kHz\nBit Depth | 24-bit\nBattery Capacity | 800 mAh\nBattery Life | Up to 40 Hours\nCharging Time | Approx. 3 Hours\nInterface | USB-C, 3.5mm TRS\nCable Length | 1.8m PVC\nPower Rating | 5V ⎓ 1A\nCompatibility | PC, Laptop, Tablet, and Smartphone with USB-C or USB-A Port\nConnectivity | 2.4GHz, Wired"
+        "specs_table_1": "Model Number | WFM1\nMicrophone Type | Condenser\nLighting Effects | RGB 12 Modes\nCapsule Size | 14 mm\nPolar Pattern | Cardioid\nFrequency Response | 20 Hz - 20 KHz\nS/N Ratio | 75 dB\nMaximum SPL | 112 dB\nSensitivity | -38 \u00b1 3 dB",
+        "specs_table_2": "Sampling Rate | 48 kHz\nBit Depth | 24-bit\nBattery Capacity | 800 mAh\nBattery Life | Up to 40 Hours\nCharging Time | Approx. 3 Hours\nInterface | USB-C, 3.5mm TRS\nCable Length | 1.8m PVC\nPower Rating | 5V \u2393 1A\nCompatibility | PC, Laptop, Tablet, and Smartphone with USB-C or USB-A Port\nConnectivity | 2.4GHz, Wired"
       }
     },
     "video_3CpC4R": {
@@ -253,12 +198,19 @@
         "padding_top": 36,
         "padding_bottom": 28
       }
+    },
+    "fc_pdp_split": {
+      "type": "fc-pdp-split",
+      "settings": {
+        "spec_1": "Wireless freedom",
+        "spec_2": "Clear voice capture",
+        "spec_3": "Long battery life",
+        "show_shop_grid_link": false
+      }
     }
   },
   "order": [
-    "pdp_hero_main",
-    "pdp_fc_main",
-    "scrollbar_menu_sticky_WdPGXV",
+    "fc_pdp_split",
     "square_image_text_7dJPdw",
     "full_width_image_only_aCCMta",
     "square_image_text_qm63r9",

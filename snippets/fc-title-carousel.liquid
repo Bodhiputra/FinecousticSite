@@ -1,0 +1,47 @@
+{% doc %}
+  Reusable infinite-loop title carousel (collections/all pattern).
+
+  @param {string} id - ID prefix; renders `{id}-header`, `{id}-track`, `{id}-viewport`
+  @param {string} labels - Tab labels separated by `|`, in slide order (first = default active unless active_index set)
+  @param {number} [active_index] - 0-based index of the initially active label (default 0)
+  @param {number} [wrap_at] - Labels longer than this (characters) wrap to two lines; default 16
+{% enddoc %}
+
+{%- liquid
+  assign carousel_id = id | default: 'fc-title'
+  assign label_arr = labels | split: '|'
+  assign active = active_index | default: 0 | plus: 0
+  assign last_idx = label_arr.size | minus: 1
+  assign wrap_at = wrap_at | default: 16 | plus: 0
+
+  assign carousel_has_wrap = false
+  for label in label_arr
+    assign stripped = label | strip
+    if stripped.size > wrap_at
+      assign carousel_has_wrap = true
+    endif
+  endfor
+
+  assign last_label = label_arr[last_idx] | strip
+  assign first_label = label_arr[0] | strip
+-%}
+
+<div
+  class="fc-collection-header fc-title-carousel{% if carousel_has_wrap %} fc-title-carousel--has-wrap{% endif %}"
+  id="{{ carousel_id }}-header"
+  data-fc-title-carousel="{{ carousel_id }}"
+>
+  <button class="fc-collection-header__arrow fc-filter-nav__prev" type="button" aria-label="Previous">&#171;</button>
+  <div class="fc-title-viewport" id="{{ carousel_id }}-viewport">
+    <div class="fc-title-track" id="{{ carousel_id }}-track">
+      <span class="fc-title-item{% if last_label.size > wrap_at %} fc-title-item--wrap{% endif %}">{% render 'fc-title-label', text: last_label %}</span>
+      {%- for label in label_arr -%}
+        {%- assign stripped = label | strip -%}
+        <span class="fc-title-item{% if stripped.size > wrap_at %} fc-title-item--wrap{% endif %}{% if forloop.index0 == active %} fc-title-active{% endif %}">{% render 'fc-title-label', text: stripped %}</span>
+      {%- endfor -%}
+      <span class="fc-title-item{% if last_label.size > wrap_at %} fc-title-item--wrap{% endif %}">{% render 'fc-title-label', text: last_label %}</span>
+      <span class="fc-title-item{% if first_label.size > wrap_at %} fc-title-item--wrap{% endif %}">{% render 'fc-title-label', text: first_label %}</span>
+    </div>
+  </div>
+  <button class="fc-collection-header__arrow fc-filter-nav__next" type="button" aria-label="Next">&#187;</button>
+</div>

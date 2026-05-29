@@ -31,6 +31,15 @@
   --fc-text-dim: rgba(255,255,255,0.18);
   --fc-surface-dark: rgba(0,0,0,0.92);
   --fc-border-subtle: rgba(255,255,255,0.1);
+  --fc-page-gutter: clamp(16px, 4vw, 64px);
+  --fc-page-gutter-sm: clamp(12px, 3vw, 40px);
+  --fc-nav-bar-gutter: 12px;
+  --fc-nav-bar-max-width: calc(100vw - (var(--fc-nav-bar-gutter) * 2));
+  --fc-drawer-gutter: clamp(16px, 4vw, 24px);
+  --fc-section-gap: clamp(16px, 2.5vw, 32px);
+  --fc-carousel-gutter: clamp(64px, 18vw, 120px);
+  --fc-carousel-band: min(700px, 100%);
+  --fc-nav-clearance: calc(var(--header-height, 72px) + clamp(12px, 3vw, 24px));
 }
 
 /* Display hero — 56–72px */
@@ -78,22 +87,171 @@ small, .caption, .caption-with-letter-spacing {
   letter-spacing: 0em;
 }
 
-/* ── Global background: FinecouBG via body::before (theme.liquid) ── */
+/* ── Global background: FinecouBG (theme.liquid sets --fc-body-bg) ── */
+html {
+  background-color: var(--fc-black);
+  min-height: 100svh;
+}
+
 body {
   background-color: transparent;
   display: flex;
   flex-direction: column;
   min-height: 100svh;
+  position: relative;
 }
+
 html,
 body {
   overflow-x: clip; /* clips horizontal overflow without creating a scroll container — viewport stays as scroll anchor, window.scrollY works, fixed elements are unaffected */
   max-width: 100%;
 }
 
-/* Main content grows to fill available space — keeps footer pinned to bottom */
+/* Mobile: fixed body bg fails on scroll (iOS) — paint texture on a tall ::before instead */
+@media screen and (max-width: 749px) {
+  body.gradient {
+    background-image: none !important;
+    background-color: var(--fc-black) !important;
+    background-attachment: scroll !important;
+  }
+
+  body.gradient::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--fc-body-bg);
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+}
+
+/* ── FC site shell (universal sticky footer) ──
+   body          flex column, min-height 100svh
+   #MainContent   flex: 1 — absorbs leftover viewport on short pages
+   footer group   flex-shrink: 0, margin-top: auto — pinned to viewport bottom
+   Nav is fixed; first section gets --fc-nav-clearance. Page quirks live INSIDE main only. */
+.content-for-layout {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 #MainContent {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+}
+
+#MainContent > .shopify-section {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  box-sizing: border-box;
+  padding-bottom: 0;
+  padding-top: 0 !important;
+}
+
+/* Short pages — lone section grows so content + footer fill the viewport */
+#MainContent > .shopify-section:only-child:not(:has(.fc-shop-page)):not(:has(.fc-search-page)) {
+  flex: 1 0 auto;
+}
+
+#MainContent > .shopify-section:only-child:has(.fc-policy-wrap),
+#MainContent > .shopify-section:only-child:has(.fc-support-wrap),
+#MainContent > .shopify-section:only-child:has(.fc-dl-page) {
+  flex: 1 0 auto;
+}
+
+/* Nav clearance on first section (fixed pill overlays content) */
+#MainContent > .shopify-section:first-child {
+  padding-top: var(--fc-nav-clearance) !important;
+}
+
+/* Full-bleed heroes — no top pad on first section */
+#MainContent > .shopify-section:first-child:has(.website-hero),
+#MainContent > .shopify-section:first-child:has(.fc-pdp-u),
+#MainContent > .shopify-section:first-child:has(.fc-pdp-video-hero),
+#MainContent > .shopify-section:first-child:has(.fc-pdp-showcases),
+#MainContent > .shopify-section:first-child:has(.fc-pdp-showcase),
+#MainContent > .shopify-section:first-child:has(.fc-pdp-specs-inbox),
+#MainContent > .shopify-section:first-child:has(.responsive-bg-section) {
+  padding-top: 0 !important;
+}
+
+/* Shop / search — content natural height; global shell pins footer on short pages */
+#MainContent .fc-shop-page,
+#MainContent .fc-search-page {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.fc-shop-swipe-zone,
+.fc-page-swipe-zone {
+  display: flex;
+  flex-direction: column;
+  touch-action: pan-y;
+}
+
+/* Tabbed pages — section + swipe zone fill main on short content */
+#MainContent .fc-policy-wrap,
+#MainContent .fc-support-wrap {
+  flex: 1 0 auto;
+  min-height: 0;
+}
+
+/* Speakers Soon — stretch section for centered placeholder */
+#MainContent > .shopify-section:only-child:has(.fc-shop-swipe-zone--soon) {
+  flex: 1 0 auto;
+  min-height: 0;
+}
+
+#MainContent .fc-shop-page:has(.fc-shop-swipe-zone--soon) {
+  flex: 1 0 auto;
+  min-height: 0;
+}
+
+/* Fixed gap: title carousel → page body (policies, support, shop) */
+.fc-title-carousel + .fc-page-swipe-zone,
+.fc-title-carousel + .fc-shop-swipe-zone {
+  margin-top: clamp(24px, 4vw, 40px);
+}
+
+.fc-shop-swipe-zone--soon {
+  flex: 1 1 auto;
+  min-height: min(50vh, 420px);
+  justify-content: center;
+  align-items: center;
+}
+
+/* Customer login — centered in main column */
+#MainContent .fc-login-page {
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: clamp(24px, 4vw, 48px) 20px;
+  box-sizing: border-box;
+  background: none !important;
+  background-attachment: unset !important;
+}
+
+/* About — vertically centered in main column */
+#MainContent .fc-about {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .utility-bar {
@@ -127,40 +285,65 @@ body {
   letter-spacing: -0.04em;
 }
 
-/* Fixed nav — overlays all content; Dawn's top-toggle hide/show still works unchanged */
+/* Fixed nav — floating pill overlays content */
 .shopify-section-group-header-group {
   position: fixed !important;
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 10005;
+  padding: max(10px, env(safe-area-inset-top, 0px)) var(--fc-nav-bar-gutter, 12px) 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.shopify-section-group-header-group .section-header,
+.shopify-section-group-header-group > .shopify-section {
+  pointer-events: auto;
+  width: 100%;
+  max-width: var(--fc-nav-bar-max-width, calc(100vw - 24px));
+  margin-left: auto;
+  margin-right: auto;
+  flex: 0 1 var(--fc-nav-bar-max-width, calc(100vw - 24px));
 }
 
 .header {
-  padding: 12px 0 !important;
   background: transparent !important;
   border: none;
   text-decoration: none;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-weight: 600;
 }
 
-.header__menu-item,
-.menu-drawer__menu-item {
+.header__menu-item {
   font-size: clamp(1.5rem, 1.8vw, 2rem);
   text-decoration: none;
   transition: transform 0.25s ease, color 0.25s ease;
 }
 
-.header__menu-item:hover,
-.menu-drawer__menu-item:hover {
+.header__menu-item:hover {
   text-decoration: none !important;
   color: var(--fc-yellow) !important;
 }
 
 .header__submenu {
-  background-color: #000000d9;
+  background-color: var(--fc-black) !important;
+  background-image: var(--fc-nav-footer-bg) !important;
+  background-size: cover !important;
+  background-position: center top !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  border: none;
+  border-radius: 16px;
+  margin-top: 8px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
 }
 
 .header__icon {
@@ -192,6 +375,93 @@ body {
     align-items: center;
     gap: 0;
     padding: 0;
+}
+
+/* Navbar icons — unified graphic size and tap targets (cart, account, menu) */
+.header {
+  --fc-nav-icon-graphic: 2rem;
+  --fc-nav-icon-hit: 4.4rem;
+}
+
+.header__icons .header__icon,
+header-drawer .header__icon {
+  width: var(--fc-nav-icon-hit);
+  height: var(--fc-nav-icon-hit);
+  min-width: var(--fc-nav-icon-hit);
+  min-height: var(--fc-nav-icon-hit);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.header__icon .svg-wrapper,
+.header__icon--account account-icon {
+  width: var(--fc-nav-icon-hit) !important;
+  height: var(--fc-nav-icon-hit) !important;
+  min-width: var(--fc-nav-icon-hit);
+  min-height: var(--fc-nav-icon-hit);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.header__icon .svg-wrapper > svg,
+.header__icon .svg-wrapper svg,
+.header__icon > .svg-wrapper svg,
+.header__icon--account .icon,
+.header__icon--account account-icon svg,
+.header__icon--cart .icon.icon-cart,
+.header__icon--cart .icon.icon-cart-empty {
+  width: var(--fc-nav-icon-graphic) !important;
+  height: var(--fc-nav-icon-graphic) !important;
+  min-width: var(--fc-nav-icon-graphic);
+  min-height: var(--fc-nav-icon-graphic);
+  max-width: var(--fc-nav-icon-graphic);
+  max-height: var(--fc-nav-icon-graphic);
+  flex-shrink: 0;
+}
+
+/* Dawn base.css sets .header__icon--cart .icon to 4.4rem — force same 2rem as account */
+.header__icons .header__icon--cart .svg-wrapper > svg {
+  width: var(--fc-nav-icon-graphic) !important;
+  height: var(--fc-nav-icon-graphic) !important;
+}
+
+.header__icon--account shop-user-avatar {
+  --shop-avatar-size: var(--fc-nav-icon-graphic);
+}
+
+.header__icon--menu > span,
+.header__icon--menu .fc-nav-icon-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--fc-nav-icon-hit);
+  height: var(--fc-nav-icon-hit);
+  min-width: var(--fc-nav-icon-hit);
+  min-height: var(--fc-nav-icon-hit);
+}
+
+.header__icon--menu .fc-header-menu-icon {
+  width: var(--fc-nav-icon-graphic) !important;
+  height: var(--fc-nav-icon-graphic) !important;
+  max-width: var(--fc-nav-icon-graphic);
+  max-height: var(--fc-nav-icon-graphic);
+  object-fit: contain;
+}
+
+.header__icon--menu .fc-menu-close-arrow {
+  display: none !important;
+}
+
+.header__icon--menu .icon {
+  inset: 0;
+  margin: auto;
+  width: var(--fc-nav-icon-graphic) !important;
+  height: var(--fc-nav-icon-graphic) !important;
 }
 
 .footer-block__details-content a {
@@ -300,16 +570,6 @@ details[open]>.header__menu-item {
   max-width: 50vw;
 }
 
-.content-for-layout {
-  padding-top: var(--header-height, 80px);
-  padding-bottom: 50px;
-}
-
-/* Homepage hero bleeds under the transparent fixed nav — no push needed */
-body.template-index .content-for-layout {
-  padding-top: 0;
-}
-
 #MainContent .gradient,
 #MainContent .color-scheme-1,
 #MainContent .color-scheme-2,
@@ -320,7 +580,20 @@ body.template-index .content-for-layout {
 
 @media (max-width: 768px) {
     .header {
-      padding: 0 12px !important;
+      --fc-nav-icon-graphic: 1.625rem;
+      --fc-nav-icon-hit: 3.6rem;
+      padding: 4px var(--fc-nav-bar-gutter, 12px) !important;
+      padding-bottom: clamp(4px, 1vw, 8px) !important;
+      align-items: center;
+      min-height: 48px;
+    }
+
+    header-drawer {
+      align-self: center;
+    }
+
+    .header__icons {
+      align-self: center;
     }
 
     .header--middle-center .header__heading,
@@ -329,16 +602,8 @@ body.template-index .content-for-layout {
     }
 
     .header__heading-logo {
-      max-width: 100px;
+      max-width: 72px;
       height: auto;
-    }
-
-    .header__icon--search {
-      position: absolute;
-      left: 44px;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 3;
     }
 
     .footer-block__details-content .list-menu__item--link {
@@ -367,15 +632,14 @@ body.template-index .content-for-layout {
     }
 }
 
-/* ── Mobile menu drawer — dark theme matching footer ── */
-.menu-drawer {
-  background-color: #000000 !important;
-}
-.menu-drawer__inner-container {
-  background-color: #000000 !important;
-}
-.menu-drawer__navigation-container {
-  background-color: #000000;
+/* ── Mobile menu drawer — inner layers transparent; shell bg in fc-nav-dropdowns.css ── */
+.menu-drawer__inner-container,
+.menu-drawer__navigation-container,
+.menu-drawer__utility-links,
+.menu-drawer__submenu,
+.menu-drawer__inner-submenu {
+  background-color: transparent !important;
+  background-image: none !important;
 }
 .menu-drawer__navigation {
   padding-top: 0 !important;
@@ -394,71 +658,105 @@ body.template-index .content-for-layout {
 }
 .menu-drawer__menu-item {
   color: #ffffff !important;
-  font-size: 2rem;
-  letter-spacing: -0.02em;
+  font-family: var(--fc-font) !important;
+  font-size: var(--fc-menu-drawer-link-size, clamp(1.35rem, 3.8vw, 1.75rem)) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em;
   border-bottom: none !important;
-  padding: 14px 0 14px 20px !important;
+  padding: 10px 20px !important;
 }
 .menu-drawer__menu-item:hover {
   color: var(--fc-yellow) !important;
 }
 .menu-drawer__utility-links {
-  background-color: #000000 !important;
   border-top: none !important;
   display: flex;
   flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
-  padding: 16px 20px;
-  padding-right: 0;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px 20px !important;
 }
+
+.menu-drawer__utility-start {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  min-width: 0;
+  flex: 0 1 auto;
+}
+
 .menu-drawer__utility-links a,
 .menu-drawer__utility-links button {
   color: #ffffff;
 }
+
 .menu-drawer__utility-links a:hover,
 .menu-drawer__utility-links button:hover {
   color: var(--fc-yellow);
 }
-/* Suppress the white 50%-opacity overlay Dawn places below the hamburger button
-   via ::before — it bleeds through the gap between navbar and drawer. */
-.header__icon--menu[aria-expanded='true']::before {
-  display: none;
+
+/* Dawn menu icon ::before overlay handled on header-drawer > details > summary::before */
+
+.menu-drawer__account {
+  position: static;
+  margin: 0 !important;
+  padding: 0;
+  font-family: var(--fc-font);
+  font-size: clamp(1.35rem, 3.8vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  text-align: right;
 }
 
-/* Log In — absolute bottom-right corner of the drawer */
-.menu-drawer__account {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  font-size: 2rem;
-  letter-spacing: -0.02em;
-}
 .menu-drawer__account account-icon,
 .menu-drawer__account .svg-wrapper {
   display: none !important;
 }
-/* Social icons in drawer — full white, left side */
-.menu-drawer .list-social__link {
-  color: #ffffff !important;
+
+/* Hamburger drawer — same social row as footer, horizontal */
+.menu-drawer__utility-links .menu-drawer__social.fc-footer__bottom-social {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--fc-footer-bar-gap, clamp(16px, 1.4vw, 24px));
+  font-size: clamp(1.35rem, 3.8vw, 1.75rem);
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
 }
-.menu-drawer .list-social__link svg {
-  fill: #ffffff !important;
-  stroke: #ffffff !important;
+
+.menu-drawer__utility-links .menu-drawer__localization {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.menu-drawer .fc-footer__bottom-social .fc-footer__bottom-link {
+  color: #ffffff;
+  font-family: var(--fc-font) !important;
+  font-size: var(--fc-menu-drawer-link-size, clamp(1.35rem, 3.8vw, 1.75rem)) !important;
+  font-weight: 700 !important;
+}
+
+.menu-drawer .fc-footer__bottom-social .fc-footer__bottom-link:hover {
+  color: var(--fc-yellow);
 }
 .menu-drawer summary.menu-drawer__menu-item::after {
   filter: invert(1);
 }
 
-/* Hamburger drawer — pin to viewport bottom; remove drop-shadow that creates
-   a visible line between the navbar and the drawer top edge. */
-header-drawer #menu-drawer {
-  position: fixed !important;
-  top: var(--header-bottom-position, 97px);
-  bottom: 0 !important;
-  height: auto !important;
-  overflow-y: auto;
-  filter: none !important;
-}
+/* Menu + cart dropdown panels — see fc-nav-dropdowns.css (loads after Dawn drawer CSS) */
 
 
 body {
@@ -504,53 +802,121 @@ body {
   transition: top 0.3s ease;
 }
 
-/* Header: always fully transparent — kill scheme-4 black at every level */
-.section-header,
+/* ── Floating pill navbar + FinecouBGLighter ── */
+.section-header {
+  width: 100%;
+  max-width: var(--fc-nav-bar-max-width, calc(100vw - 24px));
+  margin-left: auto;
+  margin-right: auto;
+  background: transparent !important;
+}
+
 sticky-header,
-.header-wrapper,
+sticky-header.header-wrapper {
+  display: block;
+  width: 100%;
+  background: transparent !important;
+}
+
+.shopify-section-group-header-group sticky-header,
+.shopify-section-group-header-group .header-wrapper {
+  pointer-events: auto;
+  width: 100%;
+}
+
+@media screen and (min-width: 990px) {
+  .shopify-section-group-header-group {
+    padding-left: var(--fc-nav-bar-gutter, 12px);
+    padding-right: var(--fc-nav-bar-gutter, 12px);
+  }
+
+  .shopify-section-group-header-group .section-header,
+  .shopify-section-group-header-group > .shopify-section,
+  .section-header {
+    max-width: var(--fc-nav-bar-max-width, calc(100vw - 24px));
+    flex: 0 1 var(--fc-nav-bar-max-width, calc(100vw - 24px));
+  }
+
+  .header.header--middle-center.drawer-menu {
+    display: grid;
+    grid-template-areas: 'left-icons heading icons';
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    column-gap: clamp(12px, 2vw, 24px);
+  }
+
+  header-drawer {
+    grid-area: left-icons;
+    justify-self: start;
+  }
+
+  .header--middle-center .header__icons {
+    grid-area: icons;
+    justify-self: end;
+  }
+}
+
+.header-wrapper {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  position: relative;
+  --fc-nav-radius: 14px;
+  border-radius: var(--fc-nav-radius);
+  border: none;
+  overflow: visible;
+  background-color: var(--fc-black) !important;
+  background-image: var(--fc-nav-footer-bg) !important;
+  background-size: cover !important;
+  background-position: center top !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
+  transition: box-shadow 0.3s ease, border-radius 0.15s ease;
+}
+
+@media screen and (max-width: 749px) {
+  .header-wrapper {
+    background-size: cover !important;
+    background-position: center top !important;
+    background-attachment: fixed !important;
+  }
+}
+
 .header-wrapper.gradient,
 .header-wrapper.color-scheme-1,
 .header-wrapper.color-scheme-2,
 .header-wrapper.color-scheme-3,
 .header-wrapper.color-scheme-4,
 .header-wrapper.color-scheme-5 {
-  background: transparent !important;
-  background-color: transparent !important;
+  background-color: var(--fc-black) !important;
+  background-image: var(--fc-nav-footer-bg) !important;
 }
-.header-wrapper--border-bottom { border-bottom: none !important; }
 
-/* FinecouBG fades in via ::before on hover and sticky-reveal */
-.header-wrapper::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  pointer-events: none;
+.header-wrapper--border-bottom {
+  border-bottom: none !important;
 }
-/* Nav content sits above ::before */
+
+.section-header.scrolled-past-header .header-wrapper {
+  box-shadow: 0 14px 48px rgba(0, 0, 0, 0.45);
+}
+
+.header-wrapper::before {
+  display: none;
+}
+
 .header-wrapper > .header {
   position: relative;
   z-index: 1;
+  padding: 6px var(--fc-nav-bar-gutter, 12px) !important;
+  min-height: 52px;
 }
-/* Hover: any interaction over the header */
-.section-header:hover .header-wrapper::before,
-/* Sticky-revealed: scrolled past original pos, nav slides back in */
-.section-header.shopify-section-header-sticky:not(.shopify-section-header-hidden) .header-wrapper::before {
-  opacity: 1;
-}
+
 body.nav-hidden .section-header {
   top: calc(-1 * var(--header-height, 80px)) !important;
 }
 
-/* Scrollbar-menu: follow nav when it hides/shows */
-.custom-product-tabs-wrapper.sticky {
-  transition: top 0.3s ease;
-}
-body.nav-hidden .custom-product-tabs-wrapper.sticky {
-  top: 0 !important;
-}
+/* Cart dropdown — see fc-nav-dropdowns.css */
 
 /* Nav links */
 .header__menu-item span {
@@ -595,38 +961,75 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 
 /* ── Footer ── */
 
+.shopify-section-group-footer-group {
+  isolation: isolate;
+  z-index: 2;
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+.shopify-section-group-footer-group .footer.gradient {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Footer — transparent so global FinecouBG shows through */
+.shopify-section-group-footer-group .footer,
+.shopify-section-group-footer-group .fc-footer {
+  background: transparent !important;
+}
+
 .fc-footer {
-  padding: 12px clamp(20px, 4vw, 48px) 0;
+  padding: clamp(12px, 2vw, 20px) clamp(20px, 4vw, 48px);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: clamp(64px, 8vw, 120px);
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
   position: relative;
-  min-height: 500px;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  box-sizing: border-box;
 }
 
-.fc-footer__brand {
-  position: absolute;
-  top: 0;
-  right: 10px;
-  display: flex;
-  align-items: center;
-  gap: clamp(4px, 1vw, 7px);
+.fc-footer__bottom-links {
+  height: auto;
 }
 
-.fc-footer__brand-by {
-  font-family: var(--fc-font);
-  font-size: clamp(1.2rem, 2vw, 1.5rem);
-  color: rgba(255,255,255,0.5);
-  letter-spacing: 0.05em;
-  line-height: 1;
+/* PDP fixed Add to bag — stay below footer bar on mobile */
+@media screen and (max-width: 749px) {
+  .shopify-section-group-footer-group {
+    position: relative;
+    z-index: 950;
+  }
+
+  .fc-pdp-u__dock,
+  .fc-pdp__dock {
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+
+  .fc-pdp-u__dock.fc-pdp-dock--footer-visible,
+  .fc-pdp__dock.fc-pdp-dock--footer-visible {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(100%);
+  }
 }
 
-.fc-footer__brand-logo {
-  height: clamp(11px, 2vw, 14px);
-  width: auto;
-  filter: invert(1);
-  opacity: 0.5;
+@media screen and (max-width: 749px) {
+  .fc-footer {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    justify-content: flex-start;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .fc-footer__bottom-links {
+    height: auto;
+  }
 }
 
 .fc-footer__center {
@@ -658,7 +1061,8 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   font-family: var(--fc-font);
   font-size: clamp(3rem, 5vw, 5rem);
   font-weight: 700;
-  color: #ffffff;
+  color: #ffffff !important;
+  opacity: 1 !important;
   letter-spacing: -0.02em;
   margin: 0;
   width: 100%;
@@ -802,120 +1206,144 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 .fc-footer__form-msg--success { color: rgba(255,255,255,0.6); }
 
 .fc-footer__bottom-links {
-  display: flex;
+  --fc-footer-bar-size: clamp(1.6rem, 1.85vw, 2rem);
+  --fc-footer-bar-gap: clamp(16px, 1.4vw, 24px);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  position: relative;
   width: 100%;
-  padding: 16px 0 0;
-  gap: 32px;
-  margin-top: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  font-size: var(--fc-footer-bar-size);
 }
 
-.fc-footer__bottom-left,
-.fc-footer__bottom-right {
+.fc-footer__bottom-nav,
+.fc-footer__bottom-social {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 40px;
+  gap: var(--fc-footer-bar-gap);
 }
 
-.fc-footer__bottom-copy {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+.fc-footer__bottom-nav {
+  justify-self: start;
+  justify-content: flex-start;
+}
+
+.fc-footer__bottom-social {
+  justify-self: end;
+  justify-content: flex-end;
+}
+
+.fc-footer__bottom-link,
+.fc-footer__bottom-icon {
   font-family: var(--fc-font);
-  font-size: clamp(1.2rem, 1.4vw, 1.6rem);
-  color: rgba(255,255,255,0.25);
+  font-size: inherit;
   letter-spacing: 0.01em;
-  cursor: default;
+  line-height: 1.2;
   white-space: nowrap;
 }
 
 .fc-footer__bottom-link {
-  font-family: var(--fc-font);
-  font-size: clamp(1.5rem, 1.8vw, 2rem);
-  color: rgba(255,255,255,0.55);
+  color: rgba(255, 255, 255, 0.55);
   text-decoration: none;
-  letter-spacing: 0.01em;
   transition: color 0.2s ease;
 }
 
-.fc-footer__bottom-link:hover { color: var(--fc-yellow); }
+.fc-footer__bottom-link:hover {
+  color: var(--fc-yellow);
+}
+
+.fc-footer__bottom-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.fc-footer__bottom-icon:hover {
+  color: var(--fc-yellow);
+}
+
+.fc-footer__bottom-icon .svg-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75em;
+  height: 1.75em;
+}
+
+.fc-footer__bottom-icon .svg-wrapper svg {
+  width: 1.75em !important;
+  height: 1.75em !important;
+}
+
+.fc-footer__bottom-copy {
+  font-family: var(--fc-font);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  white-space: nowrap;
+  justify-self: center;
+  text-align: center;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: default;
+  font-size: clamp(1rem, 2.2vw, 1.3rem);
+}
 
 @media (max-width: 749px) {
   .fc-footer {
-    padding: clamp(32px, 6vw, 48px) clamp(16px, 5vw, 24px) clamp(12px, 3vw, 20px);
-    gap: clamp(24px, 5vw, 36px);
-  }
-
-  .fc-footer__brand {
-    position: absolute;
-    top: 0;
-    right: clamp(8px, 3vw, 16px);
-    width: auto;
-    justify-content: flex-end;
-    gap: 4px;
-  }
-
-  .fc-footer__center {
-    align-items: flex-start;
-    text-align: left;
-    max-width: 100%;
-    gap: clamp(20px, 4vw, 28px);
-  }
-
-  .fc-footer__newsletter-heading,
-  .fc-footer__newsletter-sub {
-    text-align: left;
-  }
-
-  .fc-footer__social-group {
-    align-items: center;
-  }
-
-  .fc-footer__social .list-social {
-    gap: clamp(8px, 4vw, 24px);
-    justify-content: center;
-  }
-
-  .fc-footer__social .list-social__item .icon,
-  .fc-footer__social .svg-wrapper svg {
-    width: clamp(22px, 5vw, 30px) !important;
-    height: clamp(22px, 5vw, 30px) !important;
-  }
-
-  .fc-footer__social .svg-wrapper {
-    width: clamp(22px, 5vw, 30px) !important;
-    height: clamp(22px, 5vw, 30px) !important;
+    padding: 10px clamp(12px, 4vw, 20px) 0;
+    height: auto;
+    min-height: 0;
+    max-height: none;
   }
 
   .fc-footer__bottom-links {
-    flex-direction: row;
-    flex-wrap: wrap;
+    height: auto;
+  }
+
+  .shopify-section-group-footer-group .fc-footer__bottom-links {
+    --fc-footer-bar-size: clamp(1.35rem, 3.8vw, 1.75rem);
+    --fc-footer-bar-gap: clamp(12px, 2.8vw, 18px);
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    row-gap: 8px;
+    height: auto;
+    align-content: start;
+  }
+
+  .shopify-section-group-footer-group .fc-footer__bottom-nav {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: center;
     justify-content: center;
-    gap: clamp(8px, 2vw, 14px);
-  }
-
-  .fc-footer__bottom-left,
-  .fc-footer__bottom-right {
-    justify-content: center;
-    gap: clamp(12px, 3vw, 20px);
-    flex-wrap: wrap;
-  }
-
-  .fc-footer__bottom-link {
-    font-size: clamp(1.3rem, 3.5vw, 1.6rem);
-  }
-
-  .fc-footer__bottom-copy {
-    position: static;
-    transform: none;
     width: 100%;
+    max-width: 100%;
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .shopify-section-group-footer-group .fc-footer__bottom-social {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: center;
+    justify-content: center;
+  }
+
+  .shopify-section-group-footer-group .fc-footer__bottom-copy {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: center;
     text-align: center;
-    order: 3;
-    font-size: clamp(1.1rem, 3vw, 1.4rem);
   }
 }
+
 
 #shopify-section-sections--19715450568778__custom_liquid_9b94NX {
   border-top: none !important;
@@ -1000,9 +1428,10 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 /* ── Header — full width with side padding ── */
 .header.page-width {
   max-width: 100% !important;
-  padding-left: clamp(20px, 4vw, 48px) !important;
-  padding-right: clamp(20px, 4vw, 48px) !important;
+  padding-left: clamp(12px, 4vw, 24px) !important;
+  padding-right: clamp(12px, 4vw, 24px) !important;
 }
+
 
 /* ── Logo — truly centered on every page and viewport ── */
 /*
@@ -1060,6 +1489,23 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 /* ── Cart badge on bag icon — number only, no background ── */
 .header__icon--cart {
   position: relative;
+  margin-right: 0;
+}
+
+.header__icon--cart .fc-nav-icon-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--fc-nav-icon-hit);
+  height: var(--fc-nav-icon-hit);
+}
+
+.header__icon--cart:hover .fc-nav-icon--open svg,
+.header__icon--cart:hover .fc-nav-icon--close svg,
+.header__icon--cart:hover .icon {
+  transform: none !important;
+  filter: none !important;
 }
 .cart-count-bubble {
   position: absolute;
@@ -1087,7 +1533,6 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 .cart-count-bubble.hidden {
   display: none;
 }
-}
 
 /* ── SECTION APPEAR ANIMATION ── */
 @keyframes fc-section-in {
@@ -1101,31 +1546,43 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 /* ── FC CAROUSEL TITLE (shared across all carousel pages) ── */
 .fc-carousel-header,
 .fc-collection-header {
-  padding: clamp(10px, 1.5vw, 16px) clamp(12px, 2vw, 24px);
+  width: var(--fc-carousel-band);
+  max-width: 700px;
+  margin-inline: auto;
+  box-sizing: border-box;
+  padding: 0 clamp(8px, 2.5vw, 24px) 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: clamp(2px, 1vw, 8px);
+  overflow: hidden;
+}
+.fc-title-viewport,
+.fc-sl-title-viewport {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
   overflow: hidden;
 }
 .fc-title-viewport {
-  flex: 1;
-  min-width: 0;
-  max-width: min(700px, calc(100vw - 40px));
-  overflow: hidden;
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
   mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
   cursor: grab;
+}
+.fc-sl-title-viewport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .fc-title-viewport:active { cursor: grabbing; }
 .fc-title-track { display: flex; align-items: center; }
 .fc-title-item {
   flex-shrink: 0;
-  min-width: clamp(100px, 14vw, 200px);
+  min-width: clamp(48px, 10vw, 160px);
   text-align: center;
-  padding: 0 clamp(6px, 1.5vw, 12px);
+  padding: 0 clamp(4px, 1.2vw, 12px);
   font-family: var(--fc-font);
-  font-size: clamp(20px, 5.5vw, 48px);
+  font-size: clamp(16px, 4.2vw, 48px);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: rgba(255,255,255,0.18);
@@ -1135,8 +1592,49 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   transform-origin: center;
   user-select: none;
 }
+.fc-sl-title {
+  font-family: var(--fc-font);
+  font-size: clamp(16px, 4.2vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  white-space: nowrap;
+}
 .fc-title-item.fc-title-active { color: #ffffff; transform: scale(1); cursor: default; }
 .fc-title-item:not(.fc-title-active) { cursor: pointer; }
+
+/* Long labels — wrap inside the band (Policies, Support, etc.) */
+.fc-title-carousel--has-wrap.fc-collection-header {
+  overflow-x: clip;
+  overflow-y: visible;
+  /* Reserve two lines so body gap does not jump between tabs */
+  min-height: calc(2 * 1.15 * clamp(16px, 4.2vw, 48px));
+  align-items: center;
+}
+.fc-title-carousel--has-wrap .fc-title-viewport {
+  /* overflow-y: visible + overflow-x hidden computes to overflow-y: auto → vertical scrollbar */
+  overflow: clip;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.fc-title-carousel--has-wrap .fc-title-track {
+  align-items: center;
+}
+.fc-title-item.fc-title-item--wrap {
+  white-space: normal;
+  flex-shrink: 0;
+  flex-grow: 0;
+  /* min-width: 0 lets max-width constrain wrapped text; never flex-shrink or items stack on one spot */
+  min-width: 0;
+  max-width: min(10.5em, 52vw);
+  line-height: 1.15;
+  overflow-wrap: break-word;
+}
+
+.fc-title-carousel + .fc-ig-dots {
+  display: none !important;
+}
+
 @keyframes fc-arrow-prev {
   0%, 100% { transform: translateX(0); }
   50%       { transform: translateX(-4px); }
@@ -1150,9 +1648,10 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   background: transparent;
   border: none;
   color: rgba(255,255,255,0.35);
-  font-size: clamp(18px, 3vw, 30px);
+  font-size: clamp(14px, 3.5vw, 30px);
   cursor: pointer;
-  padding: 0 8px;
+  padding: 0 clamp(2px, 1vw, 8px);
+  min-width: clamp(28px, 8vw, 44px);
   line-height: 1;
   transition: color 0.15s;
   flex-shrink: 0;
@@ -1165,6 +1664,169 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   .fc-collection-header__arrow:hover { color: var(--fc-yellow); }
 }
 
+@media (max-width: 749px) {
+  :root {
+    --fc-carousel-band: min(700px, 72vw);
+  }
+
+  .fc-carousel-header,
+  .fc-collection-header {
+    padding-inline: clamp(4px, 1.5vw, 12px);
+    gap: clamp(0px, 0.5vw, 4px);
+  }
+
+  .fc-title-item {
+    min-width: clamp(40px, 9vw, 110px);
+    font-size: clamp(22px, 6.8vw, 38px);
+    transform: scale(0.72);
+  }
+
+  .fc-title-item.fc-title-active {
+    transform: scale(1);
+  }
+
+  .fc-sl-title {
+    font-size: clamp(22px, 6.8vw, 38px);
+  }
+
+  .fc-carousel-arrow,
+  .fc-collection-header__arrow {
+    font-size: clamp(14px, 3.5vw, 24px);
+    min-width: clamp(26px, 6vw, 36px);
+    padding: 0;
+  }
+
+  /* Instagram-style: swipe on mobile, hide arrow hints */
+  .fc-carousel-arrow,
+  .fc-collection-header__arrow {
+    opacity: 0.55;
+  }
+
+  .fc-title-carousel--has-wrap.fc-collection-header {
+    min-height: calc(2 * 1.15 * clamp(22px, 6.8vw, 38px));
+  }
+
+  .fc-title-item.fc-title-item--wrap {
+    flex-shrink: 0;
+    min-width: 0;
+    max-width: min(7.5em, 42vw);
+  }
+}
+
+/* ── Instagram-style carousel (shared: galleries + title dots) ── */
+.fc-ig-viewport {
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y pinch-zoom;
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.fc-ig-viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.fc-ig-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  will-change: transform;
+}
+
+.fc-ig-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dot pagination — elongated pill on active (Instagram feed) */
+.fc-ig-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 0 4px;
+  pointer-events: auto;
+}
+
+.fc-ig-dots--title {
+  width: var(--fc-carousel-band, min(700px, 100%));
+  max-width: 700px;
+  margin-inline: auto;
+  padding-top: 2px;
+  padding-bottom: clamp(8px, 2vw, 14px);
+}
+
+.fc-ig-dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1), background 0.28s ease, opacity 0.2s ease;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fc-ig-dot.is-active {
+  width: 18px;
+  background: var(--fc-yellow, #ffd300);
+}
+
+.fc-ig-dot:hover:not(.is-active) {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* Gallery dots overlay on product images */
+.fc-ig-viewport > .fc-ig-dots {
+  position: absolute;
+  bottom: clamp(6px, 1.5vw, 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  padding: 0;
+  pointer-events: none;
+}
+
+.fc-ig-viewport > .fc-ig-dots .fc-ig-dot {
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+  transition: background 0.28s ease, opacity 0.2s ease;
+}
+
+.fc-ig-viewport > .fc-ig-dots .fc-ig-dot.is-active {
+  width: 6px;
+  height: 6px;
+  background: #ffd300;
+}
+
+.fc-title-viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.fc-title-viewport.is-dragging .fc-title-item {
+  transition: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .fc-pdp-u__thumbs {
+    display: none !important;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fc-ig-viewport > .fc-ig-dots {
+    display: none;
+  }
+}
+
 /* ── FC PRICE TAG (shared component — shop grid + PDP floating card) ── */
 .fc-card__tag {
   position: relative;
@@ -1174,9 +1836,12 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   border-radius: 3px;
   margin: 8px auto 0;
   padding: 5px 27px 6px 10px;
-  cursor: pointer;
+  cursor: default;
   transition: opacity 0.2s ease;
   width: fit-content;
+}
+.fc-card__tag:not(.fc-tag-active):not(.fc-tag--oos) .fc-card__tag-body {
+  cursor: pointer;
 }
 .fc-card__tag-body {
   display: flex;
@@ -1218,12 +1883,21 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   width: 140px;
   display: block;
 }
+.fc-card__atc-label {
+  font-family: var(--fc-font);
+  font-size: clamp(10px, 1vw, 12px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #000000;
+  line-height: 1;
+  white-space: nowrap;
+}
 .fc-card__barcode {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
-  width: 80px;
+  width: 100px;
 }
 .fc-card__barcode-svg {
   width: 100%;
@@ -1242,6 +1916,7 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
+  z-index: 2;
   width: clamp(18px, 2.2vw, 24px);
   height: clamp(18px, 2.2vw, 24px);
   border-radius: 50%;
@@ -1282,6 +1957,54 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   display: block;
   animation: fc-qty-pop 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
+
+/* Download page — simple guide link under product image */
+.fc-dl-page .fc-dl-card-name {
+  font-family: var(--fc-font);
+  font-size: clamp(11px, 1.1vw, 14px);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 12px 0 0;
+  padding: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+}
+
+.fc-dl-guide-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 8px auto 0;
+  font-family: var(--fc-font);
+  font-size: clamp(11px, 1vw, 13px);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+}
+
+.fc-dl-guide-link__icon {
+  color: var(--fc-yellow);
+  font-size: 12px;
+  line-height: 1;
+}
+
+@media (hover: hover) {
+  .fc-dl-guide-link:hover {
+    color: var(--fc-yellow);
+  }
+}
+
+.fc-dl-page .fc-card {
+  align-items: center;
+}
+
 @keyframes fc-qty-pop {
   0%   { transform: scale(0.2); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
@@ -1336,12 +2059,11 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
 }
 .fc-tag-fragment__label {
   font-family: var(--fc-font);
-  font-size: clamp(6px, 0.6vw, 8px);
+  font-size: clamp(9px, 0.95vw, 12px);
   font-weight: 700;
   color: #000;
   letter-spacing: -0.02em;
-  text-transform: uppercase;
-  line-height: 1.2;
+  line-height: 1.15;
   text-align: center;
 }
 @media screen and (max-width: 749px) {
@@ -1349,5 +2071,938 @@ body.nav-hidden .custom-product-tabs-wrapper.sticky {
   .fc-card__tag { padding-right: 34px; }
   .fc-tag-oos-wrap .fc-card__tag.fc-tag--oos { width: 94px; padding-right: 5px; }
   .fc-tag-oos-wrap .fc-card__name { width: 79px; }
-  .fc-tag-fragment { width: 40px; }
+  .fc-tag-fragment { width: 48px; }
 }
+
+/* ─── Product detail page (Finecoustic PDP) ─── */
+.template-product {
+  font-family: var(--fc-font);
+  color: #ffffff;
+}
+
+.template-product .fc-pdp-section {
+  background: transparent !important;
+}
+
+/* Mobile fixed ATC spacing handled on .fc-pdp, not MainContent */
+
+/* Kill Dawn light scheme text on PDP sections */
+.template-product .color-scheme-1,
+.template-product .color-scheme-2,
+.template-product .color-scheme-3,
+.template-product .color-scheme-4,
+.template-product .color-scheme-5 {
+  --color-foreground: 255, 255, 255;
+  color: #ffffff;
+}
+
+.template-product .title,
+.template-product .title.inline-richtext,
+.template-product h1,
+.template-product h2,
+.template-product h3 {
+  font-family: var(--fc-font);
+  color: #ffffff;
+}
+
+.template-product p,
+.template-product .rte,
+.template-product .rte p {
+  font-family: var(--fc-font);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+
+/* Legacy Dawn main-product (fallback / theme editor) */
+.template-product product-info.gradient {
+  background: transparent !important;
+}
+
+.template-product .product__media-wrapper,
+.template-product .product__info-wrapper {
+  background: transparent !important;
+}
+
+.template-product .price .price-item,
+.template-product .price__regular .price-item--regular {
+  color: #ffffff;
+  font-family: var(--fc-font);
+}
+
+.template-product .product-form__submit,
+.template-product .shopify-payment-button__button {
+  font-family: var(--fc-font) !important;
+  font-weight: 700 !important;
+}
+
+.template-product .product-form__input .form__label,
+.template-product legend.form__label {
+  font-family: var(--fc-font);
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: -0.02em;
+  font-size: 1.2rem;
+}
+
+.template-product .product-form__input input[type='radio'] + label {
+  font-family: var(--fc-font);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.template-product .product-form__input input[type='radio']:checked + label {
+  border-color: var(--fc-yellow);
+  color: var(--fc-yellow);
+}
+
+/* Scrollable feature banners on PDP */
+.template-product .scrollable-banner-section {
+  background: transparent;
+}
+
+.template-product .scrollable-banner-section .section-title {
+  font-family: var(--fc-font);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.template-product .scrollable-banner-section .section-description {
+  font-family: var(--fc-font);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Overview / struggle section */
+.template-product .productinfo-section-outerdiv,
+.template-product .productinfo-section {
+  background-color: transparent;
+}
+
+/* Dual spec table on PDP */
+.template-product .dual-spec-wrapper,
+.template-product .dual-spec-section {
+  background: transparent !important;
+}
+
+.template-product .dual-spec-title,
+.template-product .dual-spec-wrapper .table-title {
+  font-family: var(--fc-font);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.template-product .dual-spec-btn {
+  font-family: var(--fc-font);
+}
+
+.template-product .dual-spec-table td {
+  font-family: var(--fc-font);
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.template-product .dual-spec-type {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.template-product .dual-spec-value {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* 50/50 feature splits */
+.template-product .text-image-split {
+  background: transparent;
+}
+
+.template-product #MainContent,
+.template-product .shopify-section {
+  background: transparent !important;
+}
+
+.template-product .image-section-title {
+  font-family: var(--fc-font);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.template-product .image-section-description,
+.template-product .image-section-description p {
+  font-family: var(--fc-font);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Video section (Dawn) */
+.template-product .video-section {
+  background: transparent !important;
+}
+
+.template-product .video-section .title-wrapper .title {
+  font-family: var(--fc-font);
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* Related products strip */
+.template-product .related-products {
+  background: transparent !important;
+}
+
+.template-product .related-products .related-products__heading {
+  font-family: var(--fc-font);
+  color: #ffffff;
+}
+
+/* ─── Search results page (Finecoustic) ─── */
+.template-search {
+  font-family: var(--fc-font);
+  color: #ffffff;
+  background: #000000;
+}
+
+.template-search .fc-search-section,
+.template-search .fc-search-page {
+  background: #000000;
+}
+
+.fc-search-page__inner {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.fc-search-page__header {
+  padding: clamp(16px, 3vw, 32px) clamp(16px, 5vw, 50px) clamp(24px, 4vw, 40px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fc-search-page__title {
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0 0 20px;
+  line-height: 1.15;
+}
+
+.fc-search-page__form {
+  display: flex;
+  gap: clamp(8px, 2vw, 10px);
+  max-width: min(640px, 100%);
+}
+
+.fc-search-page__input {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-family: var(--fc-font);
+  font-size: clamp(14px, 2vw, 15px);
+  font-weight: 600;
+  padding: clamp(10px, 2vw, 12px) clamp(12px, 2.5vw, 16px);
+  border-radius: 4px;
+  outline: none;
+}
+
+.fc-search-page__input:focus {
+  border-color: var(--fc-yellow);
+}
+
+.fc-search-page__submit {
+  flex-shrink: 0;
+  background: var(--fc-yellow);
+  color: #121212;
+  border: none;
+  font-family: var(--fc-font);
+  font-size: clamp(11px, 1.8vw, 12px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  padding: clamp(10px, 2vw, 12px) clamp(14px, 3vw, 20px);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.fc-search-page__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+  padding: 24px clamp(16px, 5vw, 50px) 12px;
+}
+
+.fc-search-page__label--pages {
+  padding-top: clamp(24px, 5vw, 40px);
+}
+
+.fc-search-page__empty,
+.fc-search-page__hint {
+  padding: clamp(32px, 6vw, 48px) var(--fc-page-gutter);
+  font-size: clamp(14px, 2vw, 15px);
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+}
+
+.fc-search-pages {
+  list-style: none;
+  margin: 0;
+  padding: 0 clamp(16px, 5vw, 50px) 32px;
+  max-width: 720px;
+}
+
+.fc-search-page-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(12px, 2.5vw, 16px);
+  padding: clamp(12px, 2vw, 14px) clamp(10px, 2vw, 12px);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.12s;
+}
+
+.fc-search-page-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.fc-search-page-row__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.fc-search-page-row__arrow {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 14px;
+}
+
+.fc-card--search .fc-card__media-link {
+  display: block;
+  text-decoration: none;
+}
+
+/* FC product grid — JS sets --fc-product-cols (visible count); CSS caps columns by viewport */
+.fc-grid {
+  display: grid;
+  --fc-product-cols: 5;
+  --fc-max-cols: 5;
+  grid-template-columns: repeat(min(var(--fc-product-cols), var(--fc-max-cols)), minmax(0, 280px));
+  justify-content: center;
+  gap: clamp(24px, 4vw, 50px) clamp(16px, 3vw, 50px);
+  margin: 0 auto 48px;
+  padding: 0 clamp(0px, 5vw, 50px);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@media screen and (max-width: 1400px) {
+  .fc-grid {
+    --fc-max-cols: 4;
+  }
+}
+
+@media screen and (max-width: 1050px) {
+  .fc-grid {
+    --fc-max-cols: 3;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .fc-grid {
+    --fc-max-cols: 2;
+    margin-bottom: 0;
+    padding-bottom: clamp(24px, 5vw, 48px);
+  }
+}
+
+.fc-card {
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  position: relative;
+  min-width: 0;
+}
+
+.fc-card__image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: transparent;
+  position: relative;
+}
+
+.fc-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.fc-card.fc-hidden {
+  display: none;
+}
+
+@keyframes fc-card-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.fc-card-appear {
+  animation: fc-card-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fc-card__image .fc-card__img.fc-img-active {
+  opacity: 1;
+}
+
+/* ─── Search (hidden for current release) ─── */
+.header__icon--search,
+#fc-search-trigger,
+#fc-search-overlay {
+  display: none !important;
+}
+
+/* ─── Search (disabled for current release) ─── */
+.header__icon--search,
+#fc-search-trigger,
+#fc-search-overlay {
+  display: none !important;
+}
+
+/* ─── Search overlay (header icon) ─── */
+body.fc-search-open {
+  overflow: hidden;
+}
+
+#fc-search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.97);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  overscroll-behavior: contain;
+}
+
+#fc-search-overlay.fc-search--open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.fc-search-top {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2.5vw, 16px);
+  padding: clamp(16px, 2.5vw, 28px) var(--fc-page-gutter);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.fc-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--fc-font);
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  caret-color: var(--fc-yellow);
+  min-width: 0;
+}
+
+.fc-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.18);
+}
+
+.fc-search-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--fc-yellow);
+  border-radius: 50%;
+  animation: fc-search-spin 0.6s linear infinite;
+  flex-shrink: 0;
+  display: none;
+}
+
+.fc-search-spinner.active {
+  display: block;
+}
+
+@keyframes fc-search-spin {
+  to { transform: rotate(360deg); }
+}
+
+.fc-search-close {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: clamp(20px, 4vw, 26px);
+  line-height: 1;
+  cursor: pointer;
+  padding: clamp(4px, 1vw, 6px);
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+
+.fc-search-close:hover {
+  color: #ffffff;
+}
+
+.fc-search-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: clamp(20px, 4vw, 40px) var(--fc-page-gutter);
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.fc-search-label {
+  font-family: var(--fc-font);
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+}
+
+.fc-search-empty-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(16px, 3vw, 32px);
+}
+
+.fc-se-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.fc-se-card__img-wrap {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.fc-se-card__img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.fc-se-card:hover .fc-se-card__img-wrap img {
+  transform: scale(1.06);
+}
+
+.fc-se-card__name {
+  font-family: var(--fc-font);
+  font-size: clamp(10px, 0.9vw, 12px);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.fc-se-card__price {
+  font-family: var(--fc-font);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+}
+
+.fc-search-results {
+  display: none;
+}
+
+.fc-search-results.active {
+  display: block;
+}
+
+.fc-search-section {
+  margin-bottom: 28px;
+}
+
+.fc-search-section-head {
+  font-family: var(--fc-font);
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.fc-sr-prod-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fc-sr-prod {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.12s;
+}
+
+.fc-sr-prod:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.fc-sr-prod__img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.fc-sr-prod__name {
+  font-family: var(--fc-font);
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc-sr-page-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fc-sr-page {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.12s;
+}
+
+.fc-sr-page:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.fc-sr-page__title {
+  font-family: var(--fc-font);
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.fc-sr-page__arrow {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.fc-search-no-results {
+  display: none;
+  font-family: var(--fc-font);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.fc-search-no-results.active {
+  display: block;
+}
+
+.fc-search-no-results em {
+  color: #ffffff;
+  font-style: normal;
+}
+
+.fc-search-view-all {
+  display: none;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fc-search-view-all.active {
+  display: block;
+}
+
+.fc-search-view-all__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--fc-font);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--fc-yellow);
+  text-decoration: none;
+}
+
+.fc-search-view-all__link:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 749px) {
+  .fc-search-empty-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .fc-search-page__form {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .fc-search-empty-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ─── Finecoustic typography system (global enforcement) ─── */
+#MainContent,
+.header,
+.footer,
+.fc-pdp,
+[class^="fc-"],
+[class*=" fc-"] {
+  font-family: var(--fc-font);
+}
+
+#MainContent :where(
+  h1, h2, h3, h4, h5, h6,
+  p, a, li, span, label, button, input, textarea, select
+) {
+  text-transform: none;
+}
+
+#MainContent .eyebrow,
+#MainContent [class*="__eyebrow"],
+#MainContent [class*="__type"],
+.template-product .section-title,
+.template-product .image-section-title,
+.fc-pdp__title,
+.fc-pdp-u__title,
+.website-hero__heading {
+  text-transform: none;
+}
+
+/* Muted body copy */
+#MainContent p,
+#MainContent .rte,
+#MainContent .rte p,
+#MainContent [class*="__desc"],
+#MainContent [class*="description"] {
+  color: var(--fc-text-muted);
+}
+
+/* Dawn caption utility — override wide tracking */
+#MainContent .caption-with-letter-spacing,
+#MainContent .caption-with-letter-spacing--medium,
+#MainContent .caption-with-letter-spacing--large,
+#MainContent .uppercase {
+  letter-spacing: -0.01em;
+  text-transform: none;
+  font-family: var(--fc-font);
+}
+
+/* Cart drawer + customer account (Dawn defaults) */
+.cart-drawer .caption-with-letter-spacing,
+.cart-drawer .uppercase,
+.drawer__footer .caption-with-letter-spacing,
+.customer .caption-with-letter-spacing,
+.customer .uppercase,
+.customer th,
+.customer .field__label {
+  text-transform: none;
+  letter-spacing: -0.01em;
+  font-family: var(--fc-font);
+}
+
+.template-product .section-main-product .caption-with-letter-spacing {
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+/* PDP scroll — fixed backgrounds repaint every frame and feel janky */
+.template-product body.gradient {
+  background-attachment: scroll !important;
+}
+
+.template-product .header-wrapper,
+.template-product .header__submenu {
+  background-attachment: scroll !important;
+}
+
+@media screen and (max-width: 749px) {
+  .template-product body.gradient::before {
+    position: absolute;
+    inset: 0;
+    min-height: 100%;
+    height: auto;
+  }
+}
+
+/* Below-fold PDP sections — skip layout/paint until near viewport */
+.template-product .fc-pdp-video-hero {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 480px;
+}
+
+/* ── PDP split hero only (unified/showcases/video define their own layout) ── */
+.fc-pdp.fc-pdp-hero {
+  min-height: 100svh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  background: transparent;
+  padding-top: max(var(--header-height, 80px), 64px);
+  padding-bottom: clamp(32px, 5vw, 64px);
+  padding-left: clamp(20px, 4vw, 48px);
+  padding-right: clamp(20px, 4vw, 48px);
+}
+
+/* Full-bleed PDP heroes — no header offset (nav floats on top) */
+.fc-pdp-showcase.fc-pdp-hero,
+.fc-pdp-video-hero.fc-pdp-hero {
+  min-height: 0;
+  display: block;
+  justify-content: unset;
+  padding: 0 !important;
+}
+
+.fc-pdp-showcases {
+  display: block;
+  padding: 0;
+  background: transparent;
+}
+
+/* Mobile PDP accordions — Album, Specifications, In the box */
+.fc-pdp-acc {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.fc-pdp-acc > .fc-pdp-acc__summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px clamp(16px, 4vw, 24px);
+  font-family: var(--fc-font);
+  font-size: clamp(15px, 4vw, 17px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fc-pdp-acc > .fc-pdp-acc__summary::-webkit-details-marker {
+  display: none;
+}
+
+.fc-pdp-acc > .fc-pdp-acc__summary::after {
+  content: '+';
+  flex-shrink: 0;
+  font-size: 1.25em;
+  font-weight: 400;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.45);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.fc-pdp-acc[open] > .fc-pdp-acc__summary::after {
+  content: '−';
+  color: var(--fc-yellow);
+}
+
+.fc-pdp-acc__body {
+  padding: 0 clamp(16px, 4vw, 24px) 20px;
+  box-sizing: border-box;
+}
+
+.fc-pdp-acc--album .fc-pdp-acc__body {
+  padding-bottom: 0;
+}
+
+.fc-pdp-acc--album .fc-pdp-showcase--image_only {
+  min-height: min(56vw, 360px);
+}
+
+@media screen and (max-width: 989px) {
+  .fc-pdp-video-hero.fc-pdp-hero {
+    padding: clamp(24px, 5vw, 40px) 0 !important;
+  }
+
+  .fc-pdp-video-hero__inner {
+    width: 100%;
+    max-width: none;
+    gap: clamp(16px, 3vw, 24px);
+    padding-inline: clamp(16px, 4vw, 24px);
+    box-sizing: border-box;
+  }
+
+  .fc-pdp-video-hero__media {
+    width: 100%;
+    max-width: none;
+    border-radius: 8px;
+    aspect-ratio: 16 / 10;
+  }
+}
+
+.fc-pdp-showcase {
+  position: relative;
+  overflow: hidden;
+}
+
+.fc-pdp-showcase + .fc-pdp-showcase {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+@media screen and (min-width: 990px) {
+  .fc-pdp-acc--album {
+    display: block;
+    border: none;
+  }
+
+  .fc-pdp-acc--album > .fc-pdp-acc__summary {
+    display: none;
+  }
+
+  .fc-pdp-acc--album .fc-pdp-acc__body {
+    display: block !important;
+  }
+}
+
+.fc-pdp-showcase.fc-pdp-showcase--split {
+  border-top: none;
+}
+

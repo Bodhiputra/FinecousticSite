@@ -1,0 +1,603 @@
+/* Finecoustic nav dropdowns — load AFTER Dawn drawer CSS (menu + cart) */
+
+:root {
+  --fc-nav-radius: 14px;
+  --fc-nav-drop-bottom: calc(var(--fc-nav-bar-gutter, 12px) + env(safe-area-inset-bottom, 0px));
+  --fc-menu-drawer-link-size: clamp(1.35rem, 3.8vw, 1.75rem);
+}
+
+/* Shared nav surface — pill, menu panel, cart panel (identical texture alignment) */
+.header-wrapper,
+.header-wrapper.gradient,
+.header-wrapper.color-scheme-1,
+.header-wrapper.color-scheme-2,
+.header-wrapper.color-scheme-3,
+.header-wrapper.color-scheme-4,
+.header-wrapper.color-scheme-5,
+header-drawer #menu-drawer,
+header-drawer .menu-drawer,
+header-drawer #menu-drawer.gradient,
+cart-drawer .drawer__inner,
+cart-drawer .drawer__inner.gradient,
+cart-drawer .drawer__inner-empty {
+  background-color: var(--fc-black) !important;
+  background-image: var(--fc-nav-footer-bg) !important;
+  background-size: cover !important;
+  background-position: center top !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+header-drawer .menu-drawer__inner-container,
+header-drawer .menu-drawer__navigation-container,
+header-drawer .menu-drawer__utility-links,
+header-drawer .menu-drawer__submenu,
+header-drawer .menu-drawer__inner-submenu,
+cart-drawer .drawer__header,
+cart-drawer cart-drawer-items,
+cart-drawer .drawer__footer {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+@media screen and (max-width: 749px) {
+  .header-wrapper,
+  .header-wrapper.gradient,
+  header-drawer #menu-drawer,
+  header-drawer .menu-drawer,
+  cart-drawer .drawer__inner,
+  cart-drawer .drawer__inner-empty {
+    background-size: cover !important;
+    background-position: center top !important;
+    background-attachment: fixed !important;
+  }
+}
+
+/* Navbar below cart drawer when open */
+.shopify-section-group-header-group,
+.section-header.menu-open {
+  z-index: 10005 !important;
+}
+
+.section-header.menu-open .header-wrapper {
+  border-radius: var(--fc-nav-radius) var(--fc-nav-radius) 0 0 !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Hamburger menu — dropdown panel flush under pill ── */
+header-drawer {
+  position: relative;
+  z-index: 10002;
+}
+
+header-drawer .menu-drawer-container {
+  position: static;
+}
+
+.js header-drawer > details > summary::before,
+.js header-drawer > details[open]:not(.menu-opening) > summary::before {
+  content: '' !important;
+  position: fixed !important;
+  top: var(--fc-nav-drop-top, var(--header-bottom-position, 72px)) !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: auto !important;
+  background: rgba(0, 0, 0, 0.45) !important;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 9998 !important;
+  cursor: default;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+header-drawer > details[open].menu-opening > summary::before {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+header-drawer #menu-drawer,
+header-drawer .menu-drawer {
+  position: fixed !important;
+  top: var(--fc-nav-drop-top, var(--header-bottom-position, 72px)) !important;
+  bottom: var(--fc-nav-drop-bottom, 12px) !important;
+  left: var(--fc-pill-left, var(--fc-nav-bar-gutter, 12px)) !important;
+  right: auto !important;
+  width: var(--fc-pill-width, calc(100vw - 24px)) !important;
+  max-width: var(--fc-pill-width, calc(100vw - 24px)) !important;
+  height: calc(100dvh - var(--fc-nav-drop-top, 72px) - var(--fc-nav-drop-bottom, 12px)) !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 !important;
+  border-radius: 0 0 var(--fc-nav-radius) var(--fc-nav-radius) !important;
+  overflow: hidden !important;
+  filter: none !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45) !important;
+  z-index: 10001 !important;
+  transform: translate3d(0, 0, 0) !important;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.22s ease,
+    visibility 0.22s ease !important;
+}
+
+.js header-drawer .menu-drawer,
+.js header-drawer #menu-drawer,
+.js .menu-drawer {
+  height: calc(100dvh - var(--fc-nav-drop-top, 72px) - var(--fc-nav-drop-bottom, 12px)) !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+
+.js header-drawer details[open]:not(.menu-opening) > .menu-drawer,
+.js header-drawer details[open]:not(.menu-opening) > #menu-drawer {
+  transform: translate3d(0, 0, 0) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.js header-drawer details[open].menu-opening > .menu-drawer,
+.js header-drawer details[open].menu-opening > #menu-drawer {
+  transform: translate3d(0, 0, 0) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Closed menu drawer — collapse so it does not inflate document scroll height */
+header-drawer details:not([open]) > .menu-drawer,
+header-drawer details:not([open]) > #menu-drawer,
+header-drawer details[open]:not(.menu-opening) > .menu-drawer,
+header-drawer details[open]:not(.menu-opening) > #menu-drawer {
+  top: auto !important;
+  bottom: auto !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+header-drawer .menu-drawer__inner-container {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+header-drawer .menu-drawer__navigation-container {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+header-drawer .menu-drawer__navigation {
+  padding: 0.75rem 0 0.25rem !important;
+  flex: 0 0 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+header-drawer .menu-drawer__utility-links {
+  padding: 16px 20px !important;
+  margin-top: auto !important;
+  flex-shrink: 0;
+}
+
+header-drawer .menu-drawer__submenu {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  bottom: auto !important;
+  width: 100% !important;
+  height: auto !important;
+  transform: none !important;
+  visibility: hidden !important;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.25s ease, opacity 0.25s ease;
+}
+
+header-drawer details[open] > .menu-drawer__submenu {
+  visibility: visible !important;
+  max-height: min(320px, 40vh);
+  opacity: 1;
+}
+
+header-drawer .menu-drawer__close-button {
+  display: none !important;
+}
+
+header-drawer .menu-drawer__inner-submenu {
+  height: auto !important;
+  overflow: visible !important;
+  padding: 0 0 0.5rem 12px;
+}
+
+header-drawer .menu-drawer__menu-item,
+header-drawer .menu-drawer__menu-item.fc-menu-drawer__primary {
+  font-family: var(--fc-font) !important;
+  font-size: var(--fc-menu-drawer-link-size) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
+  line-height: 1.2 !important;
+  padding: 10px 20px !important;
+}
+
+header-drawer .menu-drawer__utility-links a,
+header-drawer .menu-drawer__account,
+header-drawer .menu-drawer .fc-footer__bottom-social .fc-footer__bottom-link {
+  font-family: var(--fc-font) !important;
+  font-size: var(--fc-menu-drawer-link-size) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
+  line-height: 1.2 !important;
+}
+
+/* ── Cart — classic right-side drawer (not pill dropdown) ── */
+cart-drawer.drawer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10020 !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: stretch !important;
+  pointer-events: none;
+  visibility: hidden;
+  background: transparent !important;
+  width: 100% !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+cart-drawer.drawer:not(.active) {
+  height: 0 !important;
+  max-height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+cart-drawer.drawer:not(.active) .cart-drawer,
+cart-drawer.drawer:not(.active) .drawer__inner,
+cart-drawer.drawer:not(.active) .cart-drawer__overlay {
+  height: 0 !important;
+  max-height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+cart-drawer .cart-drawer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: stretch;
+  pointer-events: none;
+}
+
+cart-drawer.drawer.active .cart-drawer {
+  pointer-events: auto;
+}
+
+cart-drawer .cart-drawer__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: rgba(0, 0, 0, 0.45);
+  cursor: default;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+cart-drawer.drawer.active .cart-drawer__overlay {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+cart-drawer .drawer__inner {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: auto !important;
+  width: min(400px, calc(100vw - 24px)) !important;
+  max-width: min(400px, calc(100vw - 24px)) !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+  box-shadow: -12px 0 48px rgba(0, 0, 0, 0.45) !important;
+  z-index: 1 !important;
+  pointer-events: auto;
+  display: flex !important;
+  flex-direction: column !important;
+  transform: translateX(100%) !important;
+  opacity: 1 !important;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+cart-drawer.drawer.active .drawer__inner {
+  transform: translateX(0) !important;
+  pointer-events: auto;
+}
+
+cart-drawer .drawer__inner > cart-drawer-items {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+cart-drawer .drawer__contents {
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+}
+
+cart-drawer .drawer__inner-empty {
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+}
+
+cart-drawer.is-empty .drawer__inner {
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  height: 100% !important;
+  max-height: 100dvh !important;
+  min-height: 100% !important;
+}
+
+cart-drawer.is-empty .drawer__header,
+cart-drawer.is-empty cart-drawer-items {
+  display: none !important;
+}
+
+cart-drawer.is-empty .drawer__inner-empty {
+  position: absolute !important;
+  inset: 0 !important;
+  flex: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 var(--fc-drawer-gutter, clamp(16px, 4vw, 20px)) !important;
+  overflow: hidden !important;
+}
+
+cart-drawer.is-empty .cart-drawer__warnings {
+  flex: 0 0 auto !important;
+  width: 100%;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+cart-drawer.is-empty .cart-drawer__empty-content {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: clamp(16px, 4vw, 24px);
+  text-align: center;
+  width: 100%;
+  max-width: 100%;
+}
+
+cart-drawer.is-empty .cart-drawer__empty-content .button {
+  margin-inline: auto;
+}
+
+/* Nav icon toggle — hamburger/cart ↔ close (X) */
+.fc-nav-icon-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--fc-nav-icon-hit, 44px);
+  height: var(--fc-nav-icon-hit, 44px);
+  flex-shrink: 0;
+}
+
+.fc-nav-icon-toggle .fc-nav-icon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition:
+    opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center center;
+}
+
+#cart-icon-bubble,
+header-drawer .header__icon--menu {
+  position: relative;
+  z-index: 3;
+  pointer-events: auto !important;
+}
+
+.fc-nav-icon-toggle .fc-nav-icon--open {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.fc-nav-icon-toggle .fc-nav-icon--close {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.65);
+}
+
+.fc-nav-icon-toggle .fc-nav-icon--close svg {
+  color: #fff;
+}
+
+header-drawer details[open].menu-opening .fc-nav-icon-toggle--menu .fc-nav-icon--open,
+body.fc-cart-open #cart-icon-bubble .fc-nav-icon-toggle--cart .fc-nav-icon--open {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.65);
+}
+
+header-drawer details[open].menu-opening .fc-nav-icon-toggle--menu .fc-nav-icon--close,
+body.fc-cart-open #cart-icon-bubble .fc-nav-icon-toggle--cart .fc-nav-icon--close {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+body.fc-cart-open #cart-icon-bubble .cart-count-bubble {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* Nav icon toggle animations — no close arrows in panels */
+.drawer__close-arrow,
+.fc-menu-close-arrow {
+  display: none !important;
+}
+
+.header__icon--menu .fc-header-menu-icon {
+  width: var(--fc-nav-icon-graphic) !important;
+  height: var(--fc-nav-icon-graphic) !important;
+  max-width: var(--fc-nav-icon-graphic);
+  max-height: var(--fc-nav-icon-graphic);
+  object-fit: contain;
+}
+
+.header__icon--menu .fc-nav-icon--close svg,
+#cart-icon-bubble .fc-nav-icon--close svg {
+  width: var(--fc-nav-icon-graphic) !important;
+  height: var(--fc-nav-icon-graphic) !important;
+}
+
+cart-drawer .drawer__heading,
+cart-drawer .cart__empty-text,
+cart-drawer .cart-item__name,
+cart-drawer .totals__total,
+cart-drawer .totals__total-value {
+  color: #fff !important;
+}
+
+cart-drawer .fc-cart-drawer__close {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--fc-nav-icon-hit, 44px);
+  min-height: var(--fc-nav-icon-hit, 44px);
+  padding: 0;
+  color: #fff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+cart-drawer .drawer__header .fc-cart-drawer__close {
+  position: static;
+}
+
+cart-drawer .fc-cart-drawer__close--empty {
+  position: absolute;
+  top: max(10px, env(safe-area-inset-top, 0px));
+  right: clamp(12px, 4vw, 20px);
+  z-index: 5;
+}
+
+cart-drawer .fc-cart-drawer__close svg {
+  width: var(--fc-nav-icon-graphic, 2rem) !important;
+  height: var(--fc-nav-icon-graphic, 2rem) !important;
+  color: #fff;
+}
+
+/* Mobile — full-viewport cart drawer */
+@media screen and (max-width: 749px) {
+  cart-drawer .cart-drawer {
+    justify-content: stretch;
+  }
+
+  cart-drawer .cart-drawer__overlay {
+    inset: 0;
+  }
+
+  cart-drawer .drawer__inner {
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    max-height: 100dvh !important;
+    min-height: 100dvh !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    transform: translateX(100%) !important;
+  }
+
+  cart-drawer.drawer.active .drawer__inner {
+    transform: translateX(0) !important;
+  }
+
+  cart-drawer.is-empty .drawer__inner {
+    height: 100% !important;
+    max-height: 100dvh !important;
+    min-height: 100dvh !important;
+  }
+}
+
+@media screen and (max-width: 989px) {
+  header-drawer #menu-drawer,
+  header-drawer .menu-drawer {
+    left: var(--fc-pill-left, 12px) !important;
+    width: var(--fc-pill-width, calc(100vw - 24px)) !important;
+    max-width: var(--fc-pill-width, calc(100vw - 24px)) !important;
+    top: var(--fc-nav-drop-top, var(--header-bottom-position, 72px)) !important;
+    bottom: var(--fc-nav-drop-bottom, 12px) !important;
+    height: calc(100dvh - var(--fc-nav-drop-top, 72px) - var(--fc-nav-drop-bottom, 12px)) !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  .js header-drawer .menu-drawer,
+  .js header-drawer #menu-drawer,
+  .js .menu-drawer {
+    height: calc(100dvh - var(--fc-nav-drop-top, 72px) - var(--fc-nav-drop-bottom, 12px)) !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  .js details[open].menu-opening > .menu-drawer,
+  .js header-drawer details[open].menu-opening > .menu-drawer,
+  .js header-drawer details[open].menu-opening > #menu-drawer {
+    transform: translate3d(0, 0, 0) !important;
+    visibility: visible !important;
+  }
+}

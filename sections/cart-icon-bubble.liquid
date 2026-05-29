@@ -1,8 +1,15 @@
-{% if cart == empty %}
-  <span class="svg-wrapper">{{ 'icon-cart-empty.svg' | inline_asset_content }}</span>
-{% else %}
-  <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
-{% endif %}
+<span class="fc-nav-icon-toggle fc-nav-icon-toggle--cart">
+  <span class="fc-nav-icon fc-nav-icon--open svg-wrapper">
+    {% if cart == empty %}
+      {{ 'icon-cart-empty.svg' | inline_asset_content }}
+    {% else %}
+      {{ 'icon-cart.svg' | inline_asset_content }}
+    {% endif %}
+  </span>
+  <span class="fc-nav-icon fc-nav-icon--close svg-wrapper" aria-hidden="true">
+    {{- 'icon-close.svg' | inline_asset_content -}}
+  </span>
+</span>
 
 <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
 {%- if cart != empty -%}

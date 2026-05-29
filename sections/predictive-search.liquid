@@ -130,6 +130,8 @@
               aria-labelledby="predictive-search-products"
             >
               {%- for product in predictive_search.resources.products -%}
+                {%- render 'fc-exclude-product', product: product -%}
+                {%- if fc_exclude_product -%}{%- continue -%}{%- endif -%}
                 <li
                   id="predictive-search-option-product-{{ forloop.index }}"
                   class="predictive-search__list-item"

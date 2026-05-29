@@ -1,0 +1,11 @@
+{%- comment -%}
+  Sets fc_exclude_product to true for draft/test duplicates that should not appear on the storefront.
+  Usage: {% render 'fc-exclude-product', product: product %}
+{%- endcomment -%}
+{%- liquid
+  assign fc_exclude_product = false
+  assign fc_handle = product.handle | downcase
+  if fc_handle contains 'sonara-ufm1-test'
+    assign fc_exclude_product = true
+  endif
+-%}

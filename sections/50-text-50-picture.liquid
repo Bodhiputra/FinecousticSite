@@ -4,10 +4,6 @@
 
     <!-- Text Column -->
     <div class="text-column">
-      {% if section.settings.eyebrow != blank %}
-        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
-      {% endif %}
-
       {% if section.settings.title != blank %}
         <h2 class="image-section-title">{{ section.settings.title }}</h2>
       {% endif %}
@@ -140,31 +136,25 @@
   color: black;
 }
 
-.eyebrow {
-  text-transform: uppercase;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--fc-yellow);
-  margin: 0;
-  letter-spacing: -0.01em;
-  margin-bottom: 5px;
-}
-
 .image-section-title {
-  font-size: 32px;
-  font-weight: 800;
+  font-family: var(--fc-font);
+  font-size: clamp(26px, 3.5vw, 36px);
+  font-weight: 700;
   color: #ffffff;
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
   margin-bottom: 15px;
 }
 
+.image-section-description,
 .image-section-description p {
-  font-size: 18px;
-  color: rgba(255,255,255,0.6);
+  font-family: var(--fc-font);
+  font-size: clamp(16px, 1.8vw, 18px);
+  color: rgba(255, 255, 255, 0.65);
   margin: 0;
   font-weight: 500;
-  line-height: 1.6;
+  line-height: 1.65;
   margin-bottom: 20px;
 }
 
@@ -180,8 +170,9 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 16px;
-  color: rgba(255,255,255,0.6);
+  font-family: var(--fc-font);
+  font-size: clamp(14px, 1.5vw, 16px);
+  color: rgba(255, 255, 255, 0.65);
   transition: transform 0.2s ease;
 }
 
@@ -197,23 +188,24 @@
 
 .cta-button {
   display: inline-block;
+  font-family: var(--fc-font);
   background: transparent;
-  border: 2px solid #ffffff;
+  border: none;
+  border-bottom: 2px solid var(--fc-yellow);
   color: #ffffff;
-  padding: 2.5px 25px;
-  border-radius: 24px;
-  font-weight: 600;
+  padding: 0;
+  font-weight: 700;
   text-decoration: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 5px rgba(0,0,0,0.15);
-  font-size: 16px;
+  letter-spacing: -0.02em;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  font-size: clamp(13px, 1.4vw, 15px);
   width: max-content;
 }
 
 .cta-button:hover {
-  background: var(--fc-yellow);
-  color: black;
-  transform: translateY(-2px);
+  color: var(--fc-yellow);
+  border-bottom-color: var(--fc-yellow);
+  transform: none;
 }
 
 .text-image-container:not(.reverse) .features {
@@ -315,7 +307,6 @@
 {
   "name": "Text + Image Features",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow Text (Small Heading)", "default": "New Collection" },
     { "type": "text", "id": "title", "label": "Title", "default": "Your Section Title" },
     { "type": "richtext", "id": "description", "label": "Description", "default": "<p>Write your section description here.</p>" },
     { "type": "image_picker", "id": "image", "label": "Image" },
