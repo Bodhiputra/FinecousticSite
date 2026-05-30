@@ -134,11 +134,13 @@ header-drawer .menu-drawer {
   max-height: none !important;
 }
 
+/* Open + animating in — keep panel sized (opacity fade runs in revealMenuDrawer) */
 .js header-drawer details[open]:not(.menu-opening) > .menu-drawer,
 .js header-drawer details[open]:not(.menu-opening) > #menu-drawer {
   transform: translate3d(0, 0, 0) !important;
   opacity: 0 !important;
-  visibility: hidden !important;
+  visibility: visible !important;
+  pointer-events: none !important;
 }
 
 .js header-drawer details[open].menu-opening > .menu-drawer,
@@ -150,9 +152,7 @@ header-drawer .menu-drawer {
 
 /* Closed menu drawer — collapse so it does not inflate document scroll height */
 header-drawer details:not([open]) > .menu-drawer,
-header-drawer details:not([open]) > #menu-drawer,
-header-drawer details[open]:not(.menu-opening) > .menu-drawer,
-header-drawer details[open]:not(.menu-opening) > #menu-drawer {
+header-drawer details:not([open]) > #menu-drawer {
   top: auto !important;
   bottom: auto !important;
   height: 0 !important;

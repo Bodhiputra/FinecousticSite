@@ -463,10 +463,15 @@ class MenuDrawer extends HTMLElement {
     }
 
     if (detailsElement === this.mainDetailsToggle) {
-      if (isOpen) event.preventDefault();
-      isOpen ? this.closeMenuDrawer(event, summaryElement) : this.openMenuDrawer(summaryElement);
+      event.preventDefault();
+      if (isOpen) {
+        this.closeMenuDrawer(event, summaryElement);
+      } else {
+        detailsElement.setAttribute('open', '');
+        this.openMenuDrawer(summaryElement);
+      }
 
-      if (window.matchMedia('(max-width: 990px)')) {
+      if (window.matchMedia('(max-width: 990px)').matches) {
         document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
       }
     } else {
@@ -481,10 +486,23 @@ class MenuDrawer extends HTMLElement {
     }
   }
 
+  revealMenuDrawer() {
+    const details = this.mainDetailsToggle;
+    details.classList.remove('menu-opening');
+    void details.offsetHeight;
+    const apply = () => details.classList.add('menu-opening');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      apply();
+    } else {
+      requestAnimationFrame(apply);
+    }
+  }
+
   openMenuDrawer(summaryElement) {
-    setTimeout(() => {
-      this.mainDetailsToggle.classList.add('menu-opening');
-    });
+    if (!this.mainDetailsToggle.hasAttribute('open')) {
+      this.mainDetailsToggle.setAttribute('open', '');
+    }
+    this.revealMenuDrawer();
     summaryElement.setAttribute('aria-expanded', true);
     trapFocus(this.mainDetailsToggle, summaryElement);
     document.body.classList.add(`overflow-hidden-${this.dataset.breakpoint}`);
@@ -634,9 +652,10 @@ class HeaderDrawer extends MenuDrawer {
     }
     this.header.classList.add('menu-open');
 
-    setTimeout(() => {
-      this.mainDetailsToggle.classList.add('menu-opening');
-    });
+    if (!this.mainDetailsToggle.hasAttribute('open')) {
+      this.mainDetailsToggle.setAttribute('open', '');
+    }
+    this.revealMenuDrawer();
 
     summaryElement.setAttribute('aria-expanded', true);
     window.addEventListener('resize', this.onResize);
