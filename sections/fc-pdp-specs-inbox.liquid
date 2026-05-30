@@ -76,11 +76,55 @@
       </details>
     {%- endif -%}
 
-    {%- if section.blocks.size > 0 -%}
+    {%- liquid
+      assign fc_inbox_asset = section.settings.inbox_asset
+      if fc_inbox_asset == blank
+        case product.handle
+          when 'groove-ows-ft21'
+            assign fc_inbox_asset = 'GROOVE_OWS_FT21_What_In_The_Box.webp'
+          when 'resono-wfm1'
+            assign fc_inbox_asset = 'Resono_WFM1_What_In_The_Box.webp'
+          when 'sonara-ufm1'
+            assign fc_inbox_asset = 'Sonara_UFM1_What_In_The_Box.webp'
+        endcase
+      endif
+    -%}
+
+    {%- if section.blocks.size > 0 or section.settings.inbox_image != blank or fc_inbox_asset != blank -%}
+      {%- assign fc_inbox_alt = section.settings.inbox_title -%}
+      {%- if fc_inbox_alt == blank -%}
+        {%- assign fc_inbox_alt = 'In The Box' -%}
+      {%- endif -%}
       <details class="fc-pdp-acc fc-pdp-acc--inbox">
-        <summary class="fc-pdp-acc__summary">{{ section.settings.inbox_title | default: 'In The Box' | escape }}</summary>
+        <summary class="fc-pdp-acc__summary">{{ fc_inbox_alt | escape }}</summary>
         <div class="fc-pdp-acc__body">
           <div class="fc-pdp-specs-inbox__inbox">
+            {%- if section.settings.inbox_image != blank -%}
+              <div class="fc-pdp-specs-inbox__inbox-hero">
+                {{
+                  section.settings.inbox_image
+                  | image_url: width: 1600
+                  | image_tag:
+                    loading: 'lazy',
+                    sizes: '(max-width: 989px) 92vw, 640px',
+                    widths: '600, 900, 1200, 1600',
+                    alt: fc_inbox_alt,
+                    class: 'fc-pdp-specs-inbox__inbox-photo'
+                }}
+              </div>
+            {%- elsif fc_inbox_asset != blank -%}
+              <div class="fc-pdp-specs-inbox__inbox-hero">
+                <img
+                  src="{{ fc_inbox_asset | asset_url }}"
+                  alt="{{ fc_inbox_alt | escape }}"
+                  loading="lazy"
+                  class="fc-pdp-specs-inbox__inbox-photo"
+                  width="1600"
+                  height="900"
+                >
+              </div>
+            {%- endif -%}
+            {%- if section.blocks.size > 0 -%}
             <div class="fc-pdp-specs-inbox__icons">
               {%- for block in section.blocks -%}
                 <div class="fc-pdp-specs-inbox__icon" {{ block.shopify_attributes }}>
@@ -94,13 +138,14 @@
                         height="120"
                       >
                     {%- elsif block.settings.icon_image -%}
+                      {%- assign fc_icon_alt = block.settings.icon_text | escape -%}
                       {{
                         block.settings.icon_image
                         | image_url: width: 240
                         | image_tag:
                           loading: 'lazy',
                           widths: '120, 180, 240',
-                          alt: block.settings.icon_text | escape
+                          alt: fc_icon_alt
                       }}
                     {%- endif -%}
                   </div>
@@ -110,6 +155,7 @@
                 </div>
               {%- endfor -%}
             </div>
+            {%- endif -%}
           </div>
         </div>
       </details>
@@ -194,6 +240,20 @@
 .fc-pdp-specs-inbox__table td {
   font-weight: 500;
   color: rgba(255, 255, 255, 0.85);
+}
+
+.fc-pdp-specs-inbox__inbox-hero {
+  width: 100%;
+  margin-bottom: clamp(12px, 3vw, 20px);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.fc-pdp-specs-inbox__inbox-photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
 }
 
 .fc-pdp-specs-inbox__icons {
@@ -312,6 +372,18 @@
       "id": "inbox_title",
       "label": "In the box heading",
       "default": "In The Box"
+    },
+    {
+      "type": "image_picker",
+      "id": "inbox_image",
+      "label": "In the box image",
+      "info": "Full-width image shown when the In The Box accordion is open. Use instead of icon items for layout-style box shots."
+    },
+    {
+      "type": "text",
+      "id": "inbox_asset",
+      "label": "In the box asset filename",
+      "info": "Theme assets/ file (e.g. GROOVE_OWS_FT21_What_In_The_Box.webp). Used when no inbox image is set above."
     }
   ],
   "blocks": [

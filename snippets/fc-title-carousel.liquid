@@ -39,7 +39,6 @@
         {%- assign stripped = label | strip -%}
         <span class="fc-title-item{% if stripped.size > wrap_at %} fc-title-item--wrap{% endif %}{% if forloop.index0 == active %} fc-title-active{% endif %}">{% render 'fc-title-label', text: stripped %}</span>
       {%- endfor -%}
-      <span class="fc-title-item{% if last_label.size > wrap_at %} fc-title-item--wrap{% endif %}">{% render 'fc-title-label', text: last_label %}</span>
       <span class="fc-title-item{% if first_label.size > wrap_at %} fc-title-item--wrap{% endif %}">{% render 'fc-title-label', text: first_label %}</span>
     </div>
   </div>

@@ -1,211 +1,37 @@
 {
   "sections": {
-    "square_image_text_7dJPdw": {
-      "type": "square-image-text",
-      "custom_css": [
-        ".image-text-split .square-wrapper {border-radius: 0;}",
-        ".image-text-split {padding: 70px 0 100px;}",
-        "@media (max-width: 768px) {.image-text-split {padding: 50px 0 40px; }}"
-      ],
-      "name": "Image + Text Square",
+    "fc_pdp_unified": {
+      "type": "fc-pdp-unified",
       "settings": {
-        "image": "shopify://shop_images/Sonara_UFM1_All_Round_Recording_Modes.jpg",
-        "title": "All-Round Recording Modes",
-        "description": "Easily switch between Cardioid, Omnidirectional, and Bidirectional modes for clear vocals, group calls, or interviews with optimal focus.",
-        "swap_position": false
+        "description": "Switch effortlessly between Cardioid, Omnidirectional, and Bidirectional modes for vocals, interviews, or group calls. Portable and versatile, it's built for mobile streaming, video calls, or studio recording. Built-in monitor and gain controls let you shape audio in real time, while the integrated shock mount reduces vibrations. Comes with a detachable full-metal pop filter and instant touch controls for ENC and mute, ensuring clear, professional sound anytime."
       }
     },
-    "full_width_image_only_aCCMta": {
-      "type": "full-width-image-only",
-      "custom_css": [
-        ".fullwidth-16-9-banner .banner-wrapper {aspect-ratio: auto; padding: 0; max-width: 100vw;}",
-        ".fullwidth-16-9-banner .banner-wrapper img.banner-image {border-radius: 0;}",
-        ".fullwidth-16-9-banner {background-color: black; padding-bottom: 0;}",
-        ".fullwidth-16-9-banner .banner-description,.fullwidth-16-9-banner .banner-heading {color: white;}",
-        ".fullwidth-16-9-banner .banner-description {margin-bottom: 60px;}"
-      ],
-      "name": "Full Width 16:9 Banner",
-      "settings": {
-        "banner_heading": "Made to Fit Every Moment",
-        "banner_description": "Whether it\u2019s mobile streaming, Video calls, or studio recording, this . microphone keeps up with your lifestyle. Versatile, portable and ready for any device",
-        "banner_image": "shopify://shop_images/Sonara_UFM1_Fit_Every_Moment.jpg"
-      }
-    },
-    "square_image_text_qm63r9": {
-      "type": "square-image-text",
-      "custom_css": [
-        ".image-text-split .square-wrapper {border-radius: 0;}",
-        ".image-text-split {padding: 70px 0;}",
-        "@media (max-width: 768px) {.image-text-split {padding: 50px 0 40px; }}"
-      ],
-      "name": "Image + Text Square",
-      "settings": {
-        "image": "shopify://shop_images/Sonara_UFM1_Total_Sound_Mastery.jpg",
-        "title": "Total Sound Mastery",
-        "description": "Built-in monitor and gain controls let you shape your audio in real time \u2014 ensuring every stream, call, or recording sounds exactly the way you want.",
-        "swap_position": true
-      }
-    },
-    "square_image_text_HrTMng": {
-      "type": "square-image-text",
-      "custom_css": [
-        ".image-text-split .square-wrapper {border-radius: 0;}",
-        ".image-text-split {padding: 0;}"
-      ],
-      "name": "Image + Text Square",
-      "settings": {
-        "image": "shopify://shop_images/Sonara_UFM1_Shock_Mount.jpg",
-        "title": "Stable Audio Recording",
-        "description": "Integrated shock Mount reduces Noise from accidental table bumps or vibrations, keeping audio clear even in dynamic environments",
-        "swap_position": false
-      }
-    },
-    "square_image_text_JY94Ck": {
-      "type": "square-image-text",
-      "custom_css": [
-        ".image-text-split .square-wrapper {border-radius: 0;}",
-        ".image-text-split {padding: 100px 0;}",
-        "@media (max-width: 768px) {.image-text-split {padding: 40px 0 30px; }}"
-      ],
-      "name": "Image + Text Square",
-      "settings": {
-        "image": "shopify://shop_images/Sonara_UFM1_Detachable_Pop_Filter.jpg",
-        "title": "Detachable Full Metal Pop Filter",
-        "description": "Comes with a robust, full-metal pop filter that blocks plosive sounds while adding a professional aesthetic.",
-        "swap_position": true
-      }
-    },
-    "square_image_text_3wxMd6": {
-      "type": "square-image-text",
-      "custom_css": [
-        ".image-text-split .square-wrapper {border-radius: 0;}",
-        ".image-text-split {padding: 0;}"
-      ],
-      "name": "Image + Text Square",
-      "settings": {
-        "image": "shopify://shop_images/Sonara_UFM1_ENC_And_Mute.jpg",
-        "title": "Instant Mute / ENC Control",
-        "description": "With just a single touch, users can enable Environmental Noise Cancellation (ENC) or instantly mute the mic, offering fast response in live streaming or video calls.",
-        "swap_position": false
-      }
-    },
-    "switching_specification_table_xq7QEc": {
-      "type": "switching-specification-table",
-      "custom_css": [
-        ".dual-spec-wrapper {padding: 100px 0;}",
-        "@media (max-width: 768px) {.dual-spec-wrapper {padding: 30px 0 65px; }}"
-      ],
-      "name": "Dual Specification Table",
+    "fc_pdp_specs_inbox": {
+      "type": "fc-pdp-specs-inbox",
       "settings": {
         "table_title": "Specifications",
         "table1_button_label": "Core Microphone Specs",
         "table2_button_label": "Features & Connectivity",
-        "specs_table_1": "Model Number | UFM1\nMicrophone Type | Condenser\nLighting Effects | RGB 12 Modes\nCapsule Size | 14 mm\nPolar Pattern | Cardioid, Bidirectional, Omnidirectional\nFrequency Response | 20 Hz - 20 KHz\nSensitivity | -38 \u00b1 3 dB\nS/N Ratio | 75 dB\nMaximum SPL | 112 dB",
-        "specs_table_2": "Sampling Rate | 48 kHz\nBit Depth | 24-bit\nInterface | USB-C, 3.5mm TRS\nCable Length | 1.8m PVC\nPower Rating | 5V \u2393 1A\nCompatibility | PC, Laptop, Tablet, and Smartphone with USB-C or USB-A Port\nConnectivity | 2.4GHz, Wired"
+        "specs_table_1": "Model Number | UFM1\nMicrophone Type | Condenser\nLighting Effects | RGB 12 Modes\nCapsule Size | 14 mm\nPolar Pattern | Cardioid, Bidirectional, Omnidirectional\nFrequency Response | 20 Hz - 20 KHz\nSensitivity | -38 ± 3 dB\nS/N Ratio | 75 dB\nMaximum SPL | 112 dB",
+        "specs_table_2": "Sampling Rate | 48 kHz\nBit Depth | 24-bit\nInterface | USB-C, 3.5mm TRS\nCable Length | 1.8m PVC\nPower Rating | 5V ⎓ 1A\nCompatibility | PC, Laptop, Tablet, and Smartphone with USB-C or USB-A Port\nConnectivity | 2.4GHz, Wired",
+        "inbox_title": "In The Box",
+        "inbox_asset": "Sonara_UFM1_What_In_The_Box.webp"
       }
     },
-    "video_3CpC4R": {
-      "type": "video",
-      "custom_css": [
-        ".page-width {padding: 0 5rem 100px;}",
-        "@media (max-width: 768px) {.video-section {padding: 0px 3.5rem 60px !important; }}"
-      ],
-      "name": "t:sections.video.presets.name",
+    "fc_pdp_video": {
+      "type": "fc-pdp-video-hero",
       "settings": {
         "heading": "",
-        "heading_size": "h1",
-        "enable_video_looping": false,
+        "enable_video_looping": true,
         "video": "shopify://files/videos/ProductVideo_Sonara_UFM1.mp4",
         "video_url": "",
-        "description": "",
-        "full_width": false,
-        "color_scheme": "scheme-2",
-        "padding_top": 40,
-        "padding_bottom": 40
-      }
-    },
-    "flexible_image_banner_ApJFR7": {
-      "type": "flexible-image-banner",
-      "custom_css": [
-        ".custom-max-height {max-height: none; aspect-ratio: 2/1;}"
-      ],
-      "name": "Flexible Text Banner",
-      "settings": {
-        "background_image": "shopify://shop_images/Sonara_UFM1_What_In_The_Box.jpg",
-        "subheading": "",
-        "heading": "",
-        "text_color": "#ffffff",
-        "text_align": "center",
-        "text_position": "center",
-        "text_align_mobile": "center",
-        "text_position_mobile": "center",
-        "subheading_font_size_desktop": 24,
-        "subheading_font_size_mobile": 20,
-        "subheading_margin_desktop": "0 0 10px 0",
-        "subheading_margin_mobile": "0 0 8px 0",
-        "heading_font_size_desktop": 32,
-        "heading_font_size_mobile": 28,
-        "heading_margin_desktop": "0",
-        "heading_margin_mobile": "0",
-        "button_label": "Shop Now",
-        "button_link": "",
-        "button_bg": "#000000",
-        "button_text_color": "#ffffff",
-        "button_border_color": "#000000",
-        "button_border_width": 2,
-        "button_border_radius": 4,
-        "button_padding_x_mobile": 28,
-        "button_padding_y_mobile": 12,
-        "button_font_size_mobile": 16,
-        "button_width_mobile": "auto",
-        "button_height_mobile": "auto",
-        "button_padding_x_desktop": 32,
-        "button_padding_y_desktop": 14,
-        "button_font_size_desktop": 18,
-        "button_width_desktop": "auto",
-        "button_height_desktop": "auto"
-      }
-    },
-    "related-products": {
-      "type": "related-products",
-      "disabled": true,
-      "settings": {
-        "heading": "You may also like",
-        "heading_size": "h2",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "columns_mobile": "2",
-        "color_scheme": "scheme-2",
-        "image_ratio": "square",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "padding_top": 36,
-        "padding_bottom": 28
-      }
-    },
-    "fc_pdp_split": {
-      "type": "fc-pdp-split",
-      "settings": {
-        "spec_1": "Studio-grade USB mic",
-        "spec_2": "Plug and play",
-        "spec_3": "Built for creators",
-        "show_shop_grid_link": false
+        "description": "Sonara UFM1 product video"
       }
     }
   },
   "order": [
-    "fc_pdp_split",
-    "square_image_text_7dJPdw",
-    "full_width_image_only_aCCMta",
-    "square_image_text_qm63r9",
-    "square_image_text_HrTMng",
-    "square_image_text_JY94Ck",
-    "square_image_text_3wxMd6",
-    "switching_specification_table_xq7QEc",
-    "video_3CpC4R",
-    "flexible_image_banner_ApJFR7",
-    "related-products"
+    "fc_pdp_unified",
+    "fc_pdp_specs_inbox",
+    "fc_pdp_video"
   ]
 }

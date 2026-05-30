@@ -1567,14 +1567,12 @@ body.nav-hidden .section-header {
 .fc-title-viewport {
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
   mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
-  cursor: grab;
 }
 .fc-sl-title-viewport {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.fc-title-viewport:active { cursor: grabbing; }
 .fc-title-track { display: flex; align-items: center; }
 .fc-title-item {
   flex-shrink: 0;
@@ -1608,7 +1606,7 @@ body.nav-hidden .section-header {
   overflow-x: clip;
   overflow-y: visible;
   /* Reserve two lines so body gap does not jump between tabs */
-  min-height: calc(2 * 1.15 * clamp(16px, 4.2vw, 48px));
+  min-height: calc(2 * 1.15 * clamp(14px, 3.5vw, 36px));
   align-items: center;
 }
 .fc-title-carousel--has-wrap .fc-title-viewport {
@@ -1624,11 +1622,14 @@ body.nav-hidden .section-header {
   white-space: normal;
   flex-shrink: 0;
   flex-grow: 0;
+  font-size: clamp(14px, 3.5vw, 36px);
   /* min-width: 0 lets max-width constrain wrapped text; never flex-shrink or items stack on one spot */
   min-width: 0;
   max-width: min(10.5em, 52vw);
   line-height: 1.15;
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .fc-title-carousel + .fc-ig-dots {
@@ -1703,13 +1704,14 @@ body.nav-hidden .section-header {
   }
 
   .fc-title-carousel--has-wrap.fc-collection-header {
-    min-height: calc(2 * 1.15 * clamp(22px, 6.8vw, 38px));
+    min-height: calc(2 * 1.15 * clamp(16px, 5vw, 28px));
   }
 
   .fc-title-item.fc-title-item--wrap {
     flex-shrink: 0;
     min-width: 0;
     max-width: min(7.5em, 42vw);
+    font-size: clamp(16px, 5vw, 28px);
   }
 }
 
@@ -1805,14 +1807,6 @@ body.nav-hidden .section-header {
   width: 6px;
   height: 6px;
   background: #ffd300;
-}
-
-.fc-title-viewport.is-dragging {
-  cursor: grabbing;
-}
-
-.fc-title-viewport.is-dragging .fc-title-item {
-  transition: none;
 }
 
 @media (hover: none) and (pointer: coarse) {

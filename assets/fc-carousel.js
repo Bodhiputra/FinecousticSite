@@ -323,44 +323,39 @@
 
   /* ── Title / category carousel (infinite, centered active item) ── */
   window.FcCarousel = function (cfg) {
-    var N          = cfg.N;
-    var onSlide    = cfg.onSlide || function () {};
+    var N = cfg.N;
+    var onSlide = cfg.onSlide || function () {};
     var getInitIdx = cfg.getInitialIdx || function () { return 0; };
     var swipeThreshold = cfg.swipeThreshold || 40;
-    var showDots = cfg.dots === true;
 
-    var track, viewport, prevBtn, nextBtn, dotsWrap, dotNodes;
-    var domIdx  = 1;
-    var logIdx  = 0;
+    var track, viewport, prevBtn, nextBtn;
+    var domIdx = 1;
+    var logIdx = 0;
     var sliding = false;
-    var dragBaseTx = 0;
 
     function getItems() {
       return Array.from(track.querySelectorAll('.fc-title-item'));
     }
 
     function offsetForDom(i) {
-      var items    = getItems();
-      var item     = items[i];
+      var items = getItems();
+      var item = items[i];
       if (!item || !viewport) return 0;
-      var vpRect   = viewport.getBoundingClientRect();
+      var vpRect = viewport.getBoundingClientRect();
       var itemRect = item.getBoundingClientRect();
-      var tx       = getTx(track);
+      var tx = getTx(track);
       return tx + (vpRect.left + vpRect.width / 2) - (itemRect.left + itemRect.width / 2);
     }
 
     function snapToDom(i, animate) {
-      track.style.transition = animate === false ? 'none' : 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1)';
-      track.style.transform  = 'translate3d(' + offsetForDom(i) + 'px, 0, 0)';
-    }
-
-    function updateDots() {
-      setActiveDot(dotNodes, logIdx);
+      track.style.transition = animate === false ? 'none' : 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
+      track.style.transform = 'translate3d(' + offsetForDom(i) + 'px, 0, 0)';
+      if (animate === false) track.getBoundingClientRect();
     }
 
     function slideToDom(i, onEnd) {
-      track.style.transition = 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1)';
-      track.style.transform  = 'translate3d(' + offsetForDom(i) + 'px, 0, 0)';
+      track.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
+      track.style.transform = 'translate3d(' + offsetForDom(i) + 'px, 0, 0)';
       track.addEventListener('transitionend', function h() {
         track.removeEventListener('transitionend', h);
         if (onEnd) onEnd();
@@ -374,24 +369,6 @@
       return i - 1;
     }
 
-    function nearestDomIdx() {
-      var items = getItems();
-      if (!viewport || !items.length) return domIdx;
-      var vpRect = viewport.getBoundingClientRect();
-      var vpCenter = vpRect.left + vpRect.width / 2;
-      var bestIdx = domIdx;
-      var bestDist = Infinity;
-      items.forEach(function (item, i) {
-        var rect = item.getBoundingClientRect();
-        var dist = Math.abs(rect.left + rect.width / 2 - vpCenter);
-        if (dist < bestDist) {
-          bestDist = dist;
-          bestIdx = i;
-        }
-      });
-      return bestIdx;
-    }
-
     function setActiveVisual(i) {
       getItems().forEach(function (el, idx) {
         el.classList.toggle('fc-title-active', idx === i);
@@ -402,15 +379,12 @@
       var newLogIdx = domIdxToLogIdx(i);
       if (newLogIdx !== logIdx) {
         logIdx = newLogIdx;
-        updateDots();
         onSlide(logIdx);
       }
     }
 
-    /* Loop wrap (e.g. Terms → Privacy): skip animating into clone slides — viewport would stay on the old title for the whole slide. */
-    function jumpToDomIdx(targetDom) {
+    function snapAfterLoopSlide(targetDom) {
       domIdx = targetDom === 0 ? N : 1;
-      commitLogIdx(domIdx);
       track.style.opacity = '0';
       getItems().forEach(function (el) { el.style.transition = 'none'; });
       snapToDom(domIdx, false);
@@ -431,7 +405,11 @@
       }
       if (targetDom === 0 || targetDom === N + 1) {
         sliding = true;
-        jumpToDomIdx(targetDom);
+        commitLogIdx(targetDom);
+        setActiveVisual(targetDom);
+        slideToDom(targetDom, function () {
+          snapAfterLoopSlide(targetDom);
+        });
         return;
       }
       sliding = true;
@@ -439,20 +417,7 @@
       setActiveVisual(targetDom);
       slideToDom(targetDom, function () {
         domIdx = targetDom;
-        sliding = false;
       });
-    }
-
-    function snapAfterDrag(dx, velocity, isHorizontal) {
-      if (!isHorizontal || sliding) {
-        snapToDom(domIdx, true);
-        return;
-      }
-      if (Math.abs(dx) < swipeThreshold && Math.abs(velocity || 0) < 0.35) {
-        snapToDom(domIdx, true);
-        return;
-      }
-      goToDomIdx(nearestDomIdx());
     }
 
     function slideByDir(dir) {
@@ -470,45 +435,41 @@
       return resolveEl(cfg.root) || document;
     }
 
-    function handleSwipe(dx, dy, velocity, isHorizontal) {
-      snapAfterDrag(dx, velocity, isHorizontal);
-    }
-
-    function bindSwipeGesture(el, opts) {
+    function bindSimpleSwipe(el, opts) {
       if (!el || el.dataset.fcSwipeBound === '1') return;
       el.dataset.fcSwipeBound = '1';
       opts = opts || {};
-      var pointerActive = false;
-      var syncTrack = opts.syncTrack !== false;
 
-      bindPointerDrag(el, {
-        mouse: opts.mouse,
-        onStart: function () {
-          if (sliding) return;
-          pointerActive = true;
-          dragBaseTx = getTx(track);
-          if (viewport) viewport.classList.add('is-dragging');
-        },
-        onDrag: function (dx, dy) {
-          if (!pointerActive) return;
-          if (opts.onDrag) opts.onDrag(dx, dy);
-          if (syncTrack && track && viewport && viewport.classList.contains('is-dragging') && !sliding) {
-            track.style.transition = 'none';
-            track.style.transform = 'translate3d(' + (dragBaseTx + dx) + 'px, 0, 0)';
-          }
-        },
-        onEnd: function (dx, dy, velocity, isHorizontal) {
-          pointerActive = false;
-          if (viewport) viewport.classList.remove('is-dragging');
-          if (opts.onDrag) opts.onDrag(0, 0);
-          handleSwipe(dx, dy, velocity, isHorizontal);
-        },
-        onCancel: function () {
-          pointerActive = false;
-          if (viewport) viewport.classList.remove('is-dragging');
-          snapToDom(domIdx, true);
-        }
+      var touchX = 0;
+      el.addEventListener('touchstart', function (e) {
+        if (e.touches.length !== 1) return;
+        touchX = e.touches[0].clientX;
+      }, { passive: true });
+      el.addEventListener('touchend', function (e) {
+        var dx = e.changedTouches[0].clientX - touchX;
+        if (opts.markDrag && Math.abs(dx) > 5) opts.markDrag();
+        if (Math.abs(dx) >= swipeThreshold) slideByDir(dx < 0 ? 1 : -1);
+      }, { passive: true });
+
+      var mouseStartX = 0;
+      var mouseDragging = false;
+
+      el.addEventListener('mousedown', function (e) {
+        if (e.button !== 0) return;
+        mouseStartX = e.clientX;
+        mouseDragging = true;
       });
+      el.addEventListener('mousemove', function (e) {
+        if (mouseDragging && opts.markDrag && Math.abs(e.clientX - mouseStartX) > 5) opts.markDrag();
+      });
+      var endMouse = function (e) {
+        if (!mouseDragging) return;
+        mouseDragging = false;
+        var dx = e.clientX - mouseStartX;
+        if (Math.abs(dx) >= swipeThreshold) slideByDir(dx < 0 ? 1 : -1);
+      };
+      el.addEventListener('mouseup', endMouse);
+      el.addEventListener('mouseleave', endMouse);
     }
 
     function getExtraSwipeElements() {
@@ -520,51 +481,30 @@
         .filter(Boolean);
     }
 
-    function removeTitleDots(root) {
-      if (!root) return;
-      var next = root.nextElementSibling;
-      if (next && next.classList.contains('fc-ig-dots--title')) next.remove();
-      dotsWrap = null;
-      dotNodes = null;
-    }
-
-    function ensureDots(root) {
-      if (!showDots || N <= 1) return;
-      dotsWrap = root.querySelector('.fc-ig-dots');
-      if (!dotsWrap) {
-        dotsWrap = document.createElement('div');
-        dotsWrap.className = 'fc-ig-dots fc-ig-dots--title';
-        root.insertAdjacentElement('afterend', dotsWrap);
-      }
-      dotNodes = buildDots(dotsWrap, N, logIdx, goToLogIdx);
-    }
-
     function init() {
-      var root   = getRoot();
-      track    = document.getElementById(cfg.trackId);
+      var root = getRoot();
+      track = document.getElementById(cfg.trackId);
       viewport = document.getElementById(cfg.viewportId);
       if (!root || !track) return;
 
-      if (!showDots) removeTitleDots(root);
       if (track.dataset.fcCarouselBound === '1') return;
 
-      prevBtn  = cfg.prevSelector ? root.querySelector(cfg.prevSelector) : null;
-      nextBtn  = cfg.nextSelector ? root.querySelector(cfg.nextSelector) : null;
+      prevBtn = cfg.prevSelector ? root.querySelector(cfg.prevSelector) : null;
+      nextBtn = cfg.nextSelector ? root.querySelector(cfg.nextSelector) : null;
       track.dataset.fcCarouselBound = '1';
 
-      logIdx  = 0;
-      domIdx  = 1;
+      logIdx = 0;
+      domIdx = 1;
       sliding = false;
 
       getItems().forEach(function (el, i) { el.classList.toggle('fc-title-active', i === 1); });
-      if (showDots) ensureDots(root);
 
       if (prevBtn) prevBtn.addEventListener('click', function () { slideByDir(-1); });
       if (nextBtn) nextBtn.addEventListener('click', function () { slideByDir(+1); });
 
-      var dragged = false;
+      var trackDragged = false;
       track.addEventListener('click', function (e) {
-        if (dragged) { dragged = false; return; }
+        if (trackDragged) { trackDragged = false; return; }
         var item = e.target.closest('.fc-title-item');
         if (!item) return;
         var idx = getItems().indexOf(item);
@@ -573,14 +513,9 @@
       });
 
       if (viewport) {
-        bindSwipeGesture(viewport, {
-          mouse: true,
-          onDrag: function (dx) {
-            if (Math.abs(dx) > 5) dragged = true;
-          }
-        });
+        bindSimpleSwipe(viewport, { markDrag: function () { trackDragged = true; } });
       }
-      getExtraSwipeElements().forEach(function (el) { bindSwipeGesture(el); });
+      getExtraSwipeElements().forEach(function (el) { bindSimpleSwipe(el); });
 
       var resizing = false;
       window.addEventListener('resize', function () {
@@ -599,7 +534,6 @@
           logIdx = initIdx;
           domIdx = logIdx + 1;
           getItems().forEach(function (el, i) { el.classList.toggle('fc-title-active', i === domIdx); });
-          updateDots();
           snapToDom(domIdx, false);
         } else {
           snapToDom(domIdx, false);
@@ -643,15 +577,15 @@
       var track = document.getElementById(id + '-track');
       var viewport = document.getElementById(id + '-viewport');
       if (track) delete track.dataset.fcCarouselBound;
-      if (viewport) delete viewport.dataset.fcIgDragBound;
+      if (viewport) delete viewport.dataset.fcSwipeBound;
       if (cfg.extraSwipeId) {
         var zone = document.getElementById(cfg.extraSwipeId);
-        if (zone) delete zone.dataset.fcIgDragBound;
+        if (zone) delete zone.dataset.fcSwipeBound;
       }
       if (cfg.extraSwipeIds) {
         cfg.extraSwipeIds.forEach(function (zoneId) {
           var z = document.getElementById(zoneId);
-          if (z) delete z.dataset.fcIgDragBound;
+          if (z) delete z.dataset.fcSwipeBound;
         });
       }
     }

@@ -33,7 +33,7 @@
       "price": "{{ variant.price | money }}",
       "priceRaw": {{ variant.price }},
       "color": {% if has_color %}{{ variant.options[color_option_pos] | json }}{% else %}null{% endif %},
-      "image": {% if variant.image %}"{{ variant.image | image_url: width: 900 }}"{% else %}null{% endif %}
+      "image": {% if variant.featured_media %}"{{ variant.featured_media.preview_image | image_url: width: 900 }}"{% elsif variant.image %}"{{ variant.image | image_url: width: 900 }}"{% else %}null{% endif %}
     }{%- unless forloop.last -%},{%- endunless -%}
     {%- endfor -%}
   ]

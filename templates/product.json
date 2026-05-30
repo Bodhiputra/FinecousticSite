@@ -1,44 +1,33 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "related-products": {
-      "type": "related-products",
+    "fc_pdp_unified": {
+      "type": "fc-pdp-unified",
+      "settings": {}
+    },
+    "fc_pdp_specs_inbox": {
+      "type": "fc-pdp-specs-inbox",
       "settings": {
-        "heading": "You may also like",
-        "heading_size": "h2",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "columns_mobile": "2",
-        "color_scheme": "scheme-1",
-        "image_ratio": "square",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "padding_top": 36,
-        "padding_bottom": 28
+        "table_title": "Specifications",
+        "table1_button_label": "Details",
+        "table2_button_label": "",
+        "specs_table_1": "",
+        "specs_table_2": "",
+        "inbox_title": "In The Box"
       }
     },
-    "fc_pdp_split": {
-      "type": "fc-pdp-split",
+    "fc_pdp_video": {
+      "type": "fc-pdp-video-hero",
       "settings": {
-        "spec_1": "",
-        "spec_2": "",
-        "spec_3": "",
-        "show_shop_grid_link": false
+        "heading": "",
+        "enable_video_looping": true,
+        "video_url": "",
+        "description": ""
       }
     }
   },
   "order": [
-    "fc_pdp_split",
-    "related-products"
+    "fc_pdp_unified",
+    "fc_pdp_specs_inbox",
+    "fc_pdp_video"
   ]
 }

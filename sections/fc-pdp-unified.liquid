@@ -15,6 +15,44 @@
     assign variant = product.variants.first
     assign fc_mock_available = true
   endif
+
+  assign has_color = false
+  assign color_option_pos = 0
+  for option in product.options
+    assign option_down = option | downcase
+    if option_down == 'color' or option_down == 'colour'
+      assign has_color = true
+      assign color_option_pos = forloop.index0
+    endif
+  endfor
+
+  assign fc_variant_gallery = false
+  if section.settings.variant_image_gallery
+    assign fc_variant_gallery = true
+  endif
+  if product.handle == 'groove-ows-ft21'
+    assign fc_variant_gallery = true
+  endif
+  if fc_variant_gallery == false and has_color
+    assign fc_variant_image_count = 0
+    for v in product.variants
+      if v.featured_media or v.image
+        assign fc_variant_image_count = fc_variant_image_count | plus: 1
+      endif
+    endfor
+    if fc_variant_image_count > 1
+      assign fc_variant_gallery = true
+    elsif fc_variant_image_count > 0 and media_count <= 1
+      assign fc_variant_gallery = true
+    endif
+  endif
+
+  assign hero_image = product.featured_image
+  if variant.featured_media
+    assign hero_image = variant.featured_media.preview_image
+  elsif variant.image
+    assign hero_image = variant.image
+  endif
 -%}
 
 {%- render 'fc-product-data', product: product, mock_available: fc_mock_available -%}
@@ -23,9 +61,21 @@
   <div class="fc-pdp-u__inner page-width">
     <div class="fc-pdp-u__hero">
       <div class="fc-pdp-u__visual">
-        <div class="fc-pdp-u__gallery" data-fc-pdp-gallery>
+        <div class="fc-pdp-u__gallery{% if fc_variant_gallery %} fc-pdp-u__gallery--variant{% endif %}" data-fc-pdp-gallery{% if fc_variant_gallery %} data-fc-variant-gallery{% endif %}>
           <div class="fc-pdp-u__slides">
-            {%- if media_count > 0 -%}
+            {%- if fc_variant_gallery -%}
+              <div class="fc-pdp-u__slide is-active" data-fc-variant-slide>
+                {%- if hero_image -%}
+                  {{ hero_image | image_url: width: 1200 | image_tag:
+                    class: 'fc-pdp-u__slide-media',
+                    loading: 'eager',
+                    sizes: '(min-width: 990px) 640px, 92vw',
+                    widths: '600, 800, 1000, 1200',
+                    alt: variant.title | default: product.title | escape
+                  }}
+                {%- endif -%}
+              </div>
+            {%- elsif media_count > 0 -%}
               {%- for media in product.media -%}
                 <div class="fc-pdp-u__slide{% if forloop.first %} is-active{% endif %}" data-slide-index="{{ forloop.index0 }}">
                   {%- if media.media_type == 'video' -%}
@@ -74,13 +124,22 @@
             <span class="fc-pdp-u__variants-label">{{ product.options[0] | default: 'Option' | downcase | capitalize }}</span>
             <div class="fc-pdp-u__variant-list">
               {%- for v in product.variants -%}
+                {%- liquid
+                  assign v_hero = null
+                  if v.featured_media
+                    assign v_hero = v.featured_media.preview_image
+                  elsif v.image
+                    assign v_hero = v.image
+                  endif
+                -%}
                 <button
                   type="button"
-                  class="fc-pdp-u__variant{% if v.id == variant.id %} is-selected{% endif %}{% unless v.available %} is-disabled{% endunless %}"
+                  class="fc-pdp-u__variant{% if v.id == variant.id %} is-selected{% endif %}{% unless v.available %} is-unavailable{% endunless %}"
                   data-variant-id="{{ v.id }}"
                   data-variant-price="{{ v.price | money | escape }}"
-                  data-variant-available="{{ v.available }}"
-                  {% unless v.available %}disabled{% endunless %}
+                  data-variant-available="{% if v.available %}true{% else %}false{% endif %}"
+                  {% if v_hero %}data-variant-image="{{ v_hero | image_url: width: 1200 }}"{% endif %}
+                  aria-pressed="{% if v.id == variant.id %}true{% else %}false{% endif %}"
                 >
                   {{ v.title | downcase | capitalize }}
                 </button>
@@ -90,18 +149,19 @@
         {%- endunless -%}
 
         <div class="fc-pdp-u__buy" data-fc-pdp-purchase>
-          {%- if is_available -%}
-            <button type="button" class="fc-pdp-u__atc" data-variant-id="{{ variant.id }}">
-              <span class="fc-pdp-u__atc-price" data-fc-pdp-price>
-                {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
-                {{ variant.price | money }}
-              </span>
-              <span class="fc-pdp-u__atc-sep" aria-hidden="true">·</span>
-              <span class="fc-pdp-u__atc-label">Add to bag</span>
-            </button>
-          {%- else -%}
-            <p class="fc-pdp-u__oos">Out of stock</p>
-          {%- endif -%}
+          <button
+            type="button"
+            class="fc-pdp-u__atc{% unless is_available %} is-oos{% endunless %}"
+            data-variant-id="{{ variant.id }}"
+            {% unless is_available %}disabled aria-disabled="true"{% endunless %}
+          >
+            <span class="fc-pdp-u__atc-price" data-fc-pdp-price>
+              {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
+              {{ variant.price | money }}
+            </span>
+            <span class="fc-pdp-u__atc-sep" aria-hidden="true">·</span>
+            <span class="fc-pdp-u__atc-label" data-fc-pdp-atc-label>{% if is_available %}Add to bag{% else %}Out of stock{% endif %}</span>
+          </button>
         </div>
       </div>
     </div>
@@ -109,18 +169,19 @@
 </section>
 
 <div class="fc-pdp-u__dock" id="fc-pdp-u-dock-{{ section.id }}" hidden>
-  {%- if is_available -%}
-    <button type="button" class="fc-pdp-u__atc fc-pdp-u__atc--dock" data-variant-id="{{ variant.id }}">
-      <span class="fc-pdp-u__atc-price" data-fc-pdp-price>
-        {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
-        {{ variant.price | money }}
-      </span>
-      <span class="fc-pdp-u__atc-sep" aria-hidden="true">·</span>
-      <span class="fc-pdp-u__atc-label">Add to bag</span>
-    </button>
-  {%- else -%}
-    <p class="fc-pdp-u__oos fc-pdp-u__oos--dock">Out of stock</p>
-  {%- endif -%}
+  <button
+    type="button"
+    class="fc-pdp-u__atc fc-pdp-u__atc--dock{% unless is_available %} is-oos{% endunless %}"
+    data-variant-id="{{ variant.id }}"
+    {% unless is_available %}disabled aria-disabled="true"{% endunless %}
+  >
+    <span class="fc-pdp-u__atc-price" data-fc-pdp-price>
+      {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
+      {{ variant.price | money }}
+    </span>
+    <span class="fc-pdp-u__atc-sep" aria-hidden="true">·</span>
+    <span class="fc-pdp-u__atc-label" data-fc-pdp-atc-label>{% if is_available %}Add to bag{% else %}Out of stock{% endif %}</span>
+  </button>
 </div>
 
 {% stylesheet %}
@@ -187,6 +248,15 @@
   height: auto;
   object-fit: contain;
   display: block;
+}
+
+.fc-pdp-u__gallery--variant .fc-pdp-u__slides {
+  overflow: visible;
+}
+
+.fc-pdp-u__gallery--variant .fc-ig-dots,
+.fc-pdp-u__gallery--variant.fc-ig-viewport > .fc-ig-dots {
+  display: none !important;
 }
 
 .fc-pdp-u__meta {
@@ -262,6 +332,10 @@
   color: #ffffff;
 }
 
+.fc-pdp-u__variant.is-unavailable {
+  opacity: 0.55;
+}
+
 .fc-pdp-u__variant.is-disabled,
 .fc-pdp-u__variant:disabled {
   opacity: 0.35;
@@ -297,9 +371,15 @@
 }
 
 @media (hover: hover) {
-  .fc-pdp-u__atc:hover {
+  .fc-pdp-u__atc:hover:not(:disabled) {
     opacity: 0.85;
   }
+}
+
+.fc-pdp-u__atc.is-oos,
+.fc-pdp-u__atc:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
 }
 
 .fc-pdp-u__atc-sep {
@@ -441,6 +521,8 @@
   var gallery = root.querySelector('[data-fc-pdp-gallery]');
   var slides = root.querySelectorAll('.fc-pdp-u__slide');
   var total = slides.length;
+  var variantGallery = gallery && gallery.hasAttribute('data-fc-variant-gallery');
+  var heroImg = root.querySelector('[data-fc-variant-slide] .fc-pdp-u__slide-media');
 
   function syncSlideVideos() {
     root.querySelectorAll('.fc-pdp-u__slide').forEach(function (slide) {
@@ -457,7 +539,7 @@
     });
   }
 
-  if (gallery && total > 1 && window.FcIgGallery) {
+  if (!variantGallery && gallery && total > 1 && window.FcIgGallery) {
     window.FcIgGallery({
       viewport: gallery.querySelector('.fc-pdp-u__slides'),
       slideSelector: '.fc-pdp-u__slide',
@@ -465,7 +547,40 @@
       onChange: syncSlideVideos
     }).init();
   } else {
+    if (variantGallery && gallery) {
+      gallery.querySelectorAll('.fc-ig-dots').forEach(function (el) { el.remove(); });
+      gallery.classList.remove('fc-ig-viewport');
+      var track = gallery.querySelector('.fc-ig-track');
+      if (track) {
+        while (track.firstChild) gallery.querySelector('.fc-pdp-u__slides').appendChild(track.firstChild);
+        track.remove();
+      }
+    }
     syncSlideVideos();
+  }
+
+  function swapVariantHero(src, alt) {
+    if (!heroImg || !src) return;
+    heroImg.src = src;
+    heroImg.removeAttribute('srcset');
+    heroImg.removeAttribute('sizes');
+    if (alt) heroImg.alt = alt;
+  }
+
+  var fcProductData = null;
+  try {
+    var fcDataEl = document.getElementById('fc-data-{{ product.id }}');
+    if (fcDataEl) fcProductData = JSON.parse(fcDataEl.textContent);
+  } catch (e) {}
+
+  function variantImageForId(id) {
+    if (!fcProductData || !fcProductData.variants) return '';
+    for (var i = 0; i < fcProductData.variants.length; i++) {
+      if (fcProductData.variants[i].id === id && fcProductData.variants[i].image) {
+        return fcProductData.variants[i].image;
+      }
+    }
+    return '';
   }
 
   function syncPrices(html) {
@@ -483,19 +598,36 @@
     }
   }
 
+  function syncAtcState(available) {
+    document.querySelectorAll('#fc-pdp-u-dock-' + sId + ' .fc-pdp-u__atc, #' + root.id + ' .fc-pdp-u__atc').forEach(function (atc) {
+      atc.classList.toggle('is-oos', !available);
+      atc.disabled = !available;
+      atc.setAttribute('aria-disabled', available ? 'false' : 'true');
+      var label = atc.querySelector('[data-fc-pdp-atc-label]');
+      if (label) label.textContent = available ? 'Add to bag' : 'Out of stock';
+    });
+  }
+
   root.querySelectorAll('.fc-pdp-u__variant').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      if (btn.disabled) return;
       variantId = parseInt(btn.dataset.variantId, 10);
       root.querySelectorAll('.fc-pdp-u__variant').forEach(function (b) {
-        b.classList.toggle('is-selected', b === btn);
+        var selected = b === btn;
+        b.classList.toggle('is-selected', selected);
+        b.setAttribute('aria-pressed', selected ? 'true' : 'false');
       });
       if (btn.dataset.variantPrice) syncPrices(btn.dataset.variantPrice);
+      syncAtcState(btn.dataset.variantAvailable === 'true');
+      if (variantGallery) {
+        var nextSrc = btn.dataset.variantImage || variantImageForId(variantId);
+        swapVariantHero(nextSrc, btn.textContent ? btn.textContent.trim() : '');
+      }
     });
   });
 
   root.querySelectorAll('.fc-pdp-u__atc').forEach(function (btn) {
     btn.addEventListener('click', function () {
+      if (btn.disabled) return;
       if (window.fcAddToCart) window.fcAddToCart(variantId, 1);
     });
   });
@@ -513,6 +645,13 @@
       "id": "description",
       "label": "Product description",
       "info": "Overrides Shopify product description when set."
+    },
+    {
+      "type": "checkbox",
+      "id": "variant_image_gallery",
+      "label": "Switch hero image by variant",
+      "info": "Single product image that updates when a color/variant is selected — no swipe carousel.",
+      "default": false
     }
   ],
   "presets": [
