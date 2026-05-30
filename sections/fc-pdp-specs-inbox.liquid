@@ -328,6 +328,22 @@
       });
     });
   });
+
+  function warmLazyImages() {
+    root.querySelectorAll('img[loading="lazy"]').forEach(function (img) {
+      var src = img.currentSrc || img.src;
+      if (!src) return;
+      var warm = new Image();
+      warm.decoding = 'async';
+      warm.src = src;
+    });
+  }
+
+  if (window.requestIdleCallback) {
+    requestIdleCallback(warmLazyImages, { timeout: 2500 });
+  } else {
+    setTimeout(warmLazyImages, 400);
+  }
 })();
 </script>
 

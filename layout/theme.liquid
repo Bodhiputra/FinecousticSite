@@ -9,8 +9,18 @@
     <script>if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }</script>
 
     <link rel="icon" type="image/png" href="{{ 'FLogo-icon.png' | asset_url }}">
-    <link rel="preload" as="image" href="{{ 'FinecouBG.webp' | asset_url }}" type="image/webp">
-    <link rel="preload" as="image" href="{{ 'FinecouBGLighter.webp' | asset_url }}" type="image/webp">
+    {%- unless template.name == 'product' -%}
+      <link rel="preload" as="image" href="{{ 'FinecouBG.webp' | asset_url }}" type="image/webp">
+      <link rel="preload" as="image" href="{{ 'FinecouBGLighter.webp' | asset_url }}" type="image/webp">
+    {%- elsif product.featured_media -%}
+      <link
+        rel="preload"
+        as="image"
+        href="{{ product.featured_media | image_url: width: 800 }}"
+        imagesrcset="{{ product.featured_media | image_url: width: 600 }} 600w, {{ product.featured_media | image_url: width: 800 }} 800w, {{ product.featured_media | image_url: width: 1000 }} 1000w"
+        imagesizes="92vw"
+      >
+    {%- endunless -%}
 
     {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
@@ -33,11 +43,8 @@
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'fc-carousel.js' | asset_url }}"></script>
-    <script src="{{ 'fc-price-tag.js' | asset_url }}"></script>
-    <script src="{{ 'fc-cart.js' | asset_url }}"></script>
-    {%- if template.name == 'product' -%}
-      <script src="{{ 'fc-pdp-dock.js' | asset_url }}"></script>
-    {%- endif -%}
+    <script src="{{ 'fc-price-tag.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'fc-cart.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'details-modal.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
@@ -324,12 +331,11 @@
         background-size: cover !important;
         background-position: center top !important;
         background-repeat: no-repeat !important;
-        background-attachment: fixed !important;
+        background-attachment: scroll !important;
       }
       @media screen and (max-width: 749px) {
         body.gradient {
           background-image: none !important;
-          background-attachment: scroll !important;
         }
       }
       .header-wrapper::before {

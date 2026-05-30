@@ -88,9 +88,15 @@
       var dx = clientX - startX;
       var dy = clientY - startY;
 
-      if (!decided && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+      if (!decided && (Math.abs(dx) > 10 || Math.abs(dy) > 10)) {
         decided = true;
-        isHorizontal = Math.abs(dx) > Math.abs(dy);
+        isHorizontal = Math.abs(dx) > Math.abs(dy) * 1.35;
+        if (!isHorizontal) {
+          dragging = false;
+          decided = false;
+          if (handlers.onCancel) handlers.onCancel();
+          return;
+        }
       }
       if (!decided) return;
 
@@ -207,6 +213,9 @@
         ? 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1)'
         : 'none';
       track.style.transform = 'translate3d(' + x + 'px, 0, 0)';
+      if (viewport) {
+        viewport.classList.toggle('is-animating', !!animate);
+      }
     }
 
     function offsetForIndex(i) {
@@ -241,6 +250,7 @@
       track.addEventListener('transitionend', function h() {
         track.removeEventListener('transitionend', h);
         animating = false;
+        if (viewport) viewport.classList.remove('is-animating');
       }, { once: true });
     }
 
@@ -441,22 +451,36 @@
       opts = opts || {};
 
       var touchX = 0;
+      var touchY = 0;
+      var threshold = opts.swipeThreshold != null ? opts.swipeThreshold : swipeThreshold;
+      var horizontalRatio = opts.horizontalRatio || 1.35;
+
+      function shouldAdvanceSwipe(dx, dy) {
+        if (Math.abs(dx) < threshold) return false;
+        return Math.abs(dx) > Math.abs(dy) * horizontalRatio;
+      }
+
       el.addEventListener('touchstart', function (e) {
         if (e.touches.length !== 1) return;
         touchX = e.touches[0].clientX;
+        touchY = e.touches[0].clientY;
       }, { passive: true });
       el.addEventListener('touchend', function (e) {
         var dx = e.changedTouches[0].clientX - touchX;
+        var dy = e.changedTouches[0].clientY - touchY;
         if (opts.markDrag && Math.abs(dx) > 5) opts.markDrag();
-        if (Math.abs(dx) >= swipeThreshold) slideByDir(dx < 0 ? 1 : -1);
+        if (!shouldAdvanceSwipe(dx, dy)) return;
+        slideByDir(dx < 0 ? 1 : -1);
       }, { passive: true });
 
       var mouseStartX = 0;
+      var mouseStartY = 0;
       var mouseDragging = false;
 
       el.addEventListener('mousedown', function (e) {
         if (e.button !== 0) return;
         mouseStartX = e.clientX;
+        mouseStartY = e.clientY;
         mouseDragging = true;
       });
       el.addEventListener('mousemove', function (e) {
@@ -466,7 +490,9 @@
         if (!mouseDragging) return;
         mouseDragging = false;
         var dx = e.clientX - mouseStartX;
-        if (Math.abs(dx) >= swipeThreshold) slideByDir(dx < 0 ? 1 : -1);
+        var dy = e.clientY - mouseStartY;
+        if (!shouldAdvanceSwipe(dx, dy)) return;
+        slideByDir(dx < 0 ? 1 : -1);
       };
       el.addEventListener('mouseup', endMouse);
       el.addEventListener('mouseleave', endMouse);
@@ -515,7 +541,12 @@
       if (viewport) {
         bindSimpleSwipe(viewport, { markDrag: function () { trackDragged = true; } });
       }
-      getExtraSwipeElements().forEach(function (el) { bindSimpleSwipe(el); });
+      getExtraSwipeElements().forEach(function (el) {
+        bindSimpleSwipe(el, {
+          swipeThreshold: cfg.extraSwipeThreshold != null ? cfg.extraSwipeThreshold : swipeThreshold,
+          horizontalRatio: cfg.extraSwipeHorizontalRatio || 1.35
+        });
+      });
 
       var resizing = false;
       window.addEventListener('resize', function () {
@@ -546,6 +577,45 @@
     return { init: init, slideByDir: slideByDir, goTo: goToLogIdx };
   };
 
+  /** Mobile sticky title band — bg only after sentinel scrolls out (natural position = transparent). */
+  function bindTitleCarouselSticky(headerId, sentinelId) {
+    var header = document.getElementById(headerId);
+    var sentinel = document.getElementById(sentinelId);
+    if (!header || !sentinel) return;
+
+    if (header._fcStickyIo) {
+      header._fcStickyIo.disconnect();
+      header._fcStickyIo = null;
+    }
+
+    var mq = window.matchMedia('(max-width: 989px)');
+
+    function syncStuck(isStuck) {
+      header.classList.toggle('is-stuck', !!isStuck && mq.matches);
+    }
+
+    if (!mq.matches) {
+      syncStuck(false);
+      return;
+    }
+
+    var io = new IntersectionObserver(
+      function (entries) {
+        syncStuck(!entries[0].isIntersecting);
+      },
+      { threshold: 0 }
+    );
+    io.observe(sentinel);
+    header._fcStickyIo = io;
+
+    if (!mq._fcStickyMqBound) {
+      mq._fcStickyMqBound = true;
+      mq.addEventListener('change', function () {
+        if (!mq.matches) syncStuck(false);
+      });
+    }
+  }
+
   /**
    * Standard init for snippets/fc-title-carousel.liquid ({id}-header, {id}-track, {id}-viewport).
    */
@@ -562,6 +632,8 @@
       extraSwipeId: cfg.extraSwipeId || null,
       extraSwipeIds: cfg.extraSwipeIds || null,
       swipeThreshold: cfg.swipeThreshold || 40,
+      extraSwipeThreshold: cfg.extraSwipeThreshold,
+      extraSwipeHorizontalRatio: cfg.extraSwipeHorizontalRatio,
       dots: false,
       N: cfg.N,
       onSlide: cfg.onSlide || function () {},
@@ -571,6 +643,11 @@
     function clearBindings() {
       var root = document.getElementById(id + '-header');
       if (root) {
+        if (root._fcStickyIo) {
+          root._fcStickyIo.disconnect();
+          root._fcStickyIo = null;
+        }
+        root.classList.remove('is-stuck');
         var stray = root.nextElementSibling;
         if (stray && stray.classList.contains('fc-ig-dots')) stray.remove();
       }
@@ -594,6 +671,7 @@
       init: function () {
         clearBindings();
         carousel.init();
+        bindTitleCarouselSticky(id + '-header', id + '-sticky-sentinel');
       },
       slideByDir: carousel.slideByDir,
       goTo: carousel.goTo

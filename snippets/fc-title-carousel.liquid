@@ -27,6 +27,11 @@
 -%}
 
 <div
+  class="fc-title-carousel-sentinel"
+  id="{{ carousel_id }}-sticky-sentinel"
+  aria-hidden="true"
+></div>
+<div
   class="fc-collection-header fc-title-carousel{% if carousel_has_wrap %} fc-title-carousel--has-wrap{% endif %}"
   id="{{ carousel_id }}-header"
   data-fc-title-carousel="{{ carousel_id }}"

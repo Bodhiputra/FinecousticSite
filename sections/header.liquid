@@ -355,11 +355,20 @@
       this.preventReveal = false;
       this.predictiveSearch = this.querySelector('predictive-search');
 
-      this.onScrollHandler = this.onScroll.bind(this);
+      this._scrollTicking = false;
+      this._onScrollRaf = () => {
+        this._scrollTicking = false;
+        this.onScroll();
+      };
+      this._onScrollPassive = () => {
+        if (this._scrollTicking) return;
+        this._scrollTicking = true;
+        requestAnimationFrame(this._onScrollRaf);
+      };
       this.hideHeaderOnScrollUp = () => (this.preventReveal = true);
 
       this.addEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
-      window.addEventListener('scroll', this.onScrollHandler, false);
+      window.addEventListener('scroll', this._onScrollPassive, { passive: true });
 
       this.createObserver();
     }
@@ -370,7 +379,7 @@
 
     disconnectedCallback() {
       this.removeEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
-      window.removeEventListener('scroll', this.onScrollHandler);
+      window.removeEventListener('scroll', this._onScrollPassive);
     }
 
     createObserver() {

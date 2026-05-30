@@ -509,7 +509,7 @@ class MenuDrawer extends HTMLElement {
   }
 
   closeMenuDrawer(event, elementToFocus = false) {
-    if (event === undefined) return;
+    if (event === undefined && !elementToFocus) return;
 
     this.mainDetailsToggle.classList.remove('menu-opening');
     this.mainDetailsToggle.querySelectorAll('details').forEach((details) => {
@@ -528,8 +528,10 @@ class MenuDrawer extends HTMLElement {
 
   onFocusOut() {
     setTimeout(() => {
-      if (this.mainDetailsToggle.hasAttribute('open') && !this.mainDetailsToggle.contains(document.activeElement))
-        this.closeMenuDrawer();
+      if (this.mainDetailsToggle.hasAttribute('open') && !this.mainDetailsToggle.contains(document.activeElement)) {
+        const summary = this.mainDetailsToggle.querySelector('summary');
+        this.closeMenuDrawer(new Event('focusout'), summary);
+      }
     });
   }
 

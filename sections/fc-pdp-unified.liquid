@@ -77,21 +77,33 @@
               </div>
             {%- elsif media_count > 0 -%}
               {%- for media in product.media -%}
+                {%- liquid
+                  if forloop.first
+                    assign fc_slide_preload = 'metadata'
+                    assign fc_slide_loading = 'eager'
+                    assign fc_slide_fetchpriority = 'high'
+                  else
+                    assign fc_slide_preload = 'none'
+                    assign fc_slide_loading = 'lazy'
+                    assign fc_slide_fetchpriority = 'low'
+                  endif
+                -%}
                 <div class="fc-pdp-u__slide{% if forloop.first %} is-active{% endif %}" data-slide-index="{{ forloop.index0 }}">
                   {%- if media.media_type == 'video' -%}
                     {{ media | video_tag:
                       class: 'fc-pdp-u__slide-media',
-                      autoplay: true,
+                      autoplay: false,
                       loop: true,
                       muted: true,
                       playsinline: true,
                       controls: false,
-                      preload: 'auto'
+                      preload: fc_slide_preload
                     }}
                   {%- else -%}
                     {{ media | image_url: width: 1200 | image_tag:
                       class: 'fc-pdp-u__slide-media',
-                      loading: 'eager',
+                      loading: fc_slide_loading,
+                      fetchpriority: fc_slide_fetchpriority,
                       sizes: '(min-width: 990px) 640px, 92vw',
                       widths: '600, 800, 1000, 1200',
                       alt: media.alt | default: product.title | escape
@@ -187,6 +199,11 @@
 {% stylesheet %}
 .fc-pdp-u {
   padding: 0;
+}
+
+.fc-pdp-u.fc-pdp-hero {
+  box-sizing: border-box;
+  padding-top: 48px;
 }
 
 .fc-pdp-u__inner {
@@ -408,8 +425,6 @@
 
 @media screen and (max-width: 989px) {
   .fc-pdp-u.fc-pdp-hero {
-    box-sizing: border-box;
-    padding-top: var(--fc-nav-clearance, 72px);
     padding-bottom: clamp(12px, 2.5vw, 16px);
   }
 
@@ -430,13 +445,13 @@
     flex: 0 0 auto;
     width: 100%;
     max-width: min(100%, 520px);
-    min-height: min(44vh, 440px);
+    min-height: 0;
     margin: 0 auto;
   }
 
   .fc-pdp-u__gallery {
     width: 100%;
-    min-height: min(42vh, 420px);
+    min-height: 0;
   }
 
   .fc-pdp-u__slides {
@@ -531,12 +546,20 @@
       video.muted = true;
       video.loop = true;
       if (slide.classList.contains('is-active')) {
+        if (video.preload === 'none') video.preload = 'metadata';
         var playPromise = video.play();
         if (playPromise && playPromise.catch) playPromise.catch(function () {});
       } else {
         video.pause();
+        try { video.currentTime = 0; } catch (e) {}
       }
     });
+  }
+
+  function scheduleHeroVideos() {
+    var run = function () { syncSlideVideos(); };
+    if (window.requestIdleCallback) requestIdleCallback(run, { timeout: 600 });
+    else setTimeout(run, 0);
   }
 
   if (!variantGallery && gallery && total > 1 && window.FcIgGallery) {
@@ -546,6 +569,7 @@
       loop: true,
       onChange: syncSlideVideos
     }).init();
+    scheduleHeroVideos();
   } else {
     if (variantGallery && gallery) {
       gallery.querySelectorAll('.fc-ig-dots').forEach(function (el) { el.remove(); });
@@ -556,7 +580,7 @@
         track.remove();
       }
     }
-    syncSlideVideos();
+    scheduleHeroVideos();
   }
 
   function swapVariantHero(src, alt) {

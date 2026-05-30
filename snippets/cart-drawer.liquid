@@ -53,11 +53,21 @@
     initNavDropdowns();
   }
 
+  var navDropScrollPending = false;
+  function onNavDropScroll() {
+    if (navDropScrollPending) return;
+    navDropScrollPending = true;
+    requestAnimationFrame(function () {
+      navDropScrollPending = false;
+      positionMenuDropdown();
+    });
+  }
+
   window.addEventListener('resize', function () {
     setFcHeaderVars();
     positionMenuDropdown();
   });
-  window.addEventListener('scroll', positionMenuDropdown, { passive: true });
+  window.addEventListener('scroll', onNavDropScroll, { passive: true });
   window.addEventListener('orientationchange', function () {
     setTimeout(function () {
       setFcHeaderVars();

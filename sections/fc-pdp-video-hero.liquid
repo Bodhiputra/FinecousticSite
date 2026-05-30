@@ -41,12 +41,13 @@
           | video_tag:
             class: 'fc-video-always-on__video fc-pdp-video-hero__video',
             image_size: '1600x',
-            autoplay: true,
+            autoplay: false,
             loop: fc_video_loop,
             controls: false,
             muted: true,
             playsinline: true,
-            preload: 'auto'
+            preload: 'none',
+            poster: poster
         }}
       {%- elsif poster != null -%}
         {{
@@ -122,9 +123,10 @@
     (scope || document).querySelectorAll('.fc-pdp-video-hero .fc-video-always-on__video').forEach(function (video) {
       video.muted = true;
       video.loop = {{ section.settings.enable_video_looping | json }};
-      video.autoplay = true;
       var p = video.play();
       if (p && p.catch) p.catch(function () {});
+      if (video.dataset.fcPdpVideoBound === '1') return;
+      video.dataset.fcPdpVideoBound = '1';
       video.addEventListener('pause', function () {
         if (!video.ended) {
           var retry = video.play();
@@ -133,9 +135,38 @@
       });
     });
   }
-  keepPlaying(document.getElementById('fc-pdp-video-{{ section.id }}'));
+
+  function bindWhenVisible(section) {
+    if (!section) return;
+    var media = section.querySelector('.fc-pdp-video-hero__media');
+    if (!media) return;
+
+    var start = function () {
+      section.querySelectorAll('.fc-video-always-on__video').forEach(function (video) {
+        if (video.preload === 'none') video.preload = 'metadata';
+      });
+      keepPlaying(section);
+    };
+
+    if (!('IntersectionObserver' in window)) {
+      start();
+      return;
+    }
+
+    var io = new IntersectionObserver(
+      function (entries) {
+        if (!entries.some(function (e) { return e.isIntersecting; })) return;
+        io.disconnect();
+        start();
+      },
+      { rootMargin: '120px 0px', threshold: 0.01 }
+    );
+    io.observe(media);
+  }
+
+  bindWhenVisible(document.getElementById('fc-pdp-video-{{ section.id }}'));
   document.addEventListener('shopify:section:load', function (e) {
-    keepPlaying(e.target);
+    bindWhenVisible(e.target.querySelector('.fc-pdp-video-hero') || e.target);
   });
 })();
 </script>

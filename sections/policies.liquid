@@ -152,6 +152,9 @@
     window.FcTitleCarousel({
       id: 'fc-policies',
       extraSwipeId: 'fc-policy-wrap',
+      swipeThreshold: 40,
+      extraSwipeThreshold: 72,
+      extraSwipeHorizontalRatio: 2.25,
       N: POLICIES.length,
       onSlide: function (logIdx) { applyPolicy(POLICIES[logIdx].key); },
       getInitialIdx: function () {

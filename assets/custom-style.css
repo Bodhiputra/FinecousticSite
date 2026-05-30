@@ -90,6 +90,7 @@ small, .caption, .caption-with-letter-spacing {
 /* ── Global background: FinecouBG (theme.liquid sets --fc-body-bg) ── */
 html {
   background-color: var(--fc-black);
+  color-scheme: dark;
   min-height: 100svh;
 }
 
@@ -107,7 +108,7 @@ body {
   max-width: 100%;
 }
 
-/* Mobile: fixed body bg fails on scroll (iOS) — paint texture on a tall ::before instead */
+/* Mobile: viewport-sized texture — NOT tied to document height (policies tabs won’t re-zoom cover) */
 @media screen and (max-width: 749px) {
   body.gradient {
     background-image: none !important;
@@ -118,13 +119,23 @@ body {
   body.gradient::before {
     content: '';
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    max-height: none;
     z-index: -1;
     background-image: var(--fc-body-bg);
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
     pointer-events: none;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 }
 
@@ -232,18 +243,16 @@ body {
   align-items: center;
 }
 
-/* Title-carousel pages — swipe zone fills viewport below tabs on mobile */
+/* Title-carousel pages — natural section height (100svh forced extra compositing + odd scroll) */
 @media screen and (max-width: 989px) {
   #MainContent > .shopify-section:has(.fc-title-carousel) {
     flex: 1 0 auto;
-    min-height: 100dvh;
-    min-height: 100svh;
+    min-height: 0;
   }
 
   #MainContent .fc-shop-page:has(.fc-title-carousel) {
     flex: 1 1 auto;
-    min-height: calc(100dvh - var(--fc-nav-clearance));
-    min-height: calc(100svh - var(--fc-nav-clearance));
+    min-height: 0;
   }
 
   #MainContent > .shopify-section:has(.fc-title-carousel) > .fc-title-carousel,
@@ -1583,6 +1592,53 @@ body.nav-hidden .section-header {
   gap: clamp(2px, 1vw, 8px);
   overflow: hidden;
 }
+
+.fc-title-carousel-sentinel {
+  display: block;
+  height: 1px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* Tabbed pages — sticky title band (mobile; syncs with pill hide/show via body.nav-hidden) */
+@media screen and (max-width: 989px) {
+  .fc-title-carousel.fc-collection-header {
+    --fc-carousel-band: 100%;
+    position: sticky;
+    top: calc(var(--header-bottom-position, var(--fc-nav-drop-top, 72px)) + 6px);
+    z-index: 900;
+    width: var(--fc-pill-width, calc(100vw - (var(--fc-nav-bar-gutter, 12px) * 2)));
+    max-width: var(--fc-pill-width, calc(100vw - (var(--fc-nav-bar-gutter, 12px) * 2)));
+    margin-left: var(--fc-pill-left, var(--fc-nav-bar-gutter, 12px));
+    margin-right: 0;
+    box-sizing: border-box;
+    padding: clamp(8px, 2vw, 12px) clamp(8px, 2.5vw, 12px) clamp(10px, 2.5vw, 12px);
+    border-radius: var(--fc-nav-radius, 14px);
+    background-color: transparent;
+    background-image: none;
+    box-shadow: none;
+    transition:
+      top 0.3s ease,
+      box-shadow 0.3s ease,
+      background-color 0.2s ease;
+  }
+
+  .fc-title-carousel.fc-collection-header.is-stuck {
+    background-color: var(--fc-black);
+    background-image: var(--fc-body-bg);
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
+  }
+
+  body.nav-hidden .fc-title-carousel.fc-collection-header {
+    top: var(--fc-nav-bar-gutter, 12px);
+  }
+}
 .fc-title-viewport,
 .fc-sl-title-viewport {
   flex: 1 1 auto;
@@ -1759,6 +1815,10 @@ body.nav-hidden .section-header {
   display: flex;
   align-items: center;
   height: 100%;
+}
+
+.fc-ig-viewport.is-dragging .fc-ig-track,
+.fc-ig-viewport.is-animating .fc-ig-track {
   will-change: transform;
 }
 
@@ -2866,7 +2926,7 @@ body.fc-search-open {
   letter-spacing: -0.01em;
 }
 
-/* PDP scroll — fixed backgrounds repaint every frame and feel janky */
+/* PDP scroll — no fixed bg repaint; no scroll-snap (fights natural momentum on iOS) */
 .template-product body.gradient {
   background-attachment: scroll !important;
 }
@@ -2876,19 +2936,16 @@ body.fc-search-open {
   background-attachment: scroll !important;
 }
 
-@media screen and (max-width: 749px) {
-  .template-product body.gradient::before {
-    position: absolute;
-    inset: 0;
-    min-height: 100%;
-    height: auto;
-  }
+
+.template-product .fc-pdp-video-hero {
+  content-visibility: visible;
+  contain-intrinsic-size: none;
 }
 
-/* Below-fold PDP sections — skip layout/paint until near viewport */
-.template-product .fc-pdp-video-hero {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 480px;
+.template-product .scroll-trigger {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
 }
 
 /* ── PDP split hero only (unified/showcases/video define their own layout) ── */
