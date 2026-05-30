@@ -232,6 +232,32 @@ body {
   align-items: center;
 }
 
+/* Title-carousel pages — swipe zone fills viewport below tabs on mobile */
+@media screen and (max-width: 989px) {
+  #MainContent > .shopify-section:has(.fc-title-carousel) {
+    flex: 1 0 auto;
+    min-height: 100dvh;
+    min-height: 100svh;
+  }
+
+  #MainContent .fc-shop-page:has(.fc-title-carousel) {
+    flex: 1 1 auto;
+    min-height: calc(100dvh - var(--fc-nav-clearance));
+    min-height: calc(100svh - var(--fc-nav-clearance));
+  }
+
+  #MainContent > .shopify-section:has(.fc-title-carousel) > .fc-title-carousel,
+  #MainContent .fc-shop-page:has(.fc-title-carousel) > .fc-title-carousel {
+    flex: 0 0 auto;
+  }
+
+  .fc-title-carousel + .fc-page-swipe-zone,
+  .fc-title-carousel + .fc-shop-swipe-zone {
+    flex: 1 1 auto;
+    min-height: 12rem;
+  }
+}
+
 /* Customer login — centered in main column */
 #MainContent .fc-login-page {
   flex: 1;
