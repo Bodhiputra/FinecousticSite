@@ -1,51 +1,44 @@
-<div class="fc-shop-page fc-dl-page{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}">
+<div class="fc-dl-page{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}">
 
-  {%- render 'fc-title-carousel',
-    id: 'fc-dl',
-    labels: 'All Products|Earphones|Speakers|Microphones',
-    active_index: 0
-  -%}
+  {%- if section.settings.heading != blank -%}
+    <h1 class="fc-dl-page__heading">{{ section.settings.heading | escape }}</h1>
+  {%- endif -%}
 
-  <div class="fc-page-swipe-zone fc-shop-swipe-zone" id="fc-dl-swipe-zone">
-    <div class="fc-grid" id="fc-dl-grid" data-cols="5">
-      {%- assign dl_category = '' -%}
+  <div class="fc-dl-body" id="fc-dl-body">
+    <div class="fc-grid fc-dl-grid" id="fc-dl-grid" data-cols="5">
+      {%- assign dl_card_index = 0 -%}
       {%- for block in section.blocks -%}
-        {%- case block.type -%}
-          {%- when 'Heading' -%}
-            {%- assign dl_category = block.settings.heading_text | downcase -%}
-            {%- if dl_category contains 'earbud' -%}
-              {%- assign dl_category = 'earphones' -%}
-            {%- elsif dl_category contains 'mic' -%}
-              {%- assign dl_category = 'microphones' -%}
-            {%- elsif dl_category contains 'speaker' -%}
-              {%- assign dl_category = 'speakers' -%}
-            {%- endif -%}
-          {%- when 'Text' -%}
-            {%- assign dl_product = all_products[block.settings.product_handle] -%}
-            <div class="fc-card" data-category="{{ dl_category }}" {{ block.shopify_attributes }}>
-              <div class="fc-card__image">
-                {%- if block.settings.product_handle != blank and dl_product != blank and dl_product.featured_image -%}
-                  {{ dl_product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: block.settings.title }}
-                {%- elsif block.settings.image != blank -%}
-                  {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: block.settings.title | escape }}
-                {%- endif -%}
-              </div>
-
-              {%- if block.settings.title != blank -%}
-                <p class="fc-dl-card-name">{{ block.settings.title }}</p>
-              {%- endif -%}
-              {%- if block.settings.download_url != blank -%}
-                {%- render 'fc-guide-tag',
-                  download_url: block.settings.download_url,
-                  title: block.settings.title
-                -%}
+        {%- if block.type == 'Text' and block.settings.download_url != blank -%}
+          {%- assign dl_product = all_products[block.settings.product_handle] -%}
+          {%- assign dl_name = block.settings.title -%}
+          {%- if dl_name == blank and dl_product != blank -%}
+            {%- assign dl_name = dl_product.title -%}
+          {%- endif -%}
+          <a
+            class="fc-card fc-dl-card fc-card-appear"
+            href="{{ block.settings.download_url }}"
+            target="_blank"
+            rel="noopener"
+            style="animation-delay: {{ dl_card_index | times: 90 }}ms"
+            aria-label="Quick Start Guide — {{ dl_name | escape }}"
+            {{ block.shopify_attributes }}
+          >
+            <div class="fc-card__image">
+              {%- if block.settings.product_handle != blank and dl_product != blank and dl_product.featured_image -%}
+                {{ dl_product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: dl_name }}
+              {%- elsif block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: dl_name | escape }}
               {%- endif -%}
             </div>
-        {%- endcase -%}
+
+            {%- if dl_name != blank -%}
+              <p class="fc-dl-card-name">{{ dl_name | escape }}</p>
+            {%- endif -%}
+          </a>
+          {%- assign dl_card_index = dl_card_index | plus: 1 -%}
+        {%- endif -%}
       {%- endfor -%}
     </div>
-
-    <p class="fc-category-soon" id="fc-dl-soon" hidden>Soon.</p>
   </div>
 
 </div>
@@ -53,52 +46,19 @@
 <script>
 (function () {
 
-  const FILTERS = [
-    { key: 'all',         label: 'All Products' },
-    { key: 'earphones',   label: 'Earphones' },
-    { key: 'speakers',    label: 'Speakers' },
-    { key: 'microphones', label: 'Microphones' },
-  ];
-
-  function updateGridColumns(visibleCount) {
+  function updateGridColumns() {
     const grid = document.getElementById('fc-dl-grid');
     if (!grid) return;
+    const cards = grid.querySelectorAll('.fc-dl-card:not(.fc-hidden)');
     const maxCols = parseInt(grid.dataset.cols, 10) || 5;
-    const cols = Math.max(1, Math.min(visibleCount, maxCols));
-    grid.style.setProperty('--fc-visible-cols', String(cols));
-  }
-
-  function applyFilter(filter) {
-    let visIdx = 0;
-    let visibleCount = 0;
-    document.querySelectorAll('#fc-dl-grid .fc-card').forEach(card => {
-      card.classList.remove('fc-card-appear');
-      const show = filter === 'all' || card.dataset.category === filter;
-      if (!show) {
-        card.classList.add('fc-hidden');
-      } else {
-        visibleCount++;
-        card.classList.remove('fc-hidden');
-        const delay = visIdx * 90;
-        visIdx++;
-        requestAnimationFrame(() => {
-          card.style.animationDelay = delay + 'ms';
-          card.classList.add('fc-card-appear');
-        });
-      }
-    });
-    const soonEl = document.getElementById('fc-dl-soon');
-    const zone = document.getElementById('fc-dl-swipe-zone');
-    const showSoon = filter === 'speakers' && visibleCount === 0;
-    if (soonEl) soonEl.hidden = !showSoon;
-    if (zone) zone.classList.toggle('fc-shop-swipe-zone--soon', showSoon);
-    updateGridColumns(visibleCount);
+    const cols = Math.max(1, Math.min(cards.length, maxCols));
+    grid.style.setProperty('--fc-product-cols', String(cols));
   }
 
   function fcFitNames() {
-    document.querySelectorAll('#fc-dl-grid .fc-dl-card-name').forEach(el => {
+    document.querySelectorAll('#fc-dl-grid .fc-dl-card-name').forEach(function (el) {
       el.style.fontSize = '';
-      let size = parseFloat(getComputedStyle(el).fontSize);
+      var size = parseFloat(getComputedStyle(el).fontSize);
       while (el.scrollWidth > el.offsetWidth && size > 7) {
         size -= 0.5;
         el.style.fontSize = size + 'px';
@@ -106,34 +66,25 @@
     });
   }
 
-  function initCarousel() {
-    if (!document.getElementById('fc-dl-header') || !window.FcTitleCarousel) return;
-    window.FcTitleCarousel({
-      id: 'fc-dl',
-      extraSwipeId: 'fc-dl-swipe-zone',
-      N: FILTERS.length,
-      onSlide: function (logIdx) { applyFilter(FILTERS[logIdx].key); },
-      getInitialIdx: function () { return 0; }
-    }).init();
-  }
-
   function init() {
-    if (!document.getElementById('fc-dl-header')) return;
-    initCarousel();
-    applyFilter('all');
+    if (!document.getElementById('fc-dl-grid')) return;
+    updateGridColumns();
     fcFitNames();
   }
 
   init();
   document.addEventListener('shopify:section:load', function (evt) {
-    if (!evt.target.querySelector || !evt.target.querySelector('#fc-dl-header')) return;
+    if (!evt.target.querySelector || !evt.target.querySelector('#fc-dl-grid')) return;
     init();
   });
 
-  let fcFitTimer;
-  window.addEventListener('resize', () => {
+  var fcFitTimer;
+  window.addEventListener('resize', function () {
     clearTimeout(fcFitTimer);
-    fcFitTimer = setTimeout(fcFitNames, 120);
+    fcFitTimer = setTimeout(function () {
+      updateGridColumns();
+      fcFitNames();
+    }, 120);
   });
 
 })();
@@ -141,8 +92,14 @@
 
 {% schema %}
 {
-  "name": "Custom Image with Text",
+  "name": "Product Guide",
   "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Page heading",
+      "default": "Product Guide"
+    },
     {
       "type": "text",
       "id": "custom_class",
@@ -152,25 +109,18 @@
   "blocks": [
     {
       "type": "Text",
-      "name": "Add Product",
+      "name": "Product guide",
       "settings": [
-        { "type": "text",         "id": "product_handle", "label": "Product Handle (e.g. groove-anc-ft20)" },
-        { "type": "text",         "id": "title",          "label": "Product Display Name" },
-        { "type": "text",         "id": "download_url",   "label": "Quick Start Guide PDF URL" },
-        { "type": "image_picker", "id": "image",          "label": "Fallback Image (if product handle is blank)" }
-      ]
-    },
-    {
-      "type": "Heading",
-      "name": "Add Category",
-      "settings": [
-        { "type": "text", "id": "heading_text", "label": "Category (e.g. Earbuds, Microphones)" }
+        { "type": "text", "id": "product_handle", "label": "Product handle (e.g. groove-anc-ft20)" },
+        { "type": "text", "id": "title", "label": "Product display name" },
+        { "type": "text", "id": "download_url", "label": "Quick Start Guide PDF URL" },
+        { "type": "image_picker", "id": "image", "label": "Fallback image (if product handle is blank)" }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Custom Image with Text (download)"
+      "name": "Product Guide"
     }
   ]
 }

@@ -4,12 +4,14 @@
       "type": "fc-pdp-unified",
       "settings": {
         "description": "Lightweight open-ear design with a secure fit for all-day comfort and awareness of your surroundings. A 16 mm dynamic driver delivers deep, energizing bass, while AI-enhanced noise reduction keeps calls clear and natural. Up to 45 hours of battery life, stable low-latency wireless connection, and targeted audio design for reduced sound leakage complete the experience.",
-        "variant_image_gallery": true
+        "variant_image_gallery": true,
+        "desktop_stacked_layout": true
       }
     },
     "fc_pdp_specs_inbox": {
       "type": "fc-pdp-specs-inbox",
       "settings": {
+        "quick_start_guide_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/GROOVE_OWS_FT21_OSG_202509032.pdf?v=1760151795",
         "table_title": "Specifications",
         "table1_button_label": "Audio & Performance",
         "table2_button_label": "Battery, Charging, & Physical",

@@ -3,12 +3,14 @@
     "fc_pdp_unified": {
       "type": "fc-pdp-unified",
       "settings": {
-        "description": "Switch effortlessly between Cardioid, Omnidirectional, and Bidirectional modes for vocals, interviews, or group calls. Portable and versatile, it's built for mobile streaming, video calls, or studio recording. Built-in monitor and gain controls let you shape audio in real time, while the integrated shock mount reduces vibrations. Comes with a detachable full-metal pop filter and instant touch controls for ENC and mute, ensuring clear, professional sound anytime."
+        "description": "Switch effortlessly between Cardioid, Omnidirectional, and Bidirectional modes for vocals, interviews, or group calls. Portable and versatile, it's built for mobile streaming, video calls, or studio recording. Built-in monitor and gain controls let you shape audio in real time, while the integrated shock mount reduces vibrations. Comes with a detachable full-metal pop filter and instant touch controls for ENC and mute, ensuring clear, professional sound anytime.",
+        "desktop_stacked_layout": true
       }
     },
     "fc_pdp_specs_inbox": {
       "type": "fc-pdp-specs-inbox",
       "settings": {
+        "quick_start_guide_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/UFM1_QSG_20250926.pdf?v=1762999919",
         "table_title": "Specifications",
         "table1_button_label": "Core Microphone Specs",
         "table2_button_label": "Features & Connectivity",

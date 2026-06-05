@@ -1,6 +1,9 @@
 {%- if section.blocks.size > 0 -%}
 <details class="fc-pdp-acc fc-pdp-acc--album">
-  <summary class="fc-pdp-acc__summary">Album</summary>
+  <summary class="fc-pdp-acc__summary">
+    <span class="fc-pdp-acc__summary-label">Album</span>
+    {%- render 'fc-pdp-acc-toggle' -%}
+  </summary>
   <div class="fc-pdp-acc__body">
 <div class="fc-pdp-showcases" id="fc-pdp-showcases-{{ section.id }}">
   {%- for block in section.blocks -%}

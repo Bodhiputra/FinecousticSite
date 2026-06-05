@@ -10,6 +10,8 @@ window.fcWirePriceTag = function (tag, options) {
     };
   var onAdd = options.onAdd;
   if (!tag || tag.classList.contains('fc-tag--oos') || typeof onAdd !== 'function') return;
+  if (tag.dataset.fcPriceTagBound === '1') return;
+  tag.dataset.fcPriceTagBound = '1';
 
   var plus = tag.querySelector('.fc-card__atc-plus');
   if (!plus) return;

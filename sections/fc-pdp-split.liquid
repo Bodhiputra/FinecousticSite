@@ -16,16 +16,9 @@
       assign pdp_description = pdp_description | split: '<ul' | first | split: '<UL' | first
     endif
   endif
-  assign fc_mock_available = false
-  # FT20 UI test — force in-stock ATC. Remove before launch.
-  if product.handle == 'groove-anc-ft20'
-    assign is_available = true
-    assign variant = product.variants.first
-    assign fc_mock_available = true
-  endif
 -%}
 
-{%- render 'fc-product-data', product: product, mock_available: fc_mock_available -%}
+{%- render 'fc-product-data', product: product -%}
 
 <section class="fc-pdp fc-pdp-hero" id="fc-pdp-{{ section.id }}" data-section-id="{{ section.id }}">
   <div class="fc-pdp__layout page-width">

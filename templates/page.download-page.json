@@ -20,12 +20,6 @@
     "image_and_text_download_qWb4P4": {
       "type": "image-and-text-download",
       "blocks": {
-        "heading_BdmcqR": {
-          "type": "Heading",
-          "settings": {
-            "heading_text": "Earbuds"
-          }
-        },
         "text_PjzVGn": {
           "type": "Text",
           "settings": {
@@ -42,12 +36,6 @@
             "title": "GROOVE ANC FT20",
             "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/GROOVE_ANC_FT20_QSG_20250626.pdf?v=1759915192",
             "image": "shopify://shop_images/Product_Icon_GROOVE_ANC_FT20.png"
-          }
-        },
-        "heading_BaDpLT": {
-          "type": "Heading",
-          "settings": {
-            "heading_text": "Microphones"
           }
         },
         "text_QKyYjB": {
@@ -70,15 +58,14 @@
         }
       },
       "block_order": [
-        "heading_BdmcqR",
         "text_PjzVGn",
         "text_VwqKwN",
-        "heading_BaDpLT",
         "text_QKyYjB",
         "text_JXnx79"
       ],
-      "name": "Custom Image with Text (download)",
+      "name": "Product Guide",
       "settings": {
+        "heading": "Product Guide",
         "custom_class": ""
       }
     }

@@ -1,4 +1,6 @@
 {% comment %}theme-check-disable UndefinedObject{% endcomment %}
+{%- comment -%} FC nav: set fc_show_support_link to true to restore footer Support link {%- endcomment -%}
+{%- assign fc_show_support_link = false -%}
 {{ 'section-footer.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
@@ -107,9 +109,11 @@
     <div class="fc-footer__bottom-links">
       <nav class="fc-footer__bottom-nav" aria-label="Footer">
         <a href="/pages/policies" class="fc-footer__bottom-link">Policies</a>
-        <a href="/pages/download-page" class="fc-footer__bottom-link">Downloads &amp; Guides</a>
+        <a href="/pages/download-page" class="fc-footer__bottom-link">Product Guide</a>
         <a href="/pages/about-us" class="fc-footer__bottom-link">About Us</a>
-        <a href="/pages/support" class="fc-footer__bottom-link">Support</a>
+        {%- if fc_show_support_link -%}
+          <a href="/pages/support" class="fc-footer__bottom-link">Support</a>
+        {%- endif -%}
       </nav>
       <span class="fc-footer__bottom-copy">&copy; Finecoustic {{ 'now' | date: '%Y' }}</span>
       {%- render 'fc-social-icons' -%}

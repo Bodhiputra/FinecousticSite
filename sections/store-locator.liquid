@@ -210,26 +210,6 @@ a.fc-locator-card-ig {
   margin: 0;
 }
 
-/* ── FOOTER CTA ── */
-.fc-locator-footnote {
-  max-width: 1280px;
-  margin: clamp(16px, 2.5vw, 28px) auto 0;
-  padding: clamp(12px, 2vw, 14px) var(--fc-page-gutter, clamp(16px, 4vw, 64px)) clamp(36px, 6vw, 80px);
-  text-align: right;
-}
-.fc-locator-footnote-cta {
-  font-family: var(--fc-font);
-  font-size: clamp(14px, 2vw, 18px);
-  font-weight: 700;
-  color: var(--fc-yellow);
-  text-decoration: none;
-  letter-spacing: -0.01em;
-  border-bottom: 1px solid rgba(255,211,0,0.22);
-  padding-bottom: 2px;
-  transition: border-color 0.2s;
-}
-.fc-locator-footnote-cta:hover { border-color: var(--fc-yellow); }
-
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
   .fc-locator-body { grid-template-columns: repeat(3, 1fr); }
@@ -331,10 +311,6 @@ a.fc-locator-card-ig {
 <div class="fc-locator-empty" id="fc-locator-empty">
   <p class="fc-locator-empty-label">No results for</p>
   <p class="fc-locator-empty-query" id="fc-locator-empty-query"></p>
-</div>
-
-<div class="fc-locator-footnote">
-  <a href="/pages/support?tab=contact&inquiry=Wholesale+%2F+B2B" class="fc-locator-footnote-cta">Become a distributor &rarr;</a>
 </div>
 
 <script>

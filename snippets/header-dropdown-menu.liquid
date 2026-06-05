@@ -8,7 +8,7 @@
 <nav class="header__inline-menu">
   <ul class="list-menu list-menu--inline" role="list">
     {%- for link in section.settings.menu.links -%}
-      {%- unless link.handle == 'about-us' or link.handle == 'contact' or link.handle == 'contact-us' or link.handle == 'downloads' -%}
+      {%- unless link.handle == 'about-us' or link.handle == 'contact' or link.handle == 'contact-us' or link.handle == 'downloads' or link.handle == 'support' -%}
       <li>
         <a
           id="HeaderMenu-{{ link.handle }}"

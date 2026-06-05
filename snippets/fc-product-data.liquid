@@ -1,9 +1,4 @@
 {%- liquid
-  assign fc_mock_available = false
-  if mock_available
-    assign fc_mock_available = true
-  endif
-
   assign has_color = false
   assign color_option_pos = 0
   for option in product.options
@@ -29,7 +24,7 @@
     {
       "id": {{ variant.id }},
       "title": {{ variant.title | json }},
-      "available": {% if fc_mock_available %}true{% else %}{{ variant.available }}{% endif %},
+      "available": {{ variant.available }},
       "price": "{{ variant.price | money }}",
       "priceRaw": {{ variant.price }},
       "color": {% if has_color %}{{ variant.options[color_option_pos] | json }}{% else %}null{% endif %},

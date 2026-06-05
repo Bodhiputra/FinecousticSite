@@ -643,7 +643,18 @@
 
         <!-- CTAs -->
 
+        {%- liquid
+          assign fc_store_locator_url = '/pages/store-locator'
+          if pages['store-locator']
+            assign fc_store_locator_url = pages['store-locator'].url
+          endif
+        -%}
+
         <div class="cart__ctas" {{ block.shopify_attributes }}>
+          <p class="fc-cart-shipping-note">
+            We currently ship directly to the U.S. only. Outside the U.S.?
+            <a href="{{ fc_store_locator_url }}" class="fc-cart-shipping-note__link">Find a local retailer on our Store Locator →</a>
+          </p>
           <button
             type="submit"
             id="CartDrawer-Checkout"

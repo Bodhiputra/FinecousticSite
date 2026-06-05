@@ -1,5 +1,25 @@
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
+{%- liquid
+  assign fc_date_sort = section.settings.date_sort_by | default: 'created-descending'
+  assign fc_apply_date_sort = false
+  if section.settings.sort_by_date_listed
+    if collection.handle == 'all' or section.settings.sort_by_date_listed_all_collections
+      assign fc_apply_date_sort = true
+    endif
+  endif
+-%}
+{%- if fc_apply_date_sort and collection.sort_by == blank -%}
+  <script>
+    (function () {
+      var url = new URL(window.location.href);
+      if (url.searchParams.has('sort_by')) return;
+      url.searchParams.set('sort_by', {{ fc_date_sort | json }});
+      window.location.replace(url.toString());
+    })();
+  </script>
+{%- endif -%}
+
 {%- style -%}
 
 /* ── TOOLBAR ── */
@@ -55,11 +75,12 @@
   height: 100%;
   object-fit: contain;
   display: block;
-  opacity: 0;
-  transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: scale(1);
 }
-.fc-card__img.fc-img-active { opacity: 1; }
-.fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover)) .fc-card__img.fc-img-active { transform: scale(1.07); }
+.fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover)) .fc-card__img {
+  transform: scale(1.07);
+}
 
 /* Product cards — hover image stack only, no IG dot pagination */
 .fc-shop-page .fc-card__image .fc-ig-dots,
@@ -335,8 +356,7 @@
 {%- for product in collection.products -%}
   {%- render 'fc-exclude-product', product: product -%}
   {%- if fc_exclude_product -%}{%- continue -%}{%- endif -%}
-  {%- assign fc_mock_available = forloop.first -%}
-  {%- render 'fc-product-data', product: product, mock_available: fc_mock_available -%}
+  {%- render 'fc-product-data', product: product -%}
 {%- endfor -%}
 
 <div class="fc-shop-page">
@@ -364,10 +384,6 @@
       endif
       assign fc_variant_id = product.first_available_variant.id | default: product.variants.first.id
       assign fc_card_available = product.available
-      if forloop.first
-        assign fc_card_available = true
-        assign fc_variant_id = product.variants.first.id
-      endif
     -%}
     <div class="fc-card"
       data-product-id="{{ product.id }}"
@@ -377,13 +393,10 @@
       <div class="fc-card__image">
         {%- if product.featured_image -%}
           {%- if forloop.index <= 4 -%}
-            {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'eager', class: 'fc-card__img fc-img-active' }}
+            {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'eager', class: 'fc-card__img' }}
           {%- else -%}
-            {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active' }}
+            {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img' }}
           {%- endif -%}
-          {%- for extra_img in product.images offset: 1 limit: 2 -%}
-            {{ extra_img | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img' }}
-          {%- endfor -%}
         {%- endif -%}
       </div>
 
@@ -614,20 +627,35 @@
   }
 
   /* ── image click → product page; + button only → add to cart ── */
-  document.querySelectorAll('.fc-card').forEach(card => {
-    const url = card.dataset.url;
-    const image = card.querySelector('.fc-card__image');
-    if (image && url) {
-      image.addEventListener('click', () => {
-        window.location.href = url;
-      });
-    }
+  function fcWireShopCards() {
+    if (!window.fcWirePriceTag || !window.fcAddToCart) return;
 
-    const tag = card.querySelector('.fc-card__tag');
-    if (tag && window.fcWirePriceTag) {
-      window.fcWirePriceTag(tag, { onAdd: addToCart });
+    document.querySelectorAll('.fc-card').forEach(card => {
+      if (card.dataset.fcCardBound === '1') return;
+      card.dataset.fcCardBound = '1';
+
+      const url = card.dataset.url;
+      const image = card.querySelector('.fc-card__image');
+      if (image && url) {
+        image.addEventListener('click', () => {
+          window.location.href = url;
+        });
+      }
+
+      const tag = card.querySelector('.fc-card__tag');
+      if (tag) window.fcWirePriceTag(tag, { onAdd: addToCart });
+    });
+  }
+
+  function fcRunWhenCartReady(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn, { once: true });
+    } else {
+      fn();
     }
-  });
+  }
+
+  fcRunWhenCartReady(fcWireShopCards);
 
 
   /* ── expanded ATC ── */
@@ -762,55 +790,7 @@
 
   function fcInitCards() {
     document.querySelectorAll('.fc-card').forEach(card => {
-      const imgs   = Array.from(card.querySelectorAll('.fc-card__img'));
-      const bottom = card.querySelector('.fc-card__bottom');
-      const imageWrap = card.querySelector('.fc-card__image');
-      fcResetCardImageStack(imageWrap);
-      if (!imgs.length) return;
-      imgs[0].classList.add('fc-img-active');
-      if (imgs.length <= 1) return;
-
-      let idx = 0;
-      let timer = null;
-
-      function nextImg() {
-        imgs[idx].classList.remove('fc-img-active');
-        idx = (idx + 1) % imgs.length;
-        imgs[idx].classList.add('fc-img-active');
-      }
-      function startCycle() {
-        if (timer) return;
-        nextImg();
-        timer = setInterval(nextImg, 1500);
-      }
-
-      function stopCycle() {
-        clearInterval(timer);
-        timer = null;
-      }
-
-      const tag      = card.querySelector('.fc-card__tag');
-      const fragment = card.querySelector('.fc-tag-fragment');
-      const wrap     = card.querySelector('.fc-tag-oos-wrap');
-
-      function resetImgs() {
-        stopCycle();
-        imgs[idx].classList.remove('fc-img-active');
-        idx = 0;
-        imgs[0].classList.add('fc-img-active');
-      }
-
-      function isDeadZone(el) {
-        return (wrap     && wrap.contains(el))     ||
-               (tag      && tag.contains(el))      ||
-               (fragment && fragment.contains(el)) ||
-               (bottom   && bottom.contains(el));
-      }
-
-      card.addEventListener('mouseover', e => {
-        if (isDeadZone(e.target)) { resetImgs(); } else { startCycle(); }
-      });
-      card.addEventListener('mouseleave', resetImgs);
+      fcResetCardImageStack(card.querySelector('.fc-card__image'));
     });
   }
 
@@ -854,6 +834,7 @@
     if (!evt.target.querySelector || !evt.target.querySelector('#fc-collection-track')) return;
     fcInitCarousel();
     fcInitCards();
+    fcWireShopCards();
     fcFitNames();
   });
 
@@ -863,6 +844,7 @@
       if (document.getElementById('fc-collection-track')) {
         fcInitCarousel();
         fcInitCards();
+        fcWireShopCards();
       }
     }).observe(fcSection, { childList: true });
   }
@@ -920,6 +902,33 @@
       "id": "enable_sorting",
       "default": true,
       "label": "t:sections.main-collection-product-grid.settings.enable_sorting.label"
+    },
+    {
+      "type": "header",
+      "content": "Product order"
+    },
+    {
+      "type": "checkbox",
+      "id": "sort_by_date_listed",
+      "label": "Sort by date listed (newest first)",
+      "default": true,
+      "info": "Uses Shopify product dates. Applies on first visit when no sort is chosen in the URL."
+    },
+    {
+      "type": "checkbox",
+      "id": "sort_by_date_listed_all_collections",
+      "label": "Apply on all collection pages (not only All Products)",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "date_sort_by",
+      "label": "Date field",
+      "default": "created-descending",
+      "options": [
+        { "value": "created-descending", "label": "Date added to Shopify (newest)" },
+        { "value": "published-descending", "label": "Date published to Online Store (newest)" }
+      ]
     },
     {
       "type": "header",

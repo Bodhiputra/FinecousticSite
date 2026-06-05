@@ -1,165 +1,8 @@
 <section class="fc-pdp-specs-inbox fc-pdp-hero fc-pdp-mobile-accordions" id="fc-pdp-specs-inbox-{{ section.id }}">
-  <div class="fc-pdp-specs-inbox__inner">
-    {%- if section.settings.specs_table_1 != blank or section.settings.specs_table_2 != blank -%}
-      <details class="fc-pdp-acc fc-pdp-acc--specs">
-        <summary class="fc-pdp-acc__summary">{{ section.settings.table_title | default: 'Specifications' | escape }}</summary>
-        <div class="fc-pdp-acc__body">
-          <div class="fc-pdp-specs-inbox__specs">
-            <div class="fc-pdp-specs-inbox__toggle" role="tablist" aria-label="Specification tables">
-              {%- if section.settings.specs_table_1 != blank -%}
-                <button
-                  type="button"
-                  class="fc-pdp-specs-inbox__tab is-active"
-                  role="tab"
-                  aria-selected="true"
-                  data-spec-tab="1"
-                >
-                  {{ section.settings.table1_button_label | default: 'Table 1' | escape }}
-                </button>
-              {%- endif -%}
-              {%- if section.settings.specs_table_2 != blank -%}
-                <button
-                  type="button"
-                  class="fc-pdp-specs-inbox__tab{% if section.settings.specs_table_1 == blank %} is-active{% endif %}"
-                  role="tab"
-                  aria-selected="{% if section.settings.specs_table_1 == blank %}true{% else %}false{% endif %}"
-                  data-spec-tab="2"
-                >
-                  {{ section.settings.table2_button_label | default: 'Table 2' | escape }}
-                </button>
-              {%- endif -%}
-            </div>
-
-            {%- if section.settings.specs_table_1 != blank -%}
-              <div class="fc-pdp-specs-inbox__panel is-active" role="tabpanel" data-spec-panel="1">
-                <table class="fc-pdp-specs-inbox__table">
-                  <tbody>
-                    {%- assign rows_1 = section.settings.specs_table_1 | newline_to_br | split: '<br />' -%}
-                    {%- for row in rows_1 -%}
-                      {%- assign pair = row | split: '|' -%}
-                      {%- if pair.size >= 2 -%}
-                        <tr>
-                          <th scope="row">{{ pair[0] | strip | escape }}</th>
-                          <td>{{ pair[1] | strip | escape }}</td>
-                        </tr>
-                      {%- endif -%}
-                    {%- endfor -%}
-                  </tbody>
-                </table>
-              </div>
-            {%- endif -%}
-
-            {%- if section.settings.specs_table_2 != blank -%}
-              <div
-                class="fc-pdp-specs-inbox__panel{% if section.settings.specs_table_1 == blank %} is-active{% endif %}"
-                role="tabpanel"
-                data-spec-panel="2"
-              >
-                <table class="fc-pdp-specs-inbox__table">
-                  <tbody>
-                    {%- assign rows_2 = section.settings.specs_table_2 | newline_to_br | split: '<br />' -%}
-                    {%- for row in rows_2 -%}
-                      {%- assign pair = row | split: '|' -%}
-                      {%- if pair.size >= 2 -%}
-                        <tr>
-                          <th scope="row">{{ pair[0] | strip | escape }}</th>
-                          <td>{{ pair[1] | strip | escape }}</td>
-                        </tr>
-                      {%- endif -%}
-                    {%- endfor -%}
-                  </tbody>
-                </table>
-              </div>
-            {%- endif -%}
-          </div>
-        </div>
-      </details>
-    {%- endif -%}
-
-    {%- liquid
-      assign fc_inbox_asset = section.settings.inbox_asset
-      if fc_inbox_asset == blank
-        case product.handle
-          when 'groove-ows-ft21'
-            assign fc_inbox_asset = 'GROOVE_OWS_FT21_What_In_The_Box.webp'
-          when 'resono-wfm1'
-            assign fc_inbox_asset = 'Resono_WFM1_What_In_The_Box.webp'
-          when 'sonara-ufm1'
-            assign fc_inbox_asset = 'Sonara_UFM1_What_In_The_Box.webp'
-        endcase
-      endif
-    -%}
-
-    {%- if section.blocks.size > 0 or section.settings.inbox_image != blank or fc_inbox_asset != blank -%}
-      {%- assign fc_inbox_alt = section.settings.inbox_title -%}
-      {%- if fc_inbox_alt == blank -%}
-        {%- assign fc_inbox_alt = 'In The Box' -%}
-      {%- endif -%}
-      <details class="fc-pdp-acc fc-pdp-acc--inbox">
-        <summary class="fc-pdp-acc__summary">{{ fc_inbox_alt | escape }}</summary>
-        <div class="fc-pdp-acc__body">
-          <div class="fc-pdp-specs-inbox__inbox">
-            {%- if section.settings.inbox_image != blank -%}
-              <div class="fc-pdp-specs-inbox__inbox-hero">
-                {{
-                  section.settings.inbox_image
-                  | image_url: width: 1600
-                  | image_tag:
-                    loading: 'lazy',
-                    sizes: '(max-width: 989px) 92vw, 640px',
-                    widths: '600, 900, 1200, 1600',
-                    alt: fc_inbox_alt,
-                    class: 'fc-pdp-specs-inbox__inbox-photo'
-                }}
-              </div>
-            {%- elsif fc_inbox_asset != blank -%}
-              <div class="fc-pdp-specs-inbox__inbox-hero">
-                <img
-                  src="{{ fc_inbox_asset | asset_url }}"
-                  alt="{{ fc_inbox_alt | escape }}"
-                  loading="lazy"
-                  class="fc-pdp-specs-inbox__inbox-photo"
-                  width="1600"
-                  height="900"
-                >
-              </div>
-            {%- endif -%}
-            {%- if section.blocks.size > 0 -%}
-            <div class="fc-pdp-specs-inbox__icons">
-              {%- for block in section.blocks -%}
-                <div class="fc-pdp-specs-inbox__icon" {{ block.shopify_attributes }}>
-                  <div class="fc-pdp-specs-inbox__icon-frame">
-                    {%- if block.settings.icon_asset != blank -%}
-                      <img
-                        src="{{ block.settings.icon_asset | asset_url }}"
-                        alt="{{ block.settings.icon_text | escape }}"
-                        loading="lazy"
-                        width="120"
-                        height="120"
-                      >
-                    {%- elsif block.settings.icon_image -%}
-                      {%- assign fc_icon_alt = block.settings.icon_text | escape -%}
-                      {{
-                        block.settings.icon_image
-                        | image_url: width: 240
-                        | image_tag:
-                          loading: 'lazy',
-                          widths: '120, 180, 240',
-                          alt: fc_icon_alt
-                      }}
-                    {%- endif -%}
-                  </div>
-                  {%- if block.settings.icon_text != blank -%}
-                    <p class="fc-pdp-specs-inbox__icon-label">{{ block.settings.icon_text | escape }}</p>
-                  {%- endif -%}
-                </div>
-              {%- endfor -%}
-            </div>
-            {%- endif -%}
-          </div>
-        </div>
-      </details>
-    {%- endif -%}
+  <div class="fc-pdp-specs-inbox__mount" data-fc-specs-inbox-mount>
+    <div class="fc-pdp-specs-inbox__inner" data-fc-specs-inbox-inner>
+      {% render 'fc-pdp-specs-inbox-inner', section: section %}
+    </div>
   </div>
 </section>
 
@@ -312,25 +155,54 @@
 
 <script>
 (function () {
-  var root = document.getElementById('fc-pdp-specs-inbox-{{ section.id }}');
-  if (!root) return;
+  function bindExclusiveAccordions(inner) {
+    if (!inner || inner.dataset.fcAccExclusiveBound === '1') return;
+    inner.dataset.fcAccExclusiveBound = '1';
 
-  root.querySelectorAll('[data-spec-tab]').forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      var target = tab.getAttribute('data-spec-tab');
-      root.querySelectorAll('[data-spec-tab]').forEach(function (btn) {
-        var active = btn.getAttribute('data-spec-tab') === target;
-        btn.classList.toggle('is-active', active);
-        btn.setAttribute('aria-selected', active ? 'true' : 'false');
-      });
-      root.querySelectorAll('[data-spec-panel]').forEach(function (panel) {
-        panel.classList.toggle('is-active', panel.getAttribute('data-spec-panel') === target);
+    inner.querySelectorAll('details.fc-pdp-acc > summary').forEach(function (summary) {
+      summary.addEventListener('click', function () {
+        var clicked = summary.parentElement;
+        /* Close all siblings *before* the browser toggles the clicked one */
+        inner.querySelectorAll('details.fc-pdp-acc').forEach(function (other) {
+          if (other !== clicked) other.removeAttribute('open');
+        });
       });
     });
-  });
+  }
+
+  function bindSpecTabs(inner) {
+    if (!inner || inner.dataset.fcSpecTabsBound === '1') return;
+    inner.dataset.fcSpecTabsBound = '1';
+
+    inner.querySelectorAll('[data-spec-tab]').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var target = tab.getAttribute('data-spec-tab');
+        inner.querySelectorAll('[data-spec-tab]').forEach(function (btn) {
+          var active = btn.getAttribute('data-spec-tab') === target;
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        inner.querySelectorAll('[data-spec-panel]').forEach(function (panel) {
+          panel.classList.toggle('is-active', panel.getAttribute('data-spec-panel') === target);
+        });
+      });
+    });
+  }
+
+  function initSpecsInbox() {
+    var inner = document.querySelector('#fc-pdp-specs-inbox-{{ section.id }} [data-fc-specs-inbox-inner]')
+      || document.querySelector('[data-fc-specs-inbox-inner]');
+    bindExclusiveAccordions(inner);
+    bindSpecTabs(inner);
+  }
+
+  initSpecsInbox();
+  document.addEventListener('shopify:section:load', initSpecsInbox);
 
   function warmLazyImages() {
-    root.querySelectorAll('img[loading="lazy"]').forEach(function (img) {
+    var inner = document.querySelector('[data-fc-specs-inbox-inner]');
+    if (!inner) return;
+    inner.querySelectorAll('img[loading="lazy"]').forEach(function (img) {
       var src = img.currentSrc || img.src;
       if (!src) return;
       var warm = new Image();
@@ -400,6 +272,11 @@
       "id": "inbox_asset",
       "label": "In the box asset filename",
       "info": "Theme assets/ file (e.g. GROOVE_OWS_FT21_What_In_The_Box.webp). Used when no inbox image is set above."
+    },
+    {
+      "type": "text",
+      "id": "quick_start_guide_url",
+      "label": "Quick Start Guide PDF URL"
     }
   ],
   "blocks": [

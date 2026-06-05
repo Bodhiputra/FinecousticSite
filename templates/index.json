@@ -15,7 +15,9 @@
       "settings": {
         "image_alt": "Finecoustic",
         "show_overlay": false,
-        "heading": "",
+        "heading": "Hako Nomad",
+        "heading_highlight": "Nomad",
+        "hero_subheading": "Available soon.",
         "button_label": "",
         "button_link": ""
       }

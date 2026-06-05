@@ -40,7 +40,7 @@
           section.settings.video
           | video_tag:
             class: 'fc-video-always-on__video fc-pdp-video-hero__video',
-            image_size: '1600x',
+            image_size: '1400x',
             autoplay: false,
             loop: fc_video_loop,
             controls: false,
@@ -73,7 +73,7 @@
   flex-direction: column;
   align-items: center;
   gap: clamp(20px, 3vw, 32px);
-  width: min(1200px, 100%);
+  width: min(1400px, 100%);
   margin: 0 auto;
 }
 
@@ -89,9 +89,10 @@
 
 .fc-pdp-video-hero__media {
   width: 100%;
-  max-width: min(960px, 92vw);
-  aspect-ratio: 16 / 9;
-  border-radius: 12px;
+  max-width: min(1400px, 100%);
+  max-height: 700px;
+  aspect-ratio: 1400 / 700;
+  border-radius: 0;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.04);
 }

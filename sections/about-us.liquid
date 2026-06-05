@@ -25,8 +25,23 @@
   text-wrap: pretty;
 }
 
+#MainContent .fc-about-tagline {
+  font-family: var(--fc-font);
+  font-size: clamp(18px, 3.5vw, 26px);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.55;
+  letter-spacing: -0.02em;
+  max-width: min(680px, 90vw);
+  width: 100%;
+  margin: clamp(24px, 4vw, 40px) 0 0;
+  text-align: left;
+  text-wrap: pretty;
+}
+
 @media screen and (max-width: 749px) {
-  #MainContent .fc-about-statement {
+  #MainContent .fc-about-statement,
+  #MainContent .fc-about-tagline {
     font-size: 16px;
   }
 }
@@ -35,7 +50,9 @@
 
 <div class="fc-about">
 
-  <p class="fc-about-statement" lang="en">Finecoustic is an audio brand exploring how sound exists within everyday spaces. Developed through Fantech&rsquo;s experience in immersive technology and consumer electronics, Finecoustic focuses on a more specific direction &mdash; audio products with attention to how they look, feel, and sound across different settings, whether in rooms, on desks, or as part of daily routines. Designed for people who value both visual presence and listening experience, we continue to refine our direction through each product we develop, learning how sound, design, and context come together in practice.</p>
+  <p class="fc-about-statement" lang="en">Finecoustic is an audio brand focused on products that balance listening experience, visual appeal, and everyday use. We believe audio products are more than functional devices&mdash;they are part of the spaces we live in and the routines we experience every day. Designed for people who value both sound and aesthetics, Finecoustic approaches audio with attention to how products look, feel, and sound in different environments.</p>
+
+  <p class="fc-about-tagline" lang="en">Built to be Seen. Meant to be Heard.</p>
 
 </div>
 

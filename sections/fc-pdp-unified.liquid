@@ -9,13 +9,6 @@
     assign pdp_description = product.description | split: '<ul' | first | split: '<UL' | first
   endif
 
-  assign fc_mock_available = false
-  if product.handle == 'groove-anc-ft20'
-    assign is_available = true
-    assign variant = product.variants.first
-    assign fc_mock_available = true
-  endif
-
   assign has_color = false
   assign color_option_pos = 0
   for option in product.options
@@ -53,15 +46,29 @@
   elsif variant.image
     assign hero_image = variant.image
   endif
+
+  assign fc_desktop_stack = section.settings.desktop_stacked_layout
+  if product.handle == 'groove-anc-ft20'
+    assign fc_desktop_stack = true
+  endif
 -%}
 
-{%- render 'fc-product-data', product: product, mock_available: fc_mock_available -%}
+{%- render 'fc-product-data', product: product -%}
 
-<section class="fc-pdp-u fc-pdp-hero" id="fc-pdp-u-{{ section.id }}" data-section-id="{{ section.id }}">
-  <div class="fc-pdp-u__inner page-width">
+<section
+  class="fc-pdp-u fc-pdp-hero{% if fc_desktop_stack %} fc-pdp-u--desktop-stack{% endif %}"
+  id="fc-pdp-u-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  {% if fc_desktop_stack %}data-fc-desktop-stack="true"{% endif %}
+>
+  <div class="fc-pdp-u__inner">
     <div class="fc-pdp-u__hero">
       <div class="fc-pdp-u__visual">
-        <div class="fc-pdp-u__gallery{% if fc_variant_gallery %} fc-pdp-u__gallery--variant{% endif %}" data-fc-pdp-gallery{% if fc_variant_gallery %} data-fc-variant-gallery{% endif %}>
+        <div
+          class="fc-pdp-u__gallery{% if fc_variant_gallery %} fc-pdp-u__gallery--variant{% endif %}{% if fc_desktop_stack %} fc-pdp-u__gallery--desktop-vertical{% endif %}"
+          data-fc-pdp-gallery
+          {% if fc_variant_gallery %}data-fc-variant-gallery{% endif %}
+        >
           <div class="fc-pdp-u__slides">
             {%- if fc_variant_gallery -%}
               <div class="fc-pdp-u__slide is-active" data-fc-variant-slide>
@@ -125,6 +132,7 @@
       </div>
 
       <div class="fc-pdp-u__meta">
+        <div class="fc-pdp-u__meta-center">
         <h1 class="fc-pdp-u__title">{{ product.title | escape }}</h1>
 
         {%- if pdp_description != blank -%}
@@ -174,6 +182,11 @@
             <span class="fc-pdp-u__atc-sep" aria-hidden="true">·</span>
             <span class="fc-pdp-u__atc-label" data-fc-pdp-atc-label>{% if is_available %}Add to bag{% else %}Out of stock{% endif %}</span>
           </button>
+        </div>
+
+        {%- if fc_desktop_stack -%}
+          <div class="fc-pdp-u__meta-accordions" data-fc-desktop-accordions></div>
+        {%- endif -%}
         </div>
       </div>
     </div>
@@ -256,6 +269,8 @@
 
 .fc-pdp-u__slide.is-active {
   opacity: 1;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .fc-pdp-u__slide-media {
@@ -363,6 +378,7 @@
   display: flex;
   justify-content: flex-start;
   width: 100%;
+  max-width: min(560px, 100%);
 }
 
 .fc-pdp-u__atc {
@@ -381,7 +397,6 @@
   padding: 16px 32px;
   min-height: 48px;
   min-width: 200px;
-  max-width: 360px;
   width: 100%;
   cursor: pointer;
   transition: opacity 0.15s ease;
@@ -421,6 +436,139 @@
 
 .fc-pdp-u__dock {
   display: none;
+}
+
+.fc-pdp-u__meta-accordions {
+  display: none;
+  width: 100%;
+}
+
+@media screen and (min-width: 990px) {
+  .fc-pdp-u.fc-pdp-hero {
+    padding-top: var(--fc-nav-clearance);
+  }
+
+  .fc-pdp-u.fc-pdp-hero .fc-pdp-u__inner {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__hero {
+    align-items: flex-start;
+    min-height: 0;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__visual {
+    min-height: 0;
+    align-self: start;
+    position: relative;
+    top: auto;
+    overflow: visible;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__gallery--desktop-vertical {
+    align-items: stretch;
+    min-height: 0;
+    height: auto;
+  }
+
+  /* Page scroll drives images (no inner scrollbar); video section follows hero */
+  .fc-pdp-u--desktop-stack .fc-pdp-u__gallery--desktop-vertical .fc-pdp-u__slides {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow: visible;
+    max-height: none;
+    min-height: 0;
+    height: auto;
+    position: static;
+    touch-action: auto;
+    cursor: default;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__gallery--desktop-vertical .fc-pdp-u__slides.fc-ig-viewport {
+    overflow: visible;
+    touch-action: auto;
+    cursor: default;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__gallery--desktop-vertical .fc-ig-track {
+    display: contents;
+    transform: none !important;
+    height: auto;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__gallery--desktop-vertical .fc-pdp-u__slide {
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    min-height: calc(100dvh - var(--fc-nav-clearance) - clamp(20px, 3vw, 40px));
+    padding: 0;
+    opacity: 1;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__gallery--desktop-vertical .fc-pdp-u__slide-media {
+    max-height: min(72vh, 680px);
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__meta {
+    position: sticky;
+    top: var(--fc-nav-clearance);
+    align-self: start;
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
+    overscroll-behavior: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__meta-center {
+    width: 100%;
+    padding: clamp(20px, 3vw, 40px) 0;
+    box-sizing: border-box;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__meta-accordions {
+    max-width: min(560px, 100%);
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__meta-accordions {
+    display: block;
+    margin-top: clamp(16px, 2vw, 24px);
+    width: 100%;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__meta-accordions .fc-pdp-specs-inbox__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__meta-accordions .fc-pdp-acc > .fc-pdp-acc__summary,
+  .fc-pdp-u--desktop-stack .fc-pdp-u__meta-accordions .fc-pdp-acc__body,
+  .fc-pdp-u--desktop-stack .fc-pdp-u__meta-accordions .fc-pdp-guide-row {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .fc-pdp-u--desktop-stack .fc-pdp-u__meta-accordions .fc-pdp-acc:first-child {
+    border-top: none;
+  }
 }
 
 @media screen and (max-width: 989px) {
@@ -562,7 +710,93 @@
     else setTimeout(run, 0);
   }
 
-  if (!variantGallery && gallery && total > 1 && window.FcIgGallery) {
+  var desktopStack = root.hasAttribute('data-fc-desktop-stack');
+  var desktopMq = window.matchMedia('(min-width: 990px)');
+
+  function isDesktopStack() {
+    return desktopStack && desktopMq.matches;
+  }
+
+  function resetSlidesViewport() {
+    if (!gallery) return;
+    var slidesEl = gallery.querySelector('.fc-pdp-u__slides');
+    if (!slidesEl) return;
+    slidesEl.classList.remove('fc-ig-viewport', 'is-dragging', 'is-animating');
+    slidesEl.style.height = '';
+    slidesEl.style.maxHeight = '';
+    delete slidesEl.dataset.fcIgGalleryBound;
+    var track = slidesEl.querySelector('.fc-ig-track');
+    if (track) {
+      Array.from(track.children).forEach(function (node) {
+        node.classList.remove('fc-ig-slide');
+        node.style.transform = '';
+        slidesEl.appendChild(node);
+      });
+      track.remove();
+    }
+  }
+
+  function teardownHorizontalGallery() {
+    if (!gallery) return;
+    gallery.querySelectorAll('.fc-ig-dots').forEach(function (el) { el.remove(); });
+    gallery.classList.remove('fc-ig-viewport', 'is-dragging', 'is-animating');
+    resetSlidesViewport();
+    delete gallery.dataset.fcIgGalleryBound;
+    if (!isDesktopStack()) {
+      root.querySelectorAll('.fc-pdp-u__slide').forEach(function (slide) {
+        slide.classList.add('is-active');
+      });
+    }
+  }
+
+  var desktopScrollIo = null;
+
+  function destroyDesktopScrollGallery() {
+    if (desktopScrollIo) {
+      desktopScrollIo.disconnect();
+      desktopScrollIo = null;
+    }
+  }
+
+  function initDesktopScrollGallery() {
+    destroyDesktopScrollGallery();
+    resetSlidesViewport();
+    if (!isDesktopStack() || variantGallery || total <= 1) {
+      if (isDesktopStack()) {
+        root.querySelectorAll('.fc-pdp-u__slide').forEach(function (slide) {
+          slide.classList.add('is-active');
+        });
+      }
+      return;
+    }
+
+    root.querySelectorAll('.fc-pdp-u__slide').forEach(function (slide, i) {
+      slide.classList.toggle('is-active', i === 0);
+    });
+
+    desktopScrollIo = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var slide = entry.target;
+          root.querySelectorAll('.fc-pdp-u__slide').forEach(function (s) {
+            s.classList.toggle('is-active', s === slide);
+          });
+          syncSlideVideos();
+        });
+      },
+      { root: null, rootMargin: '-42% 0px -42% 0px', threshold: 0 }
+    );
+
+    slides.forEach(function (slide) {
+      desktopScrollIo.observe(slide);
+    });
+    scheduleHeroVideos();
+  }
+
+  function initHorizontalGallery() {
+    if (!gallery || variantGallery || total <= 1 || !window.FcIgGallery) return;
+    if (gallery.dataset.fcIgGalleryBound === '1') return;
     window.FcIgGallery({
       viewport: gallery.querySelector('.fc-pdp-u__slides'),
       slideSelector: '.fc-pdp-u__slide',
@@ -570,17 +804,55 @@
       onChange: syncSlideVideos
     }).init();
     scheduleHeroVideos();
-  } else {
+  }
+
+  function layoutDesktopAccordions() {
+    if (!desktopStack) return;
+    var slot = root.querySelector('[data-fc-desktop-accordions]');
+    var specsInner = document.querySelector('[data-fc-specs-inbox-inner]');
+    var specsMount = document.querySelector('[data-fc-specs-inbox-mount]');
+    if (!slot || !specsInner || !specsMount) return;
+
+    if (isDesktopStack()) {
+      slot.appendChild(specsInner);
+    } else if (specsInner.parentElement !== specsMount) {
+      specsMount.appendChild(specsInner);
+    }
+  }
+
+  function updateGalleryMode() {
+    if (isDesktopStack()) {
+      teardownHorizontalGallery();
+      initDesktopScrollGallery();
+      return;
+    }
+
+    destroyDesktopScrollGallery();
+
     if (variantGallery && gallery) {
       gallery.querySelectorAll('.fc-ig-dots').forEach(function (el) { el.remove(); });
       gallery.classList.remove('fc-ig-viewport');
-      var track = gallery.querySelector('.fc-ig-track');
-      if (track) {
-        while (track.firstChild) gallery.querySelector('.fc-pdp-u__slides').appendChild(track.firstChild);
-        track.remove();
-      }
+      resetSlidesViewport();
+      scheduleHeroVideos();
+    } else {
+      initHorizontalGallery();
+      if (!gallery || gallery.dataset.fcIgGalleryBound !== '1') scheduleHeroVideos();
     }
-    scheduleHeroVideos();
+  }
+
+  function runDesktopLayout() {
+    layoutDesktopAccordions();
+    updateGalleryMode();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runDesktopLayout);
+  } else {
+    runDesktopLayout();
+  }
+
+  if (desktopStack) {
+    desktopMq.addEventListener('change', runDesktopLayout);
   }
 
   function swapVariantHero(src, alt) {
@@ -676,7 +948,14 @@
       "label": "Switch hero image by variant",
       "info": "Single product image that updates when a color/variant is selected — no swipe carousel.",
       "default": false
-    }
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_stacked_layout",
+      "label": "Desktop stacked PDP",
+      "info": "Desktop only: vertical image scroll, specs and In the box in the hero column. Mobile unchanged.",
+      "default": false
+    },
   ],
   "presets": [
     {

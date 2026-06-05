@@ -594,15 +594,16 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   vertical-align: baseline;
 }
 
-/* ── Title bar — compact for dropdown panel ── */
+/* ── Title bar — Bag left, close right (match close icon scale) ── */
 .cart-drawer .drawer__header {
   height: auto;
-  min-height: 52px;
+  min-height: 4.4rem;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   gap: clamp(8px, 2vw, 12px);
-  padding: 10px var(--fc-drawer-gutter, clamp(16px, 4vw, 20px)) 10px 12px;
+  padding: 10px var(--fc-drawer-gutter, clamp(16px, 4vw, 20px));
   border-bottom: none;
   flex-shrink: 0;
   margin: 0;
@@ -611,22 +612,46 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   z-index: 3;
 }
 
+.cart-drawer .drawer__header .drawer__close.fc-cart-drawer__close {
+  position: static;
+  top: auto;
+  right: auto;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.4rem;
+  min-height: 4.4rem;
+  margin: 0;
+}
+
 .cart-drawer .drawer__close-arrow {
   display: none !important;
 }
 
 .cart-drawer .drawer__heading {
   font-family: 'Alte Haas Grotesk', sans-serif;
-  font-size: clamp(16px, 3vw, 22px);
+  font-size: 2rem;
   font-weight: 700;
   letter-spacing: -0.03em;
   text-transform: uppercase;
   color: #fff;
   margin: 0;
   line-height: 1;
-  text-align: right;
+  text-align: left;
   white-space: nowrap;
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 4.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.cart-drawer .drawer__heading-qty {
+  font-size: 1em;
+  font-weight: inherit;
+  letter-spacing: inherit;
 }
 
 /* ── Meta row — same height as navbar ── */
@@ -817,6 +842,33 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 
 .cart__ctas {
   padding: var(--fc-drawer-gutter, clamp(16px, 4vw, 24px));
+}
+
+.fc-cart-shipping-note {
+  font-family: var(--fc-font);
+  font-size: clamp(11px, 2vw, 13px);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 clamp(12px, 2vw, 16px);
+  padding: 0;
+  text-align: left;
+}
+
+.fc-cart-shipping-note__link {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+@media (hover: hover) {
+  .fc-cart-shipping-note__link:hover {
+    color: var(--fc-yellow);
+    text-decoration-color: var(--fc-yellow);
+  }
 }
 
 .cart-drawer .cart__checkout-button {
