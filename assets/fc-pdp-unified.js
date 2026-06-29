@@ -1,9 +1,9 @@
 (function () {
-  var root = document.getElementById('fc-pdp-u-{{ section.id }}');
+  var root = document.querySelector('.fc-pdp-u[data-section-id]');
   if (!root) return;
 
-  var sId = {{ section.id | json }};
-  var variantId = {{ variant.id | json }};
+  var sId = root.getAttribute('data-section-id');
+  var variantId = parseInt(root.querySelector('[data-variant-id]')?.getAttribute('data-variant-id') || '0', 10);
   var gallery = root.querySelector('[data-fc-pdp-gallery]');
   var slides = root.querySelectorAll('.fc-pdp-u__slide');
   var total = slides.length;
@@ -188,7 +188,7 @@
 
   var fcProductData = null;
   try {
-    var fcDataEl = document.getElementById('fc-data-{{ product.id }}');
+    var fcDataEl = document.querySelector('script[id^="fc-data-"]');
     if (fcDataEl) fcProductData = JSON.parse(fcDataEl.textContent);
   } catch (e) {}
 

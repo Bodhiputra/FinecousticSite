@@ -157,36 +157,36 @@
           <div class="menu-drawer__utility-links">
             <div class="menu-drawer__utility-start">
               {%- render 'fc-social-icons', class: 'menu-drawer__social' -%}
-              {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
-                <div class="menu-drawer__localization header-localization">
-                  {%- if localization.available_countries.size > 1 -%}
-                    <localization-form>
-                      {%- form 'localization', id: 'HeaderCountryMobileForm', class: 'localization-form' -%}
-                        <div>
-                          <h2 class="visually-hidden" id="HeaderCountryMobileLabel">
-                            {{ 'localization.country_label' | t }}
-                          </h2>
-                          {%- render 'country-localization', localPosition: 'HeaderCountryMobile' -%}
-                        </div>
-                      {%- endform -%}
-                    </localization-form>
-                  {% endif %}
-
-                  {%- if localization.available_languages.size > 1 -%}
-                    <localization-form>
-                      {%- form 'localization', id: 'HeaderLanguageMobileForm', class: 'localization-form' -%}
-                        <div>
-                          <h2 class="visually-hidden" id="HeaderLanguageMobileLabel">
-                            {{ 'localization.language_label' | t }}
-                          </h2>
-                          {%- render 'language-localization', localPosition: 'HeaderLanguageMobile' -%}
-                        </div>
-                      {%- endform -%}
-                    </localization-form>
-                  {%- endif -%}
-                </div>
-              {%- endif -%}
             </div>
+            {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+              <div class="menu-drawer__localization header-localization">
+                {%- if localization.available_countries.size > 1 -%}
+                  <localization-form>
+                    {%- form 'localization', id: 'HeaderCountryMobileForm', class: 'localization-form' -%}
+                      <div>
+                        <h2 class="visually-hidden" id="HeaderCountryMobileLabel">
+                          {{ 'localization.country_label' | t }}
+                        </h2>
+                        {%- render 'country-localization', localPosition: 'HeaderCountryMobile' -%}
+                      </div>
+                    {%- endform -%}
+                  </localization-form>
+                {% endif %}
+
+                {%- if localization.available_languages.size > 1 -%}
+                  <localization-form>
+                    {%- form 'localization', id: 'HeaderLanguageMobileForm', class: 'localization-form' -%}
+                      <div>
+                        <h2 class="visually-hidden" id="HeaderLanguageMobileLabel">
+                          {{ 'localization.language_label' | t }}
+                        </h2>
+                        {%- render 'language-localization', localPosition: 'HeaderLanguageMobile' -%}
+                      </div>
+                    {%- endform -%}
+                  </localization-form>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
             {%- if shop.customer_accounts_enabled -%}
               <a
                 href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"

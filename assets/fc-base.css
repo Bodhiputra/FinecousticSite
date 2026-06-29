@@ -108,6 +108,18 @@ body {
   max-width: 100%;
 }
 
+/* Dawn's .gradient class uses background shorthand which wipes background-image — restore FinecouBG on desktop */
+@media screen and (min-width: 750px) {
+  body.gradient {
+    background: var(--fc-black);
+    background-image: var(--fc-body-bg);
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+  }
+}
+
 /* Mobile: viewport-sized texture — NOT tied to document height (policies tabs won’t re-zoom cover) */
 @media screen and (max-width: 749px) {
   body.gradient {
