@@ -1,0 +1,397 @@
+/* ─── Product detail page (Finecoustic PDP) ─── */
+.template-product {
+  font-family: var(--fc-font);
+  color: #ffffff;
+}
+
+.template-product .fc-pdp-section {
+  background: transparent;
+}
+
+/* Mobile fixed ATC spacing handled on .fc-pdp, not MainContent */
+
+/* Kill Dawn light scheme text on PDP sections */
+.template-product .color-scheme-1,
+.template-product .color-scheme-2,
+.template-product .color-scheme-3,
+.template-product .color-scheme-4,
+.template-product .color-scheme-5 {
+  --color-foreground: 255, 255, 255;
+  color: #ffffff;
+}
+
+.template-product .title,
+.template-product .title.inline-richtext,
+.template-product h1,
+.template-product h2,
+.template-product h3 {
+  font-family: var(--fc-font);
+  color: #ffffff;
+}
+
+.template-product p,
+.template-product .rte,
+.template-product .rte p {
+  font-family: var(--fc-font);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+
+/* Legacy Dawn main-product (fallback / theme editor) */
+.template-product product-info.gradient {
+  background: transparent;
+}
+
+.template-product .product__media-wrapper,
+.template-product .product__info-wrapper {
+  background: transparent;
+}
+
+.template-product .price .price-item,
+.template-product .price__regular .price-item--regular {
+  color: #ffffff;
+  font-family: var(--fc-font);
+}
+
+.template-product .product-form__submit,
+.template-product .shopify-payment-button__button {
+  font-family: var(--fc-font);
+  font-weight: 700;
+}
+
+.template-product .product-form__input .form__label,
+.template-product legend.form__label {
+  font-family: var(--fc-font);
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: -0.02em;
+  font-size: 1.2rem;
+}
+
+.template-product .product-form__input input[type='radio'] + label {
+  font-family: var(--fc-font);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.template-product .product-form__input input[type='radio']:checked + label {
+  border-color: var(--fc-yellow);
+  color: var(--fc-yellow);
+}
+
+/* Scrollable feature banners on PDP */
+.template-product .scrollable-banner-section {
+  background: transparent;
+}
+
+.template-product .scrollable-banner-section .section-title {
+  font-family: var(--fc-font);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.template-product .scrollable-banner-section .section-description {
+  font-family: var(--fc-font);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Overview / struggle section */
+.template-product .productinfo-section-outerdiv,
+.template-product .productinfo-section {
+  background-color: transparent;
+}
+
+/* Dual spec table on PDP */
+.template-product .dual-spec-wrapper,
+.template-product .dual-spec-section {
+  background: transparent;
+}
+
+.template-product .dual-spec-title,
+.template-product .dual-spec-wrapper .table-title {
+  font-family: var(--fc-font);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.template-product .dual-spec-btn {
+  font-family: var(--fc-font);
+}
+
+.template-product .dual-spec-table td {
+  font-family: var(--fc-font);
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.template-product .dual-spec-type {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.template-product .dual-spec-value {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* 50/50 feature splits */
+.template-product .text-image-split {
+  background: transparent;
+}
+
+.template-product #MainContent,
+.template-product .shopify-section {
+  background: transparent;
+}
+
+.template-product .image-section-title {
+  font-family: var(--fc-font);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.template-product .image-section-description,
+.template-product .image-section-description p {
+  font-family: var(--fc-font);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Video section (Dawn) */
+.template-product .video-section {
+  background: transparent;
+}
+
+.template-product .video-section .title-wrapper .title {
+  font-family: var(--fc-font);
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* Related products strip */
+.template-product .related-products {
+  background: transparent;
+}
+
+.template-product .related-products .related-products__heading {
+  font-family: var(--fc-font);
+  color: #ffffff;
+}
+
+/* ── PDP split hero only (unified/showcases/video define their own layout) ── */
+.fc-pdp.fc-pdp-hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  background: transparent;
+  padding-top: max(var(--header-height, 80px), 64px);
+  padding-bottom: clamp(32px, 5vw, 64px);
+  padding-left: clamp(20px, 4vw, 48px);
+  padding-right: clamp(20px, 4vw, 48px);
+}
+
+/* Full-bleed PDP heroes — no header offset (nav floats on top) */
+.fc-pdp-showcase.fc-pdp-hero,
+.fc-pdp-video-hero.fc-pdp-hero {
+  min-height: 0;
+  display: block;
+  justify-content: unset;
+  padding: 0;
+}
+
+.fc-pdp-showcases {
+  display: block;
+  padding: 0;
+  background: transparent;
+}
+
+/* Mobile PDP accordions — Album, Specifications, In the box */
+.fc-pdp-acc {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.fc-pdp-acc > .fc-pdp-acc__summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px clamp(16px, 4vw, 24px);
+  font-family: var(--fc-font);
+  font-size: clamp(15px, 4vw, 17px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fc-pdp-acc > .fc-pdp-acc__summary::-webkit-details-marker {
+  display: none;
+}
+
+.fc-pdp-acc__summary-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.fc-pdp-acc__toggle {
+  position: relative;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.fc-pdp-acc__toggle-bar {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 1px;
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s ease;
+}
+
+.fc-pdp-acc__toggle-bar--h {
+  width: 14px;
+  height: 2px;
+}
+
+.fc-pdp-acc__toggle-bar--v {
+  width: 2px;
+  height: 14px;
+}
+
+.fc-pdp-acc[open] > .fc-pdp-acc__summary .fc-pdp-acc__toggle-bar--v {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+@media (hover: hover) {
+  .fc-pdp-acc > .fc-pdp-acc__summary:hover .fc-pdp-acc__toggle-bar {
+    background-color: #ffd300;
+  }
+}
+
+.fc-pdp-acc[open] > .fc-pdp-acc__summary .fc-pdp-acc__toggle-bar {
+  background-color: #ffd300;
+}
+
+.fc-pdp-guide-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px clamp(16px, 4vw, 24px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-family: var(--fc-font);
+  font-size: clamp(15px, 4vw, 17px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.fc-pdp-guide-row__arrow {
+  flex-shrink: 0;
+  font-size: 1.15em;
+  font-weight: 400;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+@media (hover: hover) {
+  .fc-pdp-guide-row:hover {
+    color: var(--fc-yellow);
+  }
+
+  .fc-pdp-guide-row:hover .fc-pdp-guide-row__arrow {
+    color: var(--fc-yellow);
+    transform: translateX(3px);
+  }
+}
+
+.fc-pdp-acc__body {
+  padding: 0 clamp(16px, 4vw, 24px) 20px;
+  box-sizing: border-box;
+}
+
+.fc-pdp-acc--album .fc-pdp-acc__body {
+  padding-bottom: 0;
+}
+
+.fc-pdp-acc--album .fc-pdp-showcase--image_only {
+  min-height: min(56vw, 360px);
+}
+
+@media screen and (max-width: 989px) {
+  .fc-pdp-video-hero.fc-pdp-hero {
+    padding: clamp(24px, 5vw, 40px) 0;
+  }
+
+  .fc-pdp-video-hero__inner {
+    width: 100%;
+    max-width: none;
+    gap: clamp(16px, 3vw, 24px);
+    padding-inline: clamp(16px, 4vw, 24px);
+    box-sizing: border-box;
+  }
+
+  .fc-pdp-video-hero__media {
+    width: 100%;
+    max-width: min(1400px, 100%);
+    max-height: 700px;
+    border-radius: 0;
+    aspect-ratio: 1400 / 700;
+  }
+}
+
+.fc-pdp-showcase {
+  position: relative;
+  overflow: hidden;
+}
+
+.fc-pdp-showcase + .fc-pdp-showcase {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+@media screen and (min-width: 990px) {
+  .template-product .fc-pdp-video-hero__inner {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding-inline: 0;
+  }
+
+  .fc-pdp-acc--album {
+    display: block;
+    border: none;
+  }
+
+  .fc-pdp-acc--album > .fc-pdp-acc__summary {
+    display: none;
+  }
+
+  .fc-pdp-acc--album .fc-pdp-acc__body {
+    display: block;
+  }
+}
+
+.fc-pdp-showcase.fc-pdp-showcase--split {
+  border-top: none;
+}
+

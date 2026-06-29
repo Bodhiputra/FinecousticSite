@@ -1,6 +1,6 @@
 {% comment %}theme-check-disable UndefinedObject{% endcomment %}
 {%- comment -%} FC nav: set fc_show_support_link to true to restore footer Support link {%- endcomment -%}
-{%- assign fc_show_support_link = false -%}
+{%- assign fc_show_support_link = true -%}
 {{ 'section-footer.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
@@ -63,7 +63,7 @@
     }
 
     #shopify-section-{{ section.id }} .fc-footer__bottom-links {
-      --fc-footer-bar-size: clamp(1.35rem, 3.8vw, 1.75rem);
+      --fc-footer-bar-size: clamp(1.2rem, 3.8vw, 1.4rem);
       --fc-footer-bar-gap: clamp(12px, 2.8vw, 18px);
       grid-template-columns: 1fr;
       grid-template-rows: auto auto auto;
@@ -121,55 +121,7 @@
   </div>
 </footer>
 
-<script>
-  (function () {
-    if (typeof Shopify !== 'undefined' && Shopify.designMode) return;
-    if (window.matchMedia('(max-width: 749px)').matches) return;
-
-    var footer = document.querySelector('footer.footer');
-    if (!footer) return;
-
-    var bottomLinks = footer.querySelector('.fc-footer__bottom-links');
-    if (!bottomLinks) return;
-
-    var revealed = false;
-
-    function reveal(baseDelay) {
-      if (revealed) return;
-      revealed = true;
-      setTimeout(function () {
-        bottomLinks.style.opacity = '1';
-        bottomLinks.style.transform = 'translateY(0)';
-      }, baseDelay);
-    }
-
-    function isInView() {
-      var r = footer.getBoundingClientRect();
-      return r.top < window.innerHeight && r.bottom > 0;
-    }
-
-    if (!('IntersectionObserver' in window)) {
-      reveal(0);
-      return;
-    }
-
-    var io = new IntersectionObserver(function (entries) {
-      if (!entries[0].isIntersecting || revealed) return;
-      reveal(0);
-      io.disconnect();
-    }, { threshold: 0 });
-    io.observe(footer);
-
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        if (!revealed && isInView()) reveal(400);
-      });
-    });
-    window.addEventListener('load', function () {
-      if (!revealed && isInView()) reveal(400);
-    });
-  })();
-</script>
+<script src="{{ 'fc-footer.js' | asset_url }}" defer></script>
 
 {% schema %}
 {

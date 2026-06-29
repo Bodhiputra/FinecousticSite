@@ -1,0 +1,91 @@
+/* ─── Finecoustic typography system (global enforcement) ─── */
+#MainContent,
+.header,
+.footer,
+.fc-pdp,
+[class^="fc-"],
+[class*=" fc-"] {
+  font-family: var(--fc-font);
+}
+
+#MainContent :where(
+  h1, h2, h3, h4, h5, h6,
+  p, a, li, span, label, button, input, textarea, select
+) {
+  text-transform: none;
+}
+
+#MainContent .eyebrow,
+#MainContent [class*="__eyebrow"],
+#MainContent [class*="__type"],
+.template-product .section-title,
+.template-product .image-section-title,
+.fc-pdp__title,
+.fc-pdp-u__title,
+.website-hero__heading {
+  text-transform: none;
+}
+
+.website-hero__content {
+  border-bottom: none;
+}
+
+/* Muted body copy */
+#MainContent p,
+#MainContent .rte,
+#MainContent .rte p,
+#MainContent [class*="__desc"],
+#MainContent [class*="description"] {
+  color: var(--fc-text-muted);
+}
+
+/* Dawn caption utility — override wide tracking */
+#MainContent .caption-with-letter-spacing,
+#MainContent .caption-with-letter-spacing--medium,
+#MainContent .caption-with-letter-spacing--large,
+#MainContent .uppercase {
+  letter-spacing: -0.01em;
+  text-transform: none;
+  font-family: var(--fc-font);
+}
+
+/* Cart drawer + customer account (Dawn defaults) */
+.cart-drawer .caption-with-letter-spacing,
+.cart-drawer .uppercase,
+.drawer__footer .caption-with-letter-spacing,
+.customer .caption-with-letter-spacing,
+.customer .uppercase,
+.customer th,
+.customer .field__label {
+  text-transform: none;
+  letter-spacing: -0.01em;
+  font-family: var(--fc-font);
+}
+
+.template-product .section-main-product .caption-with-letter-spacing {
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+/* PDP scroll — no fixed bg repaint; no scroll-snap (fights natural momentum on iOS) */
+.template-product body.gradient {
+  background-attachment: scroll;
+}
+
+.template-product .header-wrapper,
+.template-product .header__submenu {
+  background-attachment: scroll;
+}
+
+
+.template-product .fc-pdp-video-hero {
+  content-visibility: visible;
+  contain-intrinsic-size: none;
+}
+
+.template-product .scroll-trigger {
+  opacity: 1;
+  transform: none !important;
+  transition: none;
+}
+

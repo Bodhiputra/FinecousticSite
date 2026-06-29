@@ -541,7 +541,7 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   background-size: cover !important;
   background-position: center top !important;
   background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
+  background-attachment: scroll !important;
 }
 
 .cart-drawer .drawer__header,
@@ -557,7 +557,7 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   background-size: cover !important;
   background-position: center top !important;
   background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
+  background-attachment: scroll !important;
 }
 
 .cart-drawer .drawer__inner {

@@ -8,7 +8,7 @@
 <nav class="header__inline-menu">
   <ul class="list-menu list-menu--inline" role="list">
     {%- for link in section.settings.menu.links -%}
-      {%- unless link.handle == 'about-us' or link.handle == 'contact' or link.handle == 'contact-us' or link.handle == 'downloads' or link.handle == 'support' -%}
+      {%- unless link.handle == 'about-us' or link.handle == 'contact' or link.handle == 'contact-us' or link.handle == 'downloads' -%}
       <li>
         <a
           id="HeaderMenu-{{ link.handle }}"
@@ -18,11 +18,7 @@
             aria-current="page"
           {% endif %}
         >
-          <span
-            {%- if link.current or link.child_active %}
-              class="header__active-menu-item"
-            {% endif %}
-          >
+          <span class="fc-header-nav-text{% if link.current or link.child_active %} header__active-menu-item{% endif %}">
             {%- if link.title == 'Products' -%}Shop{%- else -%}{{- link.title | escape -}}{%- endif -%}
           </span>
         </a>
@@ -31,7 +27,7 @@
     {%- endfor -%}
     <li>
       <a href="/pages/store-locator" class="header__menu-item list-menu__item link link--text focus-inset">
-        <span>Store Locator</span>
+        <span class="fc-header-nav-text">Store Locator</span>
       </a>
     </li>
   </ul>

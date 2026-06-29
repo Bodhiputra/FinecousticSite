@@ -37,6 +37,9 @@ shopify.theme.toml
 # Claude Code (local machine settings)
 .claude/settings.local.json
 
+# Codex local config (contains secrets)
+.codex/config.toml
+
 # Session context (local only)
 context/
 

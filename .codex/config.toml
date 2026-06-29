@@ -1,0 +1,7 @@
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+SHOPIFY_ACCESS_TOKEN = "YOUR_SHOPIFY_ACCESS_TOKEN_HERE"
+SHOPIFY_API_VERSION = "2026-04"
+SHOPIFY_DOMAIN = "j5gawi-vu.myshopify.com"

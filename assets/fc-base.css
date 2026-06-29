@@ -1,0 +1,332 @@
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url('AlteHaasGroteskRegular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url('AlteHaasGroteskBold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-body-family: var(--fc-font);
+  --font-body-style: normal;
+  --font-body-weight: 400;
+  --font-body-weight-bold: 700;
+  --font-heading-family: var(--fc-font);
+  --font-heading-style: normal;
+  --font-heading-weight: 700;
+
+  /* Finecoustic design tokens */
+  --fc-yellow: #FFD300;
+  --fc-black: #000000;
+  --fc-font: 'Alte Haas Grotesk', sans-serif;
+  --fc-text-muted: rgba(255,255,255,0.6);
+  --fc-text-dim: rgba(255,255,255,0.18);
+  --fc-surface-dark: rgba(0,0,0,0.92);
+  --fc-border-subtle: rgba(255,255,255,0.1);
+  --fc-page-gutter: clamp(16px, 4vw, 64px);
+  --fc-page-gutter-sm: clamp(12px, 3vw, 40px);
+  --fc-nav-bar-gutter: 12px;
+  --fc-nav-bar-max-width: calc(100vw - (var(--fc-nav-bar-gutter) * 2));
+  --fc-drawer-gutter: clamp(16px, 4vw, 24px);
+  --fc-section-gap: clamp(16px, 2.5vw, 32px);
+  --fc-carousel-gutter: clamp(64px, 18vw, 120px);
+  --fc-carousel-band: min(700px, 100%);
+  --fc-nav-clearance: calc(var(--header-height, 70px) + clamp(12px, 3vw, 24px));
+}
+
+/* Display hero — 56–72px */
+.h0 {
+  letter-spacing: -0.04em;
+}
+
+/* h1 — ~50–52px */
+h1, .h1 {
+  letter-spacing: -0.03em;
+}
+
+/* h2 — ~40px */
+h2, .h2 {
+  letter-spacing: -0.03em;
+}
+
+/* h3 — ~30px */
+h3, .h3 {
+  letter-spacing: -0.025em;
+}
+
+/* h4 — ~20px */
+h4, .h4 {
+  letter-spacing: -0.025em;
+}
+
+/* h5 — ~17px */
+h5, .h5 {
+  letter-spacing: -0.01em;
+}
+
+/* h6 — ~15px */
+h6, .h6 {
+  letter-spacing: -0.01em;
+}
+
+/* Body text — 14–16px */
+body, p, a, span, li, button, input, textarea, select, label {
+  letter-spacing: -0.005em;
+}
+
+/* Small / caption — 9–13px */
+small, .caption, .caption-with-letter-spacing {
+  letter-spacing: 0em;
+}
+
+/* ── Global background: FinecouBG (theme.liquid sets --fc-body-bg) ── */
+html {
+  background-color: var(--fc-black);
+  color-scheme: dark;
+  min-height: 100vh;
+}
+
+body {
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+html,
+body {
+  overflow-x: clip; /* clips horizontal overflow without creating a scroll container — viewport stays as scroll anchor, window.scrollY works, fixed elements are unaffected */
+  max-width: 100%;
+}
+
+/* Mobile: viewport-sized texture — NOT tied to document height (policies tabs won’t re-zoom cover) */
+@media screen and (max-width: 749px) {
+  body.gradient {
+    background-image: none;
+    background-color: var(--fc-black) !important;
+    background-attachment: scroll;
+  }
+
+  body.gradient::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: var(--fc-body-bg);
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+}
+
+/* ── FC site shell (universal sticky footer) ──
+   body          flex column, min-height 100vh
+   #MainContent   flex: 1 — absorbs leftover viewport on short pages
+   footer group   flex-shrink: 0, margin-top: auto — pinned to viewport bottom
+   Nav is fixed; #MainContent gets padding-top = nav height so ALL pages
+   naturally start below the navbar with zero per-page overrides needed. */
+.content-for-layout {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* ── THE ONE TRUE CLEARANCE RULE ──
+   Applied once here. Every page type respects it automatically.
+   Full-bleed heroes (homepage hero, PDP) override to 0 below. */
+#MainContent {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  padding-top: var(--fc-nav-clearance);
+}
+
+#MainContent > .shopify-section {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  box-sizing: border-box;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Short pages — lone section grows so content + footer fill the viewport */
+#MainContent > .shopify-section:only-child:not(:has(.fc-shop-page)):not(:has(.fc-search-page)) {
+  flex: 1 0 auto;
+}
+
+#MainContent > .shopify-section:only-child:has(.fc-policy-wrap),
+#MainContent > .shopify-section:only-child:has(.fc-support-wrap),
+#MainContent > .shopify-section:only-child:has(.fc-dl-page) {
+  flex: 1 0 auto;
+}
+
+/* Landing — match hero fallback bg in main column (hides texture seam if hero is shorter than flex fill) */
+#MainContent > .shopify-section:only-child:has(.website-hero) {
+  flex: 1 0 auto;
+  background: #0a0a0a;
+}
+
+/* Full-bleed heroes — cancel #MainContent clearance so hero fills from top of viewport.
+   These sections handle their own internal positioning. */
+#MainContent:has(> .shopify-section:first-child .website-hero),
+#MainContent:has(> .shopify-section:first-child .fc-pdp-u),
+#MainContent:has(> .shopify-section:first-child .fc-pdp-video-hero),
+#MainContent:has(> .shopify-section:first-child .fc-pdp-showcases),
+#MainContent:has(> .shopify-section:first-child .fc-pdp-showcase),
+#MainContent:has(> .shopify-section:first-child .fc-pdp-specs-inbox),
+#MainContent:has(> .shopify-section:first-child .responsive-bg-section) {
+  padding-top: 0;
+}
+
+/* Shop / search — content natural height; global shell pins footer on short pages */
+#MainContent .fc-shop-page,
+#MainContent .fc-search-page {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.fc-shop-swipe-zone,
+.fc-page-swipe-zone {
+  display: flex;
+  flex-direction: column;
+  touch-action: pan-y;
+}
+
+/* Tabbed pages — section + swipe zone fill main on short content */
+#MainContent .fc-policy-wrap,
+#MainContent .fc-support-wrap {
+  flex: 1 0 auto;
+  min-height: 0;
+}
+
+/* Speakers Soon — stretch section for centered placeholder */
+#MainContent > .shopify-section:only-child:has(.fc-shop-swipe-zone--soon) {
+  flex: 1 0 auto;
+  min-height: 0;
+}
+
+#MainContent .fc-shop-page:has(.fc-shop-swipe-zone--soon) {
+  flex: 1 0 auto;
+  min-height: 0;
+}
+
+/* Fixed gap: title carousel → page body (policies, support, shop) */
+.fc-title-carousel + .fc-page-swipe-zone,
+.fc-title-carousel + .fc-shop-swipe-zone {
+  margin-top: clamp(24px, 4vw, 40px);
+}
+
+.fc-shop-swipe-zone--soon {
+  flex: 1 1 auto;
+  min-height: min(50vh, 420px);
+  justify-content: center;
+  align-items: center;
+}
+
+/* Title-carousel pages — natural section height (100svh forced extra compositing + odd scroll) */
+@media screen and (max-width: 989px) {
+  #MainContent > .shopify-section:has(.fc-title-carousel) {
+    flex: 1 0 auto;
+    min-height: 0;
+  }
+
+  #MainContent .fc-shop-page:has(.fc-title-carousel) {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  #MainContent > .shopify-section:has(.fc-title-carousel) > .fc-title-carousel,
+  #MainContent .fc-shop-page:has(.fc-title-carousel) > .fc-title-carousel {
+    flex: 0 0 auto;
+  }
+
+  .fc-title-carousel + .fc-page-swipe-zone,
+  .fc-title-carousel + .fc-shop-swipe-zone {
+    flex: 1 1 auto;
+    min-height: 12rem;
+  }
+}
+
+/* Customer login — centered in main column */
+#MainContent .fc-login-page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: clamp(24px, 4vw, 48px) 20px;
+  box-sizing: border-box;
+  background: none;
+  background-attachment: unset;
+}
+
+/* About — vertically centered in main column */
+#MainContent .fc-about {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.utility-bar {
+    background-color: #000000;
+    border-bottom: 1px solid #222222;
+}
+
+.announcement-bar__message {
+    font-size: 16px;
+    font-weight: bolder;
+}
+
+.page-width {
+  max-width: 100%;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.link {
+  color: white;
+}
+
+.link :hover {
+  color: var(--fc-yellow);
+}
+
+/* Finecoustic button typography — applies to all Dawn .button instances */
+.button {
+  font-family: var(--fc-font);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+
+/* Shopify native cookie / privacy banner (injected via Admin, not theme) */
+#shopify-pc__banner,
+#shopify-pc__banner__overlay,
+.shopify-pc__banner__dialog {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

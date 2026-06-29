@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeSubmitPrompt": [
+      {
+        "command": ".cursor/hooks/shopify-theme-preflight.sh",
+        "matcher": "UserPromptSubmit"
+      }
+    ],
+    "preToolUse": [
+      {
+        "command": ".cursor/hooks/shopify-theme-preflight.sh",
+        "matcher": "Read|Write|StrReplace|ApplyPatch|EditNotebook"
+      }
+    ]
+  }
+}

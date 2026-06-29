@@ -210,6 +210,26 @@ a.fc-locator-card-ig {
   margin: 0;
 }
 
+/* ── FOOTER CTA ── */
+.fc-locator-footnote {
+  max-width: 1280px;
+  margin: clamp(16px, 2.5vw, 28px) auto 0;
+  padding: clamp(12px, 2vw, 14px) var(--fc-page-gutter, clamp(16px, 4vw, 64px)) clamp(36px, 6vw, 80px);
+  text-align: right;
+}
+.fc-locator-footnote-cta {
+  font-family: var(--fc-font);
+  font-size: clamp(14px, 2vw, 18px);
+  font-weight: 700;
+  color: var(--fc-yellow);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid rgba(255,211,0,0.22);
+  padding-bottom: 2px;
+  transition: border-color 0.2s;
+}
+.fc-locator-footnote-cta:hover { border-color: var(--fc-yellow); }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
   .fc-locator-body { grid-template-columns: repeat(3, 1fr); }
@@ -313,100 +333,11 @@ a.fc-locator-card-ig {
   <p class="fc-locator-empty-query" id="fc-locator-empty-query"></p>
 </div>
 
-<script>
-(function () {
-  var ROW_HEIGHT = 8;
-  var layoutFrame = null;
+<div class="fc-locator-footnote">
+  <a href="/pages/support?tab=contact&inquiry=Wholesale+%2F+B2B" class="fc-locator-footnote-cta">Become a retailer &rarr;</a>
+</div>
 
-  function getLocatorGap(body) {
-    var gap = parseFloat(getComputedStyle(body).rowGap);
-    return Number.isFinite(gap) ? gap : 16;
-  }
-
-  function layoutLocatorMasonry() {
-    var body = document.getElementById('fc-locator-body');
-    if (!body) return;
-
-    var gap = getLocatorGap(body);
-    var cards = body.querySelectorAll('.fc-locator-card');
-
-    cards.forEach(function (card) {
-      card.style.gridRowEnd = 'span 1';
-    });
-
-    cards.forEach(function (card) {
-      if (card.style.display === 'none') {
-        card.style.gridRowEnd = '';
-        return;
-      }
-
-      var height = card.scrollHeight;
-      var span = Math.ceil((height + gap) / (ROW_HEIGHT + gap));
-      card.style.gridRowEnd = 'span ' + Math.max(span, 1);
-    });
-  }
-
-  function scheduleLocatorLayout() {
-    if (layoutFrame) cancelAnimationFrame(layoutFrame);
-    layoutFrame = requestAnimationFrame(function () {
-      layoutFrame = null;
-      layoutLocatorMasonry();
-    });
-  }
-
-  function initLocatorSearch() {
-    var searchInput = document.getElementById('fc-locator-search');
-    if (!searchInput) return;
-
-    searchInput.addEventListener('input', function () {
-      var q = searchInput.value.trim().toLowerCase();
-      var cards = document.querySelectorAll('#fc-locator-body .fc-locator-card');
-      var emptyState = document.getElementById('fc-locator-empty');
-      var emptyQuery = document.getElementById('fc-locator-empty-query');
-      var anyVisible = false;
-
-      cards.forEach(function (card) {
-        var match = !q || (card.dataset.country || '').toLowerCase().includes(q);
-        card.style.display = match ? '' : 'none';
-        if (match) anyVisible = true;
-      });
-
-      if (emptyState) {
-        emptyState.classList.toggle('visible', !anyVisible && q.length > 0);
-        if (emptyQuery) emptyQuery.textContent = searchInput.value.trim();
-      }
-
-      scheduleLocatorLayout();
-    });
-  }
-
-  function initLocatorSection() {
-    initLocatorSearch();
-    scheduleLocatorLayout();
-  }
-
-  var resizeTimer;
-  window.addEventListener('resize', function () {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(scheduleLocatorLayout, 120);
-  });
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initLocatorSection);
-  } else {
-    initLocatorSection();
-  }
-
-  document.addEventListener('shopify:section:load', initLocatorSection);
-
-  if (typeof ResizeObserver !== 'undefined') {
-    var body = document.getElementById('fc-locator-body');
-    if (body) {
-      new ResizeObserver(scheduleLocatorLayout).observe(body);
-    }
-  }
-})();
-</script>
+<script src="{{ 'fc-store-locator.js' | asset_url }}" defer></script>
 
 {% schema %}
 {

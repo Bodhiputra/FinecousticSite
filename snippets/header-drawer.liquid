@@ -31,7 +31,7 @@
           <nav class="menu-drawer__navigation">
             <ul class="menu-drawer__menu has-submenu list-menu" role="list">
               {%- for link in section.settings.menu.links -%}
-                {%- unless link.handle == 'about-us' or link.handle == 'contact' or link.handle == 'contact-us' or link.handle == 'downloads' or link.handle == 'support' -%}
+                {%- unless link.handle == 'about-us' or link.handle == 'contact' or link.handle == 'contact-us' or link.handle == 'downloads' -%}
                 <li>
                   {%- if link.links != blank and link.handle != 'products' -%}
                     <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">

@@ -8,19 +8,41 @@
     <link rel="canonical" href="{{ canonical_url }}">
     <script>if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }</script>
 
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
     <link rel="icon" type="image/png" href="{{ 'FLogo-icon.png' | asset_url }}">
-    {%- unless template.name == 'product' -%}
-      <link rel="preload" as="image" href="{{ 'FinecouBG.webp' | asset_url }}" type="image/webp">
-      <link rel="preload" as="image" href="{{ 'FinecouBGLighter.webp' | asset_url }}" type="image/webp">
-    {%- elsif product.featured_media -%}
+    {%- if template.name == 'index' -%}
+      <link
+        rel="preload"
+        as="image"
+        href="{{ 'HeroSectionFinal-Mobile.webp' | asset_url }}"
+        type="image/webp"
+        media="(max-width: 749px)"
+        fetchpriority="high"
+      >
+      <link
+        rel="preload"
+        as="image"
+        href="{{ 'HeroSectionFinal.webp' | asset_url }}"
+        type="image/webp"
+        media="(min-width: 750px)"
+        fetchpriority="high"
+      >
+      <link rel="preload" as="font" href="{{ 'AlteHaasGroteskBold.woff2' | asset_url }}" type="font/woff2" crossorigin>
+    {%- elsif template.name == 'product' and product.featured_media -%}
       <link
         rel="preload"
         as="image"
         href="{{ product.featured_media | image_url: width: 800 }}"
         imagesrcset="{{ product.featured_media | image_url: width: 600 }} 600w, {{ product.featured_media | image_url: width: 800 }} 800w, {{ product.featured_media | image_url: width: 1000 }} 1000w"
         imagesizes="92vw"
+        fetchpriority="high"
       >
-    {%- endunless -%}
+    {%- else -%}
+      <link rel="preload" as="image" href="{{ 'FinecouBG.webp' | asset_url }}" type="image/webp">
+    {%- endif -%}
+
+    <link rel="preload" as="font" href="{{ 'AlteHaasGroteskRegular.woff2' | asset_url }}" type="font/woff2" crossorigin>
 
     {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
@@ -42,7 +64,7 @@
     <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'fc-carousel.js' | asset_url }}"></script>
+    <script src="{{ 'fc-carousel.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'fc-price-tag.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'fc-cart.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
@@ -237,6 +259,10 @@
         --variant-pills-shadow-horizontal-offset: {{ settings.variant_pills_shadow_horizontal_offset }}px;
         --variant-pills-shadow-vertical-offset: {{ settings.variant_pills_shadow_vertical_offset }}px;
         --variant-pills-shadow-blur-radius: {{ settings.variant_pills_shadow_blur }}px;
+
+        /* Nav height seeded here so --fc-nav-clearance resolves correctly at first paint,
+           before StickyHeader JS runs and measures the real value. */
+        --header-height: 70px;
       }
 
       *,
@@ -255,7 +281,6 @@
         display: flex;
         flex-direction: column;
         min-height: 100%;
-        min-height: 100svh;
         margin: 0;
         font-size: 1.5rem;
         letter-spacing: 0.06rem;
@@ -263,11 +288,11 @@
         font-family: var(--font-body-family);
         font-style: var(--font-body-style);
         font-weight: var(--font-body-weight);
-        background-image: url('{{ "FinecouBG.png" | asset_url }}');
+        background-image: url('{{ "FinecouBG.webp" | asset_url }}');
         background-size: cover;
         background-position: center top;
         background-repeat: no-repeat;
-        background-attachment: fixed;
+        background-attachment: scroll;
       }
 
       @media screen and (min-width: 750px) {
@@ -277,29 +302,78 @@
       }
     {% endstyle %}
 
+    {%- comment -%}
+      Critical layout inline — prevents snap/FOUC on hard refresh (cold cache).
+      Duplicates the 3 rules from fc-nav.css + fc-base.css that affect first-paint layout.
+      External files still load and take over; these just ensure the layout is stable immediately.
+    {%- endcomment -%}
+    <style>
+      /* 1. Nav: fixed out of flow immediately */
+      .shopify-section-group-header-group {
+        position: fixed !important;
+        top: 0; left: 0; right: 0;
+        width: 100%;
+        height: auto !important;
+        align-self: flex-start !important;
+        z-index: 10005;
+        box-sizing: border-box;
+        pointer-events: none;
+      }
+      /* 2. Cart drawer + skip link: hidden until CSS fully loads */
+      cart-drawer, .drawer, .skip-to-content-link {
+        display: none;
+      }
+      /* 3. Main content: clearance below fixed nav */
+      #MainContent {
+        padding-top: var(--fc-nav-clearance);
+      }
+      /* 4. Full-bleed heroes: cancel clearance so hero fills from top */
+      #MainContent:has(> .shopify-section:first-child .website-hero),
+      #MainContent:has(> .shopify-section:first-child .fc-pdp-u),
+      #MainContent:has(> .shopify-section:first-child .fc-pdp-video-hero),
+      #MainContent:has(> .shopify-section:first-child .fc-pdp-showcases),
+      #MainContent:has(> .shopify-section:first-child .fc-pdp-showcase),
+      #MainContent:has(> .shopify-section:first-child .fc-pdp-specs-inbox),
+      #MainContent:has(> .shopify-section:first-child .responsive-bg-section) {
+        padding-top: 0;
+      }
+    </style>
+
     {{ 'base.css' | asset_url | stylesheet_tag }}
-    {{ 'custom-style.css' | asset_url | stylesheet_tag }}
+
+    {{- 'fc-base.css' | asset_url | stylesheet_tag }}
+    {{- 'fc-nav.css' | asset_url | stylesheet_tag }}
+    {{- 'fc-page-chrome.css' | asset_url | stylesheet_tag }}
+    {{- 'fc-footer.css' | asset_url | stylesheet_tag }}
+    {{- 'fc-typography.css' | asset_url | stylesheet_tag }}
+
+    {%- if template.name == 'collection' or template.name == 'index' or template.name == 'page' or template.name == 'product' -%}
+      {{- 'fc-carousel.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+
+    {%- if template.name == 'collection' or template.name == 'page' -%}
+      {{- 'fc-shop.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+
+    {%- if template.name == 'product' -%}
+      {{- 'fc-pdp.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+
+    {%- if template.name == 'search' -%}
+      {{- 'fc-shop.css' | asset_url | stylesheet_tag }}
+      {{- 'fc-search.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
 
     {%- if settings.cart_type == 'drawer' -%}
-      {{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
-      {{ 'fc-nav-dropdowns.css' | asset_url | stylesheet_tag }}
-      {{ 'component-cart.css' | asset_url | stylesheet_tag }}
-      {{ 'component-totals.css' | asset_url | stylesheet_tag }}
-      {{ 'component-price.css' | asset_url | stylesheet_tag }}
-      {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
+      <link rel="stylesheet" href="{{ 'component-cart-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
+      <link rel="stylesheet" href="{{ 'fc-nav-dropdowns.css' | asset_url }}" media="print" onload="this.media='all'">
+      <link rel="stylesheet" href="{{ 'component-cart.css' | asset_url }}" media="print" onload="this.media='all'">
+      <link rel="stylesheet" href="{{ 'component-totals.css' | asset_url }}" media="print" onload="this.media='all'">
+      <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
+      <link rel="stylesheet" href="{{ 'component-discounts.css' | asset_url }}" media="print" onload="this.media='all'">
     {%- endif -%}
-
-    {%- unless settings.type_body_font.system? -%}
-      {% comment %}theme-check-disable AssetPreload{% endcomment %}
-      <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
-      {% comment %}theme-check-enable AssetPreload{% endcomment %}
-    {%- endunless -%}
-    {%- unless settings.type_header_font.system? -%}
-      {% comment %}theme-check-disable AssetPreload{% endcomment %}
-      <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
-      {% comment %}theme-check-enable AssetPreload{% endcomment %}
-    {%- endunless -%}
 
     {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
       {{ 'component-localization-form.css' | asset_url | stylesheet_tag: preload: true }}
@@ -323,28 +397,6 @@
     {%- endif -%}
 
     {% sections 'header-group' %}
-
-    {%- style -%}
-      body.gradient {
-        background-image: var(--fc-body-bg) !important;
-        background-color: transparent !important;
-        background-size: cover !important;
-        background-position: center top !important;
-        background-repeat: no-repeat !important;
-        background-attachment: scroll !important;
-      }
-      @media screen and (max-width: 749px) {
-        body.gradient {
-          background-image: none !important;
-        }
-      }
-      .header-wrapper::before {
-        background-image: var(--fc-nav-footer-bg) !important;
-        background-size: cover !important;
-        background-position: center top !important;
-        background-repeat: no-repeat !important;
-      }
-    {%- endstyle -%}
 
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}
@@ -403,7 +455,43 @@
     </script>
 
     {%- if settings.cart_type == 'drawer' -%}
+      {%- if template.name == 'index' -%}
+      <script>
+        (function () {
+          var scripts = [
+            {{ 'fc-cart.js' | asset_url | json }},
+            {{ 'cart-drawer.js' | asset_url | json }}
+          ];
+          var loaded = false;
+          function loadCartUiScripts() {
+            if (loaded) return;
+            loaded = true;
+            scripts.forEach(function (src) {
+              var el = document.createElement('script');
+              el.src = src;
+              el.defer = true;
+              document.head.appendChild(el);
+            });
+          }
+          document.addEventListener(
+            'pointerdown',
+            function (e) {
+              if (e.target.closest('#cart-icon-bubble, .header__icon--cart, cart-drawer')) {
+                loadCartUiScripts();
+              }
+            },
+            { capture: true, passive: true }
+          );
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadCartUiScripts, { timeout: 5000 });
+          } else {
+            setTimeout(loadCartUiScripts, 5000);
+          }
+        })();
+      </script>
+      {%- else -%}
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
+      {%- endif -%}
     {%- endif -%}
 
     <script>
@@ -413,11 +501,17 @@
         function watchHeader() {
           var header = document.querySelector('.section-header');
           if (!header) return;
+          var pending = false;
           new MutationObserver(function () {
-            document.body.classList.toggle(
-              'nav-hidden',
-              header.classList.contains('shopify-section-header-hidden')
-            );
+            if (pending) return;
+            pending = true;
+            requestAnimationFrame(function () {
+              pending = false;
+              document.body.classList.toggle(
+                'nav-hidden',
+                header.classList.contains('shopify-section-header-hidden')
+              );
+            });
           }).observe(header, { attributes: true, attributeFilter: ['class'] });
         }
         if (document.readyState === 'loading') {
@@ -482,16 +576,20 @@
         }
 
         function sync() {
-          var shouldLock = html.classList.contains('overflow-hidden') ||
-                           body.classList.contains('overflow-hidden') ||
-                           body.classList.contains('overflow-hidden-mobile') ||
-                           body.classList.contains('overflow-hidden-tablet') ||
-                           body.classList.contains('overflow-hidden-desktop');
-          shouldLock ? lock() : unlock();
+          clearTimeout(sync._timer);
+          sync._timer = setTimeout(function () {
+            var shouldLock = html.classList.contains('overflow-hidden') ||
+                             body.classList.contains('overflow-hidden') ||
+                             body.classList.contains('overflow-hidden-mobile') ||
+                             body.classList.contains('overflow-hidden-tablet') ||
+                             body.classList.contains('overflow-hidden-desktop');
+            shouldLock ? lock() : unlock();
+          }, 0);
         }
 
-        new MutationObserver(sync).observe(html, { attributes: true, attributeFilter: ['class'] });
-        new MutationObserver(sync).observe(body, { attributes: true, attributeFilter: ['class'] });
+        var observer = new MutationObserver(sync);
+        observer.observe(html, { attributes: true, attributeFilter: ['class'] });
+        observer.observe(body, { attributes: true, attributeFilter: ['class'] });
       })();
     </script>
   </body>

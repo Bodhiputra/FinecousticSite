@@ -1,0 +1,29 @@
+{% comment %}
+  SOURCE OF TRUTH: Order confirmation notification
+  Admin: Settings → Notifications → Order confirmation → Edit code → Email body (HTML)
+
+  Setup:
+  1. Copy your current template from Admin into this file (replace this comment block).
+  2. Merge shared/notification-style-block.liquid into the <head> <style> section.
+  3. After local edits, paste this entire file back into Admin and save.
+
+  Pull from Admin when Shopify updates default templates (revert to Default in Admin, copy, then re-merge brand styles).
+{% endcomment %}
+
+{% assign delivery_method_types = delivery_agreements | map: 'delivery_method_type' | uniq %}
+{% assign has_split_cart = false %}
+{% assign non_none_count = 0 %}
+{% for type in delivery_method_types %}
+  {% unless type == 'none' %}
+    {% assign non_none_count = non_none_count | plus: 1 %}
+  {% endunless %}
+{% endfor %}
+{% if non_none_count > 1 %}
+  {% assign has_split_cart = true %}
+{% endif %}
+
+{% capture email_title %}
+  Thank you for your order!
+{% endcapture %}
+
+{% comment %} Paste the rest of your order confirmation template from Admin below this line. {% endcomment %}

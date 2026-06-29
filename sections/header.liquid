@@ -121,7 +121,9 @@
 
 {%- endstyle -%}
 
-<script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
+{%- if settings.cart_type == 'notification' -%}
+  <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
 
 {%- liquid
   for block in section.blocks
@@ -266,7 +268,7 @@
       </div>
       {%- if shop.customer_accounts_enabled -%}
         <a
-          href="{{ routes.account_login_url }}"
+          href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
           class="header__icon header__icon--account link focus-inset{% if section.settings.menu != blank %} small-hide{% endif %}"
           rel="nofollow"
         >
@@ -281,6 +283,7 @@
           {%- else -%}
             <span class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
           {%- endif -%}
+          <span class="fc-header-icon-label fc-header-nav-text">Account</span>
           <span class="visually-hidden">
             {%- liquid
               if customer
@@ -313,6 +316,7 @@
             {{- 'icon-close.svg' | inline_asset_content -}}
           </span>
         </span>
+        <span class="fc-header-icon-label fc-header-nav-text">Bag</span>
         <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
         <div class="cart-count-bubble{% if cart == empty %} hidden{% endif %}">
           <span aria-hidden="true">{% if cart.item_count < 100 %}{{ cart.item_count }}{% endif %}</span>

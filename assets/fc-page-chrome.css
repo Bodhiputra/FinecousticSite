@@ -1,0 +1,266 @@
+/* ── Announcement bar — full width, no padding ── */
+.announcement-bar-section .page-width {
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* ── Header — full width with side padding ── */
+.header.page-width {
+  max-width: 100%;
+  padding-left: clamp(12px, 4vw, 24px);
+  padding-right: clamp(12px, 4vw, 24px);
+}
+
+
+/* ── Logo — truly centered on every page and viewport ── */
+/*
+  .header__heading  = exists only on homepage (logo wrapped in <h1>)
+  > .header__heading-link = direct <a> child on all other pages
+  Both need absolute centering to override Dawn's grid alignment.
+*/
+.header--middle-center {
+  position: relative;
+}
+.header--middle-center .header__heading,
+.header--middle-center > .header__heading-link {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  white-space: nowrap;
+}
+
+/* ── Nav left group — gaps not padding ── */
+.header__inline-menu .list-menu--inline {
+  gap: 12px;
+  justify-content: flex-start;
+}
+
+/* ── Account icon — always visible regardless of viewport ── */
+.header__icon--account.small-hide {
+  display: flex;
+}
+
+/* Account / Bag — icons below 990px, text labels at desktop.
+   Dawn base.css sets `.header__icon span { display: flex }` which beats a lone
+   class selector; use `.header__icons .header__icon span.fc-header-icon-label`. */
+.header__icons .header__icon span.fc-header-icon-label {
+  display: none;
+}
+
+/* Kill Dawn's .link text-decoration on localization triggers everywhere
+   (nav + footer) — our ::after handles the hover underline animation.
+   Need !important on hover to beat Dawn's unconditional .link rule. */
+.fc-header-localization-trigger.link,
+.fc-header-localization-trigger.link:hover,
+.footer .disclosure__button.link,
+.footer .disclosure__button.link:hover,
+.shopify-section-group-footer-group .disclosure__button.link,
+.shopify-section-group-footer-group .disclosure__button.link:hover {
+  text-decoration: none !important;
+}
+
+@media screen and (min-width: 990px) {
+  .header__inline-menu .list-menu--inline,
+  .header__icons {
+    gap: 12px;
+  }
+
+  .header__inline-menu .header__menu-item,
+  .header__icons .header__icon--account,
+  .header__icons .header__icon--cart {
+    width: auto;
+    min-width: 0;
+    height: auto;
+    min-height: 0;
+    padding: 1.2rem;
+    font-size: clamp(1.5rem, 1.8vw, 2rem);
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.22s ease;
+  }
+
+  .header__icons .header__icon--account .svg-wrapper,
+  .header__icons .header__icon--account account-icon,
+  .header__icons .header__icon--cart .fc-nav-icon-toggle,
+  .header__icons .header__icon--cart .cart-count-bubble {
+    display: none !important;
+  }
+
+  .header__inline-menu .header__menu-item span,
+  .fc-header-nav-text {
+    text-decoration: none;
+  }
+
+  .header__inline-menu .header__menu-item:hover,
+  .header__inline-menu .header__menu-item:hover span,
+  .header__icons .header__icon--account:hover,
+  .header__icons .header__icon--cart:hover {
+    color: var(--fc-yellow);
+    text-decoration: none;
+  }
+
+  .header__inline-menu .header__menu-item .header__active-menu-item {
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .header__icons .header__icon span.fc-header-icon-label {
+    display: inline;
+  }
+
+  .fc-header-nav-text {
+    position: relative;
+    display: inline-block;
+    font-family: var(--fc-font);
+    font-size: clamp(1.5rem, 1.8vw, 2rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: inherit;
+    white-space: nowrap;
+    line-height: 1.2;
+    text-decoration: none;
+  }
+
+  /* Account / Bag share .header__icons--localization with the switcher — keep menu size */
+  .header__icons .header__icon--account .fc-header-nav-text,
+  .header__icons .header__icon--cart .fc-header-nav-text {
+    font-size: clamp(1.5rem, 1.8vw, 2rem);
+    font-weight: 600;
+  }
+
+  .fc-header-nav-text::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1px;
+    background-color: var(--fc-yellow);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  .header__inline-menu .header__menu-item:hover .fc-header-nav-text::after,
+  .header__icons .header__icon--account:hover .fc-header-nav-text::after,
+  .header__icons .header__icon--cart:hover .fc-header-nav-text::after,
+  .header__icons--localization .fc-header-localization-trigger:hover .fc-header-nav-text::after {
+    transform: scaleX(1);
+  }
+
+  /* Country / language switcher — match Account / Bag nav typography */
+  .header__icons--localization .desktop-localization-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .header__icons--localization .localization-form {
+    padding: 0;
+    margin: 0;
+  }
+
+  .header__icons--localization .fc-header-localization-trigger {
+    width: auto;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 1.2rem;
+    background: transparent;
+    color: #ffffff;
+    border: none;
+    text-decoration: none;
+    transition: color 0.22s ease;
+  }
+
+  .header__icons--localization .fc-header-localization-trigger .fc-header-nav-text {
+    font-size: clamp(1.5rem, 1.8vw, 1.6rem);
+    font-weight: 400;
+  }
+
+  .header__icons--localization .fc-header-localization-trigger:before,
+  .header__icons--localization .fc-header-localization-trigger:after {
+    display: none !important;
+  }
+
+  .header__icons--localization .fc-header-localization-trigger:hover {
+    color: var(--fc-yellow);
+  }
+
+  .header__icons--localization .fc-header-localization-trigger .icon-caret {
+    display: none;
+  }
+}
+
+/* ── Announcement bar — seamless scrolling marquee on mobile ── */
+@keyframes fc-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (max-width: 749px) {
+  .announcement-bar {
+    overflow: hidden;
+    justify-content: flex-start;
+  }
+  .announcement-bar__message {
+    display: block;
+    width: max-content;
+    white-space: nowrap;
+    margin: 0;
+    animation: fc-marquee 20s linear infinite;
+  }
+}
+
+/* ── Cart badge on bag icon — number only, no background ── */
+.header__icon--cart {
+  position: relative;
+  margin-right: 0;
+}
+
+.header__icon--cart .fc-nav-icon-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--fc-nav-icon-hit);
+  height: var(--fc-nav-icon-hit);
+}
+
+.header__icon--cart:hover .fc-nav-icon--open svg,
+.header__icon--cart:hover .fc-nav-icon--close svg,
+.header__icon--cart:hover .icon {
+  transform: none !important;
+  filter: none;
+}
+.cart-count-bubble {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  background: transparent;
+  color: var(--fc-yellow);
+  font-family: var(--fc-font);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  height: auto;
+  min-width: unset;
+  padding: 0;
+  border-radius: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+  pointer-events: none;
+}
+.cart-count-bubble.hidden {
+  display: none;
+}
+

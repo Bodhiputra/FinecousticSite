@@ -5,16 +5,27 @@
     - localPosition: pass in the position in which the form is coming up to create specific IDs
 {%- endcomment -%}
 
+{%- liquid
+  assign fc_header_nav_text = false
+  if localPosition contains 'Header'
+    unless localPosition contains 'Mobile'
+      assign fc_header_nav_text = true
+    endunless
+  endif
+-%}
+
 <div class="disclosure">
   <button
     type="button"
-    class="disclosure__button localization-form__select localization-selector link link--text caption-large"
+    class="disclosure__button localization-form__select localization-selector link link--text{% unless fc_header_nav_text %} caption-large{% endunless %}{% if fc_header_nav_text %} fc-header-localization-trigger{% endif %}"
     aria-expanded="false"
     aria-controls="{{ localPosition }}List"
     aria-describedby="{{ localPosition }}Label"
   >
-    <span>{{ localization.language.endonym_name | capitalize }}</span>
-    {{ 'icon-caret.svg' | inline_asset_content }}
+    <span{% if fc_header_nav_text %} class="fc-header-nav-text"{% endif %}>{{ localization.language.endonym_name | capitalize }}</span>
+    {%- unless fc_header_nav_text -%}
+      {{ 'icon-caret.svg' | inline_asset_content }}
+    {%- endunless -%}
   </button>
   <div class="disclosure__list-wrapper language-selector" hidden>
     <ul id="{{ localPosition }}List" role="list" class="disclosure__list list-unstyled">

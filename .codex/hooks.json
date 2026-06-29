@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "find . -type f | grep -v node_modules | grep -v '.git/' | sort > context/codebase-index.md",
+            "statusMessage": "Indexing codebase..."
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+---
+description: Shopify theme dev — session context, safety, and Shopify toolkit skills
+alwaysApply: true
+---
+
+# Shopify theme dev
+
+This folder is a **separate git repo** from `finecoustic/` (Deku). When the user mentions **Shopify** or you edit theme files here, use **this repo only** — not Deku bootstrap.
+
+## Session start (required)
+
+When Shopify is in scope (user said "shopify", theme file edit, or theme task):
+
+1. **Skip** Deku reads (`.claude/BOOTSTRAP.md`, `context/brand-context.md`, `context/session-context.md`) unless the user explicitly asks for brand/KOL/ops context
+2. Read `.cursor/skills/shopify-theme/SKILL.md`
+3. Read `CLAUDE.md` (safety, git, CSS placement, store `j5gawi-vu.myshopify.com`)
+4. Read `context/shopify-context.md` and `context/codebase-summary.md` when they exist
+5. For broad file lookup, use `context/codebase-index.md` if present — do not dump the full index into chat
+6. **First reply:** announce which Shopify skills/files you loaded, then proceed
+
+## Load skills before coding
+
+Skills live in **`.cursor/skills/`** (symlinks to Shopify’s official toolkit). Read the `SKILL.md` that matches the task:
+
+| Task | Skill |
+|------|--------|
+| `.liquid`, sections, snippets, schemas, theme JSON | `shopify-liquid` |
+| `shopify theme dev/check/preview`, CLI auth or execute | `shopify-use-shopify-cli` |
+| Metafields / metaobjects in theme | `shopify-custom-data` |
+| General Shopify API / docs lookup | `shopify-dev` |
+
+Announce which skill you loaded when it governs the work.
+
+## Hard rules (from CLAUDE.md)
+
+- **No Admin mutations** without explicit user approval
+- **No git add/commit/push** — user handles git
+- **CSS:** default → `{% stylesheet %}`; global → `assets/custom-style.css`; `custom_css` in JSON only for tiny tweaks (500 char total limit per section instance)
+- **Never** edit `config/settings_schema.json` unless asked
+- Preview via dev theme before any live publish
+
+## Liquid skill scripts
+
+`shopify-liquid` includes `search_docs.mjs` and `validate.mjs`. Run them from the skill directory when writing or changing non-trivial Liquid/schemas — especially new sections or schema changes.

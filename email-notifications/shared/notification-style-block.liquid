@@ -1,0 +1,38 @@
+{% comment %}
+  Copy this block into the <style> tag of any notification template (order confirmation, shipping, etc.).
+  Shopify loads /assets/notifications/styles.css separately — these rules override it.
+  Tune --fc-email-bg and --fc-email-panel for brand; accent buttons still use {{ shop.email_accent_color }}.
+{% endcomment %}
+<style>
+  /* Outer canvas + section backgrounds */
+  body,
+  .body,
+  .header__cell,
+  .content__cell,
+  .section__cell,
+  .footer__cell {
+    background-color: #000000 !important;
+  }
+
+  /* Optional: keep inner content as a light card (remove this block for all-black) */
+  .container {
+    background-color: #ffffff;
+  }
+
+  /* Text on dark outer areas (when .container stays white, most copy stays default) */
+  .disclaimer__subtext {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  /* Buttons / links — accent from Admin → Notifications branding */
+  .button__cell { background: {{ shop.email_accent_color }}; }
+  .actions-buttons .button__cell--primary { background-color: {{ shop.email_accent_color }}; }
+  a, a:hover, a:active, a:visited { color: {{ shop.email_accent_color }}; }
+</style>
+
+{% comment %}
+  Also set on the opening tags for Gmail/Outlook (paste outside <style>):
+
+  <body style="background-color: #000000; margin: 0; padding: 0;">
+  <table class="body" width="100%" cellpadding="0" cellspacing="0" style="background-color: #000000;">
+{% endcomment %}

@@ -1,0 +1,364 @@
+/* ── FC PRICE TAG (shared component — shop grid + PDP floating card) ── */
+.fc-card__tag {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--fc-yellow);
+  border-radius: 3px;
+  margin: 8px auto 0;
+  padding: 5px 27px 6px 10px;
+  cursor: default;
+  transition: opacity 0.2s ease;
+  width: fit-content;
+}
+.fc-card__tag:not(.fc-tag-active):not(.fc-tag--oos) .fc-card__tag-body {
+  cursor: pointer;
+}
+.fc-card__tag-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+@media (hover: hover) {
+  .fc-card__tag:hover:not(.fc-tag-active):not(.fc-tag--oos) { opacity: 0.75; }
+}
+.fc-card__price {
+  font-family: var(--fc-font);
+  font-size: clamp(9px, 0.85vw, 11px);
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.fc-card__price-from {
+  display: inline;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  margin-right: 2px;
+}
+.fc-card__name {
+  font-family: var(--fc-font);
+  font-size: clamp(11px, 1.1vw, 13px);
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 140px;
+  display: block;
+}
+.fc-card__atc-label {
+  font-family: var(--fc-font);
+  font-size: clamp(10px, 1vw, 12px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #000000;
+  line-height: 1;
+  white-space: nowrap;
+}
+.fc-card__barcode {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100px;
+}
+.fc-card__barcode-svg {
+  width: 100%;
+  height: 16px;
+  display: block;
+}
+.fc-card__barcode-num {
+  font-family: var(--fc-font);
+  font-size: 6px;
+  font-weight: 400;
+  color: #000000;
+  letter-spacing: 0.12em;
+}
+.fc-card__atc-plus {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: clamp(18px, 2.2vw, 24px);
+  height: clamp(18px, 2.2vw, 24px);
+  border-radius: 50%;
+  background: #000;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fc-card__atc-plus::before,
+.fc-card__atc-plus::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--fc-yellow);
+  border-radius: 1px;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.15s ease;
+}
+.fc-card__atc-plus::before { width: 45%; height: 2px; }
+.fc-card__atc-plus::after  { width: 2px; height: 45%; }
+.fc-card__atc-plus.fc-active::before,
+.fc-card__atc-plus.fc-active::after { opacity: 0; }
+.fc-qty-label {
+  display: none;
+  font-family: var(--fc-font);
+  font-size: clamp(7px, 0.8vw, 10px);
+  font-weight: 700;
+  color: var(--fc-yellow);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  pointer-events: none;
+}
+.fc-card__atc-plus.fc-active .fc-qty-label {
+  display: block;
+  animation: fc-qty-pop 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Product Guide page */
+.fc-dl-page {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 var(--fc-page-gutter) clamp(48px, 8vw, 96px);
+}
+
+.fc-dl-page__heading {
+  font-family: var(--fc-font);
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  text-align: center;
+  margin: 0 0 clamp(20px, 3vw, 32px);
+}
+
+.fc-dl-body {
+  width: 100%;
+}
+
+.fc-dl-grid {
+  margin-top: 0;
+}
+
+a.fc-dl-card {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  align-items: center;
+}
+
+@media (hover: hover) {
+  a.fc-dl-card:hover .fc-dl-card-name {
+    color: var(--fc-yellow);
+  }
+
+  .fc-dl-page a.fc-dl-card:hover .fc-card__img {
+    transform: scale(1.07);
+  }
+}
+
+.fc-dl-page .fc-dl-card-name {
+  font-family: var(--fc-font);
+  font-size: clamp(11px, 1.1vw, 14px);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 12px 0 0;
+  padding: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  transition: color 0.2s ease;
+}
+
+.fc-dl-guide-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 8px auto 0;
+  font-family: var(--fc-font);
+  font-size: clamp(11px, 1vw, 13px);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+}
+
+.fc-dl-guide-link__icon {
+  color: var(--fc-yellow);
+  font-size: 12px;
+  line-height: 1;
+}
+
+@media (hover: hover) {
+  .fc-dl-guide-link:hover {
+    color: var(--fc-yellow);
+  }
+}
+
+@keyframes fc-qty-pop {
+  0%   { transform: scale(0.2); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.fc-tag-rip {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left center;
+  width: 13px;
+  height: 3px;
+  background: #000;
+  border-radius: 1px;
+}
+.fc-card__tag.fc-tag-active .fc-tag-rip {
+  animation: fc-rip-tear 0.22s linear forwards;
+}
+@keyframes fc-rip-tear {
+  0%   { transform: translateY(-50%) scaleX(0); }
+  100% { transform: translateY(-50%) scaleX(1); }
+}
+.fc-tag-oos-wrap {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 8px auto 0;
+  width: fit-content;
+}
+.fc-tag-oos-wrap .fc-card__tag.fc-tag--oos {
+  flex: none;
+  width: 117px;
+  padding: 5px 5px 6px 10px;
+  margin: 0;
+  cursor: default;
+  clip-path: polygon(0% 0%,93% 0%,90% 13%,95% 27%,89% 41%,94% 55%,89% 68%,94% 82%,91% 100%,0% 100%);
+  border-radius: 3px 0 0 3px;
+}
+.fc-tag-oos-wrap .fc-card__name { width: 102px; }
+.fc-tag-fragment {
+  flex: none;
+  width: 60px;
+  background: var(--fc-yellow);
+  clip-path: polygon(5% 0%,100% 0%,100% 100%,5% 100%,7% 82%,3% 68%,8% 55%,3% 41%,8% 27%,3% 13%,5% 0%);
+  transform: rotate(0.8deg) translateY(1px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 0 3px 3px 0;
+  filter: drop-shadow(-3px 0 4px rgba(0,0,0,0.3));
+}
+.fc-tag-fragment__label {
+  font-family: var(--fc-font);
+  font-size: clamp(9px, 0.95vw, 12px);
+  font-weight: 700;
+  color: #000;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  text-align: center;
+}
+@media screen and (max-width: 749px) {
+  .fc-card__name { width: 90px; }
+  .fc-card__tag { padding-right: 34px; }
+  .fc-tag-oos-wrap .fc-card__tag.fc-tag--oos { width: 94px; padding-right: 5px; }
+  .fc-tag-oos-wrap .fc-card__name { width: 79px; }
+  .fc-tag-fragment { width: 48px; }
+}
+
+
+/* FC product grid — JS sets --fc-product-cols (visible count); CSS caps columns by viewport */
+.fc-grid {
+  display: grid;
+  --fc-product-cols: 5;
+  --fc-max-cols: 5;
+  grid-template-columns: repeat(min(var(--fc-product-cols), var(--fc-max-cols)), minmax(0, 280px));
+  justify-content: center;
+  gap: clamp(24px, 4vw, 50px) clamp(16px, 3vw, 50px);
+  margin: 0 auto 48px;
+  padding: 0 clamp(0px, 5vw, 50px);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@media screen and (max-width: 1400px) {
+  .fc-grid {
+    --fc-max-cols: 4;
+  }
+}
+
+@media screen and (max-width: 1050px) {
+  .fc-grid {
+    --fc-max-cols: 3;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .fc-grid {
+    --fc-max-cols: 2;
+    margin-bottom: 0;
+    padding-bottom: clamp(24px, 5vw, 48px);
+  }
+}
+
+.fc-card {
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  position: relative;
+  min-width: 0;
+}
+
+.fc-card__image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: transparent;
+  position: relative;
+}
+
+.fc-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: scale(1);
+}
+
+.fc-card.fc-hidden {
+  display: none;
+}
+
+@keyframes fc-card-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.fc-card-appear {
+  animation: fc-card-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fc-shop-page .fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover)) .fc-card__img {
+  transform: scale(1.07);
+}
+
