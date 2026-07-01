@@ -19,6 +19,10 @@
   border-top: none;
 }
 
+.footer__content-bottom {
+  border-top: none;
+}
+
 .fc-footer {
   padding: clamp(12px, 2vw, 20px) clamp(20px, 4vw, 48px);
   display: flex;

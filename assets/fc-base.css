@@ -342,3 +342,10 @@ body {
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+/* Hide product prices site-wide */
+.fc-card-price,
+.fc-pdp-u__atc-price,
+.fc-pdp__price {
+  display: none !important;
+}
