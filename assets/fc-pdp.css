@@ -213,6 +213,26 @@
   background: transparent;
   width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+.fc-pdp-acc > .fc-pdp-acc__body-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s ease;
+}
+
+.fc-pdp-acc[open] > .fc-pdp-acc__body-wrap,
+.fc-pdp-acc.is-closing > .fc-pdp-acc__body-wrap {
+  grid-template-rows: 1fr;
+}
+
+.fc-pdp-acc.is-closing > .fc-pdp-acc__body-wrap {
+  grid-template-rows: 0fr;
+}
+
+.fc-pdp-acc__body-inner {
+  overflow: hidden;
 }
 
 .fc-pdp-acc > .fc-pdp-acc__summary {
@@ -221,9 +241,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 16px clamp(16px, 4vw, 24px);
+  padding: clamp(14px, 2vw, 20px) clamp(16px, 4vw, 24px);
   font-family: var(--fc-font);
-  font-size: clamp(15px, 4vw, 17px);
+  font-size: clamp(14px, 1.5vw, 20px);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: #ffffff;
@@ -292,10 +312,10 @@
   gap: 12px;
   width: 100%;
   box-sizing: border-box;
-  padding: 16px clamp(16px, 4vw, 24px);
+  padding: clamp(14px, 2vw, 20px) clamp(16px, 4vw, 24px);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   font-family: var(--fc-font);
-  font-size: clamp(15px, 4vw, 17px);
+  font-size: clamp(14px, 1.5vw, 20px);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: #ffffff;

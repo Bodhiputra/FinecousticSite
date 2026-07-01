@@ -250,4 +250,32 @@
       if (window.fcAddToCart) window.fcAddToCart(variantId, 1);
     });
   });
+
+  /* Accordion open/close animation — wrap body in grid container */
+  document.querySelectorAll('details.fc-pdp-acc').forEach(function (acc) {
+    var body = acc.querySelector('.fc-pdp-acc__body');
+    if (!body || body.parentElement.classList.contains('fc-pdp-acc__body-wrap')) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'fc-pdp-acc__body-wrap';
+    var inner = document.createElement('div');
+    inner.className = 'fc-pdp-acc__body-inner';
+    acc.insertBefore(wrap, body);
+    wrap.appendChild(inner);
+    inner.appendChild(body);
+
+    acc.addEventListener('click', function (e) {
+      if (e.target.closest('summary') === null) return;
+      e.preventDefault();
+      if (acc.open) {
+        acc.classList.add('is-closing');
+        wrap.addEventListener('transitionend', function handler() {
+          wrap.removeEventListener('transitionend', handler);
+          acc.removeAttribute('open');
+          acc.classList.remove('is-closing');
+        });
+      } else {
+        acc.setAttribute('open', '');
+      }
+    });
+  });
 })();
