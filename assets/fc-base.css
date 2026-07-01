@@ -345,8 +345,6 @@ body {
 
 /* Hide product prices site-wide */
 .fc-card-price,
-.fc-pdp-u__atc-price,
-.fc-pdp__price,
 .fc-pdp-u__atc-sep,
 .fc-pdp__atc-sep {
   display: none !important;
