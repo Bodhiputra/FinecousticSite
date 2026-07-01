@@ -55,7 +55,6 @@
     <div class="fc-card__tag-body">
       <span class="fc-card__price">{{ price | money }}</span>
       <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
-      {%- endunless -%}
       {%- if show_barcode -%}
       <div class="fc-card__barcode">
         <svg class="fc-card__barcode-svg" viewBox="0 0 200 16" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
