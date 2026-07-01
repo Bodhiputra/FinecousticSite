@@ -53,6 +53,7 @@
 <div class="fc-tag-oos-wrap {{ tag_class }}">
   <div class="fc-card__tag fc-tag--oos">
     <div class="fc-card__tag-body">
+      <span class="fc-card__price" style="visibility: hidden;">{{ price | money }}</span>
       {%- unless hide_name -%}
       <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
       {%- endunless -%}
