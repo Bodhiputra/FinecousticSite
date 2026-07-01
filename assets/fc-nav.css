@@ -348,10 +348,15 @@ details[open]>.header__menu-item {
     .menu-drawer__menu-item {
       color: #ffffff;
       background-color: transparent !important;
+      font-size: 24px;
     }
 }
 
 /* ── Mobile menu drawer — inner layers transparent; shell bg in fc-nav-dropdowns.css ── */
+.menu-drawer__navigation-container {
+  height: 50%;
+}
+
 .menu-drawer__inner-container,
 .menu-drawer__navigation-container,
 .menu-drawer__utility-links,

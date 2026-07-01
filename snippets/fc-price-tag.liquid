@@ -53,10 +53,9 @@
 <div class="fc-tag-oos-wrap {{ tag_class }}">
   <div class="fc-card__tag fc-tag--oos">
     <div class="fc-card__tag-body">
-      <span class="fc-card__price">{{ price | money }}</span>
       {%- unless hide_name -%}
       <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
-    {%- endunless -%}
+      {%- endunless -%}
       {%- if show_barcode -%}
       <div class="fc-card__barcode">
         <svg class="fc-card__barcode-svg" viewBox="0 0 200 16" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -90,7 +89,7 @@
     </div>
   </div>
   <div class="fc-tag-fragment">
-    <span class="fc-tag-fragment__label">Out of stock</span>
+    <span class="fc-tag-fragment__label">Sold Out</span>
   </div>
 </div>
 {%- endif -%}
