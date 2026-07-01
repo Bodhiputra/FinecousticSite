@@ -322,7 +322,7 @@ body {
   color: white;
 }
 
-.link :hover {
+.link:hover {
   color: var(--fc-yellow);
 }
 

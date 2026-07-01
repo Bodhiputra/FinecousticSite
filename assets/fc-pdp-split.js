@@ -1,9 +1,9 @@
 (function () {
-  var root = document.getElementById('fc-pdp-{{ section.id }}');
+  var root = document.querySelector('.fc-pdp[data-section-id]');
   if (!root) return;
 
-  var sId = {{ section.id | json }};
-  var variantId = {{ variant.id | json }};
+  var sId = root.getAttribute('data-section-id');
+  var variantId = parseInt(root.querySelector('[data-variant-id]')?.getAttribute('data-variant-id') || '0', 10);
   var gallery = root.querySelector('[data-fc-pdp-gallery]');
   var slides = root.querySelectorAll('.fc-pdp__slide');
   var total = slides.length;

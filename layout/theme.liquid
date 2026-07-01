@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="">
     <link rel="canonical" href="{{ canonical_url }}">
-    <script>if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }</script>
 
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 
@@ -64,7 +63,9 @@
     <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'fc-carousel.js' | asset_url }}" defer="defer"></script>
+    {%- if template.name == 'index' or template.name == 'collection' or template.name == 'page' or template.name == 'product' -%}
+      <script src="{{ 'fc-carousel.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
     <script src="{{ 'fc-price-tag.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'fc-cart.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
@@ -84,12 +85,6 @@
     %}
 
     {% style %}
-      {{ settings.type_body_font | font_face: font_display: 'swap' }}
-      {{ body_font_bold | font_face: font_display: 'swap' }}
-      {{ body_font_italic | font_face: font_display: 'swap' }}
-      {{ body_font_bold_italic | font_face: font_display: 'swap' }}
-      {{ settings.type_header_font | font_face: font_display: 'swap' }}
-
       {% for scheme in settings.color_schemes -%}
         {% assign scheme_classes = scheme_classes | append: ', .color-' | append: scheme.id %}
         {% if forloop.index == 1 -%}
@@ -357,6 +352,7 @@
 
     {%- if template.name == 'product' -%}
       {{- 'fc-pdp.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'fc-pdp-dock.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
     {%- if template.name == 'search' -%}
@@ -368,7 +364,6 @@
 
     {%- if settings.cart_type == 'drawer' -%}
       <link rel="stylesheet" href="{{ 'component-cart-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
-      <link rel="stylesheet" href="{{ 'fc-nav-dropdowns.css' | asset_url }}" media="print" onload="this.media='all'">
       <link rel="stylesheet" href="{{ 'component-cart.css' | asset_url }}" media="print" onload="this.media='all'">
       <link rel="stylesheet" href="{{ 'component-totals.css' | asset_url }}" media="print" onload="this.media='all'">
       <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
