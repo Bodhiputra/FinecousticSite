@@ -236,6 +236,17 @@
   min-height: min(88vh, 900px);
 }
 
+@media screen and (max-width: 989px) {
+  .fc-pdp-u__hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: 0;
+  }
+  .fc-pdp-u__meta {
+    padding-top: 24px;
+  }
+}
+
 .fc-pdp-u__visual {
   width: 100%;
   min-width: 0;
@@ -284,9 +295,6 @@
 }
 
 @media screen and (max-width: 989px) {
-  .fc-pdp-u__hero {
-    min-height: 0;
-  }
   .fc-pdp-u__visual {
     min-height: 0;
   }
