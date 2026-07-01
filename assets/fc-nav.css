@@ -57,7 +57,7 @@ body > .section-header.shopify-section-group-header-group {
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
-  background-attachment: scroll;
+  background-attachment: fixed;
   border: none;
   border-radius: 16px;
   margin-top: 8px;
@@ -595,7 +595,7 @@ sticky-header.header-wrapper {
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
-  background-attachment: scroll;
+  background-attachment: fixed;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
   transition: box-shadow 0.3s ease, border-radius 0.15s ease;
 }
@@ -604,7 +604,7 @@ sticky-header.header-wrapper {
   .header-wrapper {
     background-size: cover;
     background-position: center top;
-    background-attachment: scroll;
+    background-attachment: fixed;
   }
 }
 

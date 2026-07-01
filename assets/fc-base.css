@@ -113,9 +113,9 @@ body {
   body.gradient {
     background: var(--fc-black);
     background-image: var(--fc-body-bg);
-    background-size: cover;
+    background-size: 100% auto;
     background-position: center top;
-    background-repeat: no-repeat;
+    background-repeat: repeat-y;
     background-attachment: scroll;
   }
 }
@@ -138,9 +138,9 @@ body {
     height: 100%;
     z-index: -1;
     background-image: var(--fc-body-bg);
-    background-size: cover;
+    background-size: 100% auto;
     background-position: center top;
-    background-repeat: no-repeat;
+    background-repeat: repeat-y;
     pointer-events: none;
   }
 }
