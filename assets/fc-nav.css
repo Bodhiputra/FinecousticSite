@@ -3,6 +3,12 @@
   --fc-nav-bar-gutter: 24px;
 }
 
+.desktop-localization-wrapper,
+.header__icons--localization .localization-form,
+.header-localization {
+  display: none !important;
+}
+
 /* Fixed nav — floating pill overlays content */
 .shopify-section-group-header-group {
   position: fixed;
