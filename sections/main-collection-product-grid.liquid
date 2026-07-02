@@ -15,7 +15,7 @@
       var url = new URL(window.location.href);
       if (url.searchParams.has('sort_by')) return;
       url.searchParams.set('sort_by', {{ fc_date_sort | json }});
-      window.location.replace(url.toString());
+      history.replaceState(null, '', url.toString());
     })();
   </script>
 {%- endif -%}
