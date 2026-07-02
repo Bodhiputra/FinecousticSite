@@ -20,7 +20,7 @@
 }
 
 .footer__content-bottom {
-  border-top: none;
+  border-top: none !important;
 }
 
 .fc-footer {
