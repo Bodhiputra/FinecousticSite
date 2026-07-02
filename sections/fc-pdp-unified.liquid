@@ -353,20 +353,21 @@
   position: relative;
   flex: 1 1 auto;
   width: 100%;
-  height: min(76vh, 780px);
+  min-height: min(76vh, 780px);
   overflow: hidden;
 }
 
 .fc-pdp-u__slides .fc-ig-track {
-  height: 100%;
+  min-height: inherit;
 }
 
 .fc-pdp-u__slide {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  width: 100%;
+  min-height: min(76vh, 780px);
+  max-height: min(76vh, 780px);
+  overflow: hidden;
 }
 
 .fc-pdp-u__slide.is-active {
@@ -378,7 +379,7 @@
 .fc-pdp-u__slide-media {
   display: block;
   max-width: 100%;
-  max-height: 100%;
+  max-height: min(74vh, 740px);
   width: auto;
   height: auto;
   object-fit: contain;
@@ -393,16 +394,15 @@
     min-height: 0;
   }
   .fc-pdp-u__slides {
-    height: clamp(240px, 60vw, 420px);
+    min-height: 0;
   }
   .fc-pdp-u__slide {
-    height: 100%;
+    min-height: 0;
+    max-height: clamp(240px, 60vw, 420px);
   }
   .fc-pdp-u__slide-media {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
+    max-height: clamp(240px, 60vw, 420px);
+    width: 100%;
     object-fit: contain;
   }
 }
@@ -473,8 +473,9 @@
 
   .fc-pdp-u__slide-media {
     width: 100%;
-    max-height: none;
+    max-height: min(74vh, 740px);
     height: auto;
+    object-fit: contain;
   }
 
   /* Hide carousel dots on desktop — not needed for scroll gallery */
