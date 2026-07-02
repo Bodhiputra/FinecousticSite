@@ -10,6 +10,11 @@
     </summary>
     <div class="fc-pdp-acc__body">
       <div class="fc-pdp-specs-inbox__specs">
+        {%- assign has_both_tables = false -%}
+        {%- if section.settings.specs_table_1 != blank and section.settings.specs_table_2 != blank -%}
+          {%- assign has_both_tables = true -%}
+        {%- endif -%}
+        {%- if has_both_tables -%}
         <div class="fc-pdp-specs-inbox__toggle" role="tablist" aria-label="Specification tables">
           {%- if section.settings.specs_table_1 != blank -%}
             <button
@@ -34,6 +39,7 @@
             </button>
           {%- endif -%}
         </div>
+        {%- endif -%}
 
         {%- if section.settings.specs_table_1 != blank -%}
           <div class="fc-pdp-specs-inbox__panel is-active" role="tabpanel" data-spec-panel="1">
