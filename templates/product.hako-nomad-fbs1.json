@@ -19,7 +19,8 @@
         "table2_button_label": "",
         "specs_table_1": "Model Number | Hako Nomad FBS1\nConnectivity | BT 5.3 · AUX · TF Card · USB Flash Drive\nBT Version | 5.3\nSpeaker Output | 30 W\nDriver Size | 1 × Woofer 76.8 × 43mm · 1 × Tweeter Ø21.3mm · 1 × Passive Radiator\nSpeaker Layout | 1.0 (Mono)\nFrequency Response | 80 Hz – 20 kHz\nBuilt-in EQ Mode | Music Mode · Outdoor Mode · Game Mode\nBuilt-in Mic | Yes\nTWS Mode | Yes\nAmbient Light | 3 Color Presets\nTF Card Support | Up to 32 GB\nUSB Flash Drive | Up to 32 GB\nBattery Capacity | 2600 mAh\nBattery Life | Up to 12 hours\nWeight | 617 g\nSize | 106.5 × 112 × 68 mm",
         "specs_table_2": "",
-        "inbox_title": "In The Box"
+        "inbox_title": "In The Box",
+        "inbox_asset": "FBS1_ITB.png"
       }
     }
   },
