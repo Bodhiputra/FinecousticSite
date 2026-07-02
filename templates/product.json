@@ -14,20 +14,10 @@
         "specs_table_2": "",
         "inbox_title": "In The Box"
       }
-    },
-    "fc_pdp_video": {
-      "type": "fc-pdp-video-hero",
-      "settings": {
-        "heading": "",
-        "enable_video_looping": true,
-        "video_url": "",
-        "description": ""
-      }
     }
   },
   "order": [
     "fc_pdp_unified",
-    "fc_pdp_specs_inbox",
-    "fc_pdp_video"
+    "fc_pdp_specs_inbox"
   ]
 }

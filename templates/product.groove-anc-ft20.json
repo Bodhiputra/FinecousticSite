@@ -4,7 +4,10 @@
       "type": "fc-pdp-unified",
       "settings": {
         "description": "Powerful 13 mm drivers deliver deep bass and clear highs, while Active Noise Cancellation keeps distractions out. ENC technology ensures crisp calls, Bluetooth 5.3 provides stable wireless connection, and all-day battery life keeps you going without interruptions.",
-        "desktop_stacked_layout": true
+        "desktop_stacked_layout": true,
+        "enable_video_looping": true,
+        "video": "shopify://files/videos/ProductVideo_GROOVE_ANC_FT20.mp4",
+        "video_description": "Groove ANC FT20 product video"
       }
     },
     "fc_pdp_specs_inbox": {
@@ -70,21 +73,10 @@
         "inbox_title": "In The Box",
         "quick_start_guide_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/GROOVE_ANC_FT20_QSG_20250626.pdf?v=1759915192"
       }
-    },
-    "fc_pdp_video": {
-      "type": "fc-pdp-video-hero",
-      "settings": {
-        "heading": "",
-        "enable_video_looping": true,
-        "video": "shopify://files/videos/ProductVideo_GROOVE_ANC_FT20.mp4",
-        "video_url": "",
-        "description": "Groove ANC FT20 product video"
-      }
     }
   },
   "order": [
     "fc_pdp_unified",
-    "fc_pdp_specs_inbox",
-    "fc_pdp_video"
+    "fc_pdp_specs_inbox"
   ]
 }

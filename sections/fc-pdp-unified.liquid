@@ -190,6 +190,75 @@
         </div>
       </div>
     </div>
+
+    {%- liquid
+      assign fc_video = section.settings.video
+      assign fc_video_url = section.settings.video_url
+      assign fc_video_loop = section.settings.enable_video_looping
+      assign fc_video_poster = section.settings.video.preview_image | default: section.settings.cover_image
+      assign fc_video_heading = section.settings.video_heading
+      assign fc_video_desc = section.settings.video_description
+      assign fc_video_id = section.settings.video_url.id
+    -%}
+    {%- if fc_video != null or fc_video_url != null or section.settings.cover_image != null -%}
+    <div class="fc-pdp-u__video-wrap">
+      {%- unless fc_video_heading == blank -%}
+        <h2 class="fc-pdp-u__video-heading">{{ fc_video_heading | escape }}</h2>
+      {%- endunless -%}
+      <div class="fc-pdp-u__video-media fc-video-always-on">
+        {%- if fc_video == null and fc_video_url != null -%}
+          {%- liquid
+            assign loop_param = ''
+            if fc_video_loop
+              assign loop_param = '&loop=1&playlist=' | append: fc_video_id
+            endif
+          -%}
+          {%- if fc_video_url.type == 'youtube' -%}
+            <iframe
+              src="https://www.youtube.com/embed/{{ fc_video_id }}?enablejsapi=1&autoplay=1&mute=1{{ loop_param }}"
+              class="js-youtube fc-video-always-on__iframe fc-pdp-u__video-iframe"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              title="{{ fc_video_desc | default: fc_video_heading | escape }}"
+            ></iframe>
+          {%- else -%}
+            <iframe
+              src="https://player.vimeo.com/video/{{ fc_video_id }}?autoplay=1&muted=1{% if fc_video_loop %}&loop=1{% endif %}"
+              class="js-vimeo fc-video-always-on__iframe fc-pdp-u__video-iframe"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              title="{{ fc_video_desc | default: fc_video_heading | escape }}"
+            ></iframe>
+          {%- endif -%}
+        {%- elsif fc_video != null -%}
+          {{
+            fc_video
+            | video_tag:
+              class: 'fc-video-always-on__video fc-pdp-u__video-video',
+              image_size: '1400x',
+              autoplay: false,
+              loop: fc_video_loop,
+              controls: false,
+              muted: true,
+              playsinline: true,
+              preload: 'none',
+              poster: fc_video_poster
+          }}
+        {%- elsif section.settings.cover_image != null -%}
+          {{
+            section.settings.cover_image
+            | image_url: width: 2000
+            | image_tag:
+              class: 'fc-pdp-u__video-poster',
+              loading: 'lazy',
+              sizes: '(min-width: 990px) 80vw, 92vw',
+              widths: '750, 1100, 1500, 2000',
+              alt: fc_video_desc | default: fc_video_heading | escape
+          }}
+        {%- endif -%}
+      </div>
+    </div>
+    {%- endif -%}
   </div>
 </section>
 
@@ -212,6 +281,7 @@
 {% stylesheet %}
 .fc-pdp-u {
   padding: 0;
+  padding-bottom: 48px;
 }
 
 .fc-pdp-u.fc-pdp-hero {
@@ -762,9 +832,90 @@
     display: none !important;
   }
 }
+
+/* ── Inline product video ── */
+.fc-pdp-u__video-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(20px, 3vw, 32px);
+  width: 100%;
+  padding-top: clamp(32px, 5vw, 64px);
+}
+
+.fc-pdp-u__video-heading {
+  font-family: var(--fc-font);
+  font-size: clamp(24px, 3vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+}
+
+.fc-pdp-u__video-media {
+  width: 100%;
+  max-width: min(1400px, 100%);
+  max-height: 700px;
+  aspect-ratio: 1400 / 700;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  position: relative;
+}
+
+.fc-pdp-u__video-video,
+.fc-pdp-u__video-iframe,
+.fc-pdp-u__video-poster {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border: none;
+}
+
+.fc-pdp-u__video-iframe {
+  position: absolute;
+  inset: 0;
+}
 {% endstylesheet %}
 
 <script src="{{ 'fc-pdp-unified.js' | asset_url }}" defer></script>
+
+<script>
+(function () {
+  function keepPlaying(scope) {
+    (scope || document).querySelectorAll('.fc-pdp-u__video-wrap .fc-video-always-on__video').forEach(function (video) {
+      video.muted = true;
+      var p = video.play();
+      if (p && p.catch) p.catch(function () {});
+      if (video.dataset.fcPdpVideoBound === '1') return;
+      video.dataset.fcPdpVideoBound = '1';
+      video.addEventListener('pause', function () {
+        if (!video.ended) {
+          var retry = video.play();
+          if (retry && retry.catch) retry.catch(function () {});
+        }
+      });
+    });
+  }
+  var wrap = document.querySelector('#fc-pdp-u-{{ section.id }} .fc-pdp-u__video-wrap');
+  if (wrap) {
+    var media = wrap.querySelector('.fc-pdp-u__video-media');
+    if (media) {
+      if (!('IntersectionObserver' in window)) { keepPlaying(wrap); return; }
+      var io = new IntersectionObserver(function (entries) {
+        if (!entries.some(function (e) { return e.isIntersecting; })) return;
+        io.disconnect();
+        wrap.querySelectorAll('.fc-video-always-on__video').forEach(function (v) {
+          if (v.preload === 'none') v.preload = 'metadata';
+        });
+        keepPlaying(wrap);
+      }, { rootMargin: '120px 0px', threshold: 0.01 });
+      io.observe(media);
+    }
+  }
+})();
+</script>
 
 {% schema %}
 {
@@ -792,6 +943,44 @@
       "info": "Desktop only: vertical image scroll, specs and In the box in the hero column. Mobile unchanged.",
       "default": false
     },
+    {
+      "type": "header",
+      "content": "Product video"
+    },
+    {
+      "type": "text",
+      "id": "video_heading",
+      "label": "Video heading"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video"
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "accept": ["youtube", "vimeo"],
+      "label": "Video URL",
+      "info": "Used when no uploaded video is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "Cover image",
+      "info": "Fallback when no video is available."
+    },
+    {
+      "type": "text",
+      "id": "video_description",
+      "label": "Video description (accessibility)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "label": "Loop video",
+      "default": true
+    }
   ],
   "presets": [
     {

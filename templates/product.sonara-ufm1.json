@@ -4,7 +4,10 @@
       "type": "fc-pdp-unified",
       "settings": {
         "description": "Switch effortlessly between Cardioid, Omnidirectional, and Bidirectional modes for vocals, interviews, or group calls. Portable and versatile, it's built for mobile streaming, video calls, or studio recording. Built-in monitor and gain controls let you shape audio in real time, while the integrated shock mount reduces vibrations. Comes with a detachable full-metal pop filter and instant touch controls for ENC and mute, ensuring clear, professional sound anytime.",
-        "desktop_stacked_layout": true
+        "desktop_stacked_layout": true,
+        "enable_video_looping": true,
+        "video": "shopify://files/videos/ProductVideo_Sonara_UFM1.mp4",
+        "video_description": "Sonara UFM1 product video"
       }
     },
     "fc_pdp_specs_inbox": {
@@ -19,21 +22,10 @@
         "inbox_title": "In The Box",
         "inbox_asset": "Sonara_UFM1_What_In_The_Box.webp"
       }
-    },
-    "fc_pdp_video": {
-      "type": "fc-pdp-video-hero",
-      "settings": {
-        "heading": "",
-        "enable_video_looping": true,
-        "video": "shopify://files/videos/ProductVideo_Sonara_UFM1.mp4",
-        "video_url": "",
-        "description": "Sonara UFM1 product video"
-      }
     }
   },
   "order": [
     "fc_pdp_unified",
-    "fc_pdp_specs_inbox",
-    "fc_pdp_video"
+    "fc_pdp_specs_inbox"
   ]
 }
