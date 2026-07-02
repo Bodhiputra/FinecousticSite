@@ -1,5 +1,5 @@
 :root {
-  --fc-nav-bar-max-width: min(860px, calc(100vw - 48px));
+  --fc-nav-bar-max-width: min(1200px, calc(100vw - 48px));
   --fc-nav-bar-gutter: 24px;
 }
 
@@ -650,7 +650,7 @@ sticky-header.header-wrapper {
 .header-wrapper > .header {
   position: relative;
   z-index: 1;
-  padding: 6px var(--fc-nav-bar-gutter, 12px);
+  padding: 6px 24px;
   min-height: 52px;
 }
 
