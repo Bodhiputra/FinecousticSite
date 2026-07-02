@@ -111,53 +111,6 @@
     }
   }
 
-  /* Currency switcher inline in footer nav — match footer link styling */
-  #shopify-section-{{ section.id }} .fc-footer__bottom-nav localization-form,
-  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .localization-form {
-    display: contents;
-  }
-  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .localization-form > div {
-    display: contents;
-  }
-  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .disclosure {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    padding-left: var(--fc-footer-bar-gap, 16px);
-    border-left: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .disclosure__button,
-  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .localization-form__select {
-    all: unset;
-    font-family: var(--fc-font, sans-serif);
-    font-size: var(--fc-footer-bar-size, 1.3rem);
-    font-weight: 600;
-    color: rgba(255,255,255,0.7);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    border: none !important;
-    background: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-shadow: none !important;
-    outline: none !important;
-  }
-  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .disclosure__button:hover,
-  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .localization-form__select:hover {
-    color: #fff;
-  }
-  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .disclosure__button svg,
-  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .localization-form__select svg {
-    display: none !important;
-  }
-  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .disclosure__list-wrapper {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 0;
-    z-index: 100;
-  }
 {%- endstyle -%}
 
 <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
@@ -168,16 +121,6 @@
         <a href="/pages/download-page" class="fc-footer__bottom-link">Product Guide</a>
         {%- if fc_show_support_link -%}
           <a href="/pages/support" class="fc-footer__bottom-link">Support</a>
-        {%- endif -%}
-        {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
-          <localization-form data-prevent-hide>
-            {%- form 'localization', id: 'FooterCountryForm', class: 'localization-form' -%}
-              <div>
-                <h2 class="visually-hidden" id="FooterCountryLabel">{{ 'localization.country_label' | t }}</h2>
-                {%- render 'country-localization', localPosition: 'FooterCountry' -%}
-              </div>
-            {%- endform -%}
-          </localization-form>
         {%- endif -%}
       </nav>
       <span class="fc-footer__bottom-copy">&copy; Finecoustic {{ 'now' | date: '%Y' }}</span>
