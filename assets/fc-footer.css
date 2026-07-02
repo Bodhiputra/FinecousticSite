@@ -297,6 +297,12 @@
   justify-content: flex-end;
 }
 
+.fc-footer__bottom-sep {
+  color: rgba(255, 255, 255, 0.2);
+  font-weight: 300;
+  user-select: none;
+}
+
 .fc-footer__bottom-link,
 .fc-footer__bottom-icon {
   font-family: var(--fc-font);
