@@ -383,10 +383,14 @@
   display: block;
 }
 
-/* Speaker PDPs — landscape images need scale boost to visually match portrait products */
+/* Speaker PDPs — use cover so landscape images fill the gallery box without clipping */
 .fc-pdp-u[data-product-handle="hako-nomad-fbs1"] .fc-pdp-u__slide-media,
 .fc-pdp-u[data-product-handle="hako-nomad-l-fbs2"] .fc-pdp-u__slide-media {
-  transform: scale(1.4);
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
 }
 
 @media screen and (max-width: 989px) {
