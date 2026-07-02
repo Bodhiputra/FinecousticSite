@@ -1,24 +1,5 @@
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
-{%- liquid
-  assign fc_date_sort = section.settings.date_sort_by | default: 'created-descending'
-  assign fc_apply_date_sort = false
-  if section.settings.sort_by_date_listed
-    if collection.handle == 'all' or section.settings.sort_by_date_listed_all_collections
-      assign fc_apply_date_sort = true
-    endif
-  endif
--%}
-{%- if fc_apply_date_sort and collection.sort_by == blank -%}
-  <script>
-    (function () {
-      var url = new URL(window.location.href);
-      if (url.searchParams.has('sort_by')) return;
-      url.searchParams.set('sort_by', {{ fc_date_sort | json }});
-      history.replaceState(null, '', url.toString());
-    })();
-  </script>
-{%- endif -%}
 
 {%- style -%}
 
@@ -514,33 +495,6 @@
       "id": "enable_sorting",
       "default": true,
       "label": "t:sections.main-collection-product-grid.settings.enable_sorting.label"
-    },
-    {
-      "type": "header",
-      "content": "Product order"
-    },
-    {
-      "type": "checkbox",
-      "id": "sort_by_date_listed",
-      "label": "Sort by date listed (newest first)",
-      "default": true,
-      "info": "Uses Shopify product dates. Applies on first visit when no sort is chosen in the URL."
-    },
-    {
-      "type": "checkbox",
-      "id": "sort_by_date_listed_all_collections",
-      "label": "Apply on all collection pages (not only All Products)",
-      "default": false
-    },
-    {
-      "type": "select",
-      "id": "date_sort_by",
-      "label": "Date field",
-      "default": "created-descending",
-      "options": [
-        { "value": "created-descending", "label": "Date added to Shopify (newest)" },
-        { "value": "published-descending", "label": "Date published to Online Store (newest)" }
-      ]
     },
     {
       "type": "header",
