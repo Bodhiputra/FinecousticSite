@@ -22,7 +22,7 @@
       <div class="fc-search-empty-grid">
         {%- for product in collections.all.products limit: 20 -%}
           {%- render 'fc-exclude-product', product: product -%}
-          {%- unless product.title contains 'FBS2' or fc_exclude_product -%}
+          {%- unless fc_exclude_product -%}
             <a class="fc-se-card" href="{{ product.url }}">
               <div class="fc-se-card__img-wrap">
                 {%- if product.featured_image -%}

@@ -352,7 +352,7 @@
 <div class="fc-grid" id="fc-grid" data-cols="{{ section.settings.columns_desktop }}">
   {%- for product in collection.products -%}
     {%- render 'fc-exclude-product', product: product -%}
-    {%- unless product.title contains 'FBS2' or fc_exclude_product -%}
+    {%- unless fc_exclude_product -%}
     {%- liquid
       assign fc_h = product.handle | downcase
       assign fc_t = product.type | downcase
