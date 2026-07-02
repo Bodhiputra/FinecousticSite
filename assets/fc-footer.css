@@ -42,7 +42,7 @@
 }
 
 .fc-footer__bottom-links {
-  height: auto;
+  height: 48px;
 }
 
 /* PDP fixed Add to bag — stay below footer bar on mobile */
