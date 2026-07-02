@@ -122,6 +122,16 @@
         {%- if fc_show_support_link -%}
           <a href="/pages/support" class="fc-footer__bottom-link">Support</a>
         {%- endif -%}
+        {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+          <localization-form data-prevent-hide>
+            {%- form 'localization', id: 'FooterCountryForm', class: 'localization-form' -%}
+              <div>
+                <h2 class="visually-hidden" id="FooterCountryLabel">{{ 'localization.country_label' | t }}</h2>
+                {%- render 'country-localization', localPosition: 'FooterCountry' -%}
+              </div>
+            {%- endform -%}
+          </localization-form>
+        {%- endif -%}
       </nav>
       <span class="fc-footer__bottom-copy">&copy; Finecoustic {{ 'now' | date: '%Y' }}</span>
       {%- render 'fc-social-icons' -%}
