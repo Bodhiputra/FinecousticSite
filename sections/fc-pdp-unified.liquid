@@ -708,7 +708,10 @@
   .fc-pdp-u--desktop-stack .fc-pdp-u__gallery--desktop-vertical .fc-pdp-u__slide {
     flex: 0 0 auto;
     box-sizing: border-box;
-    min-height: calc(100vh - var(--fc-nav-clearance) - clamp(20px, 3vw, 40px));
+    width: 100%;
+    height: min(640px, 74vh);
+    min-height: 0;
+    max-height: min(640px, 74vh);
     padding: 0;
     opacity: 1;
     scroll-snap-align: start;
@@ -718,11 +721,10 @@
   }
 
   .fc-pdp-u--desktop-stack .fc-pdp-u__gallery--desktop-vertical .fc-pdp-u__slide-media {
-    max-height: min(72vh, 680px);
-    max-width: 100%;
-    width: auto;
-    height: auto;
+    width: min(640px, 100%);
+    height: min(640px, 74vh);
     object-fit: contain;
+    margin: 0 auto;
   }
 
   .fc-pdp-u--desktop-stack .fc-pdp-u__meta {
