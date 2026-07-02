@@ -189,10 +189,9 @@ body {
   flex: 1 0 auto;
 }
 
-/* Landing — match hero fallback bg in main column (hides texture seam if hero is shorter than flex fill) */
+/* Landing — hero fills viewport, section wrapper should not grow beyond hero */
 #MainContent > .shopify-section:only-child:has(.website-hero) {
-  flex: 1 0 auto;
-  background: #0a0a0a;
+  flex: 0 0 auto;
 }
 
 /* Full-bleed heroes — cancel #MainContent clearance so hero fills from top of viewport.

@@ -29,7 +29,7 @@
     margin-top: {{ section.settings.margin_top | times: 0.75 | round: 0 }}px;
     background-color: transparent !important;
     background-image: none !important;
-    overflow: hidden;
+    overflow: visible;
     isolation: isolate;
     border-top: none !important;
     border-bottom: none !important;
@@ -48,7 +48,7 @@
     min-height: 0;
     max-height: none;
     overflow: visible;
-    padding-top: 0;
+    padding-top: clamp(12px, 2vw, 20px);
     padding-bottom: clamp(12px, 2vw, 20px);
   }
 
