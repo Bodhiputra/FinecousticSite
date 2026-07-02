@@ -63,6 +63,19 @@
   transform: scale(1.07);
 }
 
+/* Speakers — landscape images: contain so nothing gets cropped, dark bg fills the letterbox */
+.fc-card[data-category="speakers"] .fc-card__image {
+  background: #0d0d0d;
+}
+.fc-card[data-category="speakers"] .fc-card__img {
+  object-fit: contain;
+  object-position: center center;
+  transform: scale(0.9);
+}
+.fc-card[data-category="speakers"]:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover)) .fc-card__img {
+  transform: scale(0.95);
+}
+
 /* Product cards — hover image stack only, no IG dot pagination */
 .fc-shop-page .fc-card__image .fc-ig-dots,
 #fc-collection-header + .fc-ig-dots,
