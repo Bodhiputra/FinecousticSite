@@ -420,12 +420,3 @@
   border-top: none;
 }
 
-/* Non-stacked unified PDP: specs section sits below the hero on desktop.
-   Stacked PDPs move specs into the meta column via JS, so they keep display:none. */
-@media screen and (min-width: 990px) {
-  .fc-pdp-unified-section + .fc-pdp-specs-inbox-section:not(:has(.fc-pdp-u--desktop-stack ~ *)) .fc-pdp-mobile-accordions,
-  .template-product:not(:has(.fc-pdp-u--desktop-stack)) .fc-pdp-specs-inbox-section .fc-pdp-mobile-accordions {
-    display: block !important;
-  }
-}
-
