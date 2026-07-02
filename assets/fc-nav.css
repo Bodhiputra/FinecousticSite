@@ -1,5 +1,6 @@
 :root {
   --fc-nav-bar-max-width: 50vw;
+  --fc-nav-bar-gutter: 24px;
 }
 
 /* Fixed nav — floating pill overlays content */
