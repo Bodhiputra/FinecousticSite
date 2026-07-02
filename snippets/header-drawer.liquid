@@ -132,7 +132,7 @@
                   {%- else -%}
                     <a
                       id="HeaderDrawer-{{ link.handle }}"
-                      href="{%- if link.handle == 'products' -%}/collections/all{%- else -%}{{ link.url }}{%- endif -%}"
+                      href="{%- if link.handle == 'products' -%}/collections/all?sort_by=created-descending{%- else -%}{{ link.url }}{%- endif -%}"
                       class="menu-drawer__menu-item list-menu__item link link--text focus-inset fc-menu-drawer__primary{% if link.current %} menu-drawer__menu-item--active{% endif %}"
                       {% if link.current %}
                         aria-current="page"

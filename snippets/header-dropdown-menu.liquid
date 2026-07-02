@@ -12,7 +12,7 @@
       <li>
         <a
           id="HeaderMenu-{{ link.handle }}"
-          href="{{ link.url }}"
+          href="{%- if link.handle == 'products' -%}/collections/all?sort_by=created-descending{%- else -%}{{ link.url }}{%- endif -%}"
           class="header__menu-item list-menu__item link link--text focus-inset"
           {% if link.current %}
             aria-current="page"

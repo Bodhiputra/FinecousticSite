@@ -3,7 +3,7 @@
   or moved into fc-pdp-unified meta on desktop via JS.
 {%- endcomment -%}
 {%- if section.settings.specs_table_1 != blank or section.settings.specs_table_2 != blank -%}
-  <details class="fc-pdp-acc fc-pdp-acc--specs">
+  <details class="fc-pdp-acc fc-pdp-acc--specs" open>
     <summary class="fc-pdp-acc__summary">
       <span class="fc-pdp-acc__summary-label">{{ section.settings.table_title | default: 'Specifications' | escape }}</span>
       {%- render 'fc-pdp-acc-toggle' -%}

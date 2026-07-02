@@ -223,7 +223,7 @@
       atc.disabled = !available;
       atc.setAttribute('aria-disabled', available ? 'false' : 'true');
       var label = atc.querySelector('[data-fc-pdp-atc-label]');
-      if (label) label.textContent = available ? 'Add to bag' : 'Out of stock';
+      if (label) label.textContent = available ? 'Add to bag' : 'Sold Out';
     });
   }
 

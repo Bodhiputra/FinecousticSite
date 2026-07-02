@@ -18,6 +18,7 @@
         "color_scheme": "scheme-1",
         "enable_filtering": true,
         "enable_sorting": true,
+        "default_sort_by": "created-descending",
         "padding_top": 0,
         "padding_bottom": 0
       }

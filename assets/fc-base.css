@@ -179,7 +179,8 @@ body {
 }
 
 /* Short pages — lone section grows so content + footer fill the viewport */
-#MainContent > .shopify-section:only-child:not(:has(.fc-shop-page)):not(:has(.fc-search-page)) {
+/* Exclude website-hero: it's already 100vh, stretching it adds a gap before the footer */
+#MainContent > .shopify-section:only-child:not(:has(.fc-shop-page)):not(:has(.fc-search-page)):not(:has(.website-hero)) {
   flex: 1 0 auto;
 }
 
@@ -189,9 +190,9 @@ body {
   flex: 1 0 auto;
 }
 
-/* Landing — hero fills viewport, section wrapper should not grow beyond hero */
+/* Landing — hero section absorbs any leftover flex space so no gap appears before footer */
 #MainContent > .shopify-section:only-child:has(.website-hero) {
-  flex: 0 0 auto;
+  flex: 1 0 auto;
 }
 
 /* Full-bleed heroes — cancel #MainContent clearance so hero fills from top of viewport.

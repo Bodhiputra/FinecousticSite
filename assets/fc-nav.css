@@ -54,7 +54,7 @@ body > .section-header.shopify-section-group-header-group {
 .header__submenu {
   background-color: var(--fc-black) !important;
   background-image: var(--fc-nav-footer-bg) !important;
-  background-size: cover;
+  background-size: 100% auto;
   background-position: center top;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -592,7 +592,7 @@ sticky-header.header-wrapper {
   overflow: visible;
   background-color: var(--fc-black) !important;
   background-image: var(--fc-nav-footer-bg) !important;
-  background-size: cover;
+  background-size: 100% auto;
   background-position: center top;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -602,7 +602,7 @@ sticky-header.header-wrapper {
 
 @media screen and (max-width: 749px) {
   .header-wrapper {
-    background-size: cover;
+    background-size: 100% auto;
     background-position: center top;
     background-attachment: fixed;
   }

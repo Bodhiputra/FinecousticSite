@@ -277,6 +277,7 @@
   transform-origin: center center;
   transition:
     transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s ease,
     background-color 0.3s ease;
 }
 
@@ -296,10 +297,7 @@
 
 .fc-pdp-acc[open] > .fc-pdp-acc__summary .fc-pdp-acc__toggle-bar--v {
   transform: rotate(90deg);
-  top: 7px;
-  left: 0;
-  width: 16px;
-  height: 2px;
+  opacity: 0;
 }
 
 @media (hover: hover) {

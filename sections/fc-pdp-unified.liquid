@@ -300,8 +300,8 @@
 .fc-pdp-u__hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(32px, 5vw, 72px);
-  align-items: center;
+  gap: 0;
+  align-items: stretch;
   min-height: min(88vh, 900px);
 }
 
@@ -319,7 +319,6 @@
 .fc-pdp-u__visual {
   width: 100%;
   min-width: 0;
-  min-height: min(80vh, 820px);
 }
 
 .fc-pdp-u__gallery {
@@ -406,6 +405,7 @@
   justify-content: center;
   width: 100%;
   min-width: 0;
+  padding: clamp(32px, 5vh, 64px) clamp(24px, 4vw, 48px);
 }
 
 .fc-pdp-u__meta-center {
@@ -486,6 +486,7 @@
 .fc-pdp-u__variants {
   margin-bottom: 20px;
   width: 100%;
+  max-width: min(560px, 100%);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
