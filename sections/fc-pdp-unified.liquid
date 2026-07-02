@@ -353,7 +353,8 @@
   position: relative;
   flex: 1 1 auto;
   width: 100%;
-  min-height: min(76vh, 780px);
+  height: min(640px, 74vh);
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -365,9 +366,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: min(76vh, 780px);
-  max-height: min(76vh, 780px);
+  width: 100%;
+  height: min(640px, 74vh);
+  min-height: 0;
+  max-height: min(640px, 74vh);
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .fc-pdp-u__slide.is-active {
@@ -464,6 +468,8 @@
 
   .fc-pdp-u__slide {
     min-height: 0;
+    height: min(640px, 74vh);
+    max-height: min(640px, 74vh);
     width: 100% !important;
     opacity: 1 !important;
     visibility: visible !important;
