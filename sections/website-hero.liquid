@@ -56,7 +56,7 @@
   {%- endif -%}
 
   {%- liquid
-    assign hero_subheading = section.settings.hero_subheading
+    assign hero_subheading = section.settings.hero_subheading | strip
   -%}
   {%- if section.settings.heading != blank or hero_subheading != blank or section.settings.button_label != blank -%}
     <div class="website-hero__content">
@@ -274,7 +274,7 @@
       "type": "text",
       "id": "hero_subheading",
       "label": "Subheading",
-      "default": ""
+      "default": " "
     },
     {
       "type": "text",
