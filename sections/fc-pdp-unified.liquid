@@ -378,11 +378,10 @@
 
 .fc-pdp-u__slide-media {
   display: block;
-  max-width: 100%;
-  max-height: min(74vh, 740px);
-  width: auto;
-  height: auto;
+  width: min(640px, 100%);
+  height: min(640px, 74vh);
   object-fit: contain;
+  margin: 0 auto;
 }
 
 
@@ -401,9 +400,10 @@
     max-height: clamp(240px, 60vw, 420px);
   }
   .fc-pdp-u__slide-media {
-    max-height: clamp(240px, 60vw, 420px);
     width: 100%;
+    height: clamp(240px, 60vw, 420px);
     object-fit: contain;
+    margin: 0 auto;
   }
 }
 
@@ -472,10 +472,10 @@
   }
 
   .fc-pdp-u__slide-media {
-    width: 100%;
-    max-height: min(74vh, 740px);
-    height: auto;
+    width: min(640px, 100%);
+    height: min(640px, 74vh);
     object-fit: contain;
+    margin: 0 auto;
   }
 
   /* Hide carousel dots on desktop — not needed for scroll gallery */
