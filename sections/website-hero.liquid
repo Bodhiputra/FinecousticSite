@@ -57,9 +57,6 @@
 
   {%- liquid
     assign hero_subheading = section.settings.hero_subheading
-    if hero_subheading == blank
-      assign hero_subheading = 'Available soon.'
-    endif
   -%}
   {%- if section.settings.heading != blank or hero_subheading != blank or section.settings.button_label != blank -%}
     <div class="website-hero__content">
