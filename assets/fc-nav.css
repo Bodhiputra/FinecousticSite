@@ -4,8 +4,7 @@
 }
 
 .desktop-localization-wrapper,
-.header__icons--localization .localization-form,
-.header-localization {
+.header__icons--localization .localization-form {
   display: none !important;
 }
 
