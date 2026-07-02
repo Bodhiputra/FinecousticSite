@@ -110,6 +110,58 @@
       margin-top: {{ section.settings.margin_top }}px;
     }
   }
+
+  /* Currency switcher inline in footer nav */
+  #shopify-section-{{ section.id }} .fc-footer__bottom-nav localization-form,
+  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .localization-form {
+    display: contents;
+  }
+  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .localization-form > div {
+    display: contents;
+  }
+  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .localization-selector {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    opacity: 0.7;
+  }
+  #shopify-section-{{ section.id }} .fc-footer__bottom-nav .localization-selector:hover {
+    opacity: 1;
+  }
+  #shopify-section-{{ section.id }} .fc-footer__bottom-nav details.disclosure {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+  #shopify-section-{{ section.id }} .fc-footer__bottom-nav details.disclosure > summary {
+    font-family: var(--fc-font, sans-serif);
+    font-size: var(--fc-footer-bar-size, 1.3rem);
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    list-style: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  #shopify-section-{{ section.id }} .fc-footer__bottom-nav details.disclosure > summary::-webkit-details-marker { display: none; }
+  #shopify-section-{{ section.id }} .fc-footer__bottom-nav details.disclosure > summary:hover { color: #fff; }
+  #shopify-section-{{ section.id }} .fc-footer__bottom-nav details.disclosure .disclosure__list-wrapper {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    z-index: 100;
+  }
 {%- endstyle -%}
 
 <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
@@ -121,6 +173,16 @@
         <a href="/pages/about-us" class="fc-footer__bottom-link">About Us</a>
         {%- if fc_show_support_link -%}
           <a href="/pages/support" class="fc-footer__bottom-link">Support</a>
+        {%- endif -%}
+        {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+          <localization-form data-prevent-hide>
+            {%- form 'localization', id: 'FooterCountryForm', class: 'localization-form' -%}
+              <div>
+                <h2 class="visually-hidden" id="FooterCountryLabel">{{ 'localization.country_label' | t }}</h2>
+                {%- render 'country-localization', localPosition: 'FooterCountry' -%}
+              </div>
+            {%- endform -%}
+          </localization-form>
         {%- endif -%}
       </nav>
       <span class="fc-footer__bottom-copy">&copy; Finecoustic {{ 'now' | date: '%Y' }}</span>
