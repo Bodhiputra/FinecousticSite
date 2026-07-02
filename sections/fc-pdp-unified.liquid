@@ -59,6 +59,7 @@
   class="fc-pdp-u fc-pdp-hero{% if fc_desktop_stack %} fc-pdp-u--desktop-stack{% endif %}"
   id="fc-pdp-u-{{ section.id }}"
   data-section-id="{{ section.id }}"
+  data-product-handle="{{ product.handle }}"
   {% if fc_desktop_stack %}data-fc-desktop-stack="true"{% endif %}
 >
   <div class="fc-pdp-u__inner">
@@ -167,6 +168,26 @@
             </div>
           </div>
         {%- endunless -%}
+
+        {%- if section.settings.sibling_1_label != blank or section.settings.sibling_2_label != blank -%}
+          <div class="fc-pdp-u__siblings">
+            <span class="fc-pdp-u__variants-label">Size</span>
+            <div class="fc-pdp-u__variant-list">
+              {%- if section.settings.sibling_1_label != blank -%}
+                <a
+                  href="{{ section.settings.sibling_1_url }}"
+                  class="fc-pdp-u__variant fc-pdp-u__sibling{% if section.settings.sibling_1_url contains product.handle %} is-selected{% endif %}"
+                >{{ section.settings.sibling_1_label }}</a>
+              {%- endif -%}
+              {%- if section.settings.sibling_2_label != blank -%}
+                <a
+                  href="{{ section.settings.sibling_2_url }}"
+                  class="fc-pdp-u__variant fc-pdp-u__sibling{% if section.settings.sibling_2_url contains product.handle %} is-selected{% endif %}"
+                >{{ section.settings.sibling_2_label }}</a>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
 
         <div class="fc-pdp-u__buy" data-fc-pdp-purchase>
           <button
@@ -360,6 +381,12 @@
   height: auto;
   object-fit: contain;
   display: block;
+}
+
+/* Speaker PDPs — landscape images need scale boost to visually match portrait products */
+.fc-pdp-u[data-product-handle="hako-nomad-fbs1"] .fc-pdp-u__slide-media,
+.fc-pdp-u[data-product-handle="hako-nomad-l-fbs2"] .fc-pdp-u__slide-media {
+  transform: scale(1.4);
 }
 
 @media screen and (max-width: 989px) {
@@ -943,6 +970,32 @@
       "label": "Desktop stacked PDP",
       "info": "Desktop only: vertical image scroll, specs and In the box in the hero column. Mobile unchanged.",
       "default": false
+    },
+    {
+      "type": "header",
+      "content": "Product siblings (cross-product variant nav)"
+    },
+    {
+      "type": "text",
+      "id": "sibling_1_label",
+      "label": "Sibling 1 label",
+      "info": "e.g. Original"
+    },
+    {
+      "type": "url",
+      "id": "sibling_1_url",
+      "label": "Sibling 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "sibling_2_label",
+      "label": "Sibling 2 label",
+      "info": "e.g. Large"
+    },
+    {
+      "type": "url",
+      "id": "sibling_2_url",
+      "label": "Sibling 2 URL"
     },
     {
       "type": "header",
