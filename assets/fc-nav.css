@@ -1,3 +1,7 @@
+:root {
+  --fc-nav-bar-max-width: 700px;
+}
+
 /* Fixed nav — floating pill overlays content */
 .shopify-section-group-header-group {
   position: fixed;
