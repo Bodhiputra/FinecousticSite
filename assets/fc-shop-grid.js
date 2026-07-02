@@ -285,9 +285,9 @@
   /* ── filter carousel ── */
   const FILTERS = [
     { key: 'all',         label: 'All Products' },
-    { key: 'earphones',   label: 'Earphones' },
     { key: 'speakers',    label: 'Speakers' },
     { key: 'microphones', label: 'Microphones' },
+    { key: 'earphones',   label: 'Earphones' },
   ];
 
   function fcResetCardImageStack(imageWrap) {
