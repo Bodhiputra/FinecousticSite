@@ -8,17 +8,22 @@
     <div class="fc-grid fc-dl-grid" id="fc-dl-grid" data-cols="5">
       {%- assign dl_card_index = 0 -%}
       {%- for block in section.blocks -%}
-        {%- if block.type == 'Text' and block.settings.download_url != blank -%}
+        {%- if block.type == 'Text' -%}
           {%- assign dl_product = all_products[block.settings.product_handle] -%}
-          {%- capture fc_excl -%}{%- render 'fc-exclude-product', product: dl_product, handle: block.settings.product_handle -%}{%- endcapture -%}
-          {%- if fc_excl contains 'true' -%}{%- continue -%}{%- endif -%}
+          {%- capture fc_qsg_url -%}
+            {%- render 'fc-product-qsg-url', product: dl_product, override: block.settings.download_url -%}
+          {%- endcapture -%}
+          {%- assign fc_qsg_url = fc_qsg_url | strip -%}
+          {%- if fc_qsg_url == blank -%}{%- continue -%}{%- endif -%}
+          {%- include 'fc-exclude-product', product: dl_product, handle: block.settings.product_handle -%}
+          {%- if fc_exclude_product -%}{%- continue -%}{%- endif -%}
           {%- assign dl_name = block.settings.title -%}
           {%- if dl_name == blank and dl_product != blank -%}
             {%- assign dl_name = dl_product.title -%}
           {%- endif -%}
           <a
             class="fc-card fc-dl-card fc-card-appear"
-            href="{{ block.settings.download_url }}"
+            href="{{ fc_qsg_url }}"
             target="_blank"
             rel="noopener"
             style="animation-delay: {{ dl_card_index | times: 90 }}ms"
@@ -70,7 +75,7 @@
       "settings": [
         { "type": "text", "id": "product_handle", "label": "Product handle (e.g. groove-anc-ft20)" },
         { "type": "text", "id": "title", "label": "Product display name" },
-        { "type": "text", "id": "download_url", "label": "Quick Start Guide PDF URL" },
+        { "type": "text", "id": "download_url", "label": "QSG URL override", "info": "Optional. Set Quick Start Guide URL on the product metafield in Admin; use this only to override." },
         { "type": "image_picker", "id": "image", "label": "Fallback image (if product handle is blank)" }
       ]
     }

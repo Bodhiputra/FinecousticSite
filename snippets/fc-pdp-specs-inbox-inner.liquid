@@ -173,10 +173,14 @@
   </details>
 {%- endif -%}
 
-{%- if section.settings.quick_start_guide_url != blank -%}
+{%- capture fc_qsg_url -%}
+  {%- render 'fc-product-qsg-url', product: product, override: section.settings.quick_start_guide_url -%}
+{%- endcapture -%}
+{%- assign fc_qsg_url = fc_qsg_url | strip -%}
+{%- if fc_qsg_url != blank -%}
   <a
     class="fc-pdp-guide-row"
-    href="{{ section.settings.quick_start_guide_url }}"
+    href="{{ fc_qsg_url }}"
     target="_blank"
     rel="noopener"
     aria-label="Quick Start Guide — {{ product.title | escape }}"

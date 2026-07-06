@@ -68,9 +68,8 @@
         "table1_button_label": "Audio & Performance",
         "table2_button_label": "Battery, Charging, & Physical",
         "specs_table_1": "Frequency Response | 20 Hz - 20 kHz\nDriver Size | 13 mm\nEarbuds Type | In-Ear\nConnectivity | Wireless (Bluetooth)\nBT Version | 5.3\nBT Range | 10 m\nTouch Controls | Yes",
-        "specs_table_2": "Earbud Battery Type | 35 mAh LiPo Each\nCharging Case Battery Type | 300 mAh LiPo\nWorking Time | Up to 4 Hours\nStandby Time | Up to 90 Day\nCharging Time | Approx. 1.5 Hours\nCharging Interface | USB-C\nWeight | 30 ± 3 g",
-        "inbox_title": "In The Box",
-        "quick_start_guide_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/GROOVE_ANC_FT20_QSG_20250626.pdf?v=1759915192"
+        "specs_table_2": "Earbud Battery Type | 35 mAh LiPo Each\nCharging Case Battery Type | 300 mAh LiPo\nWorking Time | Up to 4 Hours\nStandby Time | Up to 90 Day\nCharging Time | Approx. 1.5 Hours\nCharging Interface | USB-C\nWeight | 30 \u00b1 3 g",
+        "inbox_title": "In The Box"
       }
     }
   },

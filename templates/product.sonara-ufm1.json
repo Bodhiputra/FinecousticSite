@@ -12,12 +12,11 @@
     "fc_pdp_specs_inbox": {
       "type": "fc-pdp-specs-inbox",
       "settings": {
-        "quick_start_guide_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/UFM1_QSG_20250926.pdf?v=1762999919",
         "table_title": "Specifications",
         "table1_button_label": "Core Microphone Specs",
         "table2_button_label": "Features & Connectivity",
-        "specs_table_1": "Model Number | UFM1\nMicrophone Type | Condenser\nLighting Effects | RGB 12 Modes\nCapsule Size | 14 mm\nPolar Pattern | Cardioid, Bidirectional, Omnidirectional\nFrequency Response | 20 Hz - 20 KHz\nSensitivity | -38 ± 3 dB\nS/N Ratio | 75 dB\nMaximum SPL | 112 dB",
-        "specs_table_2": "Sampling Rate | 48 kHz\nBit Depth | 24-bit\nInterface | USB-C, 3.5mm TRS\nCable Length | 1.8m PVC\nPower Rating | 5V ⎓ 1A\nCompatibility | PC, Laptop, Tablet, and Smartphone with USB-C or USB-A Port\nConnectivity | 2.4GHz, Wired",
+        "specs_table_1": "Model Number | UFM1\nMicrophone Type | Condenser\nLighting Effects | RGB 12 Modes\nCapsule Size | 14 mm\nPolar Pattern | Cardioid, Bidirectional, Omnidirectional\nFrequency Response | 20 Hz - 20 KHz\nSensitivity | -38 \u00b1 3 dB\nS/N Ratio | 75 dB\nMaximum SPL | 112 dB",
+        "specs_table_2": "Sampling Rate | 48 kHz\nBit Depth | 24-bit\nInterface | USB-C, 3.5mm TRS\nCable Length | 1.8m PVC\nPower Rating | 5V \u2393 1A\nCompatibility | PC, Laptop, Tablet, and Smartphone with USB-C or USB-A Port\nConnectivity | 2.4GHz, Wired",
         "inbox_title": "In The Box",
         "inbox_asset": "Sonara_UFM1_What_In_The_Box.webp"
       }

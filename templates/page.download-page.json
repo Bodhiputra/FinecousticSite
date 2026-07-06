@@ -25,7 +25,6 @@
           "settings": {
             "product_handle": "groove-ows-ft21",
             "title": "GROOVE OWS FT21",
-            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/GROOVE_OWS_FT21_OSG_202509032.pdf?v=1760151795",
             "image": "shopify://shop_images/Product_Icon_Groove_OWS_FT21.png"
           }
         },
@@ -34,7 +33,6 @@
           "settings": {
             "product_handle": "groove-anc-ft20",
             "title": "GROOVE ANC FT20",
-            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/GROOVE_ANC_FT20_QSG_20250626.pdf?v=1759915192",
             "image": "shopify://shop_images/Product_Icon_GROOVE_ANC_FT20.png"
           }
         },
@@ -43,7 +41,6 @@
           "settings": {
             "product_handle": "resono-wfm1",
             "title": "RESONO WFM1",
-            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/WFM1_QSG_20250926.pdf?v=1762999963",
             "image": "shopify://shop_images/Product_Icon_Resono_WFM1.png"
           }
         },
@@ -52,7 +49,6 @@
           "settings": {
             "product_handle": "sonara-ufm1",
             "title": "SONARA UFM1",
-            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/UFM1_QSG_20250926.pdf?v=1762999919",
             "image": "shopify://shop_images/Product_Icon_Sonara_UFM1.png"
           }
         },
@@ -61,7 +57,6 @@
           "settings": {
             "product_handle": "hako-nomad-fbs1",
             "title": "HAKO NOMAD S",
-            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/FBS1.jpg?v=1783310032",
             "image": ""
           }
         },
@@ -70,7 +65,6 @@
           "settings": {
             "product_handle": "hako-nomad-l-fbs2",
             "title": "HAKO NOMAD L",
-            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/FBS2.jpg?v=1783310033",
             "image": ""
           }
         }

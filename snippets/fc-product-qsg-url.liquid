@@ -1,0 +1,10 @@
+{%- comment -%}
+  Quick Start Guide URL — Admin product metafield first, optional theme override second.
+  Output: URL string only (capture in parent). Requires `product`.
+{%- endcomment -%}
+{%- liquid
+  assign fc_qsg = product.metafields.custom.quick_start_guide_url.value
+  if fc_qsg == blank and override != blank
+    assign fc_qsg = override
+  endif
+-%}{{- fc_qsg -}}
