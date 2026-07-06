@@ -334,7 +334,8 @@ a.fc-locator-card-ig {
 </div>
 
 <div class="fc-locator-footnote">
-  <a href="/pages/support?tab=contact&inquiry=Wholesale+%2F+B2B" class="fc-locator-footnote-cta">Become a retailer &rarr;</a>
+  {%- assign fc_support_url = pages['support'].url | default: '/pages/support' -%}
+  <a href="{{ fc_support_url }}?tab=contact&amp;inquiry=Wholesale+%2F+B2B" class="fc-locator-footnote-cta">Become a retailer &rarr;</a>
 </div>
 
 <script src="{{ 'fc-store-locator.js' | asset_url }}" defer></script>

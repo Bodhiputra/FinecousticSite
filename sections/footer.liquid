@@ -116,10 +116,10 @@
   <div class="fc-footer page-width">
     <div class="fc-footer__bottom-links">
       <nav class="fc-footer__bottom-nav" aria-label="Footer">
-        <a href="/pages/policies" class="fc-footer__bottom-link">Policies</a>
-        <a href="/pages/download-page" class="fc-footer__bottom-link">Product Guide</a>
+        <a href="{{ pages['policies'].url | default: '/pages/policies' }}" class="fc-footer__bottom-link">Policies</a>
+        <a href="{{ pages['download-page'].url | default: '/pages/download-page' }}" class="fc-footer__bottom-link">Product Guide</a>
         {%- if fc_show_support_link -%}
-          <a href="/pages/support" class="fc-footer__bottom-link">Support</a>
+          <a href="{{ pages['support'].url | default: '/pages/support' }}" class="fc-footer__bottom-link">Support</a>
         {%- endif -%}
         {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
           <localization-form data-prevent-hide>

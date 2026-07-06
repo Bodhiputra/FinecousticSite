@@ -144,9 +144,12 @@
                 </li>
                 {%- endunless -%}
               {%- endfor -%}
+              {%- liquid
+                assign fc_store_locator_url = pages['store-locator'].url | default: '/pages/store-locator'
+              -%}
               <li>
                 <a
-                  href="/pages/store-locator"
+                  href="{{ fc_store_locator_url }}"
                   class="menu-drawer__menu-item list-menu__item link link--text focus-inset fc-menu-drawer__primary"
                 >
                   Store Locator

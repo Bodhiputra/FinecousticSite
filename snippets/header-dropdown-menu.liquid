@@ -25,8 +25,11 @@
       </li>
       {%- endunless -%}
     {%- endfor -%}
+    {%- liquid
+      assign fc_store_locator_url = pages['store-locator'].url | default: '/pages/store-locator'
+    -%}
     <li>
-      <a href="/pages/store-locator" class="header__menu-item list-menu__item link link--text focus-inset">
+      <a href="{{ fc_store_locator_url }}" class="header__menu-item list-menu__item link link--text focus-inset">
         <span class="fc-header-nav-text">Store Locator</span>
       </a>
     </li>
