@@ -3,7 +3,7 @@
   assign media_count = product.media.size
   assign is_available = variant.available
 
-  assign pdp_description = section.settings.description
+  assign pdp_description = product.description
 
   assign has_color = false
   assign color_option_pos = 0
@@ -127,7 +127,7 @@
         <h1 class="fc-pdp-u__title">{{ product.title | escape }}</h1>
 
         {%- if pdp_description != blank -%}
-          <div class="fc-pdp-u__description">{{ pdp_description | escape }}</div>
+          <div class="fc-pdp-u__description rte">{{ pdp_description }}</div>
         {%- endif -%}
 
         {%- unless product.has_only_default_variant -%}
@@ -979,12 +979,6 @@
   "tag": "section",
   "class": "fc-pdp-unified-section",
   "settings": [
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Product description (PDP)",
-      "info": "Marketing paragraph shown on the product page. Admin → Products → Description (bullets) is separate — used for catalog/SEO, not shown here unless you paste it here."
-    },
     {
       "type": "checkbox",
       "id": "variant_image_gallery",
