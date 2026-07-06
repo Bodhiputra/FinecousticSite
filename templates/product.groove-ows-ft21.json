@@ -4,7 +4,8 @@
       "type": "fc-pdp-unified",
       "settings": {
         "variant_image_gallery": true,
-        "desktop_stacked_layout": true
+        "desktop_stacked_layout": true,
+        "description": "Lightweight open-ear design with a secure fit for all-day comfort and awareness of your surroundings. A 16 mm dynamic driver delivers deep, energizing bass, while AI-enhanced noise reduction keeps calls clear and natural. Up to 45 hours of battery life, stable low-latency wireless connection, and targeted audio design for reduced sound leakage complete the experience."
       }
     },
     "fc_pdp_specs_inbox": {
