@@ -512,10 +512,6 @@
 }
 
 
-#shopify-section-sections--19715450568778__custom_liquid_9b94NX {
-  border-top: none;
-}
-
 /* In The Box section — dark theme override (background_color is inline, needs) */
 [class^="icon-grid-section"] {
   background-color: #000000 !important;
@@ -524,25 +520,6 @@
 [class^="icon-grid-section"] .text-title-section h2,
 [class^="icon-grid-section"] .icon-text {
   color: #ffffff;
-}
-
-/* Hi-Fi badge patch — OWS FT21 banner top-right vignette */
-#shopify-section-template--17700538089546__one_style_main_page_banner_hpYAAn .responsive-bg-section::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 18%;
-  height: 28%;
-  background: linear-gradient(to bottom left, rgba(28,28,32,0.96) 0%, transparent 100%);
-  z-index: 1;
-  pointer-events: none;
-}
-
-@media screen and (max-width: 767px) {
-  #shopify-section-template--17700538089546__one_style_main_page_banner_hpYAAn .responsive-bg-section::after {
-    display: none;
-  }
 }
 
 /* Hero banners — no gap between sections */

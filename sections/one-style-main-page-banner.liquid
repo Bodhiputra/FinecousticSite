@@ -438,6 +438,23 @@
     margin: calc(var(--btn-mt) * 0.75) calc(var(--btn-mr) * 0.75)
             calc(var(--btn-mb) * 0.75) calc(var(--btn-ml) * 0.75);
   }
+
+  .responsive-bg-section::after {
+    display: none;
+  }
+}
+
+/* Hi-Fi badge — top-right vignette (desktop) */
+.responsive-bg-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 18%;
+  height: 28%;
+  background: linear-gradient(to bottom left, rgba(28,28,32,0.96) 0%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
 }
 
 {% endstylesheet %}
