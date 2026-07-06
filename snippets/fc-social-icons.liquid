@@ -5,9 +5,13 @@
 {% endcomment %}
 
 <div class="fc-footer__bottom-social{% if class != blank %} {{ class }}{% endif %}">
-  <a href="/pages/about-us" class="fc-footer__bottom-link">About Us</a>
+  {%- unless hide_about_us -%}
+    <a href="/pages/about-us" class="fc-footer__bottom-link">About Us</a>
+  {%- endunless -%}
   {%- if settings.social_instagram_link != blank -%}
-    <span class="fc-footer__bottom-sep" aria-hidden="true">|</span>
+    {%- unless hide_about_us -%}
+      <span class="fc-footer__bottom-sep" aria-hidden="true">|</span>
+    {%- endunless -%}
     <a href="{{ settings.social_instagram_link }}" class="fc-footer__bottom-link">Instagram</a>
   {%- endif -%}
 </div>

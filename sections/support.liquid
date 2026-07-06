@@ -204,6 +204,13 @@
   align-self: flex-end;
 }
 .fc-field-error-msg { font-family: var(--fc-font); font-size: 11px; color: rgba(255,90,90,0.9); letter-spacing: -0.01em; margin: 2px 0 0; display: none; }
+.fc-form-status--error {
+  font-family: var(--fc-font);
+  font-size: clamp(12px, 1.1vw, 14px);
+  color: rgba(255, 90, 90, 0.95);
+  margin: 0 0 16px;
+  line-height: 1.4;
+}
 
 /* ── SMART FORM ── */
 .fc-sup-field--hidden { display: none !important; }
@@ -217,6 +224,18 @@
 .fc-sup-success__check { width: 44px; height: 44px; border: 2px solid var(--fc-yellow); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: var(--fc-yellow); font-size: 20px; margin-bottom: 28px; }
 .fc-sup-success__title { font-family: var(--fc-font); font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: #ffffff; letter-spacing: -0.02em; margin: 0 0 12px; }
 .fc-sup-success__body { font-family: var(--fc-font); font-size: clamp(13px, 1.1vw, 15px); color: rgba(255,255,255,0.45); margin: 0; line-height: 1.8; }
+.fc-sup-success__reset {
+  margin-top: 28px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.7);
+}
+@media (hover: hover) {
+  .fc-sup-success__reset:hover {
+    border-color: rgba(255,255,255,0.4);
+    color: #ffffff;
+  }
+}
 
 @media (max-width: 600px) { .fc-form-row { grid-template-columns: 1fr; } }
 
@@ -387,12 +406,18 @@
       <div class="fc-sup-success__check">&#10003;</div>
       <p class="fc-sup-success__title">Message sent.</p>
       <p class="fc-sup-success__body">We'll be in touch within 3 business days.</p>
+      <button type="button" class="button fc-submit fc-sup-success__reset" data-fc-reset-form="contact">Send another message</button>
     </div>
 
-    <form class="fc-form" id="fc-contact-form" action="/contact#fc-contact-form" method="post" accept-charset="UTF-8">
-      <input type="hidden" name="form_type" value="contact">
-      <input type="hidden" name="utf8" value="✓">
-      <input type="hidden" name="redirect_to" value="/pages/support?tab=contact&inquiry_posted=true">
+    {%- form 'contact', id: 'fc-contact-form', class: 'fc-form' -%}
+      {%- if form.errors -%}
+        <p class="fc-form-status fc-form-status--error" role="alert">
+          Something went wrong sending your message. Please check your details and try again.
+        </p>
+      {%- endif -%}
+      <input type="hidden" name="return_to" value="/pages/support?tab=contact&inquiry_posted=true">
+      {%- comment -%} SiteGround filter: Body contains "Form Source: Contact Us" {%- endcomment -%}
+      <input type="hidden" name="contact[Form Source]" value="Contact Us">
 
       <div class="fc-form-row">
         <div class="fc-field">
@@ -430,7 +455,7 @@
       </div>
 
       <button type="submit" class="button fc-submit">Send Message</button>
-    </form>
+    {%- endform -%}
 
   </div>
 
@@ -440,13 +465,19 @@
     <div id="fc-sup-success-msg" class="fc-sup-success" style="display:none;">
       <div class="fc-sup-success__check">&#10003;</div>
       <p class="fc-sup-success__title">Request received.</p>
-      <p class="fc-sup-success__body">We'll get back to you within 3 business days.<br>We reply in the order requests are received.</p>
+      <p class="fc-sup-success__body">We'll get back to you within 3 business days.</p>
+      <button type="button" class="button fc-submit fc-sup-success__reset" data-fc-reset-form="support">Send another request</button>
     </div>
 
-    <form class="fc-form" id="contact_form" action="/contact#contact_form" method="post" accept-charset="UTF-8">
-      <input type="hidden" name="form_type" value="contact">
-      <input type="hidden" name="utf8" value="✓">
-      <input type="hidden" name="redirect_to" value="/pages/support?tab=support&contact_posted=true">
+    {%- form 'contact', id: 'fc-aftersales-form', class: 'fc-form' -%}
+      {%- if form.errors -%}
+        <p class="fc-form-status fc-form-status--error" role="alert">
+          Something went wrong sending your request. Please check your details and try again.
+        </p>
+      {%- endif -%}
+      <input type="hidden" name="return_to" value="/pages/support?tab=support&contact_posted=true">
+      {%- comment -%} SiteGround filter: Body contains "Form Source: Aftersales Service" {%- endcomment -%}
+      <input type="hidden" name="contact[Form Source]" value="Aftersales Service">
 
       <div class="fc-form-row">
         <div class="fc-field">
@@ -525,7 +556,7 @@
       </div>
 
       <button type="submit" class="button fc-submit">Submit Request</button>
-    </form>
+    {%- endform -%}
 
   </div>
 

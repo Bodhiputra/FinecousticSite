@@ -69,3 +69,9 @@ Shopify enforces a **500-character total limit** on the `custom_css` array per s
 
 ## When in Doubt: STOP and Ask
 Better to ask than to mess something up.
+
+## Admin-first content (required)
+
+**Rule file:** `.cursor/rules/admin-configurable-content.mdc`
+
+Merchant-facing copy and product data must be editable in **admin.shopify.com** (Products, Pages, Collections, Customize, Metafields) — not only in git JSON/Liquid. Engineers own structure/CSS/JS; collaborators own content in Admin. Never duplicate Admin fields in `templates/*.json` section settings unless the setting is an explicit optional override with Admin as default.

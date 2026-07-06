@@ -1,11 +1,29 @@
 {%- comment -%}
-  Sets fc_exclude_product to true for draft/test duplicates that should not appear on the storefront.
-  Usage: {% render 'fc-exclude-product', product: product %}
+  Sets fc_exclude_product to true for products that should not appear on the storefront.
+  Usage (render isolates scope — capture the output):
+    {% capture fc_excl %}{% render 'fc-exclude-product', product: product %}{% endcapture %}
+    {% if fc_excl contains 'true' %} … excluded … {% endif %}
+  Optional handle when product object is blank: pass handle: 'hako-nomad-fbs1'
+  Hako/FBS: visible only on Development theme (#146565922890); hidden everywhere else (live + previews).
 {%- endcomment -%}
 {%- liquid
   assign fc_exclude_product = false
-  assign fc_handle = product.handle | downcase
+  if product != blank
+    assign fc_handle = product.handle | downcase
+  elsif handle != blank
+    assign fc_handle = handle | downcase
+  else
+    assign fc_handle = ''
+  endif
+
   if fc_handle contains 'sonara-ufm1-test'
     assign fc_exclude_product = true
   endif
--%}
+
+  if fc_handle contains 'fbs' or fc_handle contains 'hako-nomad'
+    assign fc_dev_theme_id = 146565922890
+    unless theme.id == fc_dev_theme_id
+      assign fc_exclude_product = true
+    endunless
+  endif
+-%}{%- if fc_exclude_product -%}true{%- endif -%}

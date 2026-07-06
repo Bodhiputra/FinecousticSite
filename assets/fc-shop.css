@@ -1,12 +1,23 @@
 /* ── FC PRICE TAG (shared component — shop grid + PDP floating card) ── */
+.fc-card__tag,
+.fc-tag-oos-wrap {
+  --fc-tag-max-w: clamp(100px, 42vw, 200px);
+}
+
 .fc-card__tag {
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   background: var(--fc-yellow);
   border-radius: 3px;
   margin: 8px auto 0;
   padding: 5px 27px 6px 10px;
+  min-height: clamp(52px, 7vw, 59px);
+  max-width: var(--fc-tag-max-w);
+  max-height: 59px;
+  overflow: hidden;
+  box-sizing: border-box;
   cursor: default;
   transition: opacity 0.2s ease;
   width: fit-content;
@@ -17,15 +28,15 @@
 .fc-card__tag-body {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  min-width: 0;
+  justify-content: center;
+  gap: 5px;
 }
 @media (hover: hover) {
   .fc-card__tag:hover:not(.fc-tag-active):not(.fc-tag--oos) { opacity: 0.75; }
 }
 .fc-card__price {
   font-family: var(--fc-font);
-  font-size: clamp(9px, 0.85vw, 11px);
+  font-size: clamp(11px, 1vw, 14px);
   font-weight: 700;
   color: #000000;
   letter-spacing: -0.01em;
@@ -41,7 +52,7 @@
 }
 .fc-card__name {
   font-family: var(--fc-font);
-  font-size: clamp(11px, 1.1vw, 13px);
+  font-size: clamp(13px, 1.2vw, 16px);
   font-weight: 700;
   color: #000000;
   letter-spacing: -0.03em;
@@ -50,8 +61,6 @@
   padding: 0;
   text-align: left;
   white-space: nowrap;
-  overflow: hidden;
-  width: 140px;
   display: block;
 }
 .fc-card__atc-label {
@@ -62,25 +71,6 @@
   color: #000000;
   line-height: 1;
   white-space: nowrap;
-}
-.fc-card__barcode {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-  width: 100px;
-}
-.fc-card__barcode-svg {
-  width: 100%;
-  height: 16px;
-  display: block;
-}
-.fc-card__barcode-num {
-  font-family: var(--fc-font);
-  font-size: 6px;
-  font-weight: 400;
-  color: #000000;
-  letter-spacing: 0.12em;
 }
 .fc-card__atc-plus {
   position: absolute;
@@ -242,17 +232,22 @@ a.fc-dl-card {
   gap: 0;
   margin: 8px auto 0;
   width: fit-content;
+  max-width: var(--fc-tag-max-w);
+  max-height: 59px;
+  overflow: hidden;
 }
 .fc-tag-oos-wrap .fc-card__tag.fc-tag--oos {
   flex: none;
-  width: 117px;
+  width: auto;
+  max-width: none;
+  min-height: clamp(52px, 7vw, 59px);
+  max-height: 59px;
   padding: 5px 5px 6px 10px;
   margin: 0;
   cursor: default;
   clip-path: polygon(0% 0%,93% 0%,90% 13%,95% 27%,89% 41%,94% 55%,89% 68%,94% 82%,91% 100%,0% 100%);
   border-radius: 3px 0 0 3px;
 }
-.fc-tag-oos-wrap .fc-card__name { width: 102px; }
 .fc-tag-fragment {
   flex: none;
   width: 60px;
@@ -268,19 +263,62 @@ a.fc-dl-card {
 }
 .fc-tag-fragment__label {
   font-family: var(--fc-font);
-  font-size: clamp(9px, 0.95vw, 12px);
+  font-size: clamp(10px, 1vw, 12px);
   font-weight: 700;
   color: #000;
   letter-spacing: -0.02em;
   line-height: 1.15;
   text-align: center;
 }
+
+.fc-grid .fc-card {
+  align-items: center;
+}
+
+/* Grid cards: uniform tag width per column (shop + search) */
+.fc-grid .fc-card__tag {
+  width: min(100%, var(--fc-tag-max-w));
+  max-width: var(--fc-tag-max-w);
+  max-height: 59px;
+  min-height: clamp(52px, 7vw, 59px);
+  margin: 8px auto 0;
+  padding-right: clamp(30px, 3.5vw, 34px);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.fc-grid .fc-tag-oos-wrap {
+  width: min(100%, var(--fc-tag-max-w));
+  max-width: var(--fc-tag-max-w);
+  max-height: 59px;
+  margin: 8px auto 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.fc-grid .fc-tag-oos-wrap .fc-card__tag.fc-tag--oos {
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+  padding-right: 5px;
+  overflow: hidden;
+}
+.fc-grid .fc-card__tag-body {
+  min-width: 0;
+  overflow: hidden;
+}
+.fc-grid .fc-card__name,
+.fc-grid .fc-card__price {
+  white-space: nowrap;
+  overflow: hidden;
+}
+.fc-grid .fc-tag-fragment {
+  width: clamp(44px, 4.5vw, 60px);
+  flex-shrink: 0;
+}
+
 @media screen and (max-width: 749px) {
-  .fc-card__name { width: 90px; }
-  .fc-card__tag { padding-right: 34px; }
-  .fc-tag-oos-wrap .fc-card__tag.fc-tag--oos { width: 94px; padding-right: 5px; }
-  .fc-tag-oos-wrap .fc-card__name { width: 79px; }
-  .fc-tag-fragment { width: 48px; }
+  .fc-grid .fc-tag-fragment__label {
+    font-size: clamp(10px, 2.8vw, 12px);
+  }
 }
 
 

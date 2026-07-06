@@ -247,7 +247,23 @@
   root.querySelectorAll('.fc-pdp-u__atc').forEach(function (btn) {
     btn.addEventListener('click', function () {
       if (btn.disabled) return;
-      if (window.fcAddToCart) window.fcAddToCart(variantId, 1);
+      if (!window.fcAddToCart) return;
+      // Optimistic UI: immediately disable and show feedback so INP is < 100ms
+      btn.disabled = true;
+      var label = btn.querySelector('[data-fc-pdp-atc-label]');
+      var prevText = label ? label.textContent : null;
+      if (label) label.textContent = 'Adding…';
+      // Fire fetch without awaiting — user gets instant visual response
+      window.fcAddToCart(variantId, 1).then(function () {
+        // Restore after 1.2s so user sees confirmation
+        setTimeout(function () {
+          btn.disabled = false;
+          if (label && prevText) label.textContent = prevText;
+        }, 1200);
+      }).catch(function () {
+        btn.disabled = false;
+        if (label && prevText) label.textContent = prevText;
+      });
     });
   });
 

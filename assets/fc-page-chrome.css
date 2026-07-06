@@ -264,3 +264,60 @@
   display: none;
 }
 
+/* ── Mobile header nav (Shop + Store Locator pin) — replaces hamburger below 990px ── */
+.fc-header-mobile-nav {
+  display: none;
+}
+
+@media screen and (max-width: 989px) {
+  header-drawer {
+    display: none !important;
+  }
+
+  .fc-header-mobile-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+    z-index: 3;
+  }
+
+  .fc-header-mobile-nav__shop {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--fc-nav-icon-hit, 3.6rem);
+    padding: 0 6px 0 0;
+    color: #ffffff !important;
+    text-decoration: none;
+    transition: color 0.22s ease;
+  }
+
+  .fc-header-mobile-nav__shop .fc-header-nav-text {
+    display: inline;
+    font-family: var(--fc-font);
+    font-size: clamp(1.1rem, 3.2vw, 1.35rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    white-space: nowrap;
+    color: #ffffff !important;
+  }
+
+  .fc-header-mobile-nav__shop:hover,
+  .fc-header-mobile-nav__shop:hover .fc-header-nav-text {
+    color: var(--fc-yellow) !important;
+  }
+
+  .fc-header-mobile-nav__locator .svg-wrapper svg {
+    width: var(--fc-nav-icon-graphic, 1.625rem);
+    height: var(--fc-nav-icon-graphic, 1.625rem);
+  }
+
+  .fc-header-mobile-nav__locator:hover .svg-wrapper svg,
+  .fc-header-mobile-nav__locator.fc-header-mobile-nav__link--active .svg-wrapper svg {
+    fill: var(--fc-yellow);
+    stroke: var(--fc-yellow);
+  }
+}
+

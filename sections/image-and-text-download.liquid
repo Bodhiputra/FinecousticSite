@@ -10,6 +10,8 @@
       {%- for block in section.blocks -%}
         {%- if block.type == 'Text' and block.settings.download_url != blank -%}
           {%- assign dl_product = all_products[block.settings.product_handle] -%}
+          {%- capture fc_excl -%}{%- render 'fc-exclude-product', product: dl_product, handle: block.settings.product_handle -%}{%- endcapture -%}
+          {%- if fc_excl contains 'true' -%}{%- continue -%}{%- endif -%}
           {%- assign dl_name = block.settings.title -%}
           {%- if dl_name == blank and dl_product != blank -%}
             {%- assign dl_name = dl_product.title -%}

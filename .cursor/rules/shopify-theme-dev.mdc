@@ -14,9 +14,10 @@ When Shopify is in scope (user said "shopify", theme file edit, or theme task):
 1. **Skip** Deku reads (`.claude/BOOTSTRAP.md`, `context/brand-context.md`, `context/session-context.md`) unless the user explicitly asks for brand/KOL/ops context
 2. Read `.cursor/skills/shopify-theme/SKILL.md`
 3. Read `CLAUDE.md` (safety, git, CSS placement, store `j5gawi-vu.myshopify.com`)
-4. Read `context/shopify-context.md` and `context/codebase-summary.md` when they exist
-5. For broad file lookup, use `context/codebase-index.md` if present — do not dump the full index into chat
-6. **First reply:** announce which Shopify skills/files you loaded, then proceed
+4. Read `.cursor/rules/admin-configurable-content.mdc` when adding/changing merchant-facing copy or product data
+5. Read `context/shopify-context.md` and `context/codebase-summary.md` when they exist
+6. For broad file lookup, use `context/codebase-index.md` if present — do not dump the full index into chat
+7. **First reply:** announce which Shopify skills/files you loaded, then proceed
 
 ## Load skills before coding
 
@@ -38,6 +39,10 @@ Announce which skill you loaded when it governs the work.
 - **CSS:** default → `{% stylesheet %}`; global → `assets/custom-style.css`; `custom_css` in JSON only for tiny tweaks (500 char total limit per section instance)
 - **Never** edit `config/settings_schema.json` unless asked
 - Preview via dev theme before any live publish
+
+## Admin-first content
+
+Read `.cursor/rules/admin-configurable-content.mdc`. Merchant-facing copy must be editable in Shopify Admin — not hardcoded only in git JSON/Liquid.
 
 ## Liquid skill scripts
 

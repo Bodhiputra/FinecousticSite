@@ -103,6 +103,58 @@
     }
   }
 
+  function showFormSuccess(formId, successId) {
+    const form       = document.getElementById(formId);
+    const successMsg = document.getElementById(successId);
+    if (form)       form.style.display       = 'none';
+    if (successMsg) successMsg.style.display = 'block';
+  }
+
+  function resetFormSuccess(formId, successId, postedParam) {
+    const form       = document.getElementById(formId);
+    const successMsg = document.getElementById(successId);
+    if (form) {
+      form.style.display = '';
+      form.reset();
+    }
+    if (successMsg) successMsg.style.display = 'none';
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete(postedParam);
+    history.replaceState(null, '', url.toString());
+  }
+
+  function initFormSuccess() {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get('contact_posted') === 'true') {
+      showFormSuccess('fc-aftersales-form', 'fc-sup-success-msg');
+    }
+
+    if (params.get('inquiry_posted') === 'true') {
+      showFormSuccess('fc-contact-form', 'fc-contact-success-msg');
+    }
+  }
+
+  function initFormSuccessReset() {
+    document.querySelectorAll('[data-fc-reset-form]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const which = btn.dataset.fcResetForm;
+        if (which === 'contact') {
+          resetFormSuccess('fc-contact-form', 'fc-contact-success-msg', 'inquiry_posted');
+          const contactOtherFld = document.querySelector('.fc-contact-field-other');
+          if (contactOtherFld) {
+            contactOtherFld.classList.add('fc-sup-field--hidden');
+            contactOtherFld.classList.remove('fc-sup-field--visible');
+          }
+        } else if (which === 'support') {
+          resetFormSuccess('fc-aftersales-form', 'fc-sup-success-msg', 'contact_posted');
+          updateFormFields('');
+        }
+      });
+    });
+  }
+
   function initSmartForm() {
     const typeSelect = document.getElementById('support-type');
     if (!typeSelect) return;
@@ -115,20 +167,6 @@
       typeSelect.value = urlType;
     }
     updateFormFields(typeSelect.value || '');
-
-    if (params.get('contact_posted') === 'true') {
-      const form       = document.getElementById('contact_form');
-      const successMsg = document.getElementById('fc-sup-success-msg');
-      if (form)       form.style.display       = 'none';
-      if (successMsg) successMsg.style.display = 'block';
-    }
-
-    if (params.get('inquiry_posted') === 'true') {
-      const form       = document.getElementById('fc-contact-form');
-      const successMsg = document.getElementById('fc-contact-success-msg');
-      if (form)       form.style.display       = 'none';
-      if (successMsg) successMsg.style.display = 'block';
-    }
 
     const inquirySelect   = document.getElementById('contact-inquiry');
     const contactOtherFld = document.querySelector('.fc-contact-field-other');
@@ -156,7 +194,7 @@
 
   /* ── FORM VALIDATION ── */
   function initFileUpload() {
-    const form = document.getElementById('contact_form');
+    const form = document.getElementById('fc-aftersales-form');
     if (!form) return;
 
     form.addEventListener('submit', e => {
@@ -214,6 +252,8 @@
     wrap.dataset.fcSupportBound = '1';
     initFaqCategories();
     initFaq();
+    initFormSuccess();
+    initFormSuccessReset();
     initSmartForm();
     initFileUpload();
     initTrackOrder();

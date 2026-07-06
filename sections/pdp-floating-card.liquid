@@ -23,7 +23,6 @@
     price_varies: false,
     title: product.title,
     available: is_available,
-    show_barcode: true,
     name_class: 'pdp-tag__name',
     tag_class: 'pdp-fc__tag',
     product_url: product.url
@@ -44,7 +43,6 @@
     price_varies: false,
     title: product.title,
     available: is_available,
-    show_barcode: false,
     name_class: 'pdp-tag__name--bar',
     tag_class: 'pdp-fc-bar__tag',
     product_url: product.url
@@ -116,9 +114,9 @@
 .pdp-fc .fc-card__tag,
 .pdp-fc .fc-tag-oos-wrap { margin: 0; }
 
-/* name width overrides for the floating card context */
-.pdp-tag__name { width: 120px; }
-.pdp-tag__name--bar { width: 80px; }
+/* name width — tag grows with title */
+.pdp-tag__name,
+.pdp-tag__name--bar { width: auto; max-width: none; }
 
 /* ── Mobile bottom bar ── */
 .pdp-fc-bar {

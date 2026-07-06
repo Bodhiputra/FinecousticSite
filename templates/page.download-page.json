@@ -55,13 +55,33 @@
             "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/UFM1_QSG_20250926.pdf?v=1762999919",
             "image": "shopify://shop_images/Product_Icon_Sonara_UFM1.png"
           }
+        },
+        "text_FBS1": {
+          "type": "Text",
+          "settings": {
+            "product_handle": "hako-nomad-fbs1",
+            "title": "HAKO NOMAD S",
+            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/FBS1.jpg?v=1783310032",
+            "image": ""
+          }
+        },
+        "text_FBS2": {
+          "type": "Text",
+          "settings": {
+            "product_handle": "hako-nomad-l-fbs2",
+            "title": "HAKO NOMAD L",
+            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/FBS2.jpg?v=1783310033",
+            "image": ""
+          }
         }
       },
       "block_order": [
         "text_PjzVGn",
         "text_VwqKwN",
         "text_QKyYjB",
-        "text_JXnx79"
+        "text_JXnx79",
+        "text_FBS1",
+        "text_FBS2"
       ],
       "name": "Product Guide",
       "settings": {

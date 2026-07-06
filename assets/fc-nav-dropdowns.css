@@ -4,6 +4,7 @@
   --fc-nav-radius: 14px;
   --fc-nav-drop-bottom: calc(var(--fc-nav-bar-gutter, 12px) + env(safe-area-inset-bottom, 0px));
   --fc-menu-drawer-link-size: clamp(1.35rem, 3.8vw, 1.75rem);
+  --fc-menu-drawer-height: 50dvh;
 }
 
 /* Shared nav surface — pill, menu panel, cart panel (identical texture alignment) */
@@ -102,14 +103,14 @@ header-drawer #menu-drawer,
 header-drawer .menu-drawer {
   position: fixed !important;
   top: var(--fc-nav-drop-top, var(--header-bottom-position, 72px)) !important;
-  bottom: var(--fc-nav-drop-bottom, 12px) !important;
+  bottom: auto !important;
   left: var(--fc-pill-left, var(--fc-nav-bar-gutter, 12px)) !important;
   right: auto !important;
   width: var(--fc-pill-width, calc(100vw - 24px)) !important;
   max-width: var(--fc-pill-width, calc(100vw - 24px)) !important;
-  height: calc(100dvh - var(--fc-nav-drop-top, 72px) - var(--fc-nav-drop-bottom, 12px)) !important;
+  height: var(--fc-menu-drawer-height) !important;
   min-height: 0 !important;
-  max-height: none !important;
+  max-height: var(--fc-menu-drawer-height) !important;
   display: flex !important;
   flex-direction: column !important;
   margin: 0 !important;
@@ -129,9 +130,9 @@ header-drawer .menu-drawer {
 .js header-drawer .menu-drawer,
 .js header-drawer #menu-drawer,
 .js .menu-drawer {
-  height: calc(100dvh - var(--fc-nav-drop-top, 72px) - var(--fc-nav-drop-bottom, 12px)) !important;
+  height: var(--fc-menu-drawer-height) !important;
   min-height: 0 !important;
-  max-height: none !important;
+  max-height: var(--fc-menu-drawer-height) !important;
 }
 
 /* Open + animating in — keep panel sized (opacity fade runs in revealMenuDrawer) */
@@ -580,18 +581,18 @@ cart-drawer .fc-cart-drawer__close svg {
     width: var(--fc-pill-width, calc(100vw - 24px)) !important;
     max-width: var(--fc-pill-width, calc(100vw - 24px)) !important;
     top: var(--fc-nav-drop-top, var(--header-bottom-position, 72px)) !important;
-    bottom: var(--fc-nav-drop-bottom, 12px) !important;
-    height: calc(100dvh - var(--fc-nav-drop-top, 72px) - var(--fc-nav-drop-bottom, 12px)) !important;
+    bottom: auto !important;
+    height: var(--fc-menu-drawer-height) !important;
     min-height: 0 !important;
-    max-height: none !important;
+    max-height: var(--fc-menu-drawer-height) !important;
   }
 
   .js header-drawer .menu-drawer,
   .js header-drawer #menu-drawer,
   .js .menu-drawer {
-    height: calc(100dvh - var(--fc-nav-drop-top, 72px) - var(--fc-nav-drop-bottom, 12px)) !important;
+    height: var(--fc-menu-drawer-height) !important;
     min-height: 0 !important;
-    max-height: none !important;
+    max-height: var(--fc-menu-drawer-height) !important;
   }
 
   .js details[open].menu-opening > .menu-drawer,

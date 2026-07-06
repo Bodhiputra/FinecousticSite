@@ -21,8 +21,8 @@
       <p class="fc-search-label">All Products</p>
       <div class="fc-search-empty-grid">
         {%- for product in collections.all.products limit: 20 -%}
-          {%- render 'fc-exclude-product', product: product -%}
-          {%- unless fc_exclude_product -%}
+          {%- capture fc_excl -%}{%- render 'fc-exclude-product', product: product -%}{%- endcapture -%}
+          {%- unless fc_excl contains 'true' -%}
             <a class="fc-se-card" href="{{ product.url }}">
               <div class="fc-se-card__img-wrap">
                 {%- if product.featured_image -%}

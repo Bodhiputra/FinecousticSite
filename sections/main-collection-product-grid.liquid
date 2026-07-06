@@ -119,9 +119,7 @@
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.82);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -345,8 +343,8 @@
 
 {%- comment -%} Embed product data as JSON for JS to consume {%- endcomment -%}
 {%- for product in collection.products -%}
-  {%- render 'fc-exclude-product', product: product -%}
-  {%- if fc_exclude_product -%}{%- continue -%}{%- endif -%}
+  {%- capture fc_excl -%}{%- render 'fc-exclude-product', product: product -%}{%- endcapture -%}
+  {%- if fc_excl contains 'true' -%}{%- continue -%}{%- endif -%}
   {%- render 'fc-product-data', product: product -%}
 {%- endfor -%}
 
@@ -361,18 +359,28 @@
 <div class="fc-page-swipe-zone fc-shop-swipe-zone" id="fc-shop-swipe-zone">
 <div class="fc-grid" id="fc-grid" data-cols="{{ section.settings.columns_desktop }}">
   {%- for product in collection.products -%}
-    {%- render 'fc-exclude-product', product: product -%}
-    {%- unless fc_exclude_product -%}
+    {%- capture fc_excl -%}{%- render 'fc-exclude-product', product: product -%}{%- endcapture -%}
+    {%- unless fc_excl contains 'true' -%}
     {%- liquid
-      assign fc_h = product.handle | downcase
-      assign fc_t = product.type | downcase
-      if fc_h contains 'wfm1' or fc_h contains 'ufm1' or fc_t contains 'microphone' or fc_t contains 'mic'
-        assign fc_cat = 'microphones'
-      elsif fc_h contains 'fbs' or fc_t contains 'speaker'
-        assign fc_cat = 'speakers'
-      else
-        assign fc_cat = 'earphones'
-      endif
+      comment
+        Shop tab category — set exactly one tag per product in Admin:
+          shop-earphones | shop-speakers | shop-microphones
+        No tag = visible under "All Products" only.
+      endcomment
+      assign fc_cat = ''
+      for tag in product.tags
+        assign fc_tag = tag | downcase | strip
+        if fc_tag == 'shop-microphones'
+          assign fc_cat = 'microphones'
+          break
+        elsif fc_tag == 'shop-speakers'
+          assign fc_cat = 'speakers'
+          break
+        elsif fc_tag == 'shop-earphones'
+          assign fc_cat = 'earphones'
+          break
+        endif
+      endfor
       assign fc_variant_id = product.first_available_variant.id | default: product.variants.first.id
       assign fc_card_available = product.available
     -%}
@@ -397,7 +405,6 @@
         price_varies: product.price_varies,
         title: product.title,
         available: fc_card_available,
-        show_barcode: true,
         name_class: '',
         tag_class: ''
       -%}

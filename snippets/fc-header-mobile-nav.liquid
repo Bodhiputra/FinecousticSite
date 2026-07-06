@@ -1,0 +1,29 @@
+{% comment %}
+  Mobile header nav — Shop text + Store Locator map pin (replaces hamburger below 990px).
+{% endcomment %}
+{%- liquid
+  assign fc_store_locator_url = '/pages/store-locator'
+  if pages['store-locator']
+    assign fc_store_locator_url = pages['store-locator'].url
+  endif
+
+  assign fc_locator_active = false
+  if request.page_type == 'page' and page.handle == 'store-locator'
+    assign fc_locator_active = true
+  endif
+-%}
+<nav class="fc-header-mobile-nav" aria-label="Primary">
+  <a
+    href="/collections/all?sort_by=created-descending"
+    class="fc-header-mobile-nav__shop link focus-inset"
+  >
+    <span class="fc-header-nav-text">Shop</span>
+  </a>
+  <a
+    href="{{ fc_store_locator_url }}"
+    class="header__icon header__icon--store-locator fc-header-mobile-nav__locator link focus-inset{% if fc_locator_active %} fc-header-mobile-nav__link--active{% endif %}"
+    aria-label="Store Locator"
+  >
+    <span class="svg-wrapper">{{ 'icon-map-pin.svg' | inline_asset_content }}</span>
+  </a>
+</nav>

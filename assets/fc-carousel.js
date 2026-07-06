@@ -149,9 +149,16 @@
         onStart(e.clientX, e.clientY);
       });
 
+      var _rafPending = false;
       window.addEventListener('mousemove', function (e) {
         if (!dragging) return;
-        onMove(e.clientX, e.clientY);
+        if (_rafPending) return;
+        _rafPending = true;
+        var cx = e.clientX, cy = e.clientY;
+        requestAnimationFrame(function () {
+          _rafPending = false;
+          onMove(cx, cy);
+        });
       });
 
       window.addEventListener('mouseup', function (e) {

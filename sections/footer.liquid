@@ -1,7 +1,6 @@
 {% comment %}theme-check-disable UndefinedObject{% endcomment %}
 {%- comment -%} FC nav: set fc_show_support_link to true to restore footer Support link {%- endcomment -%}
 {%- assign fc_show_support_link = true -%}
-{{ 'section-footer.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
   body:not(.shopify-design-mode) .fc-footer__bottom-links {
@@ -48,8 +47,8 @@
     min-height: 0;
     max-height: none;
     overflow: visible;
-    padding-top: clamp(12px, 2vw, 20px);
-    padding-bottom: clamp(12px, 2vw, 20px);
+    padding-top: 24px;
+    padding-bottom: 24px;
   }
 
   #shopify-section-{{ section.id }} .fc-footer__bottom-links {

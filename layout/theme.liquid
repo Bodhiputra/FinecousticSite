@@ -41,7 +41,9 @@
       <link rel="preload" as="image" href="{{ 'FinecouBG.webp' | asset_url }}" type="image/webp">
     {%- endif -%}
 
-    <link rel="preload" as="font" href="{{ 'AlteHaasGroteskRegular.woff2' | asset_url }}" type="font/woff2" crossorigin>
+    {%- unless template.name == 'index' -%}
+      <link rel="preload" as="font" href="{{ 'AlteHaasGroteskRegular.woff2' | asset_url }}" type="font/woff2" crossorigin>
+    {%- endunless -%}
 
     {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
@@ -68,9 +70,6 @@
     {%- endif -%}
     <script src="{{ 'fc-price-tag.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'fc-cart.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'details-modal.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
 
     {%- if settings.animations_reveal_on_scroll -%}
       <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
@@ -339,8 +338,8 @@
     {{- 'fc-base.css' | asset_url | stylesheet_tag }}
     {{- 'fc-nav.css' | asset_url | stylesheet_tag }}
     {{- 'fc-page-chrome.css' | asset_url | stylesheet_tag }}
-    {{- 'fc-footer.css' | asset_url | stylesheet_tag }}
-    {{- 'fc-typography.css' | asset_url | stylesheet_tag }}
+    <link rel="stylesheet" href="{{ 'fc-footer.css' | asset_url }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ 'fc-typography.css' | asset_url }}" media="print" onload="this.media='all'">
 
     {%- if template.name == 'collection' or template.name == 'index' or template.name == 'page' or template.name == 'product' -%}
       {{- 'fc-carousel.css' | asset_url | stylesheet_tag }}
@@ -454,7 +453,6 @@
       <script>
         (function () {
           var scripts = [
-            {{ 'fc-cart.js' | asset_url | json }},
             {{ 'cart-drawer.js' | asset_url | json }}
           ];
           var loaded = false;

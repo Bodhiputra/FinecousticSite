@@ -64,10 +64,10 @@ body > .section-header.shopify-section-group-header-group {
 .header__submenu {
   background-color: var(--fc-black) !important;
   background-image: var(--fc-nav-footer-bg) !important;
-  background-size: 100% auto;
-  background-position: center top;
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-attachment: scroll;
   border: none;
   border-radius: 16px;
   margin-top: 8px;
@@ -609,19 +609,19 @@ sticky-header.header-wrapper {
   overflow: visible;
   background-color: var(--fc-black) !important;
   background-image: var(--fc-nav-footer-bg) !important;
-  background-size: 100% auto;
-  background-position: center top;
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-attachment: scroll;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
   transition: box-shadow 0.3s ease, border-radius 0.15s ease;
 }
 
 @media screen and (max-width: 749px) {
   .header-wrapper {
-    background-size: 100% auto;
-    background-position: center top;
-    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
   }
 }
 

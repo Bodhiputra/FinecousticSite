@@ -14,8 +14,8 @@
     {% if col != blank %}
       <div class="fc-grid">
         {% for product in col.products limit: section.settings.products_to_show %}
-          {% render 'fc-exclude-product', product: product %}
-          {% unless fc_exclude_product %}
+          {% capture fc_excl %}{% render 'fc-exclude-product', product: product %}{% endcapture %}
+          {% unless fc_excl contains 'true' %}
           <a href="{{ product.url }}" class="fc-card">
             <div class="fc-card-image">
               {% if product.featured_image %}

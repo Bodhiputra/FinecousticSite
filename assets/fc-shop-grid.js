@@ -251,35 +251,40 @@
     fcClampScroll();
   }
 
-  /* ── filter shared logic — staggered appear ── */
+  /* ── filter shared logic ── */
   function applyFilter(filter) {
     if (filter !== currentFilter) fcResetShopScroll();
     currentFilter = filter;
-    let visibleIdx = 0;
+    const cards = Array.from(document.querySelectorAll('.fc-card'));
     let visibleCount = 0;
-    document.querySelectorAll('.fc-card').forEach(card => {
+
+    // Phase 1 (sync): classify cards — no reads, only dataset access
+    const toShow = [];
+    const toHide = [];
+    cards.forEach(card => {
       card.classList.remove('fc-card-appear');
       const visible = filter === 'all' || card.dataset.category === filter;
-      if (!visible) {
-        card.classList.add('fc-hidden');
-      } else {
-        visibleCount++;
-        card.classList.remove('fc-hidden');
-        const delay = visibleIdx * 90;
-        visibleIdx++;
-        requestAnimationFrame(() => {
-          card.style.animationDelay = delay + 'ms';
-          card.classList.add('fc-card-appear');
-        });
-      }
+      if (visible) { visibleCount++; toShow.push(card); }
+      else { toHide.push(card); }
     });
+
     const soonEl = document.getElementById('fc-grid-soon');
     const showSoon = filter === 'speakers' && visibleCount === 0;
-    if (soonEl) soonEl.hidden = !showSoon;
     const zone = document.getElementById('fc-shop-swipe-zone');
-    if (zone) zone.classList.toggle('fc-shop-swipe-zone--soon', showSoon);
-    updateGridColumns(visibleCount);
-    fcClampScroll();
+
+    // Phase 2 (single RAF): all DOM mutations in one frame — eliminates stagger INP cost
+    requestAnimationFrame(() => {
+      toHide.forEach(card => card.classList.add('fc-hidden'));
+      toShow.forEach(card => {
+        card.classList.remove('fc-hidden');
+        card.style.animationDelay = '0ms';
+        card.classList.add('fc-card-appear');
+      });
+      if (soonEl) soonEl.hidden = !showSoon;
+      if (zone) zone.classList.toggle('fc-shop-swipe-zone--soon', showSoon);
+      updateGridColumns(visibleCount);
+      fcClampScroll();
+    });
   }
 
   /* ── filter carousel ── */
@@ -329,17 +334,6 @@
     });
   }
 
-  function fcFitNames() {
-    document.querySelectorAll('.fc-card__name').forEach(el => {
-      el.style.fontSize = '';
-      let size = parseFloat(getComputedStyle(el).fontSize);
-      while (el.scrollWidth > el.offsetWidth && size > 7) {
-        size -= 0.5;
-        el.style.fontSize = size + 'px';
-      }
-    });
-  }
-
   function fcRunWhenReady(fn) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', fn, { once: true });
@@ -351,7 +345,6 @@
   fcRunWhenReady(function () {
     fcInitCarousel();
     fcInitCards();
-    fcFitNames();
     syncGridColumns();
     fcClampScroll();
   });
@@ -360,7 +353,6 @@
   window.addEventListener('resize', () => {
     clearTimeout(fcFitTimer);
     fcFitTimer = setTimeout(() => {
-      fcFitNames();
       syncGridColumns();
       fcClampScroll();
     }, 120);
@@ -379,7 +371,6 @@
     fcInitCarousel();
     fcInitCards();
     fcWireShopCards();
-    fcFitNames();
   });
 
   const fcSection = document.getElementById('shopify-section-{{ section.id }}');

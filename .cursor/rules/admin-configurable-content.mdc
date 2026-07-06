@@ -1,0 +1,47 @@
+---
+description: Theme content must be editable in Shopify Admin — not hardcoded in JSON/Liquid when merchants need to change it
+alwaysApply: true
+---
+
+# Admin-first content (Shopify theme)
+
+The owner may edit via **codebase**; collaborators edit via **admin.shopify.com** (Products, Pages, Collections, Online Store → Customize, Metafields). Anything merchant-facing must work in Admin without a deploy.
+
+## Default: read from Shopify, don't duplicate
+
+| Content | Source in Admin | In theme |
+|---------|-----------------|----------|
+| Product title, price, media, availability | Products | `product.*` |
+| Product description / bullets | Products → Description | `product.description` (render HTML, don't `\| escape` rich text) |
+| Product category (shop tabs) | Products → Type | `product.type` |
+| Collection membership | Products → Collections | `collection.products` |
+| Page copy | Pages | `page.content` or section blocks |
+| FAQs, support copy | Pages / metaobjects / section blocks | Not 600-line Liquid literals |
+| Specs, QSG PDFs | Product metafields or Files | Not duplicated CDN URLs in every JSON template |
+
+## Forbidden patterns
+
+```liquid
+❌ templates/product.*.json → fc_pdp_unified.settings.description (paragraph that ignores Admin bullets)
+❌ {{ pdp_description | escape }} on HTML from Admin (strips formatting)
+❌ product.description | split: '<ul' | first (drops bullet lists Admin editors added)
+❌ Hardcoded product names in support forms (use catalog or metaobject list)
+❌ Copy-paste specs/QSG URLs across 6 JSON templates
+```
+
+## Allowed in codebase
+
+- Layout, CSS, JS, component structure
+- Section **schema** for presentation toggles (gallery mode, stacked layout, sibling URLs)
+- Sensible **defaults** in schema that fall back to `product.*` when blank
+- `{% stylesheet %}` and design tokens
+
+## When adding features
+
+1. Ask: *"Will a non-engineer need to change this?"* → If yes, wire to Admin (product, page, metafield, metaobject, or theme editor setting with clear label).
+2. Prefer **one source of truth** — never maintain the same copy in Admin **and** JSON template settings.
+3. If overriding Admin is required, document why in a one-line Liquid comment and expose override in **Customize**, not only in git JSON.
+
+## Product PDP description (current bug pattern)
+
+Use Admin description when section setting is blank; render with a rich-text filter, not `escape`. Do not strip `<ul>` lists unless a separate metafield holds "hero blurb" vs full description.
