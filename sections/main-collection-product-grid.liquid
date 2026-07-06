@@ -363,24 +363,13 @@
     {%- unless fc_excl contains 'true' -%}
     {%- liquid
       comment
-        Shop tab category — set exactly one tag per product in Admin:
-          shop-earphones | shop-speakers | shop-microphones
-        No tag = visible under "All Products" only.
+        Shop tab category — set Product type in Admin: Earphones, Speakers, or Microphones.
+        Empty or other types = visible under "All Products" only.
       endcomment
-      assign fc_cat = ''
-      for tag in product.tags
-        assign fc_tag = tag | downcase | strip
-        if fc_tag == 'shop-microphones'
-          assign fc_cat = 'microphones'
-          break
-        elsif fc_tag == 'shop-speakers'
-          assign fc_cat = 'speakers'
-          break
-        elsif fc_tag == 'shop-earphones'
-          assign fc_cat = 'earphones'
-          break
-        endif
-      endfor
+      assign fc_cat = product.type | downcase | strip
+      unless fc_cat == 'earphones' or fc_cat == 'speakers' or fc_cat == 'microphones'
+        assign fc_cat = ''
+      endunless
       assign fc_variant_id = product.first_available_variant.id | default: product.variants.first.id
       assign fc_card_available = product.available
     -%}

@@ -23,9 +23,6 @@
   if section.settings.variant_image_gallery
     assign fc_variant_gallery = true
   endif
-  if product.handle == 'groove-ows-ft21'
-    assign fc_variant_gallery = true
-  endif
   if fc_variant_gallery == false and has_color
     assign fc_variant_image_count = 0
     for v in product.variants
@@ -48,9 +45,6 @@
   endif
 
   assign fc_desktop_stack = section.settings.desktop_stacked_layout
-  if product.handle == 'groove-anc-ft20'
-    assign fc_desktop_stack = true
-  endif
 -%}
 
 {%- render 'fc-product-data', product: product -%}
