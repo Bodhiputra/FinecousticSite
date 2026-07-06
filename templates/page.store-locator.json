@@ -2,7 +2,117 @@
   "sections": {
     "store-locator": {
       "type": "store-locator",
-      "settings": {}
+      "blocks": {
+        "store_1": {
+          "type": "store",
+          "settings": {
+            "country_filter": "indonesia",
+            "country": "Indonesia",
+            "name": "Fantech Indonesia",
+            "website_url": "https://fantech.id/",
+            "website_label": "fantech.id",
+            "address": "Sedayu Square Blok J no. 26 Jl. Lingkar Luar Barat Cengkareng - Jakarta Barat 11730",
+            "phone": "(+62)81119094439"
+          }
+        },
+        "store_2": {
+          "type": "store",
+          "settings": {
+            "country_filter": "philippines",
+            "country": "Philippines",
+            "name": "Fantech Philippines",
+            "website_url": "https://fantech.ph",
+            "website_label": "fantech.ph",
+            "address": "",
+            "phone": ""
+          }
+        },
+        "store_3": {
+          "type": "store",
+          "settings": {
+            "country_filter": "thailand",
+            "country": "Thailand",
+            "name": "Fantech Thailand",
+            "website_url": "https://fantech.th",
+            "website_label": "fantech.th",
+            "address": "",
+            "phone": ""
+          }
+        },
+        "store_4": {
+          "type": "store",
+          "settings": {
+            "country_filter": "bangladesh",
+            "country": "Bangladesh",
+            "name": "Fantech Bangladesh",
+            "website_url": "https://www.newazenterprise.com/fantech",
+            "website_label": "newazenterprise.com",
+            "address": "",
+            "phone": ""
+          }
+        },
+        "store_5": {
+          "type": "store",
+          "settings": {
+            "country_filter": "chile",
+            "country": "Chile",
+            "name": "Fantech Esports Chile",
+            "website_url": "https://www.fantechesports.cl/",
+            "website_label": "fantechesports.cl",
+            "address": "",
+            "phone": ""
+          }
+        },
+        "store_6": {
+          "type": "store",
+          "settings": {
+            "country_filter": "jordan",
+            "country": "Jordan",
+            "name": "Gameak",
+            "website_url": "https://gameakjo.com/",
+            "website_label": "gameakjo.com",
+            "address": "",
+            "phone": ""
+          }
+        },
+        "store_7": {
+          "type": "store",
+          "settings": {
+            "country_filter": "serbia",
+            "country": "Serbia",
+            "name": "Fantech Serbia",
+            "website_url": "https://fantech.rs/",
+            "website_label": "fantech.rs",
+            "address": "",
+            "phone": ""
+          }
+        },
+        "store_8": {
+          "type": "store",
+          "settings": {
+            "country_filter": "cambodia",
+            "country": "Cambodia",
+            "name": "CMK Computer",
+            "website_url": "https://www.cmkcomputer.com/en/",
+            "website_label": "cmkcomputer.com",
+            "address": "",
+            "phone": ""
+          }
+        }
+      },
+      "block_order": [
+        "store_1",
+        "store_2",
+        "store_3",
+        "store_4",
+        "store_5",
+        "store_6",
+        "store_7",
+        "store_8"
+      ],
+      "settings": {
+        "footnote_cta_label": "Become a retailer \u2192"
+      }
     }
   },
   "order": [

@@ -268,63 +268,64 @@ a.fc-locator-card-ig {
 
 <div class="fc-locator-body" id="fc-locator-body">
 
-  <div class="fc-locator-card" data-country="indonesia">
-    <span class="fc-locator-card-country">Indonesia</span>
-    <span class="fc-locator-card-name">Fantech Indonesia</span>
-    <a class="fc-locator-card-ig" href="https://fantech.id/" target="_blank" rel="noopener">fantech.id <span class="fc-locator-card-ig-arrow">↗</span></a>
-    <div class="fc-locator-card-contact">
-      <p class="fc-locator-card-contact-row">
-        <span class="fc-locator-card-contact-label">Address</span>
-        Sedayu Square Blok J no. 26 Jl. Lingkar Luar Barat Cengkareng - Jakarta Barat 11730
-      </p>
-      <p class="fc-locator-card-contact-row">
-        <span class="fc-locator-card-contact-label">Tel</span>
-        <a href="tel:+6281119094439">(+62)81119094439</a>
-      </p>
-    </div>
-  </div>
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'store' and block.settings.name != blank -%}
+      {%- assign fc_country_filter = block.settings.country_filter | default: block.settings.country | downcase | strip -%}
+      {%- assign fc_has_contact = false -%}
+      {%- if block.settings.address != blank or block.settings.phone != blank -%}
+        {%- assign fc_has_contact = true -%}
+      {%- endif -%}
+      {%- assign fc_web_label = block.settings.website_label | strip -%}
+      {%- if fc_web_label == blank and block.settings.website_url != blank -%}
+        {%- assign fc_web_label = block.settings.website_url | remove: 'https://' | remove: 'http://' | remove: 'www.' | split: '/' | first -%}
+      {%- endif -%}
 
-  <a class="fc-locator-card" href="https://fantech.ph" target="_blank" rel="noopener" data-country="philippines">
-    <span class="fc-locator-card-country">Philippines</span>
-    <span class="fc-locator-card-name">Fantech Philippines</span>
-    <span class="fc-locator-card-ig">fantech.ph <span class="fc-locator-card-ig-arrow">↗</span></span>
-  </a>
-
-  <a class="fc-locator-card" href="https://fantech.th" target="_blank" rel="noopener" data-country="thailand">
-    <span class="fc-locator-card-country">Thailand</span>
-    <span class="fc-locator-card-name">Fantech Thailand</span>
-    <span class="fc-locator-card-ig">fantech.th <span class="fc-locator-card-ig-arrow">↗</span></span>
-  </a>
-
-  <a class="fc-locator-card" href="https://www.newazenterprise.com/fantech" target="_blank" rel="noopener" data-country="bangladesh">
-    <span class="fc-locator-card-country">Bangladesh</span>
-    <span class="fc-locator-card-name">Fantech Bangladesh</span>
-    <span class="fc-locator-card-ig">newazenterprise.com <span class="fc-locator-card-ig-arrow">↗</span></span>
-  </a>
-
-  <a class="fc-locator-card" href="https://www.fantechesports.cl/" target="_blank" rel="noopener" data-country="chile">
-    <span class="fc-locator-card-country">Chile</span>
-    <span class="fc-locator-card-name">Fantech Esports Chile</span>
-    <span class="fc-locator-card-ig">fantechesports.cl <span class="fc-locator-card-ig-arrow">↗</span></span>
-  </a>
-
-  <a class="fc-locator-card" href="https://gameakjo.com/" target="_blank" rel="noopener" data-country="jordan">
-    <span class="fc-locator-card-country">Jordan</span>
-    <span class="fc-locator-card-name">Gameak</span>
-    <span class="fc-locator-card-ig">gameakjo.com <span class="fc-locator-card-ig-arrow">↗</span></span>
-  </a>
-
-  <a class="fc-locator-card" href="https://fantech.rs/" target="_blank" rel="noopener" data-country="serbia">
-    <span class="fc-locator-card-country">Serbia</span>
-    <span class="fc-locator-card-name">Fantech Serbia</span>
-    <span class="fc-locator-card-ig">fantech.rs <span class="fc-locator-card-ig-arrow">↗</span></span>
-  </a>
-
-  <a class="fc-locator-card" href="https://www.cmkcomputer.com/en/" target="_blank" rel="noopener" data-country="cambodia">
-    <span class="fc-locator-card-country">Cambodia</span>
-    <span class="fc-locator-card-name">CMK Computer</span>
-    <span class="fc-locator-card-ig">cmkcomputer.com <span class="fc-locator-card-ig-arrow">↗</span></span>
-  </a>
+      {%- if fc_has_contact -%}
+        <div class="fc-locator-card" data-country="{{ fc_country_filter | escape }}" {{ block.shopify_attributes }}>
+          {%- if block.settings.country != blank -%}
+            <span class="fc-locator-card-country">{{ block.settings.country | escape }}</span>
+          {%- endif -%}
+          <span class="fc-locator-card-name">{{ block.settings.name | escape }}</span>
+          {%- if block.settings.website_url != blank -%}
+            <a class="fc-locator-card-ig" href="{{ block.settings.website_url }}" target="_blank" rel="noopener">
+              {{- fc_web_label | escape -}} <span class="fc-locator-card-ig-arrow">↗</span>
+            </a>
+          {%- endif -%}
+          <div class="fc-locator-card-contact">
+            {%- if block.settings.address != blank -%}
+              <p class="fc-locator-card-contact-row">
+                <span class="fc-locator-card-contact-label">Address</span>
+                {{ block.settings.address | escape }}
+              </p>
+            {%- endif -%}
+            {%- if block.settings.phone != blank -%}
+              <p class="fc-locator-card-contact-row">
+                <span class="fc-locator-card-contact-label">Tel</span>
+                <a href="tel:{{ block.settings.phone | replace: ' ', '' | replace: '(', '' | replace: ')', '' | replace: '-', '' }}">{{ block.settings.phone | escape }}</a>
+              </p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- else -%}
+        <a
+          class="fc-locator-card"
+          href="{{ block.settings.website_url | default: '#' }}"
+          target="_blank"
+          rel="noopener"
+          data-country="{{ fc_country_filter | escape }}"
+          {{ block.shopify_attributes }}
+        >
+          {%- if block.settings.country != blank -%}
+            <span class="fc-locator-card-country">{{ block.settings.country | escape }}</span>
+          {%- endif -%}
+          <span class="fc-locator-card-name">{{ block.settings.name | escape }}</span>
+          {%- if block.settings.website_url != blank -%}
+            <span class="fc-locator-card-ig">{{ fc_web_label | escape }} <span class="fc-locator-card-ig-arrow">↗</span></span>
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
 
 </div>
 
@@ -335,7 +336,7 @@ a.fc-locator-card-ig {
 
 <div class="fc-locator-footnote">
   {%- assign fc_support_url = pages['support'].url | default: '/pages/support' -%}
-  <a href="{{ fc_support_url }}?tab=contact&amp;inquiry=Wholesale+%2F+B2B" class="fc-locator-footnote-cta">Become a retailer &rarr;</a>
+  <a href="{{ fc_support_url }}?tab=contact&amp;inquiry=Wholesale+%2F+B2B" class="fc-locator-footnote-cta">{{ section.settings.footnote_cta_label | default: 'Become a retailer →' | escape }}</a>
 </div>
 
 <script src="{{ 'fc-store-locator.js' | asset_url }}" defer></script>
@@ -348,7 +349,60 @@ a.fc-locator-card-ig {
   "disabled_on": {
     "groups": ["header", "footer"]
   },
-  "settings": [],
+  "settings": [
+    {
+      "type": "text",
+      "id": "footnote_cta_label",
+      "label": "Footer CTA label",
+      "default": "Become a retailer →"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "store",
+      "name": "Store",
+      "settings": [
+        {
+          "type": "text",
+          "id": "country_filter",
+          "label": "Country filter keyword",
+          "info": "Lowercase keyword for search (e.g. indonesia). Defaults to country name."
+        },
+        {
+          "type": "text",
+          "id": "country",
+          "label": "Country"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Store name"
+        },
+        {
+          "type": "url",
+          "id": "website_url",
+          "label": "Website URL"
+        },
+        {
+          "type": "text",
+          "id": "website_label",
+          "label": "Website label",
+          "info": "Optional display text. Defaults to the website hostname."
+        },
+        {
+          "type": "textarea",
+          "id": "address",
+          "label": "Address",
+          "info": "When set, card shows contact details instead of a full-card link."
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone"
+        }
+      ]
+    }
+  ],
   "presets": [
     {
       "name": "Store Locator"

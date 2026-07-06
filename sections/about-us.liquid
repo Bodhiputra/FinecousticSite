@@ -50,9 +50,13 @@
 
 <div class="fc-about">
 
-  <p class="fc-about-statement" lang="en">At Finecoustic, we believe audio products are more than devices that produce sound. They are part of the spaces we live in and the routines we experience every day. Our mission is to create products that balance listening experience, visual appeal, and everyday usability, designed for those who appreciate both sound quality and aesthetics.</p>
+  {%- if section.settings.statement != blank -%}
+    <div class="fc-about-statement rte" lang="en">{{ section.settings.statement }}</div>
+  {%- endif -%}
 
-  <p class="fc-about-tagline" lang="en">Build to be Seen. Meant to be Heard.</p>
+  {%- if section.settings.tagline != blank -%}
+    <p class="fc-about-tagline" lang="en">{{ section.settings.tagline | escape }}</p>
+  {%- endif -%}
 
 </div>
 
@@ -64,7 +68,20 @@
   "disabled_on": {
     "groups": ["header", "footer"]
   },
-  "settings": [],
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "statement",
+      "label": "Statement",
+      "default": "<p>At Finecoustic, we believe audio products are more than devices that produce sound. They are part of the spaces we live in and the routines we experience every day. Our mission is to create products that balance listening experience, visual appeal, and everyday usability, designed for those who appreciate both sound quality and aesthetics.</p>"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Build to be Seen. Meant to be Heard."
+    }
+  ],
   "presets": [
     {
       "name": "About Us"

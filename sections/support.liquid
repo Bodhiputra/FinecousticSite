@@ -262,7 +262,7 @@
           <path d="M3 10a7 7 0 1 0 1.5-4.3"/>
           <polyline points="1 4 3.5 6.5 6 4"/>
         </svg>
-        <span class="fc-faq-cat-name">Orders &amp; Returns</span>
+        <span class="fc-faq-cat-name">{{ section.settings.category_returns_label | default: 'Orders & Returns' | escape }}</span>
       </button>
 
       <button class="fc-faq-cat-card" data-cat="shipping" type="button">
@@ -270,7 +270,7 @@
           <rect x="2" y="6" width="16" height="11" rx="1"/>
           <path d="M6 6V4a4 4 0 0 1 8 0v2"/>
         </svg>
-        <span class="fc-faq-cat-name">Shipping &amp; Delivery</span>
+        <span class="fc-faq-cat-name">{{ section.settings.category_shipping_label | default: 'Shipping & Delivery' | escape }}</span>
       </button>
 
       <button class="fc-faq-cat-card" data-cat="warranty" type="button">
@@ -278,126 +278,33 @@
           <path d="M10 2L3 5v5c0 4.4 3 8.3 7 9.3 4-1 7-4.9 7-9.3V5l-7-3z"/>
           <polyline points="7 10 9 12 13 8"/>
         </svg>
-        <span class="fc-faq-cat-name">Warranty &amp; Repairs</span>
+        <span class="fc-faq-cat-name">{{ section.settings.category_warranty_label | default: 'Warranty & Repairs' | escape }}</span>
       </button>
 
     </div>
 
     <div class="fc-faq-list" id="fc-faq-list">
 
-      {%- comment -%} Orders & Returns {%- endcomment -%}
-      <div class="fc-faq-item" data-cat="returns">
-        <div class="fc-faq-q">
-          <span class="fc-faq-q-text">How do I request a refund or return?</span>
-          <span class="fc-faq-icon"></span>
-        </div>
-        <div class="fc-faq-a">
-          <div class="fc-faq-a-inner">
-            <p class="fc-faq-a-short">Submit a Refund Request through our Support page with your order number and a photo link.</p>
-            <p class="fc-faq-a-detail">Head to our <a href="{{ fc_support_url }}?tab=support&type=refund" style="color:var(--fc-yellow);">Support page</a> and select "Refund Request". Fill in your order number, describe the issue, and provide a photo link (Google Drive, iCloud, or OneDrive). Our team will review and respond within 3 business days. Returns are only accepted for verified defects, wrong items received, or manufacturing faults.</p>
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'faq_item' and block.settings.question != blank -%}
+          <div class="fc-faq-item" data-cat="{{ block.settings.category | escape }}" {{ block.shopify_attributes }}>
+            <div class="fc-faq-q">
+              <span class="fc-faq-q-text">{{ block.settings.question | escape }}</span>
+              <span class="fc-faq-icon"></span>
+            </div>
+            <div class="fc-faq-a">
+              <div class="fc-faq-a-inner">
+                {%- if block.settings.answer_short != blank -%}
+                  <p class="fc-faq-a-short">{{ block.settings.answer_short | escape }}</p>
+                {%- endif -%}
+                {%- if block.settings.answer_detail != blank -%}
+                  <div class="fc-faq-a-detail rte">{{ block.settings.answer_detail }}</div>
+                {%- endif -%}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="fc-faq-item" data-cat="returns">
-        <div class="fc-faq-q">
-          <span class="fc-faq-q-text">I received the wrong item — what should I do?</span>
-          <span class="fc-faq-icon"></span>
-        </div>
-        <div class="fc-faq-a">
-          <div class="fc-faq-a-inner">
-            <p class="fc-faq-a-short">Submit a return request within 7 days of delivery with photos and your order details.</p>
-            <p class="fc-faq-a-detail">Go to our <a href="{{ fc_support_url }}?tab=support&type=refund" style="color:var(--fc-yellow);">Support page</a> within 7 days of receiving your order. Provide photos of the item received, your tracking number, and order details. Upload photos to Google Drive, iCloud, or OneDrive and share the link. We'll arrange a replacement or refund once verified.</p>
-          </div>
-        </div>
-      </div>
-      <div class="fc-faq-item" data-cat="returns">
-        <div class="fc-faq-q">
-          <span class="fc-faq-q-text">Can I cancel my order after it's been placed?</span>
-          <span class="fc-faq-icon"></span>
-        </div>
-        <div class="fc-faq-a">
-          <div class="fc-faq-a-inner">
-            <p class="fc-faq-a-short">Yes — within 12 hours of purchase and only before the order ships.</p>
-            <p class="fc-faq-a-detail">Cancellations must be requested within 12 hours of purchase through our <a href="{{ fc_support_url }}?tab=support" style="color:var(--fc-yellow);">Support page</a>. Once the order has shipped, cancellation is no longer possible and any returns will be the customer's responsibility. We process orders quickly — reach out immediately if you need to cancel.</p>
-          </div>
-        </div>
-      </div>
-      <div class="fc-faq-item" data-cat="returns">
-        <div class="fc-faq-q">
-          <span class="fc-faq-q-text">Do you accept returns for personal preference reasons?</span>
-          <span class="fc-faq-icon"></span>
-        </div>
-        <div class="fc-faq-a">
-          <div class="fc-faq-a-inner">
-            <p class="fc-faq-a-short">No — returns are only accepted for defects, wrong items received, or manufacturing faults.</p>
-            <p class="fc-faq-a-detail">We do not accept returns based on personal preference, including dissatisfaction with sound signature, comfort, or fit, where the product is functioning as described. If your product has a genuine defect or you received the wrong item, submit a request through our <a href="{{ fc_support_url }}?tab=support&type=refund" style="color:var(--fc-yellow);">Support page</a> and we'll make it right.</p>
-          </div>
-        </div>
-      </div>
-
-      {%- comment -%} Shipping & Delivery {%- endcomment -%}
-      <div class="fc-faq-item" data-cat="shipping">
-        <div class="fc-faq-q">
-          <span class="fc-faq-q-text">How do I track my order?</span>
-          <span class="fc-faq-icon"></span>
-        </div>
-        <div class="fc-faq-a">
-          <div class="fc-faq-a-inner">
-            <p class="fc-faq-a-short">Check your dispatch email for your tracking number, then enter it on our Track Order page.</p>
-            <p class="fc-faq-a-detail">Once your order ships, you'll receive a confirmation email with your Yanwen tracking number. Enter it on our <a href="{{ fc_support_url }}?tab=track" style="color:var(--fc-yellow);">Track Order page</a> to monitor your shipment in real time. If you haven't received a tracking email within 3 business days of ordering, check your spam folder or contact us through the Support page.</p>
-          </div>
-        </div>
-      </div>
-      <div class="fc-faq-item" data-cat="shipping">
-        <div class="fc-faq-q">
-          <span class="fc-faq-q-text">Can I change my shipping address after ordering?</span>
-          <span class="fc-faq-icon"></span>
-        </div>
-        <div class="fc-faq-a">
-          <div class="fc-faq-a-inner">
-            <p class="fc-faq-a-short">Only before your order is dispatched — contact us immediately through the Support page.</p>
-            <p class="fc-faq-a-detail">Address changes must be requested before a tracking number has been issued. Once dispatched, the address cannot be changed and the package may be returned if undeliverable, with return shipping costs the customer's responsibility. Reach out through our <a href="{{ fc_support_url }}?tab=support" style="color:var(--fc-yellow);">Support page</a> as soon as possible.</p>
-          </div>
-        </div>
-      </div>
-
-      {%- comment -%} Warranty & Repairs {%- endcomment -%}
-      <div class="fc-faq-item" data-cat="warranty">
-        <div class="fc-faq-q">
-          <span class="fc-faq-q-text">What does the warranty cover?</span>
-          <span class="fc-faq-icon"></span>
-        </div>
-        <div class="fc-faq-a">
-          <div class="fc-faq-a-inner">
-            <p class="fc-faq-a-short">Manufacturing defects and hardware faults under normal use — not physical damage, liquid damage, or misuse.</p>
-            <p class="fc-faq-a-detail">The warranty covers manufacturing defects and hardware faults that occur under normal use. It does not cover physical damage from drops or impacts, liquid damage, unauthorized modifications, or wear and tear on consumable parts. If you're unsure whether your issue is covered, submit a Warranty Claim through our <a href="{{ fc_support_url }}?tab=support&type=warranty" style="color:var(--fc-yellow);">Support page</a> and our team will assess it.</p>
-          </div>
-        </div>
-      </div>
-      <div class="fc-faq-item" data-cat="warranty">
-        <div class="fc-faq-q">
-          <span class="fc-faq-q-text">My product arrived damaged — what should I do?</span>
-          <span class="fc-faq-icon"></span>
-        </div>
-        <div class="fc-faq-a">
-          <div class="fc-faq-a-inner">
-            <p class="fc-faq-a-short">Keep the original packaging and submit a Warranty Claim with photos through our Support page.</p>
-            <p class="fc-faq-a-detail">Do not discard the original packaging — it may be needed for the return. Submit a Warranty Claim through our <a href="{{ fc_support_url }}?tab=support&type=warranty" style="color:var(--fc-yellow);">Support page</a> with your order number and photos of the damage (uploaded to Google Drive, iCloud, or OneDrive). Our team will review your claim and arrange a replacement or repair as quickly as possible.</p>
-          </div>
-        </div>
-      </div>
-      <div class="fc-faq-item" data-cat="warranty">
-        <div class="fc-faq-q">
-          <span class="fc-faq-q-text">How do I make a warranty claim?</span>
-          <span class="fc-faq-icon"></span>
-        </div>
-        <div class="fc-faq-a">
-          <div class="fc-faq-a-inner">
-            <p class="fc-faq-a-short">Go to our Support page, select "Warranty Claim", and fill in your order number and defect description.</p>
-            <p class="fc-faq-a-detail">Head to our <a href="{{ fc_support_url }}?tab=support&amp;type=warranty" style="color:var(--fc-yellow);">Support page</a> and select "Warranty Claim" from the request type dropdown. Provide your order number, describe the defect in detail, and include a photo link (Google Drive, iCloud, or OneDrive) showing the issue. Our team will confirm eligibility and guide you through the next steps within 3 business days.</p>
-          </div>
-        </div>
-      </div>
+        {%- endif -%}
+      {%- endfor -%}
 
     </div>
   </div>
@@ -591,6 +498,28 @@
   "settings": [
     {
       "type": "header",
+      "content": "FAQ categories"
+    },
+    {
+      "type": "text",
+      "id": "category_returns_label",
+      "label": "Orders & Returns label",
+      "default": "Orders & Returns"
+    },
+    {
+      "type": "text",
+      "id": "category_shipping_label",
+      "label": "Shipping & Delivery label",
+      "default": "Shipping & Delivery"
+    },
+    {
+      "type": "text",
+      "id": "category_warranty_label",
+      "label": "Warranty & Repairs label",
+      "default": "Warranty & Repairs"
+    },
+    {
+      "type": "header",
       "content": "Padding"
     },
     {
@@ -612,6 +541,40 @@
       "unit": "px",
       "label": "Padding bottom",
       "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "category",
+          "label": "Category",
+          "options": [
+            { "value": "returns", "label": "Orders & Returns" },
+            { "value": "shipping", "label": "Shipping & Delivery" },
+            { "value": "warranty", "label": "Warranty & Repairs" }
+          ],
+          "default": "returns"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "textarea",
+          "id": "answer_short",
+          "label": "Short answer"
+        },
+        {
+          "type": "richtext",
+          "id": "answer_detail",
+          "label": "Detailed answer"
+        }
+      ]
     }
   ],
   "presets": [

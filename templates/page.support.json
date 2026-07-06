@@ -2,9 +2,106 @@
   "sections": {
     "support": {
       "type": "support",
+      "blocks": {
+        "faq_1": {
+          "type": "faq_item",
+          "settings": {
+            "category": "returns",
+            "question": "How do I request a refund or return?",
+            "answer_short": "Submit a Refund Request through our Support page with your order number and a photo link.",
+            "answer_detail": "<p>Head to our <a href=\"/pages/support?tab=support&amp;type=refund\" style=\"color:var(--fc-yellow);\">Support page</a> and select \"Refund Request\". Fill in your order number, describe the issue, and provide a photo link (Google Drive, iCloud, or OneDrive). Our team will review and respond within 3 business days. Returns are only accepted for verified defects, wrong items received, or manufacturing faults.</p>"
+          }
+        },
+        "faq_2": {
+          "type": "faq_item",
+          "settings": {
+            "category": "returns",
+            "question": "I received the wrong item \u2014 what should I do?",
+            "answer_short": "Submit a return request within 7 days of delivery with photos and your order details.",
+            "answer_detail": "<p>Go to our <a href=\"/pages/support?tab=support&amp;type=refund\" style=\"color:var(--fc-yellow);\">Support page</a> within 7 days of receiving your order. Provide photos of the item received, your tracking number, and order details. Upload photos to Google Drive, iCloud, or OneDrive and share the link. We'll arrange a replacement or refund once verified.</p>"
+          }
+        },
+        "faq_3": {
+          "type": "faq_item",
+          "settings": {
+            "category": "returns",
+            "question": "Can I cancel my order after it's been placed?",
+            "answer_short": "Yes \u2014 within 12 hours of purchase and only before the order ships.",
+            "answer_detail": "<p>Cancellations must be requested within 12 hours of purchase through our <a href=\"/pages/support?tab=support\" style=\"color:var(--fc-yellow);\">Support page</a>. Once the order has shipped, cancellation is no longer possible and any returns will be the customer's responsibility. We process orders quickly \u2014 reach out immediately if you need to cancel.</p>"
+          }
+        },
+        "faq_4": {
+          "type": "faq_item",
+          "settings": {
+            "category": "returns",
+            "question": "Do you accept returns for personal preference reasons?",
+            "answer_short": "No \u2014 returns are only accepted for defects, wrong items received, or manufacturing faults.",
+            "answer_detail": "<p>We do not accept returns based on personal preference, including dissatisfaction with sound signature, comfort, or fit, where the product is functioning as described. If your product has a genuine defect or you received the wrong item, submit a request through our <a href=\"/pages/support?tab=support&amp;type=refund\" style=\"color:var(--fc-yellow);\">Support page</a> and we'll make it right.</p>"
+          }
+        },
+        "faq_5": {
+          "type": "faq_item",
+          "settings": {
+            "category": "shipping",
+            "question": "How do I track my order?",
+            "answer_short": "Check your dispatch email for your tracking number, then enter it on our Track Order page.",
+            "answer_detail": "<p>Once your order ships, you'll receive a confirmation email with your Yanwen tracking number. Enter it on our <a href=\"/pages/support?tab=track\" style=\"color:var(--fc-yellow);\">Track Order page</a> to monitor your shipment in real time. If you haven't received a tracking email within 3 business days of ordering, check your spam folder or contact us through the Support page.</p>"
+          }
+        },
+        "faq_6": {
+          "type": "faq_item",
+          "settings": {
+            "category": "shipping",
+            "question": "Can I change my shipping address after ordering?",
+            "answer_short": "Only before your order is dispatched \u2014 contact us immediately through the Support page.",
+            "answer_detail": "<p>Address changes must be requested before a tracking number has been issued. Once dispatched, the address cannot be changed and the package may be returned if undeliverable, with return shipping costs the customer's responsibility. Reach out through our <a href=\"/pages/support?tab=support\" style=\"color:var(--fc-yellow);\">Support page</a> as soon as possible.</p>"
+          }
+        },
+        "faq_7": {
+          "type": "faq_item",
+          "settings": {
+            "category": "warranty",
+            "question": "What does the warranty cover?",
+            "answer_short": "Manufacturing defects and hardware faults under normal use \u2014 not physical damage, liquid damage, or misuse.",
+            "answer_detail": "<p>The warranty covers manufacturing defects and hardware faults that occur under normal use. It does not cover physical damage from drops or impacts, liquid damage, unauthorized modifications, or wear and tear on consumable parts. If you're unsure whether your issue is covered, submit a Warranty Claim through our <a href=\"/pages/support?tab=support&amp;type=warranty\" style=\"color:var(--fc-yellow);\">Support page</a> and our team will assess it.</p>"
+          }
+        },
+        "faq_8": {
+          "type": "faq_item",
+          "settings": {
+            "category": "warranty",
+            "question": "My product arrived damaged \u2014 what should I do?",
+            "answer_short": "Keep the original packaging and submit a Warranty Claim with photos through our Support page.",
+            "answer_detail": "<p>Do not discard the original packaging \u2014 it may be needed for the return. Submit a Warranty Claim through our <a href=\"/pages/support?tab=support&amp;type=warranty\" style=\"color:var(--fc-yellow);\">Support page</a> with your order number and photos of the damage (uploaded to Google Drive, iCloud, or OneDrive). Our team will review your claim and arrange a replacement or repair as quickly as possible.</p>"
+          }
+        },
+        "faq_9": {
+          "type": "faq_item",
+          "settings": {
+            "category": "warranty",
+            "question": "How do I make a warranty claim?",
+            "answer_short": "Go to our Support page, select \"Warranty Claim\", and fill in your order number and defect description.",
+            "answer_detail": "<p>Head to our <a href=\"/pages/support?tab=support&amp;type=warranty\" style=\"color:var(--fc-yellow);\">Support page</a> and select \"Warranty Claim\" from the request type dropdown. Provide your order number, describe the defect in detail, and include a photo link (Google Drive, iCloud, or OneDrive) showing the issue. Our team will confirm eligibility and guide you through the next steps within 3 business days.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5",
+        "faq_6",
+        "faq_7",
+        "faq_8",
+        "faq_9"
+      ],
       "settings": {
         "padding_top": 0,
-        "padding_bottom": 0
+        "padding_bottom": 0,
+        "category_returns_label": "Orders & Returns",
+        "category_shipping_label": "Shipping & Delivery",
+        "category_warranty_label": "Warranty & Repairs"
       }
     }
   },

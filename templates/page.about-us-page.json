@@ -2,7 +2,10 @@
   "sections": {
     "about-us": {
       "type": "about-us",
-      "settings": {}
+      "settings": {
+        "statement": "<p>At Finecoustic, we believe audio products are more than devices that produce sound. They are part of the spaces we live in and the routines we experience every day. Our mission is to create products that balance listening experience, visual appeal, and everyday usability, designed for those who appreciate both sound quality and aesthetics.</p>",
+        "tagline": "Build to be Seen. Meant to be Heard."
+      }
     }
   },
   "order": [
