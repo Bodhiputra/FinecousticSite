@@ -517,11 +517,12 @@
         <div class="fc-select-wrap">
           <select id="support-product" name="contact[product]">
             <option value="" disabled selected>Select your product</option>
-            <option value="Groove ANC FT20">Groove ANC FT20</option>
-            <option value="Groove OWS FT21">Groove OWS FT21</option>
-            <option value="Sonara UFM1">Sonara UFM1</option>
-            <option value="Resono WFM1">Resono WFM1</option>
-            <option value="Hako Nomad FBS1">Hako Nomad FBS1</option>
+            {%- for product in collections.all.products -%}
+              {%- include 'fc-exclude-product', product: product -%}
+              {%- unless fc_exclude_product -%}
+                <option value="{{ product.title | escape }}">{{ product.title | escape }}</option>
+              {%- endunless -%}
+            {%- endfor -%}
             <option value="Other">Other</option>
           </select>
         </div>
