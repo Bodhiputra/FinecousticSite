@@ -3,7 +3,6 @@
     "fc_pdp_unified": {
       "type": "fc-pdp-unified",
       "settings": {
-        "description": "Cardioid pickup captures natural, studio-quality voice clarity, while the built-in shock mount minimizes unwanted vibrations and table noise. Monitor Mix Control lets you balance voice and system audio directly from the microphone, complete with a detachable full-metal pop filter and instant mute / ENC controls for seamless recording and streaming.",
         "desktop_stacked_layout": true,
         "enable_video_looping": true,
         "video": "shopify://files/videos/ProductVideo_Resono_WFM1.mp4",

@@ -6,7 +6,7 @@
   if section.settings.description != blank
     assign pdp_description = section.settings.description
   else
-    assign pdp_description = product.description | split: '<ul' | first | split: '<UL' | first
+    assign pdp_description = product.description
   endif
 
   assign has_color = false
@@ -131,7 +131,7 @@
         <h1 class="fc-pdp-u__title">{{ product.title | escape }}</h1>
 
         {%- if pdp_description != blank -%}
-          <div class="fc-pdp-u__description">{{ pdp_description | escape }}</div>
+          <div class="fc-pdp-u__description rte">{{ pdp_description }}</div>
         {%- endif -%}
 
         {%- unless product.has_only_default_variant -%}
@@ -507,6 +507,27 @@
   margin: 0 0 20px;
   max-width: min(560px, 100%);
   text-align: justify;
+}
+
+.fc-pdp-u__description ul {
+  list-style: disc;
+  margin: 0.75em 0 0;
+  padding-left: 1.25em;
+  text-align: left;
+}
+
+.fc-pdp-u__description li {
+  margin-bottom: 0.35em;
+}
+
+.fc-pdp-u__description li:last-child {
+  margin-bottom: 0;
+}
+
+.fc-pdp-u__description strong,
+.fc-pdp-u__description b {
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 700;
 }
 
 .fc-pdp-u__siblings {
@@ -966,7 +987,7 @@
       "type": "textarea",
       "id": "description",
       "label": "Product description",
-      "info": "Overrides Shopify product description when set."
+      "info": "Optional override. Leave blank to use the product Description from Admin (Products)."
     },
     {
       "type": "checkbox",
