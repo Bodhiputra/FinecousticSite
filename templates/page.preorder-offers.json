@@ -3,7 +3,7 @@
     "preorder_offers": {
       "type": "fc-preorder-offers",
       "settings": {
-        "heading": "PREORDER SPECIALS",
+        "heading": "PRE-ORDER SPECIALS",
         "reservation_ends": "RESERVATION ENDS - 2026.07.31",
         "save_badge_s": "SAVE $20 USD",
         "save_badge_l": "SAVE $30 USD",
@@ -16,8 +16,8 @@
         "cta_label": "Reserve discount for only $2",
         "decline_label": "No, I'll Pay Full Price",
         "reserved_check_secret": "6b33426348051ce8498fcf8b20b1dfb05cc0d45228a37374",
-        "term_1": "The preorder discount will be automatically applied at checkout page during launch when you use the same email address registered for your preorder reservation.",
-        "term_2": "Each preorder reservation is eligible for one Hako Nomad and one Hako Nomad L purchase.",
+        "term_1": "The pre-order discount will be automatically applied at checkout page during launch when you use the same email address registered for your pre-order reservation.",
+        "term_2": "Each pre-order reservation is eligible for one Hako Nomad and one Hako Nomad L purchase.",
         "term_3": "Each variant must be purchased in a separate order to redeem the discount.",
         "footnote": "*The reservation fee is not refundable."
       }

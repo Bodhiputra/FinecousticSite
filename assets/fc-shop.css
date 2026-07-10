@@ -22,7 +22,7 @@
   transition: opacity 0.2s ease;
   width: fit-content;
 }
-.fc-card__tag:not(.fc-tag-active):not(.fc-tag--oos) .fc-card__tag-body {
+.fc-card__tag:not(.fc-tag-active):not(.fc-tag--oos):not(.fc-tag--coming-soon) .fc-card__tag-body {
   cursor: pointer;
 }
 .fc-card__tag-body {
@@ -32,7 +32,7 @@
   gap: 5px;
 }
 @media (hover: hover) {
-  .fc-card__tag:hover:not(.fc-tag-active):not(.fc-tag--oos) { opacity: 0.75; }
+  .fc-card__tag:hover:not(.fc-tag-active):not(.fc-tag--oos):not(.fc-tag--coming-soon) { opacity: 0.75; }
 }
 .fc-card__price {
   font-family: var(--fc-font);
@@ -331,7 +331,8 @@ a.fc-dl-card {
   max-height: 59px;
   overflow: hidden;
 }
-.fc-tag-oos-wrap .fc-card__tag.fc-tag--oos {
+.fc-tag-oos-wrap .fc-card__tag.fc-tag--oos,
+.fc-tag-coming-soon-wrap .fc-card__tag.fc-tag--coming-soon {
   flex: none;
   width: auto;
   max-width: none;
@@ -342,6 +343,14 @@ a.fc-dl-card {
   cursor: default;
   clip-path: polygon(0% 0%,93% 0%,90% 13%,95% 27%,89% 41%,94% 55%,89% 68%,94% 82%,91% 100%,0% 100%);
   border-radius: 3px 0 0 3px;
+}
+.fc-tag-coming-soon-wrap .fc-card__tag-body {
+  display: flex;
+  align-items: center;
+  min-height: 100%;
+}
+.fc-tag-coming-soon-wrap .fc-card__name {
+  margin: 0;
 }
 .fc-tag-fragment {
   flex: none;
@@ -381,7 +390,8 @@ a.fc-dl-card {
   box-sizing: border-box;
   overflow: hidden;
 }
-.fc-grid .fc-tag-oos-wrap {
+.fc-grid .fc-tag-oos-wrap,
+.fc-grid .fc-tag-coming-soon-wrap {
   width: min(100%, var(--fc-tag-max-w));
   max-width: var(--fc-tag-max-w);
   max-height: 59px;
@@ -389,7 +399,8 @@ a.fc-dl-card {
   box-sizing: border-box;
   overflow: hidden;
 }
-.fc-grid .fc-tag-oos-wrap .fc-card__tag.fc-tag--oos {
+.fc-grid .fc-tag-oos-wrap .fc-card__tag.fc-tag--oos,
+.fc-grid .fc-tag-coming-soon-wrap .fc-card__tag.fc-tag--coming-soon {
   flex: 1 1 0;
   min-width: 0;
   width: auto;
@@ -482,7 +493,7 @@ a.fc-dl-card {
   display: none;
 }
 
-.fc-shop-page .fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover)) .fc-card__img {
+.fc-shop-page .fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover, .fc-tag-coming-soon-wrap:hover)) .fc-card__img {
   transform: scale(1.07);
 }
 

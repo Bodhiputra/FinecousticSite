@@ -30,20 +30,15 @@
   assign title_parts = product_title | split: ' '
   assign title_left = title_parts[0] | default: 'Hako'
   assign title_right = title_parts[1] | default: 'Nomad'
+
+  assign hero_pdp_aria = section.settings.preorder_learn_more_label | default: 'Learn more about'
+  assign hero_pdp_aria = hero_pdp_aria | append: ' ' | append: product_title
 -%}
 
 <section
-  class="website-hero{% if section.settings.show_preorder_form %} website-hero--clickable{% endif %}"
+  class="website-hero"
   id="website-hero-{{ section.id }}"
-  {% if hero_pdp_url != blank %}data-hero-pdp-url="{{ hero_pdp_url | escape }}"{% endif %}
 >
-  {%- if hero_pdp_url != blank -%}
-    <a
-      class="website-hero__pdp-link"
-      href="{{ hero_pdp_url }}"
-      aria-label="{{ product_title | escape }}"
-    >
-  {%- endif -%}
   <picture class="website-hero__picture">
     {%- if hero_is_asset -%}
       <source
@@ -80,8 +75,13 @@
       -}}
     {%- endif -%}
   </picture>
+
   {%- if hero_pdp_url != blank -%}
-    </a>
+    <a
+      class="website-hero__pdp-hotspot"
+      href="{{ hero_pdp_url }}"
+      aria-label="{{ hero_pdp_aria | escape }}"
+    ></a>
   {%- endif -%}
 
   {%- if section.settings.show_overlay -%}
@@ -137,19 +137,6 @@
       </div>
       {%- render 'fc-preorder-hero-form', section: section -%}
     </div>
-    <script>
-      (function () {
-        var hero = document.getElementById('website-hero-{{ section.id }}');
-        if (!hero || !hero.dataset.heroPdpUrl) return;
-
-        hero.addEventListener('click', function (event) {
-          if (event.defaultPrevented) return;
-          if (event.target.closest('.fc-preorder-hero-form')) return;
-          if (event.target.closest('a.website-hero__pdp-link')) return;
-          window.location.assign(hero.dataset.heroPdpUrl);
-        });
-      })();
-    </script>
   {%- endif -%}
 </section>
 
@@ -352,25 +339,26 @@
     },
     {
       "type": "header",
-      "content": "Preorder email gate"
+      "content": "Pre-order email gate"
     },
     {
       "type": "checkbox",
       "id": "show_preorder_form",
-      "label": "Show preorder email form",
+      "label": "Show pre-order email form",
       "default": false
     },
     {
       "type": "text",
       "id": "preorder_product_title",
-      "label": "Preorder product title",
+      "label": "Pre-order product title",
       "default": "Hako Nomad"
     },
     {
       "type": "text",
       "id": "preorder_learn_more_label",
       "label": "Learn more link label",
-      "default": "Learn more"
+      "default": "Learn more",
+      "info": "Screen-reader label for the product hotspot on the hero image."
     },
     {
       "type": "text",
@@ -388,8 +376,8 @@
     {
       "type": "text",
       "id": "preorder_button_label",
-      "label": "Preorder submit button",
-      "default": "Reveal Preorder Offers"
+      "label": "Pre-order submit button",
+      "default": "Reveal Pre-order Offers"
     },
     {
       "type": "text",
@@ -400,7 +388,7 @@
     {
       "type": "url",
       "id": "preorder_offers_url",
-      "label": "Preorder offers page",
+      "label": "Pre-order offers page",
       "info": "Defaults to /pages/preorder-offers"
     }
   ],

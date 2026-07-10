@@ -2,13 +2,13 @@ window.FC_PREORDER_SURVEY = {
   reserve: [
     {
       id: 'r1',
-      title: 'What was the main reason you decided to preorder Hako Nomad?',
+      title: 'What was the main reason you decided to pre-order Hako Nomad?',
       hint: 'Single choice',
       max: 1,
       options: [
         { letter: 'A', text: 'The design and appearance caught my attention' },
         { letter: 'B', text: 'The features/specifications matched what I was looking for' },
-        { letter: 'C', text: 'The preorder offer and special pricing were attractive' },
+        { letter: 'C', text: 'The pre-order offer and special pricing were attractive' },
         { letter: 'D', text: 'I was looking for a portable speaker for my lifestyle/use case' },
         { letter: 'E', text: 'I wanted to support a new audio brand' },
         { letter: 'F', text: 'Other', other: true }
@@ -48,7 +48,7 @@ window.FC_PREORDER_SURVEY = {
   decline: [
     {
       id: 'd1',
-      title: 'What was the main reason you decided not to preorder?',
+      title: 'What was the main reason you decided not to pre-order?',
       hint: 'Choose one',
       max: 1,
       options: [

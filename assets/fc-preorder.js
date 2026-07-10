@@ -79,7 +79,7 @@
 
   function resumeReserveCheckout(variantId, checkoutUrl, note) {
     var checkout = (checkoutUrl || '/checkout').trim() || '/checkout';
-    var summary = (note || '').trim() || 'Preorder questionnaire completed';
+    var summary = (note || '').trim() || 'Pre-order questionnaire completed';
 
     return fetch(window.routes.cart_add_url, {
       method: 'POST',
@@ -803,7 +803,7 @@
 
     function finishReserve() {
       if (!variantId) {
-        showError('Preorder product is not configured. Set it in the theme editor.');
+        showError('Pre-order product is not configured. Set it in the theme editor.');
         return;
       }
 

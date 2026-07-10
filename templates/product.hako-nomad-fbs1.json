@@ -14,12 +14,12 @@
         "table_title": "Specifications",
         "table1_button_label": "",
         "table2_button_label": "",
-        "specs_table_1": "Model Number | FBS1\nConnectivity | BT 5.3 · AUX · TF Card · USB Flash Drive\nBT Version | 5.3\nSpeaker Output | 30 W\nDriver Size | 1 × Woofer 45×80mm · 1 × Tweeter 44.5×12.8mm · 1 × Passive Radiator Φ66\nSpeaker Layout | 1.0 (Mono)\nFrequency Response | 80 Hz – 20 kHz\nBuilt-in EQ Mode | Music Mode · Outdoor Mode · Game Mode\nBuilt-in Mic | Yes\nTWS Mode | Yes\nAmbient Light | 3 Color Presets\nTF Card Support | Up to 32 GB\nUSB Flash Drive | Up to 32 GB\nBattery Capacity | 2600 mAh\nBattery Life | Up to 12 hours\nWeight | 617 g\nSize | 106.5 × 112 × 68 mm",
+        "specs_table_1": "Model Number | FBS1\nConnectivity | BT 5.3 \u00b7 AUX \u00b7 TF Card \u00b7 USB Flash Drive\nBT Version | 5.3\nSpeaker Output | 30 W\nDriver Size | 1 \u00d7 Woofer 45\u00d780mm \u00b7 1 \u00d7 Tweeter 44.5\u00d712.8mm \u00b7 1 \u00d7 Passive Radiator \u03a666\nSpeaker Layout | 1.0 (Mono)\nFrequency Response | 80 Hz \u2013 20 kHz\nBuilt-in EQ Mode | Music Mode \u00b7 Outdoor Mode \u00b7 Game Mode\nBuilt-in Mic | Yes\nTWS Mode | Yes\nAmbient Light | 3 Color Presets\nTF Card Support | Up to 32 GB\nUSB Flash Drive | Up to 32 GB\nBattery Capacity | 2600 mAh\nBattery Life | Up to 12 hours\nWeight | 617 g\nSize | 106.5 \u00d7 112 \u00d7 68 mm",
         "specs_table_2": "",
         "inbox_title": "In The Box",
         "inbox_asset": "FBS1_ITB.png",
         "enable_preorder_gate": true,
-        "preorder_button_label": "Reveal Preorder Offers",
+        "preorder_button_label": "Reveal Pre-order Offers",
         "preorder_marketing_label": "Be the first to experience what's next in sound."
       }
     }

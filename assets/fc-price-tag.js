@@ -117,7 +117,7 @@ window.fcWirePriceTag = function (tag, options) {
       return Number(tag.dataset.variantId);
     };
   var onAdd = options.onAdd;
-  if (!tag || tag.classList.contains('fc-tag--oos') || typeof onAdd !== 'function') return;
+  if (!tag || tag.classList.contains('fc-tag--oos') || tag.classList.contains('fc-tag--coming-soon') || typeof onAdd !== 'function') return;
   if (tag.dataset.fcPriceTagBound === '1') return;
   tag.dataset.fcPriceTagBound = '1';
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Create/update preorder flow pages in Shopify Admin.
+ * Create/update pre-order flow pages in Shopify Admin.
  * Requires shopify/.env: SHOPIFY_ADMIN_TOKEN, SHOPIFY_STORE
  */
 const fs = require('fs');
@@ -11,8 +11,8 @@ const ENV_PATH = path.join(REPO_ROOT, '.env');
 const API_VERSION = process.env.SHOPIFY_API_VERSION || '2024-10';
 
 const PAGES = [
-  { title: 'Preorder Offers', handle: 'preorder-offers', templateSuffix: 'preorder-offers' },
-  { title: 'Preorder Questionnaire', handle: 'preorder-questionnaire', templateSuffix: 'preorder-questionnaire' },
+  { title: 'Pre-order Offers', handle: 'preorder-offers', templateSuffix: 'preorder-offers' },
+  { title: 'Pre-order Questionnaire', handle: 'preorder-questionnaire', templateSuffix: 'preorder-questionnaire' },
 ];
 
 function loadEnv() {

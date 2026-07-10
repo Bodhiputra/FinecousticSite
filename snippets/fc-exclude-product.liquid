@@ -4,7 +4,7 @@
     {% include 'fc-exclude-product', product: product %}
     {% if fc_exclude_product %} … skip … {% endif %}
   Pre-release (FBS/Hako): was hidden on live until Nomad launch — now visible on all themes.
-  Nomad preorder digital SKU stays hidden from grid/search.
+  Nomad pre-order digital SKU stays hidden from grid/search.
 {%- endcomment -%}
 {%- liquid
   assign fc_exclude_product = false
@@ -21,7 +21,7 @@
   endif
 
   comment
-    Nomad preorder (digital) — never list on shop grid / search; PDP stays direct-link only.
+    Nomad pre-order (digital) — never list on shop grid / search; PDP stays direct-link only.
   endcomment
   if fc_handle contains 'nomad-preorder' or fc_handle contains 'hako-nomad-preorder'
     assign fc_exclude_product = true

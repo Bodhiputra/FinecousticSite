@@ -1,11 +1,12 @@
 {% doc %}
-  Homepage hero preorder email gate (client-side — no Shopify customer form captcha).
+  Pre-order hero email gate — Shopify {% form 'customer' %} (creates/updates customer).
 
-  @param {object} section - Parent section object (website-hero)
+  @param {object} section - Parent section object (website-hero or fc-pdp-unified)
 {% enddoc %}
 
 {%- liquid
   assign form_uid = form_id_suffix | default: section.id
+  assign form_dom_id = 'fc-preorder-hero-customer-form-' | append: form_uid
 
   if preorder_offers_url != blank
     assign offers_path = preorder_offers_url
@@ -20,7 +21,7 @@
     assign submit_label = section.settings.preorder_button_label
   endif
   if submit_label == blank
-    assign submit_label = 'Reveal Preorder Offers'
+    assign submit_label = 'Reveal Pre-order Offers'
   endif
 
   assign marketing_label = preorder_marketing_label
@@ -47,15 +48,13 @@
 -%}
 
 <div class="fc-preorder-hero-form{% unless show_email_field %} fc-preorder-hero-form--logged-in{% endunless %}{% unless show_marketing_checkbox %} fc-preorder-hero-form--marketing-set{% endunless %}">
-  <form
-    id="fc-preorder-hero-customer-form"
-    class="fc-preorder-hero-form__inner"
-    action="{{ offers_path }}"
-    method="get"
-    novalidate
-    {% if customer_email != blank %}data-customer-email="{{ customer_email | escape }}"{% endif %}
-    {% if customer_accepts_marketing %}data-customer-marketing="true"{% endif %}
-  >
+  {% form 'customer', id: form_dom_id, class: 'fc-preorder-hero-form__inner' %}
+    <input type="hidden" name="contact[tags]" value="preorder-lead">
+
+    {%- if customer_email != blank -%}
+      <input type="hidden" name="contact[email]" value="{{ customer_email | escape }}">
+    {%- endif -%}
+
     {%- if show_email_field -%}
       <div class="fc-preorder-hero-form__field">
         <label class="visually-hidden" for="fc-preorder-email-{{ form_uid }}">Email</label>
@@ -63,12 +62,17 @@
           id="fc-preorder-email-{{ form_uid }}"
           class="fc-preorder-hero-form__email"
           type="email"
-          name="email"
+          name="contact[email]"
+          value="{{ form.email }}"
           placeholder="your@email.com"
           autocomplete="email"
           autocorrect="off"
           autocapitalize="off"
           required
+          {% if form.errors contains 'email' %}
+            aria-invalid="true"
+            aria-describedby="fc-preorder-hero-error-{{ form_uid }}"
+          {% endif %}
         >
       </div>
     {%- endif -%}
@@ -77,65 +81,59 @@
       {%- liquid
         assign marketing_toggle_id = 'fc-preorder-marketing-' | append: form_uid
       -%}
+      <input type="hidden" name="contact[accepts_marketing]" value="false">
       {%- render 'fc-marketing-checkbox',
         id: marketing_toggle_id,
-        name: 'accepts_marketing',
         label: marketing_label
       -%}
     {%- endif -%}
 
-    <button type="submit" class="fc-preorder-hero-form__submit">
+    <button type="submit" class="fc-preorder-hero-form__submit" name="commit">
       {{ submit_label | escape }}
     </button>
 
-    <p class="fc-preorder-hero-form__error" id="fc-preorder-hero-error-{{ form_uid }}" role="alert" hidden></p>
-  </form>
+    {%- if form.errors -%}
+      <p class="fc-preorder-hero-form__error" id="fc-preorder-hero-error-{{ form_uid }}" role="alert">
+        {%- if form.errors.messages.email != blank -%}
+          {{ form.errors.messages.email }}
+        {%- else -%}
+          {{ form.errors | default_errors }}
+        {%- endif -%}
+      </p>
+    {%- else -%}
+      <p class="fc-preorder-hero-form__error" id="fc-preorder-hero-error-{{ form_uid }}" role="alert" hidden></p>
+    {%- endif -%}
+  {% endform %}
 </div>
 
 <script>
   (function () {
-    var form = document.getElementById('fc-preorder-hero-customer-form');
+    var form = document.getElementById({{ form_dom_id | json }});
     if (!form) return;
 
-    var emailInput = form.querySelector('[name="email"]');
-    var marketingInput = form.querySelector('[name="accepts_marketing"]');
-    var customerEmail = (form.dataset.customerEmail || '').trim();
-    var customerMarketing = form.dataset.customerMarketing === 'true';
-    var errorEl = document.getElementById('fc-preorder-hero-error-{{ form_uid }}');
     var offersPath = {{ offers_path | json }};
+    var emailInput = form.querySelector('[name="contact[email]"]');
+    var marketingInput = form.querySelector('[name="contact[accepts_marketing]"][type="checkbox"]');
+    var defaultMarketing = {{ customer_accepts_marketing | json }};
+    var errorEl = document.getElementById('fc-preorder-hero-error-{{ form_uid }}');
 
     function resolveEmail() {
-      if (emailInput) return emailInput.value.trim();
-      return customerEmail;
+      if (!emailInput) return '';
+      return emailInput.value.trim();
     }
 
     function resolveMarketing() {
-      if (customerMarketing) return true;
-      return !!(marketingInput && marketingInput.checked);
+      if (!marketingInput) return defaultMarketing;
+      return marketingInput.checked;
     }
 
     function isValidEmail(email) {
       if (!email) return false;
-      if (emailInput) return emailInput.checkValidity();
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      return emailInput ? emailInput.checkValidity() : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    form.addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      var nextEmail = resolveEmail();
-      if (!isValidEmail(nextEmail)) {
-        if (errorEl) {
-          errorEl.textContent = 'Please enter a valid email address.';
-          errorEl.hidden = false;
-        }
-        if (emailInput) emailInput.focus();
-        return;
-      }
-
-      if (errorEl) errorEl.hidden = true;
-
-      var normalizedNext = nextEmail.toLowerCase();
+    function persistSession(email, marketing) {
+      var normalizedNext = email.toLowerCase();
       try {
         var prevEmail = (sessionStorage.getItem('fc_preorder_email') || '').trim().toLowerCase();
         if (prevEmail && normalizedNext && prevEmail !== normalizedNext) {
@@ -149,14 +147,32 @@
             }
           }
           window.dispatchEvent(new CustomEvent('fc-preorder-email-changed', {
-            detail: { email: nextEmail, previous: prevEmail }
+            detail: { email: email, previous: prevEmail }
           }));
         }
-        sessionStorage.setItem('fc_preorder_email', nextEmail);
-        sessionStorage.setItem('fc_preorder_marketing', resolveMarketing() ? '1' : '0');
+        sessionStorage.setItem('fc_preorder_email', email);
+        sessionStorage.setItem('fc_preorder_marketing', marketing ? '1' : '0');
       } catch (e) { /* ignore */ }
+    }
 
-      window.location.href = offersPath;
+    form.addEventListener('submit', function (event) {
+      var nextEmail = resolveEmail();
+      if (!isValidEmail(nextEmail)) {
+        event.preventDefault();
+        if (errorEl) {
+          errorEl.textContent = 'Please enter a valid email address.';
+          errorEl.hidden = false;
+        }
+        if (emailInput) emailInput.focus();
+        return;
+      }
+
+      if (errorEl) errorEl.hidden = true;
+      persistSession(nextEmail, resolveMarketing());
     });
+
+    {%- if form.posted_successfully? -%}
+      window.location.replace(offersPath);
+    {%- endif -%}
   })();
 </script>
