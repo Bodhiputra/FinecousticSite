@@ -56,29 +56,31 @@
     if (!el || el.dataset.fcIgDragBound === '1') return;
     el.dataset.fcIgDragBound = '1';
 
+    var axis = handlers.axis || 'x';
     var startX = 0;
     var startY = 0;
     var lastX = 0;
+    var lastY = 0;
     var lastT = 0;
     var velocity = 0;
     var dragging = false;
     var decided = false;
-    var isHorizontal = false;
+    var onAxis = false;
 
     function reset() {
       dragging = false;
       decided = false;
-      isHorizontal = false;
+      onAxis = false;
       velocity = 0;
     }
 
     function onStart(clientX, clientY) {
       startX = lastX = clientX;
-      startY = clientY;
+      startY = lastY = clientY;
       lastT = Date.now();
       dragging = true;
       decided = false;
-      isHorizontal = false;
+      onAxis = false;
       velocity = 0;
       if (handlers.onStart) handlers.onStart();
     }
@@ -90,8 +92,12 @@
 
       if (!decided && (Math.abs(dx) > 10 || Math.abs(dy) > 10)) {
         decided = true;
-        isHorizontal = Math.abs(dx) > Math.abs(dy) * 1.35;
-        if (!isHorizontal) {
+        if (axis === 'y') {
+          onAxis = Math.abs(dy) > Math.abs(dx) * 1.35;
+        } else {
+          onAxis = Math.abs(dx) > Math.abs(dy) * 1.35;
+        }
+        if (!onAxis) {
           dragging = false;
           decided = false;
           if (handlers.onCancel) handlers.onCancel();
@@ -100,12 +106,16 @@
       }
       if (!decided) return;
 
-      if (isHorizontal) {
+      if (onAxis) {
         if (preventDefault) preventDefault();
         var now = Date.now();
         var dt = now - lastT;
-        if (dt > 0) velocity = (clientX - lastX) / dt;
+        if (dt > 0) {
+          if (axis === 'y') velocity = (clientY - lastY) / dt;
+          else velocity = (clientX - lastX) / dt;
+        }
         lastX = clientX;
+        lastY = clientY;
         lastT = now;
         if (handlers.onDrag) handlers.onDrag(dx, dy);
       }
@@ -116,7 +126,7 @@
       var dx = clientX - startX;
       var dy = clientY - startY;
       dragging = false;
-      if (handlers.onEnd) handlers.onEnd(dx, dy, velocity, isHorizontal);
+      if (handlers.onEnd) handlers.onEnd(dx, dy, velocity, onAxis);
       reset();
     }
 
@@ -128,7 +138,7 @@
     el.addEventListener('touchmove', function (e) {
       if (e.touches.length !== 1) return;
       onMove(e.touches[0].clientX, e.touches[0].clientY, function () {
-        if (isHorizontal) e.preventDefault();
+        if (onAxis) e.preventDefault();
       });
     }, { passive: false });
 
@@ -168,11 +178,15 @@
     }
   }
 
-  function shouldAdvance(dx, velocity, threshold) {
+  function shouldAdvance(delta, velocity, threshold) {
     threshold = threshold || 40;
     if (Math.abs(velocity) > 0.35) return velocity < 0 ? 1 : -1;
-    if (Math.abs(dx) >= threshold) return dx < 0 ? 1 : -1;
+    if (Math.abs(delta) >= threshold) return delta < 0 ? 1 : -1;
     return 0;
+  }
+
+  function shouldAdvanceAxis(dx, dy, velocity, axis, threshold) {
+    return shouldAdvance(axis === 'y' ? dy : dx, velocity, threshold);
   }
 
   /* ── Full-width image gallery (Instagram post carousel) ── */
@@ -182,6 +196,7 @@
 
     var track = resolveEl(cfg.track);
     var slideSelector = cfg.slideSelector || '.fc-ig-slide, .fc-pdp-u__slide, .fc-pdp__slide, [data-slide-index]';
+    var axis = cfg.axis === 'y' ? 'y' : 'x';
     var slides;
     var index = cfg.initialIndex || 0;
     var loop = cfg.loop !== false;
@@ -189,6 +204,7 @@
     var dotsEl = resolveEl(cfg.dotsEl);
     var dotNodes = null;
     var onChange = cfg.onChange || function () {};
+    var wheelTimer = null;
 
     function getSlides() {
       return track ? Array.from(track.querySelectorAll(slideSelector)) : [];
@@ -211,22 +227,28 @@
       return track;
     }
 
-    function slideWidth() {
-      return viewport ? viewport.getBoundingClientRect().width : 0;
+    function slideSize() {
+      if (!viewport) return 0;
+      var rect = viewport.getBoundingClientRect();
+      return axis === 'y' ? rect.height : rect.width;
     }
 
-    function setTransform(x, animate) {
+    function setTransform(offset, animate) {
       track.style.transition = animate
         ? 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1)'
         : 'none';
-      track.style.transform = 'translate3d(' + x + 'px, 0, 0)';
+      if (axis === 'y') {
+        track.style.transform = 'translate3d(0, ' + offset + 'px, 0)';
+      } else {
+        track.style.transform = 'translate3d(' + offset + 'px, 0, 0)';
+      }
       if (viewport) {
         viewport.classList.toggle('is-animating', !!animate);
       }
     }
 
     function offsetForIndex(i) {
-      return -i * slideWidth();
+      return -i * slideSize();
     }
 
     function snapTo(i, animate) {
@@ -265,6 +287,7 @@
       if (viewport.dataset.fcIgGalleryBound === '1') return;
       viewport.dataset.fcIgGalleryBound = '1';
       viewport.classList.add('fc-ig-viewport');
+      if (axis === 'y') viewport.classList.add('fc-ig-viewport--vertical');
 
       ensureTrack();
       slides = getSlides();
@@ -274,10 +297,11 @@
         dotsEl = viewport.querySelector('.fc-ig-dots');
         if (!dotsEl) {
           dotsEl = document.createElement('div');
-          dotsEl.className = 'fc-ig-dots';
+          dotsEl.className = 'fc-ig-dots' + (axis === 'y' ? ' fc-ig-dots--vertical' : '');
           viewport.appendChild(dotsEl);
         }
       }
+
       dotNodes = buildDots(dotsEl, slides.length, index, function (i) {
         goTo(i, true);
       });
@@ -291,30 +315,33 @@
 
       var dragBase = 0;
       bindPointerDrag(viewport, {
+        axis: axis,
         mouse: cfg.mouse !== false,
         onStart: function () {
           dragBase = offsetForIndex(index);
           viewport.classList.add('is-dragging');
           animating = false;
         },
-        onDrag: function (dx) {
-          var w = slideWidth();
-          var x = dragBase + dx;
+        onDrag: function (dx, dy) {
+          var size = slideSize();
+          var delta = axis === 'y' ? dy : dx;
+          var x = dragBase + delta;
           if (!loop) {
-            var min = -(slides.length - 1) * w;
+            var min = -(slides.length - 1) * size;
             if (x > 0) x = x * 0.28;
             else if (x < min) x = min + (x - min) * 0.28;
           }
           setTransform(x, false);
         },
-        onEnd: function (dx, dy, velocity, isHorizontal) {
+        onEnd: function (dx, dy, velocity, onAxisDrag) {
           viewport.classList.remove('is-dragging');
-          if (!isHorizontal) {
+          if (!onAxisDrag) {
             snapTo(index, true);
             return;
           }
-          var dir = shouldAdvance(dx, velocity, cfg.swipeThreshold || 36);
-          if (Math.abs(dx) > 8) viewport.dataset.fcSwiped = '1';
+          var dir = shouldAdvanceAxis(dx, dy, velocity, axis, cfg.swipeThreshold || 36);
+          var primaryDelta = axis === 'y' ? dy : dx;
+          if (Math.abs(primaryDelta) > 8) viewport.dataset.fcSwiped = '1';
           if (dir === 0) snapTo(index, true);
           else goTo(index + dir, true);
         },
@@ -323,6 +350,19 @@
           snapTo(index, true);
         }
       });
+
+      if (axis === 'y' && cfg.wheel) {
+        viewport.addEventListener('wheel', function (e) {
+          if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+          e.preventDefault();
+          if (wheelTimer) return;
+          wheelTimer = window.setTimeout(function () {
+            wheelTimer = null;
+          }, 420);
+          if (e.deltaY > 0) goTo(index + 1, true);
+          else if (e.deltaY < 0) goTo(index - 1, true);
+        }, { passive: false });
+      }
 
       var resizing = false;
       window.addEventListener('resize', function () {
@@ -514,6 +554,20 @@
         .filter(Boolean);
     }
 
+    function scheduleSnapToActive() {
+      function snap() {
+        if (track && viewport) snapToDom(domIdx, false);
+      }
+      snap();
+      requestAnimationFrame(function () {
+        snap();
+        requestAnimationFrame(snap);
+      });
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(snap);
+      }
+    }
+
     function init() {
       var root = getRoot();
       track = document.getElementById(cfg.trackId);
@@ -526,11 +580,12 @@
       nextBtn = cfg.nextSelector ? root.querySelector(cfg.nextSelector) : null;
       track.dataset.fcCarouselBound = '1';
 
-      logIdx = 0;
-      domIdx = 1;
+      logIdx = getInitIdx();
+      if (logIdx < 0 || logIdx >= N) logIdx = 0;
+      domIdx = logIdx + 1;
       sliding = false;
 
-      getItems().forEach(function (el, i) { el.classList.toggle('fc-title-active', i === 1); });
+      getItems().forEach(function (el, i) { el.classList.toggle('fc-title-active', i === domIdx); });
 
       if (prevBtn) prevBtn.addEventListener('click', function () { slideByDir(-1); });
       if (nextBtn) nextBtn.addEventListener('click', function () { slideByDir(+1); });
@@ -565,20 +620,8 @@
         });
       });
 
-      track.style.opacity = '0';
-      requestAnimationFrame(function () {
-        var initIdx = getInitIdx();
-        if (initIdx > 0) {
-          logIdx = initIdx;
-          domIdx = logIdx + 1;
-          getItems().forEach(function (el, i) { el.classList.toggle('fc-title-active', i === domIdx); });
-          snapToDom(domIdx, false);
-        } else {
-          snapToDom(domIdx, false);
-        }
-        onSlide(logIdx);
-        track.style.opacity = '1';
-      });
+      scheduleSnapToActive();
+      onSlide(logIdx, { initial: true });
     }
 
     return { init: init, slideByDir: slideByDir, goTo: goToLogIdx };

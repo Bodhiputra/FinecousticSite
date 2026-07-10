@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "preorder_questionnaire": {
+      "type": "fc-preorder-questionnaire",
+      "settings": {
+        "done_decline": "Thank you for your support in helping us grow!",
+        "preorder_product": "hako-nomad-preorder",
+        "survey_webhook_url": "https://finehub.vercel.app/api/public/preorder-survey",
+        "survey_webhook_secret": "6b33426348051ce8498fcf8b20b1dfb05cc0d45228a37374"
+      }
+    }
+  },
+  "order": [
+    "preorder_questionnaire"
+  ]
+}

@@ -245,14 +245,39 @@ class QuantityInput extends HTMLElement {
   onButtonClick(event) {
     event.preventDefault();
     const previousValue = this.input.value;
+    const currentValue = parseInt(this.input.value, 10);
+    const min = this.input.min ? parseInt(this.input.min, 10) : null;
+    const max = this.input.max ? parseInt(this.input.max, 10) : null;
 
     if (event.target.name === 'plus') {
-      if (parseInt(this.input.dataset.min) > parseInt(this.input.step) && this.input.value == 0) {
+      if (max !== null && !Number.isNaN(currentValue) && currentValue >= max) return;
+      if (parseInt(this.input.dataset.min, 10) > parseInt(this.input.step, 10) && this.input.value == 0) {
         this.input.value = this.input.dataset.min;
       } else {
         this.input.stepUp();
       }
     } else {
+      const drawerItems = this.closest('cart-drawer-items');
+      const willRemove =
+        drawerItems &&
+        !Number.isNaN(currentValue) &&
+        currentValue === 1 &&
+        parseInt(this.input.min, 10) === 0;
+
+      if (willRemove && typeof window.fcConfirmRemoveFromBag === 'function') {
+        const self = this;
+        window.fcConfirmRemoveFromBag().then(function (confirmed) {
+          if (!confirmed) return;
+          const index = self.input.dataset.index;
+          const variantId = self.input.dataset.quantityVariantId;
+          const removeEvent = { currentTarget: self.input, target: self.input };
+          drawerItems.updateQuantity(index, 0, removeEvent, 'minus', variantId);
+          self.validateQtyRules();
+        });
+        return;
+      }
+
+      if (min !== null && !Number.isNaN(currentValue) && currentValue <= min) return;
       this.input.stepDown();
     }
 
@@ -264,15 +289,20 @@ class QuantityInput extends HTMLElement {
   }
 
   validateQtyRules() {
-    const value = parseInt(this.input.value);
+    const value = parseInt(this.input.value, 10);
     if (this.input.min) {
+      const min = parseInt(this.input.min, 10);
       const buttonMinus = this.querySelector(".quantity__button[name='minus']");
-      buttonMinus.classList.toggle('disabled', parseInt(value) <= parseInt(this.input.min));
+      const atMin = !Number.isNaN(value) && value <= min;
+      buttonMinus.classList.toggle('disabled', atMin);
+      buttonMinus.toggleAttribute('disabled', atMin);
     }
     if (this.input.max) {
-      const max = parseInt(this.input.max);
+      const max = parseInt(this.input.max, 10);
       const buttonPlus = this.querySelector(".quantity__button[name='plus']");
-      buttonPlus.classList.toggle('disabled', value >= max);
+      const atMax = !Number.isNaN(value) && value >= max;
+      buttonPlus.classList.toggle('disabled', atMax);
+      buttonPlus.toggleAttribute('disabled', atMax);
     }
   }
 }

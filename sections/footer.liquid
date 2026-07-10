@@ -130,7 +130,6 @@
           {%- endfor -%}
         {%- else -%}
           <a href="{{ pages['policies'].url | default: '/pages/policies' }}" class="fc-footer__bottom-link">Policies</a>
-          <a href="{{ pages['download-page'].url | default: '/pages/download-page' }}" class="fc-footer__bottom-link">Product Guide</a>
           <a href="{{ pages['support'].url | default: '/pages/support' }}" class="fc-footer__bottom-link">Support</a>
         {%- endif -%}
         {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
@@ -259,7 +258,6 @@
       "type": "link_list",
       "id": "bottom_nav_menu",
       "label": "Footer links (bottom bar)",
-      "default": "footer-bottom-bar",
       "info": "Edit link labels and URLs in Online Store → Navigation."
     },
     {

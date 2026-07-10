@@ -87,15 +87,15 @@ small, .caption, .caption-with-letter-spacing {
   letter-spacing: 0em;
 }
 
-/* ── Global background: FinecouBG (theme.liquid sets --fc-body-bg) ── */
+/* ── Global background: 512×512 repeating tile (theme.liquid sets --fc-body-bg) ── */
 html {
-  background-color: var(--fc-black);
+  background-color: #050505;
   color-scheme: dark;
   min-height: 100vh;
 }
 
 body {
-  background-color: transparent;
+  background-color: #050505;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -104,45 +104,17 @@ body {
 
 html,
 body {
-  overflow-x: clip; /* clips horizontal overflow without creating a scroll container — viewport stays as scroll anchor, window.scrollY works, fixed elements are unaffected */
+  overflow-x: clip;
   max-width: 100%;
 }
 
-/* Dawn's .gradient class uses background shorthand which wipes background-image — restore FinecouBG on desktop */
-@media screen and (min-width: 750px) {
-  body.gradient {
-    background: var(--fc-black);
-    background-image: var(--fc-body-bg);
-    background-size: 100% auto;
-    background-position: center top;
-    background-repeat: repeat-y;
-    background-attachment: scroll;
-  }
-}
-
-/* Mobile: viewport-sized texture — NOT tied to document height (policies tabs won’t re-zoom cover) */
-@media screen and (max-width: 749px) {
-  body.gradient {
-    background-image: none;
-    background-color: var(--fc-black) !important;
-    background-attachment: scroll;
-  }
-
-  body.gradient::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-image: var(--fc-body-bg);
-    background-size: 100% auto;
-    background-position: center top;
-    background-repeat: repeat-y;
-    pointer-events: none;
-  }
+/* Dawn's .gradient shorthand wipes background-image — restore repeating tile */
+body.gradient {
+  background-color: #050505 !important;
+  background-image: var(--fc-body-bg);
+  background-repeat: repeat;
+  background-size: var(--fc-bg-tile-size, 512px) var(--fc-bg-tile-size, 512px);
+  background-attachment: scroll;
 }
 
 /* ── FC site shell (universal sticky footer) ──

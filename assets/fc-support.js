@@ -5,16 +5,32 @@
     { key: 'contact', id: 'fc-sup-contact'     },
     { key: 'support', id: 'fc-sup-support'     },
     { key: 'track',   id: 'fc-sup-trackorder'  },
+    { key: 'guide',   id: 'fc-sup-guide'       },
   ];
 
-  function applyTab(key) {
-    document.querySelectorAll('.fc-support-panel').forEach(panel => {
-      panel.classList.remove('fc-sup-active');
-      if (panel.dataset.tab === key) panel.classList.add('fc-sup-active');
+  function refreshGuideGrid() {
+    if (!window.FcDownloadGrid) return;
+    var grid = document.getElementById('fc-sup-guide-grid');
+    if (grid) window.FcDownloadGrid.init(grid);
+  }
+
+  function applyTab(key, opts) {
+    opts = opts || {};
+    var animate = opts.animate === true;
+
+    document.querySelectorAll('.fc-support-panel').forEach(function (panel) {
+      var isActive = panel.dataset.tab === key;
+      panel.classList.remove('fc-sup-active', 'fc-panel-animate');
+      if (isActive) {
+        panel.classList.add('fc-sup-active');
+        if (animate) panel.classList.add('fc-panel-animate');
+      }
     });
+
     const url = new URL(window.location.href);
     key === 'faq' ? url.searchParams.delete('tab') : url.searchParams.set('tab', key);
     history.pushState(null, '', url.toString());
+    if (key === 'guide') requestAnimationFrame(refreshGuideGrid);
   }
 
   /* ── FAQ CATEGORIES ── */
@@ -23,27 +39,30 @@
     const list     = document.getElementById('fc-faq-list');
     if (!catCards.length || !list) return;
 
-    function filterCat(cat) {
-      list.classList.add('fc-faq-switching');
-      setTimeout(() => {
-        list.querySelectorAll('.fc-faq-item').forEach(item => {
+    function filterCat(cat, silent) {
+      if (!silent) list.classList.add('fc-faq-switching');
+
+      function apply() {
+        list.querySelectorAll('.fc-faq-item').forEach(function (item) {
           item.style.display = item.dataset.cat === cat ? '' : 'none';
         });
         list.classList.remove('fc-faq-switching');
-      }, 150);
+      }
+
+      if (silent) apply();
+      else setTimeout(apply, 150);
     }
 
-    catCards.forEach(card => {
-      card.addEventListener('click', () => {
-        catCards.forEach(c => c.classList.remove('fc-cat-active'));
+    catCards.forEach(function (card) {
+      card.addEventListener('click', function () {
+        catCards.forEach(function (c) { c.classList.remove('fc-cat-active'); });
         card.classList.add('fc-cat-active');
         filterCat(card.dataset.cat);
       });
     });
 
-    /* apply first active card on load */
-    const firstActive = document.querySelector('.fc-faq-cat-card.fc-cat-active');
-    if (firstActive) filterCat(firstActive.dataset.cat);
+    var firstActive = document.querySelector('.fc-faq-cat-card.fc-cat-active');
+    if (firstActive) filterCat(firstActive.dataset.cat, true);
   }
 
   /* ── FAQ ACCORDION ── */
@@ -265,13 +284,16 @@
       id: 'fc-support',
       extraSwipeId: 'fc-support-wrap',
       N: TABS.length,
-      onSlide: function (logIdx) { applyTab(TABS[logIdx].key); },
+      onSlide: function (logIdx, meta) {
+        applyTab(TABS[logIdx].key, { animate: !(meta && meta.initial) });
+      },
       getInitialIdx: getInitialTabIdx
     }).init();
   }
 
   function init() {
     if (!document.getElementById('fc-support-header')) return;
+    applyTab(TABS[getInitialTabIdx()].key, { initial: true });
     initCarousel();
     initSupportContent();
   }

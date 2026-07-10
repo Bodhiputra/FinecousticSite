@@ -1,0 +1,16 @@
+{%- comment -%}
+  Sold out when Shopify marks the variant unavailable.
+  Usage: {% render 'fc-variant-sold-out', variant: variant %}
+  Outputs: true | false
+{%- endcomment -%}
+{%- liquid
+  assign fc_sold_out = false
+  if variant == blank or variant.available == false
+    assign fc_sold_out = true
+  endif
+  if fc_sold_out
+    echo 'true'
+  else
+    echo 'false'
+  endif
+-%}

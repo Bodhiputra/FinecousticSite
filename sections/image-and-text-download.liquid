@@ -4,49 +4,7 @@
     <h1 class="fc-dl-page__heading">{{ section.settings.heading | escape }}</h1>
   {%- endif -%}
 
-  <div class="fc-dl-body" id="fc-dl-body">
-    <div class="fc-grid fc-dl-grid" id="fc-dl-grid" data-cols="5">
-      {%- assign dl_card_index = 0 -%}
-      {%- for block in section.blocks -%}
-        {%- if block.type == 'Text' -%}
-          {%- assign dl_product = all_products[block.settings.product_handle] -%}
-          {%- capture fc_qsg_url -%}
-            {%- render 'fc-product-qsg-url', product: dl_product, override: block.settings.download_url -%}
-          {%- endcapture -%}
-          {%- assign fc_qsg_url = fc_qsg_url | strip -%}
-          {%- if fc_qsg_url == blank -%}{%- continue -%}{%- endif -%}
-          {%- include 'fc-exclude-product', product: dl_product, handle: block.settings.product_handle -%}
-          {%- if fc_exclude_product -%}{%- continue -%}{%- endif -%}
-          {%- assign dl_name = block.settings.title -%}
-          {%- if dl_name == blank and dl_product != blank -%}
-            {%- assign dl_name = dl_product.title -%}
-          {%- endif -%}
-          <a
-            class="fc-card fc-dl-card fc-card-appear"
-            href="{{ fc_qsg_url }}"
-            target="_blank"
-            rel="noopener"
-            style="animation-delay: {{ dl_card_index | times: 90 }}ms"
-            aria-label="Quick Start Guide — {{ dl_name | escape }}"
-            {{ block.shopify_attributes }}
-          >
-            <div class="fc-card__image">
-              {%- if block.settings.product_handle != blank and dl_product != blank and dl_product.featured_image -%}
-                {{ dl_product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: dl_name }}
-              {%- elsif block.settings.image != blank -%}
-                {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: dl_name | escape }}
-              {%- endif -%}
-            </div>
-
-            {%- if dl_name != blank -%}
-              <p class="fc-dl-card-name">{{ dl_name | escape }}</p>
-            {%- endif -%}
-          </a>
-          {%- assign dl_card_index = dl_card_index | plus: 1 -%}
-        {%- endif -%}
-      {%- endfor -%}
-    </div>
-  </div>
+  {%- render 'fc-product-guide-grid', blocks: section.blocks, block_type: 'Text' -%}
 
 </div>
 

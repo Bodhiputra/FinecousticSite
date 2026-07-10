@@ -7,6 +7,13 @@
   --fc-menu-drawer-height: 50dvh;
 }
 
+/* 512px grain — half tile on Retina so 1 source pixel = 1 device pixel (no upscale blur) */
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
+  :root {
+    --fc-nav-bg-tile-size: 256px;
+  }
+}
+
 /* Shared nav surface — pill, menu panel, cart panel (identical texture alignment) */
 .header-wrapper,
 .header-wrapper.gradient,
@@ -21,12 +28,11 @@ header-drawer #menu-drawer.gradient,
 cart-drawer .drawer__inner,
 cart-drawer .drawer__inner.gradient,
 cart-drawer .drawer__inner-empty {
-  background-color: var(--fc-black) !important;
+  background-color: #050505 !important;
   background-image: var(--fc-nav-footer-bg) !important;
-  background-size: cover !important;
-  background-position: center top !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
+  background-repeat: repeat !important;
+  background-size: var(--fc-nav-bg-tile-size, 512px) !important;
+  background-attachment: scroll !important;
 }
 
 header-drawer .menu-drawer__inner-container,
@@ -41,18 +47,7 @@ cart-drawer .drawer__footer {
   background-image: none !important;
 }
 
-@media screen and (max-width: 749px) {
-  .header-wrapper,
-  .header-wrapper.gradient,
-  header-drawer #menu-drawer,
-  header-drawer .menu-drawer,
-  cart-drawer .drawer__inner,
-  cart-drawer .drawer__inner-empty {
-    background-size: cover !important;
-    background-position: center top !important;
-    background-attachment: fixed !important;
-  }
-}
+/* Mobile: keep 512px tile repeat (cover + fixed attachment blurs grain on iOS). */
 
 /* Navbar below cart drawer when open */
 .shopify-section-group-header-group,

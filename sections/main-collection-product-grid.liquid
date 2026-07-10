@@ -84,14 +84,6 @@
 .fc-card.fc-hidden { display: none; }
 
 /* ── FILTER APPEAR ANIMATION ── */
-@keyframes fc-card-in {
-  from { opacity: 0; transform: translateY(12px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-.fc-card-appear {
-  animation: fc-card-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
 /* ── CATEGORY PLACEHOLDER ── */
 .fc-category-soon {
   font-family: var(--fc-font);
@@ -343,8 +335,8 @@
 
 {%- comment -%} Embed product data as JSON for JS to consume {%- endcomment -%}
 {%- for product in collection.products -%}
-  {%- capture fc_excl -%}{%- render 'fc-exclude-product', product: product -%}{%- endcapture -%}
-  {%- if fc_excl contains 'true' -%}{%- continue -%}{%- endif -%}
+  {%- include 'fc-exclude-product', product: product -%}
+  {%- if fc_exclude_product -%}{%- continue -%}{%- endif -%}
   {%- render 'fc-product-data', product: product -%}
 {%- endfor -%}
 
@@ -359,8 +351,8 @@
 <div class="fc-page-swipe-zone fc-shop-swipe-zone" id="fc-shop-swipe-zone">
 <div class="fc-grid" id="fc-grid" data-cols="{{ section.settings.columns_desktop }}">
   {%- for product in collection.products -%}
-    {%- capture fc_excl -%}{%- render 'fc-exclude-product', product: product -%}{%- endcapture -%}
-    {%- unless fc_excl contains 'true' -%}
+    {%- include 'fc-exclude-product', product: product -%}
+    {%- unless fc_exclude_product -%}
     {%- liquid
       comment
         Shop tab category — set Product type in Admin: Earphones, Speakers, or Microphones.
@@ -371,7 +363,13 @@
         assign fc_cat = ''
       endunless
       assign fc_variant_id = product.first_available_variant.id | default: product.variants.first.id
+      assign fc_card_variant = product.first_available_variant | default: product.variants.first
       assign fc_card_available = product.available
+      assign fc_handle_down = product.handle | downcase
+      assign fc_hide_card_price_tag = false
+      if fc_handle_down == 'hako-nomad-fbs1' or fc_handle_down == 'hako-nomad-l-fbs2'
+        assign fc_hide_card_price_tag = true
+      endif
     -%}
     <div class="fc-card"
       data-product-id="{{ product.id }}"
@@ -388,15 +386,19 @@
         {%- endif -%}
       </div>
 
+      {%- unless fc_hide_card_price_tag -%}
       {%- render 'fc-price-tag',
+        variant: fc_card_variant,
         variant_id: fc_variant_id,
         price: product.price,
+        compare_at_price: product.compare_at_price,
         price_varies: product.price_varies,
         title: product.title,
         available: fc_card_available,
         name_class: '',
         tag_class: ''
       -%}
+      {%- endunless -%}
 
     </div>
     {%- endunless -%}

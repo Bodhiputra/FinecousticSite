@@ -326,7 +326,12 @@
         {%- endcase -%}
       {%- endfor -%}
 
-      <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble" aria-expanded="false">
+      <a
+        href="{% if settings.cart_type == 'drawer' %}#{% else %}{{ routes.cart_url }}{% endif %}"
+        class="header__icon header__icon--cart link focus-inset"
+        id="cart-icon-bubble"
+        aria-expanded="false"
+      >
         <span class="fc-nav-icon-toggle fc-nav-icon-toggle--cart">
           <span class="fc-nav-icon fc-nav-icon--open svg-wrapper">
             {% if cart == empty %}

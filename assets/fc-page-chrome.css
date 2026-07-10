@@ -84,9 +84,52 @@
 
   .header__icons .header__icon--account .svg-wrapper,
   .header__icons .header__icon--account account-icon,
-  .header__icons .header__icon--cart .fc-nav-icon-toggle,
-  .header__icons .header__icon--cart .cart-count-bubble {
+  .header__icons .header__icon--cart .fc-nav-icon-toggle {
     display: none !important;
+  }
+
+  .header__icons .header__icon--cart {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0;
+  }
+
+  .header__icons .header__icon--cart .cart-count-bubble {
+    position: static;
+    display: inline-flex !important;
+    transform: none;
+    top: auto;
+    right: auto;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    line-height: inherit;
+    vertical-align: baseline;
+    margin-top: 0;
+  }
+
+  .header__icons .header__icon--cart .cart-count-bubble::before {
+    content: '(';
+    color: inherit;
+  }
+
+  .header__icons .header__icon--cart .cart-count-bubble::after {
+    content: ')';
+    color: inherit;
+  }
+
+  .header__icons .header__icon--cart .cart-count-bubble [aria-hidden='true'] {
+    color: inherit;
+    font-weight: inherit;
+  }
+
+  .header__icons .header__icon--cart .cart-count-bubble.hidden {
+    display: none !important;
+  }
+
+  body.fc-cart-open #cart-icon-bubble .cart-count-bubble {
+    opacity: 1;
+    visibility: visible;
   }
 
   .header__inline-menu .header__menu-item span,
@@ -309,15 +352,25 @@
     color: var(--fc-yellow) !important;
   }
 
+  .fc-header-mobile-nav__locator {
+    color: #ffffff;
+  }
+
   .fc-header-mobile-nav__locator .svg-wrapper svg {
     width: var(--fc-nav-icon-graphic, 1.625rem);
     height: var(--fc-nav-icon-graphic, 1.625rem);
+    fill: currentColor;
+  }
+
+  .fc-header-mobile-nav__locator:hover,
+  .fc-header-mobile-nav__locator.fc-header-mobile-nav__link--active {
+    color: var(--fc-yellow);
   }
 
   .fc-header-mobile-nav__locator:hover .svg-wrapper svg,
   .fc-header-mobile-nav__locator.fc-header-mobile-nav__link--active .svg-wrapper svg {
-    fill: var(--fc-yellow);
-    stroke: var(--fc-yellow);
+    fill: currentColor;
+    stroke: none;
   }
 }
 

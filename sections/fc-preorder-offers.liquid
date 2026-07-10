@@ -1,0 +1,340 @@
+{%- liquid
+  assign questionnaire_path = section.settings.questionnaire_url
+  if questionnaire_path == blank
+    assign questionnaire_path = '/pages/preorder-questionnaire'
+  endif
+  assign reserve_url = questionnaire_path | append: '?intent=reserve'
+  assign decline_url = questionnaire_path | append: '?intent=decline'
+
+  assign preorder_product = section.settings.preorder_product
+  if preorder_product == blank
+    assign preorder_product = all_products['hako-nomad-preorder']
+  endif
+  if preorder_product != blank
+    assign preorder_variant = preorder_product.selected_or_first_available_variant
+  endif
+
+  assign reserved_tag = section.settings.reserved_customer_tag | default: 'nomadpreorder'
+  assign customer_is_reserved = false
+  if customer and customer.tags contains reserved_tag
+    assign customer_is_reserved = true
+  endif
+
+  assign reserved_check_url = section.settings.reserved_check_url
+  if reserved_check_url == blank
+    assign reserved_check_url = '/apps/fc-preorder/reserved'
+  endif
+-%}
+
+<section
+  class="fc-preorder-offers"
+  id="fc-preorder-offers-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-checkout-url="{{ routes.checkout_url | escape }}"
+  data-checkout-cta-label="{{ section.settings.checkout_cta_label | escape }}"
+  data-reserve-url="{{ reserve_url | escape }}"
+  data-reserve-label="{{ section.settings.cta_label | escape }}"
+  data-decline-url="{{ decline_url | escape }}"
+  data-decline-label="{{ section.settings.decline_label | escape }}"
+  data-decline-completed-label="{{ section.settings.decline_completed_label | escape }}"
+  data-home-url="{{ routes.root_url | escape }}"
+  data-reserved-tag="{{ reserved_tag | escape }}"
+  data-reserved-message="{{ section.settings.reserved_message | escape }}"
+  data-reserved-check-url="{{ reserved_check_url | escape }}"
+  data-reserved-check-secret="{{ section.settings.reserved_check_secret | escape }}"
+  {% if customer_is_reserved %}data-customer-reserved="true"{% endif %}
+  {% if preorder_variant != blank %}
+    data-variant-id="{{ preorder_variant.id }}"
+  {% endif %}
+>
+  <div class="fc-preorder-offers__inner">
+    <header class="fc-preorder-offers__masthead">
+      <h1 class="fc-preorder-offers__title">{{ section.settings.heading | escape }}</h1>
+      {%- if section.settings.reservation_ends != blank -%}
+        <p class="fc-preorder-offers__deadline">{{ section.settings.reservation_ends | escape }}</p>
+      {%- endif -%}
+    </header>
+
+    <hr class="fc-preorder-offers__rule" aria-hidden="true">
+
+    <div class="fc-preorder-offers__row">
+      <div class="fc-preorder-offers__visual">
+        <div class="fc-preorder-offers__images">
+          <div class="fc-preorder-offers__image-wrap fc-preorder-offers__image-wrap--l">
+            <img
+              src="{{ 'FBS2Showcase.png' | asset_url }}"
+              alt="{{ section.settings.image_alt_l | escape }}"
+              width="320"
+              height="399"
+              loading="eager"
+              class="fc-preorder-offers__image"
+            >
+          </div>
+          <div class="fc-preorder-offers__image-wrap fc-preorder-offers__image-wrap--s">
+            <img
+              src="{{ 'FBS1Showcase.png' | asset_url }}"
+              alt="{{ section.settings.image_alt_s | escape }}"
+              width="319"
+              height="399"
+              loading="eager"
+              class="fc-preorder-offers__image"
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="fc-preorder-offers__offer">
+        <div class="fc-preorder-offers__products">
+          <article class="fc-preorder-offers__product fc-preorder-offers__product--s">
+            {%- if section.settings.save_badge_s != blank -%}
+              <p class="fc-preorder-offers__save">{{ section.settings.save_badge_s | escape }}</p>
+            {%- endif -%}
+            <div class="fc-preorder-offers__price-line">
+              <span class="fc-preorder-offers__model">{{ section.settings.label_s | escape }}</span>
+              <span class="fc-preorder-offers__amounts">
+                <span class="fc-price-scratch fc-price-scratch--sale fc-price-scratch--diagonal">
+                  <span class="fc-price-scratch__was">{{ section.settings.compare_price_s | escape }}</span>
+                </span>
+                <span class="fc-preorder-offers__now">{{ section.settings.sale_price_s | escape }}</span>
+              </span>
+            </div>
+          </article>
+
+          <article class="fc-preorder-offers__product fc-preorder-offers__product--l">
+            {%- if section.settings.save_badge_l != blank -%}
+              <p class="fc-preorder-offers__save">{{ section.settings.save_badge_l | escape }}</p>
+            {%- endif -%}
+            <div class="fc-preorder-offers__price-line">
+              <span class="fc-preorder-offers__model">{{ section.settings.label_l | escape }}</span>
+              <span class="fc-preorder-offers__amounts">
+                <span class="fc-price-scratch fc-price-scratch--sale fc-price-scratch--diagonal">
+                  <span class="fc-price-scratch__was">{{ section.settings.compare_price_l | escape }}</span>
+                </span>
+                <span class="fc-preorder-offers__now">{{ section.settings.sale_price_l | escape }}</span>
+              </span>
+            </div>
+          </article>
+        </div>
+
+        <div class="fc-preorder-offers__actions">
+          <a href="{{ reserve_url }}" class="fc-preorder-offers__cta">
+            {{ section.settings.cta_label | escape }}
+          </a>
+          <a href="{{ decline_url }}" class="fc-preorder-offers__decline">
+            {{ section.settings.decline_label | escape }}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="fc-preorder-offers__rule" aria-hidden="true">
+
+    <footer class="fc-preorder-offers__terms">
+      <div class="fc-preorder-offers__terms-intro">
+        <h2 class="fc-preorder-offers__terms-title">Preorder Terms:</h2>
+      </div>
+      <ol class="fc-preorder-offers__terms-list">
+        {%- if section.settings.term_1 != blank -%}
+          <li class="fc-preorder-offers__terms-item">
+            <span class="fc-preorder-offers__terms-num" aria-hidden="true">01</span>
+            <p>{{ section.settings.term_1 | escape }}</p>
+          </li>
+        {%- endif -%}
+        {%- if section.settings.term_2 != blank -%}
+          <li class="fc-preorder-offers__terms-item">
+            <span class="fc-preorder-offers__terms-num" aria-hidden="true">02</span>
+            <p>{{ section.settings.term_2 | escape }}</p>
+          </li>
+        {%- endif -%}
+        {%- if section.settings.term_3 != blank -%}
+          <li class="fc-preorder-offers__terms-item">
+            <span class="fc-preorder-offers__terms-num" aria-hidden="true">03</span>
+            <p>{{ section.settings.term_3 | escape }}</p>
+          </li>
+        {%- endif -%}
+      </ol>
+      {%- if section.settings.footnote != blank -%}
+        <p class="fc-preorder-offers__footnote">{{ section.settings.footnote | escape }}</p>
+      {%- endif -%}
+    </footer>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Preorder Offers",
+  "tag": "section",
+  "class": "section-fc-preorder-offers",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "PREORDER SPECIALS"
+    },
+    {
+      "type": "text",
+      "id": "reservation_ends",
+      "label": "Reservation deadline",
+      "default": "RESERVATION ENDS - 2026.07.31"
+    },
+    {
+      "type": "text",
+      "id": "save_badge_s",
+      "label": "Save badge (S)",
+      "default": "SAVE $20 USD"
+    },
+    {
+      "type": "text",
+      "id": "save_badge_l",
+      "label": "Save badge (L)",
+      "default": "SAVE $30 USD"
+    },
+    {
+      "type": "text",
+      "id": "label_s",
+      "label": "Small model label",
+      "default": "Hako Nomad"
+    },
+    {
+      "type": "text",
+      "id": "label_l",
+      "label": "Large model label",
+      "default": "Hako Nomad L"
+    },
+    {
+      "type": "text",
+      "id": "compare_price_s",
+      "label": "Strikethrough price (S)",
+      "default": "$68.8"
+    },
+    {
+      "type": "text",
+      "id": "sale_price_s",
+      "label": "Sale price (S)",
+      "default": "$48.8"
+    },
+    {
+      "type": "text",
+      "id": "compare_price_l",
+      "label": "Strikethrough price (L)",
+      "default": "$128.8"
+    },
+    {
+      "type": "text",
+      "id": "sale_price_l",
+      "label": "Sale price (L)",
+      "default": "$98.8"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Reserve button label",
+      "default": "Reserve discount for only $2"
+    },
+    {
+      "type": "text",
+      "id": "checkout_cta_label",
+      "label": "Complete checkout button label",
+      "default": "Complete your $2 reservation",
+      "info": "Shown when a preorder ticket is already in the cart."
+    },
+    {
+      "type": "product",
+      "id": "preorder_product",
+      "label": "Preorder digital product ($2)",
+      "info": "Default: hako-nomad-preorder — used to prevent duplicate tickets in cart."
+    },
+    {
+      "type": "text",
+      "id": "decline_label",
+      "label": "Decline link label",
+      "default": "No, I'll Pay Full Price"
+    },
+    {
+      "type": "text",
+      "id": "decline_completed_label",
+      "label": "Decline completed link label",
+      "default": "Back to Home Page",
+      "info": "Shown after the decline questionnaire has been completed in this browser session."
+    },
+    {
+      "type": "header",
+      "content": "Already reserved"
+    },
+    {
+      "type": "text",
+      "id": "reserved_customer_tag",
+      "label": "Customer tag (reserved)",
+      "default": "nomadpreorder",
+      "info": "Logged-in customers with this tag see the reserved message instead of CTAs."
+    },
+    {
+      "type": "text",
+      "id": "reserved_message",
+      "label": "Reserved message",
+      "default": "You're on the list! We'll notify you when the launch date is announced."
+    },
+    {
+      "type": "text",
+      "id": "reserved_check_url",
+      "label": "Reserved tag check URL",
+      "default": "/apps/fc-preorder/reserved",
+      "info": "Shopify App Proxy path (same-origin). Requires app proxy → finehub /api/shopify-proxy."
+    },
+    {
+      "type": "text",
+      "id": "reserved_check_secret",
+      "label": "Reserved check secret",
+      "info": "Same value as PREORDER_SURVEY_SECRET on finehub."
+    },
+    {
+      "type": "url",
+      "id": "questionnaire_url",
+      "label": "Questionnaire page URL",
+      "info": "Defaults to /pages/preorder-questionnaire"
+    },
+    {
+      "type": "text",
+      "id": "term_1",
+      "label": "Term 01",
+      "default": "The preorder discount will be automatically applied at checkout page during launch when you use the same email address registered for your preorder reservation."
+    },
+    {
+      "type": "text",
+      "id": "term_2",
+      "label": "Term 02",
+      "default": "Each preorder reservation is eligible for one Hako Nomad and one Hako Nomad L purchase."
+    },
+    {
+      "type": "text",
+      "id": "term_3",
+      "label": "Term 03",
+      "default": "Each variant must be purchased in a separate order to redeem the discount."
+    },
+    {
+      "type": "text",
+      "id": "footnote",
+      "label": "Terms footnote",
+      "default": "*The reservation fee is not refundable."
+    },
+    {
+      "type": "text",
+      "id": "image_alt_s",
+      "label": "Image alt (S)",
+      "default": "Hako Nomad"
+    },
+    {
+      "type": "text",
+      "id": "image_alt_l",
+      "label": "Image alt (L)",
+      "default": "Hako Nomad L"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Preorder Offers"
+    }
+  ]
+}
+{% endschema %}

@@ -2,10 +2,6 @@
   "sections": {
     "fc_pdp_unified": {
       "type": "fc-pdp-unified",
-      "settings": {}
-    },
-    "fc_pdp_specs_inbox": {
-      "type": "fc-pdp-specs-inbox",
       "settings": {
         "table_title": "Specifications",
         "table1_button_label": "Details",
@@ -17,7 +13,6 @@
     }
   },
   "order": [
-    "fc_pdp_unified",
-    "fc_pdp_specs_inbox"
+    "fc_pdp_unified"
   ]
 }

@@ -1,10 +1,10 @@
 {%- comment -%}
-  Sets fc_exclude_product to true for products that should not appear on the storefront.
-  Usage (render isolates scope — capture the output):
-    {% capture fc_excl %}{% render 'fc-exclude-product', product: product %}{% endcapture %}
-    {% if fc_excl contains 'true' %} … excluded … {% endif %}
-  Optional handle when product object is blank: pass handle: 'hako-nomad-fbs1'
-  Hako/FBS: visible only on Development theme (#146565922890); hidden everywhere else (live + previews).
+  Sets fc_exclude_product (use {% include %} — render isolates scope).
+  Usage:
+    {% include 'fc-exclude-product', product: product %}
+    {% if fc_exclude_product %} … skip … {% endif %}
+  Pre-release (FBS/Hako): was hidden on live until Nomad launch — now visible on all themes.
+  Nomad preorder digital SKU stays hidden from grid/search.
 {%- endcomment -%}
 {%- liquid
   assign fc_exclude_product = false
@@ -20,10 +20,10 @@
     assign fc_exclude_product = true
   endif
 
-  if fc_handle contains 'fbs' or fc_handle contains 'hako-nomad'
-    assign fc_dev_theme_id = 146565922890
-    unless theme.id == fc_dev_theme_id
-      assign fc_exclude_product = true
-    endunless
+  comment
+    Nomad preorder (digital) — never list on shop grid / search; PDP stays direct-link only.
+  endcomment
+  if fc_handle contains 'nomad-preorder' or fc_handle contains 'hako-nomad-preorder'
+    assign fc_exclude_product = true
   endif
--%}{%- if fc_exclude_product -%}true{%- endif -%}
+-%}

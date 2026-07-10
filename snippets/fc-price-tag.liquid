@@ -1,11 +1,22 @@
 {%- if available -%}
-<div class="fc-card__tag {{ tag_class }}" data-variant-id="{{ variant_id }}">
+{%- liquid
+  assign fc_tag_qty_max = qty_max
+  if fc_tag_qty_max == blank and variant != blank
+    capture fc_tag_qty_max
+      render 'fc-variant-qty-max', variant: variant
+    endcapture
+    assign fc_tag_qty_max = fc_tag_qty_max | strip
+  endif
+-%}
+<div class="fc-card__tag {{ tag_class }}" data-variant-id="{{ variant_id }}"{% if fc_tag_qty_max != blank %} data-qty-max="{{ fc_tag_qty_max }}"{% endif %}>
   <div class="fc-card__tag-body">
     {%- unless hide_price -%}
-    <span class="fc-card__price">
-      {%- if price_varies -%}<span class="fc-card__price-from">From</span> {%- endif -%}
-      {{ price | money }}
-    </span>
+    {%- render 'fc-price-scratch',
+      price: price,
+      compare_at_price: compare_at_price,
+      price_varies: price_varies,
+      scratch: 'diagonal'
+    -%}
     {%- endunless -%}
     {%- if atc_label != blank -%}
       <span class="fc-card__atc-label">{{ atc_label }}</span>
@@ -23,7 +34,9 @@
 <div class="fc-tag-oos-wrap {{ tag_class }}">
   <div class="fc-card__tag fc-tag--oos">
     <div class="fc-card__tag-body">
-      <span class="fc-card__price">{{ price | money }}</span>
+      <span class="fc-card__price">
+        {%- render 'fc-price-scratch', price: price, compare_at_price: compare_at_price, scratch: 'diagonal' -%}
+      </span>
       <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
     </div>
   </div>

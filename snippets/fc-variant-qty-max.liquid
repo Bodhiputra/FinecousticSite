@@ -1,0 +1,26 @@
+{%- comment -%}
+  Outputs purchasable max qty for a variant (quantity rule ∩ inventory).
+  Usage: {% render 'fc-variant-qty-max', variant: item.variant %}
+{%- endcomment -%}
+{%- liquid
+  assign fc_max = null
+  if variant != blank
+    if variant.product.handle == 'hako-nomad-preorder'
+      assign fc_max = 1
+    elsif variant.quantity_rule.max != null
+      assign fc_max = variant.quantity_rule.max
+    endif
+    assign fc_check_inventory = true
+    if variant.inventory_management != 'shopify' or variant.inventory_policy == 'continue'
+      assign fc_check_inventory = false
+    endif
+    if fc_check_inventory
+      if fc_max == null or variant.inventory_quantity < fc_max
+        assign fc_max = variant.inventory_quantity
+      endif
+    endif
+  endif
+  if fc_max != null
+    echo fc_max
+  endif
+-%}

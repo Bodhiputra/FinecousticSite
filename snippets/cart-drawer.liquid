@@ -13,28 +13,44 @@
     {{ 'cart.js' | asset_url | json }},
     {{ 'quantity-popover.js' | asset_url | json }}
   ];
-  var loaded = false;
+  var loadPromise = null;
   function loadCartScripts() {
-    if (loaded) return;
-    loaded = true;
-    urls.forEach(function (src) {
-      var el = document.createElement('script');
-      el.src = src;
-      el.defer = true;
-      document.head.appendChild(el);
+    if (loadPromise) return loadPromise;
+    loadPromise = Promise.all(
+      urls.map(function (src) {
+        return new Promise(function (resolve, reject) {
+          if (document.querySelector('script[src="' + src + '"]')) {
+            resolve();
+            return;
+          }
+          var el = document.createElement('script');
+          el.src = src;
+          el.defer = true;
+          el.onload = function () { resolve(); };
+          el.onerror = reject;
+          document.head.appendChild(el);
+        });
+      })
+    ).catch(function (err) {
+      loadPromise = null;
+      throw err;
     });
+    return loadPromise;
   }
+  window.fcLoadCartDrawerScripts = loadCartScripts;
   document.addEventListener(
     'pointerdown',
     function (e) {
-      if (e.target.closest('#cart-icon-bubble, .header__icon--cart, cart-drawer')) loadCartScripts();
+      if (e.target.closest('#cart-icon-bubble, .header__icon--cart, cart-drawer, .fc-card__tag, .fc-card__atc-plus')) {
+        loadCartScripts();
+      }
     },
     { capture: true, passive: true }
   );
   if ('requestIdleCallback' in window) {
-    requestIdleCallback(loadCartScripts, { timeout: 5000 });
+    requestIdleCallback(function () { loadCartScripts(); }, { timeout: 3000 });
   } else {
-    setTimeout(loadCartScripts, 5000);
+    setTimeout(loadCartScripts, 3000);
   }
 })();
 </script>
@@ -261,11 +277,11 @@
                             <a href="{{ item.url }}" class="cart-item__link" tabindex="-1" aria-hidden="true"> </a>
                             <img
                               class="cart-item__image"
-                              src="{{ item.image | image_url: width: 300 }}"
+                              src="{{ item.image | image_url: width: 400 }}"
                               alt="{{ item.image.alt | escape }}"
                               loading="lazy"
-                              width="150"
-                              height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
+                              width="160"
+                              height="{{ 160 | divided_by: item.image.aspect_ratio | ceil }}"
                             >
                           {% endif %}
                         </td>
@@ -278,27 +294,6 @@
                           <a href="{{ item.url }}" class="cart-item__name h4 break">
                             {{- item.product.title | escape -}}
                           </a>
-
-                          {%- if item.original_price != item.final_price -%}
-                            <div class="cart-item__discounted-prices">
-                              <span class="visually-hidden">
-                                {{ 'products.product.price.regular_price' | t }}
-                              </span>
-                              <s class="cart-item__old-price product-option">
-                                {{- item.original_price | money -}}
-                              </s>
-                              <span class="visually-hidden">
-                                {{ 'products.product.price.sale_price' | t }}
-                              </span>
-                              <strong class="cart-item__final-price product-option">
-                                {{ item.final_price | money }}
-                              </strong>
-                            </div>
-                          {%- else -%}
-                            <div class="product-option">
-                              {{ item.original_price | money }}
-                            </div>
-                          {%- endif -%}
 
                           {%- if item.product.has_only_default_variant == false
                             or item.properties.size != 0
@@ -397,6 +392,15 @@
                           if item.variant.quantity_price_breaks.size > 0
                             assign has_vol_pricing = true
                           endif
+
+                          capture fc_qty_max
+                            render 'fc-variant-qty-max', variant: item.variant
+                          endcapture
+                          assign fc_qty_max = fc_qty_max | strip
+                          assign fc_qty_at_max = false
+                          if fc_qty_max != blank and item.quantity >= fc_qty_max
+                            assign fc_qty_at_max = true
+                          endif
                         -%}
                         <td
                           class="cart-item__quantity {% if has_qty_rules or has_vol_pricing %} cart-item__quantity--info{% endif %}"
@@ -405,6 +409,15 @@
                         >
                           <quantity-popover>
                             <div class="cart-item__quantity-wrapper quantity-popover-wrapper">
+                              <div class="cart-item__line-price">
+                                {%- if item.original_line_price != item.final_line_price -%}
+                                  <s class="cart-item__old-price">{{ item.original_line_price | money }}</s>
+                                  <span>{{ item.final_line_price | money }}</span>
+                                {%- else -%}
+                                  {{ item.original_line_price | money }}
+                                {%- endif -%}
+                              </div>
+                              <div class="cart-item__quantity-controls">
                               <div class="quantity-popover-container{% if has_qty_rules or has_vol_pricing %} quantity-popover-container--hover{% endif %}">
                                 <quantity-input class="quantity cart-quantity">
                                   <button
@@ -436,7 +449,9 @@
                                     data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
                                     min="0"
                                     data-min="{{ item.variant.quantity_rule.min }}"
-                                    {% if item.variant.quantity_rule.max != null %}
+                                    {% if fc_qty_max != blank %}
+                                      max="{{ fc_qty_max }}"
+                                    {% elsif item.variant.quantity_rule.max != null %}
                                       max="{{ item.variant.quantity_rule.max }}"
                                     {% endif %}
                                     step="{{ item.variant.quantity_rule.increment }}"
@@ -449,9 +464,12 @@
                                     {% endif %}
                                   >
                                   <button
-                                    class="quantity__button"
+                                    class="quantity__button{% if fc_qty_at_max %} disabled{% endif %}"
                                     name="plus"
                                     type="button"
+                                    {% if fc_qty_at_max %}
+                                      disabled
+                                    {% endif %}
                                     {% if item.instructions and item.instructions.can_update_quantity == false %}
                                       disabled
                                     {% endif %}
@@ -472,6 +490,7 @@
                               <cart-remove-button
                                 id="CartDrawer-Remove-{{ item.index | plus: 1 }}"
                                 data-index="{{ item.index | plus: 1 }}"
+                                data-variant-id="{{ item.variant.id }}"
                               >
                                 <button
                                   type="button"
@@ -487,6 +506,7 @@
                                   </span>
                                 </button>
                               </cart-remove-button>
+                              </div>
                             </div>
                             {%- if has_qty_rules or has_vol_pricing -%}
                               <button
@@ -694,14 +714,10 @@
         -%}
 
         <div class="cart__ctas" {{ block.shopify_attributes }}>
-          <p class="fc-cart-shipping-note">
-            We currently ship directly to the U.S. only. Outside the U.S.?
-            <a href="{{ fc_store_locator_url }}" class="fc-cart-shipping-note__link">Find a local retailer on our Store Locator →</a>
-          </p>
           <button
             type="submit"
             id="CartDrawer-Checkout"
-            class="cart__checkout-button button"
+            class="cart__checkout-button button button--primary button--full-width"
             name="checkout"
             form="CartDrawer-Form"
             {% if cart == empty %}
@@ -710,6 +726,10 @@
           >
             {{ 'sections.cart.checkout' | t }}
           </button>
+          <p class="fc-cart-shipping-note">
+            Authorized retailers in your country may already stock our product.
+            <a href="{{ fc_store_locator_url }}" class="fc-cart-shipping-note__link">Store Locator page →</a>
+          </p>
           <div class="cart-drawer-payment-icons">
             <ul class="list list-payment" role="list">
               {%- for type in shop.enabled_payment_types -%}
@@ -721,6 +741,21 @@
               {%- endfor -%}
             </ul>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-bag-remove-dialog" id="fc-bag-remove-dialog" hidden>
+      <div class="fc-bag-remove-dialog__backdrop" data-fc-bag-remove-dismiss></div>
+      <div
+        class="fc-bag-remove-dialog__panel"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="fc-bag-remove-title"
+      >
+        <p class="fc-bag-remove-dialog__title" id="fc-bag-remove-title">Remove the item from your bag?</p>
+        <div class="fc-bag-remove-dialog__actions">
+          <button type="button" class="fc-bag-remove-dialog__cancel" data-fc-bag-remove-dismiss>Keep</button>
+          <button type="button" class="fc-bag-remove-dialog__confirm">Remove</button>
         </div>
       </div>
     </div>

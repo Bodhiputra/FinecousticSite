@@ -1,6 +1,6 @@
 {%- comment -%}
-  Specs + In the box accordions. Rendered inside fc-pdp-specs-inbox (mobile)
-  or moved into fc-pdp-unified meta on desktop via JS.
+  Reusable PDP specs + in-the-box block.
+  Rendered from fc-pdp-unified via {% render %} (desktop column + mobile below hero).
 {%- endcomment -%}
 {%- if section.settings.specs_table_1 != blank or section.settings.specs_table_2 != blank -%}
   <details class="fc-pdp-acc fc-pdp-acc--specs" open>
@@ -126,14 +126,15 @@
           </div>
         {%- elsif fc_inbox_asset != blank -%}
           <div class="fc-pdp-specs-inbox__inbox-hero">
-            <img
-              src="{{ fc_inbox_asset | asset_url }}"
-              alt="{{ fc_inbox_alt | escape }}"
-              loading="lazy"
-              class="fc-pdp-specs-inbox__inbox-photo"
-              width="1600"
-              height="900"
-            >
+                    <img
+                      src="{{ fc_inbox_asset | asset_url }}"
+                      alt="{{ fc_inbox_alt | escape }}"
+                      loading="lazy"
+                      decoding="async"
+                      class="fc-pdp-specs-inbox__inbox-photo"
+                      width="1600"
+                      height="900"
+                    >
           </div>
         {%- endif -%}
         {%- if section.blocks.size > 0 -%}
@@ -145,7 +146,8 @@
                     <img
                       src="{{ block.settings.icon_asset | asset_url }}"
                       alt="{{ block.settings.icon_text | escape }}"
-                      loading="lazy"
+                      loading="eager"
+                      decoding="async"
                       width="120"
                       height="120"
                     >
@@ -155,7 +157,8 @@
                       block.settings.icon_image
                       | image_url: width: 240
                       | image_tag:
-                        loading: 'lazy',
+                        loading: 'eager',
+                        decoding: 'async',
                         widths: '120, 180, 240',
                         alt: fc_icon_alt
                     }}

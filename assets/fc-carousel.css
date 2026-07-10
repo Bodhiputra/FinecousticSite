@@ -56,11 +56,10 @@
   }
 
   .fc-title-carousel.fc-collection-header.is-stuck {
-    background-color: var(--fc-black);
+    background-color: #050505;
     background-image: var(--fc-body-bg);
-    background-size: cover;
-    background-position: center top;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
+    background-size: var(--fc-bg-tile-size, 512px) var(--fc-bg-tile-size, 512px);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
   }
 
@@ -84,9 +83,7 @@
   align-items: center;
   justify-content: center;
 }
-.fc-title-track { display: flex; align-items: center; opacity: 0; }
-/* JS sets opacity:1 after snapping to initial position — no-JS fallback */
-.no-js .fc-title-track { opacity: 1; }
+.fc-title-track { display: flex; align-items: center; }
 .fc-title-item {
   flex-shrink: 0;
   min-width: clamp(48px, 10vw, 160px);
@@ -123,22 +120,43 @@
   align-items: center;
 }
 .fc-title-carousel--has-wrap .fc-title-viewport {
-  /* overflow-y: visible + overflow-x hidden computes to overflow-y: auto → vertical scrollbar */
-  overflow: clip;
-  -webkit-mask-image: none;
-  mask-image: none;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 14%, black 86%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 14%, black 86%, transparent 100%);
 }
 .fc-title-carousel--has-wrap .fc-title-track {
   align-items: center;
 }
+
+/* Natural widths — narrow enough that prev/next titles peek at the edges */
+.fc-title-carousel--has-wrap .fc-title-item {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: clamp(64px, 12vw, 120px);
+  max-width: min(10.5em, 40vw);
+  padding: 0 clamp(4px, 1.2vw, 12px);
+  font-size: clamp(14px, 3.5vw, 36px);
+  line-height: 1.15;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.fc-title-carousel--has-wrap .fc-title-item.fc-title-item--wrap {
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+}
+
+.fc-title-carousel--has-wrap .fc-title-item:not(.fc-title-item--wrap) {
+  white-space: nowrap;
+}
+
 .fc-title-item.fc-title-item--wrap {
   white-space: normal;
   flex-shrink: 0;
   flex-grow: 0;
   font-size: clamp(14px, 3.5vw, 36px);
-  /* min-width: 0 lets max-width constrain wrapped text; never flex-shrink or items stack on one spot */
-  min-width: 0;
-  max-width: min(10.5em, 52vw);
   line-height: 1.15;
   overflow-wrap: normal;
   word-break: normal;
@@ -147,6 +165,26 @@
 
 .fc-title-carousel + .fc-ig-dots {
   display: none !important;
+}
+
+/* ── Unified tab/panel motion (policies, support, shop filter) ── */
+@keyframes fc-panel-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fc-policy-panel.fc-pol-active.fc-panel-animate,
+.fc-support-panel.fc-sup-active.fc-panel-animate {
+  animation: fc-panel-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fc-card.fc-card-animate {
+  animation: fc-card-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fc-card-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fc-arrow-prev {
@@ -238,6 +276,10 @@
   user-select: none;
 }
 
+.fc-ig-viewport--vertical {
+  touch-action: pan-x pinch-zoom;
+}
+
 .fc-ig-viewport.is-dragging {
   cursor: grabbing;
 }
@@ -246,6 +288,11 @@
   display: flex;
   align-items: center;
   height: 100%;
+}
+
+.fc-ig-viewport--vertical .fc-ig-track {
+  flex-direction: column;
+  width: 100%;
 }
 
 .fc-ig-viewport.is-dragging .fc-ig-track,
@@ -260,6 +307,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.fc-ig-viewport--vertical .fc-ig-slide {
+  min-height: 100%;
 }
 
 /* Dot pagination — elongated pill on active (Instagram feed) */
@@ -326,6 +377,22 @@
   background: #ffd300;
 }
 
+.fc-ig-viewport--vertical > .fc-ig-dots.fc-ig-dots--vertical {
+  flex-direction: column;
+  top: 50%;
+  right: clamp(6px, 1.2vw, 12px);
+  bottom: auto;
+  left: auto;
+  transform: translateY(-50%);
+  gap: 6px;
+  padding: 0;
+}
+
+.fc-ig-viewport--vertical > .fc-ig-dots.fc-ig-dots--vertical .fc-ig-dot.is-active {
+  width: 6px;
+  height: 18px;
+}
+
 @media (hover: none) and (pointer: coarse) {
   .fc-pdp-u__thumbs {
     display: none !important;
@@ -333,7 +400,7 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .fc-ig-viewport > .fc-ig-dots {
+  .fc-ig-viewport:not(.fc-ig-viewport--vertical) > .fc-ig-dots {
     display: none;
   }
 }

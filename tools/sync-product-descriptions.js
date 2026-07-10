@@ -51,7 +51,7 @@ const DESCRIPTION_BY_HANDLE = {
   'sonara-ufm1':
     "Switch effortlessly between Cardioid, Omnidirectional, and Bidirectional modes for vocals, interviews, or group calls. Portable and versatile, it's built for mobile streaming, video calls, or studio recording. Built-in monitor and gain controls let you shape audio in real time, while the integrated shock mount reduces vibrations. Comes with a detachable full-metal pop filter and instant touch controls for ENC and mute, ensuring clear, professional sound anytime.",
   'hako-nomad-fbs1':
-    'Small but loud retro-aesthetic box speaker designed to bring presence into everyday sound. Its ambient lighting adds subtle atmosphere to any space, while flexible connectivity options—Bluetooth, AUX, USB, and TF card—keep it adaptable to different listening needs. Built-in EQ allows quick sound adjustment to match mood or environment, and an integrated microphone enables clear calls and voice use directly through the device. With TWS pairing, two units can connect to create a wider stereo experience, extending its sound beyond its compact form.',
+    'Small but loud retro-aesthetic designed box speaker. Its ambient lighting adds subtle atmosphere to any space, while flexible connectivity options keep it adaptable to different listening needs. Built-in EQ allows quick sound adjustment and an integrated microphone enables clear calls and voice use directly through the device. With TWS pairing, two Nomads can connect to create a wider stereo experience.',
   'hako-nomad-l-fbs2':
     'Larger retro-aesthetic designed box speaker. With increased output power and a dedicated 2-tweeter and 1-woofer setup. Everything else stays the same as the smaller Hako Nomad',
 };

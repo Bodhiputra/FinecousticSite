@@ -11,21 +11,51 @@
   elsif hero_is_asset == false
     assign hero_img_mobile = hero_img
   endif
+
+  assign hero_pdp_url = blank
+  if section.settings.show_preorder_form
+    assign product_handle = section.settings.preorder_product_handle | default: 'hako-nomad-fbs1'
+    assign hero_pdp_url = section.settings.preorder_learn_more_url
+    if hero_pdp_url == blank
+      assign hero_product = all_products[product_handle]
+      if hero_product != blank
+        assign hero_pdp_url = hero_product.url
+      else
+        assign hero_pdp_url = '/products/hako-nomad-fbs1'
+      endif
+    endif
+  endif
+
+  assign product_title = section.settings.preorder_product_title | default: 'Hako Nomad'
+  assign title_parts = product_title | split: ' '
+  assign title_left = title_parts[0] | default: 'Hako'
+  assign title_right = title_parts[1] | default: 'Nomad'
 -%}
 
-<section class="website-hero" id="website-hero-{{ section.id }}">
+<section
+  class="website-hero{% if section.settings.show_preorder_form %} website-hero--clickable{% endif %}"
+  id="website-hero-{{ section.id }}"
+  {% if hero_pdp_url != blank %}data-hero-pdp-url="{{ hero_pdp_url | escape }}"{% endif %}
+>
+  {%- if hero_pdp_url != blank -%}
+    <a
+      class="website-hero__pdp-link"
+      href="{{ hero_pdp_url }}"
+      aria-label="{{ product_title | escape }}"
+    >
+  {%- endif -%}
   <picture class="website-hero__picture">
     {%- if hero_is_asset -%}
       <source
         media="(min-width: 750px)"
-        srcset="{{ 'HeroSectionFinal.webp' | asset_url }}"
+        srcset="{{ 'WebsiteHeroNomad.webp' | asset_url }}"
       >
       <img
         class="website-hero__img"
-        src="{{ 'HeroSectionFinal-Mobile.webp' | asset_url }}"
+        src="{{ 'WebsiteHeroNomad-Mobile.webp' | asset_url }}"
         alt="{{ section.settings.image_alt | escape }}"
         width="750"
-        height="1334"
+        height="1000"
         loading="eager"
         fetchpriority="high"
       >
@@ -50,6 +80,9 @@
       -}}
     {%- endif -%}
   </picture>
+  {%- if hero_pdp_url != blank -%}
+    </a>
+  {%- endif -%}
 
   {%- if section.settings.show_overlay -%}
     <div class="website-hero__overlay" aria-hidden="true"></div>
@@ -86,6 +119,37 @@
         </a>
       {%- endif -%}
     </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_preorder_form -%}
+    <div class="fc-preorder-hero-title fc-preorder-hero-title--desktop">
+      <div class="fc-preorder-hero-title__inner">
+        <h2 class="fc-preorder-hero-title__part fc-preorder-hero-title__part--left">{{ title_left | escape }}</h2>
+        <h2 class="fc-preorder-hero-title__part fc-preorder-hero-title__part--right">{{ title_right | escape }}</h2>
+      </div>
+    </div>
+    <div class="fc-preorder-hero-stack" id="fc-preorder-hero-stack-{{ section.id }}">
+      <div class="fc-preorder-hero-title fc-preorder-hero-title--mobile">
+        <div class="fc-preorder-hero-title__inner">
+          <h2 class="fc-preorder-hero-title__part fc-preorder-hero-title__part--left">{{ title_left | escape }}</h2>
+          <h2 class="fc-preorder-hero-title__part fc-preorder-hero-title__part--right">{{ title_right | escape }}</h2>
+        </div>
+      </div>
+      {%- render 'fc-preorder-hero-form', section: section -%}
+    </div>
+    <script>
+      (function () {
+        var hero = document.getElementById('website-hero-{{ section.id }}');
+        if (!hero || !hero.dataset.heroPdpUrl) return;
+
+        hero.addEventListener('click', function (event) {
+          if (event.defaultPrevented) return;
+          if (event.target.closest('.fc-preorder-hero-form')) return;
+          if (event.target.closest('a.website-hero__pdp-link')) return;
+          window.location.assign(hero.dataset.heroPdpUrl);
+        });
+      })();
+    </script>
   {%- endif -%}
 </section>
 
@@ -238,13 +302,13 @@
       "type": "image_picker",
       "id": "hero_image",
       "label": "Hero image (desktop)",
-      "info": "Leave empty to use HeroSectionFinal.webp from theme assets."
+      "info": "Leave empty to use WebsiteHeroNomad.webp from theme assets."
     },
     {
       "type": "image_picker",
       "id": "hero_image_mobile",
       "label": "Hero image (mobile)",
-      "info": "Leave empty to use HeroSectionFinal-Mobile.webp from theme assets."
+      "info": "Leave empty to use WebsiteHeroNomad-Mobile.webp from theme assets."
     },
     {
       "type": "text",
@@ -285,6 +349,59 @@
       "type": "url",
       "id": "button_link",
       "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Preorder email gate"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_preorder_form",
+      "label": "Show preorder email form",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "preorder_product_title",
+      "label": "Preorder product title",
+      "default": "Hako Nomad"
+    },
+    {
+      "type": "text",
+      "id": "preorder_learn_more_label",
+      "label": "Learn more link label",
+      "default": "Learn more"
+    },
+    {
+      "type": "text",
+      "id": "preorder_product_handle",
+      "label": "Learn more product handle",
+      "default": "hako-nomad-fbs1",
+      "info": "Used when Learn more URL is empty."
+    },
+    {
+      "type": "url",
+      "id": "preorder_learn_more_url",
+      "label": "Learn more URL",
+      "info": "Defaults to the product above."
+    },
+    {
+      "type": "text",
+      "id": "preorder_button_label",
+      "label": "Preorder submit button",
+      "default": "Reveal Preorder Offers"
+    },
+    {
+      "type": "text",
+      "id": "preorder_marketing_label",
+      "label": "Marketing consent label",
+      "default": "Be the first to experience what’s next in sound."
+    },
+    {
+      "type": "url",
+      "id": "preorder_offers_url",
+      "label": "Preorder offers page",
+      "info": "Defaults to /pages/preorder-offers"
     }
   ],
   "presets": [

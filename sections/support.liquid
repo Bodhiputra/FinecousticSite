@@ -20,14 +20,7 @@
   box-sizing: border-box;
 }
 .fc-support-panel { display: none; }
-.fc-support-panel.fc-sup-active {
-  display: block;
-  animation: fc-sup-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-@keyframes fc-sup-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+.fc-support-panel.fc-sup-active { display: block; }
 
 /* Align top spacing across FAQ / forms / track */
 .fc-support-panel.fc-sup-active > .fc-faq-cats,
@@ -246,14 +239,14 @@
 
 {%- render 'fc-title-carousel',
   id: 'fc-support',
-  labels: 'FAQ|Contact Us|Aftersales Service|Track Order',
+  labels: 'FAQ|Contact Us|Aftersales Service|Track Order|Product Guide',
   active_index: 0
 -%}
 
 <div class="fc-page-swipe-zone fc-support-wrap" id="fc-support-wrap">
 
   {%- comment -%} ── FAQ ── {%- endcomment -%}
-  <div class="fc-support-panel" id="fc-sup-faq" data-tab="faq">
+  <div class="fc-support-panel fc-sup-active" id="fc-sup-faq" data-tab="faq">
 
     <div class="fc-faq-cats" id="fc-faq-cats">
 
@@ -483,8 +476,16 @@
     </form>
   </div>
 
+  {%- comment -%} ── PRODUCT GUIDE ── {%- endcomment -%}
+  <div class="fc-support-panel" id="fc-sup-guide" data-tab="guide">
+    <div class="fc-dl-page fc-dl-page--support">
+      {%- render 'fc-product-guide-grid', blocks: section.blocks, block_type: 'product_guide', grid_id: 'fc-sup-guide-grid', cols: 3 -%}
+    </div>
+  </div>
+
 </div>
 
+<script src="{{ 'fc-download-grid.js' | asset_url }}" defer></script>
 <script src="{{ 'fc-support.js' | asset_url }}" defer></script>
 
 {% schema %}
@@ -574,6 +575,16 @@
           "id": "answer_detail",
           "label": "Detailed answer"
         }
+      ]
+    },
+    {
+      "type": "product_guide",
+      "name": "Product guide",
+      "settings": [
+        { "type": "text", "id": "product_handle", "label": "Product handle (e.g. groove-anc-ft20)" },
+        { "type": "text", "id": "title", "label": "Product display name" },
+        { "type": "text", "id": "download_url", "label": "QSG URL override", "info": "Optional. Set Quick Start Guide URL on the product metafield in Admin; use this only to override." },
+        { "type": "image_picker", "id": "image", "label": "Fallback image (if product handle is blank)" }
       ]
     }
   ],

@@ -183,14 +183,30 @@
   }
 
   function fcRunWhenCartReady(fn) {
+    function run() {
+      if (!window.fcWirePriceTag || !window.fcAddToCart) {
+        setTimeout(run, 32);
+        return;
+      }
+      if (customElements.get('cart-drawer')) {
+        fn();
+        return;
+      }
+      customElements.whenDefined('cart-drawer').then(fn).catch(function () {
+        setTimeout(run, 32);
+      });
+    }
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', fn, { once: true });
+      document.addEventListener('DOMContentLoaded', run, { once: true });
     } else {
-      fn();
+      run();
     }
   }
 
-  fcRunWhenCartReady(fcWireShopCards);
+  fcRunWhenCartReady(function () {
+    if (window.fcLoadCartDrawerScripts) window.fcLoadCartDrawerScripts();
+    fcWireShopCards();
+  });
 
 
   /* ── expanded ATC ── */
@@ -252,17 +268,19 @@
   }
 
   /* ── filter shared logic ── */
-  function applyFilter(filter) {
+  function applyFilter(filter, opts) {
+    opts = opts || {};
+    var animate = opts.animate === true;
+
     if (filter !== currentFilter) fcResetShopScroll();
     currentFilter = filter;
     const cards = Array.from(document.querySelectorAll('.fc-card'));
     let visibleCount = 0;
 
-    // Phase 1 (sync): classify cards — no reads, only dataset access
     const toShow = [];
     const toHide = [];
-    cards.forEach(card => {
-      card.classList.remove('fc-card-appear');
+    cards.forEach(function (card) {
+      card.classList.remove('fc-card-animate');
       const visible = filter === 'all' || card.dataset.category === filter;
       if (visible) { visibleCount++; toShow.push(card); }
       else { toHide.push(card); }
@@ -272,13 +290,12 @@
     const showSoon = filter === 'speakers' && visibleCount === 0;
     const zone = document.getElementById('fc-shop-swipe-zone');
 
-    // Phase 2 (single RAF): all DOM mutations in one frame — eliminates stagger INP cost
-    requestAnimationFrame(() => {
-      toHide.forEach(card => card.classList.add('fc-hidden'));
-      toShow.forEach(card => {
+    requestAnimationFrame(function () {
+      toHide.forEach(function (card) { card.classList.add('fc-hidden'); });
+      toShow.forEach(function (card) {
         card.classList.remove('fc-hidden');
         card.style.animationDelay = '0ms';
-        card.classList.add('fc-card-appear');
+        if (animate) card.classList.add('fc-card-animate');
       });
       if (soonEl) soonEl.hidden = !showSoon;
       if (zone) zone.classList.toggle('fc-shop-swipe-zone--soon', showSoon);
@@ -319,7 +336,9 @@
       id: 'fc-collection',
       extraSwipeId: 'fc-shop-swipe-zone',
       N: FILTERS.length,
-      onSlide: function (logIdx) { applyFilter(FILTERS[logIdx].key); },
+      onSlide: function (logIdx, meta) {
+        applyFilter(FILTERS[logIdx].key, { animate: !(meta && meta.initial) });
+      },
       getInitialIdx: function () {
         var urlFilter = new URLSearchParams(window.location.search).get('filter');
         var idx = urlFilter ? FILTERS.findIndex(function (f) { return f.key === urlFilter; }) : -1;
@@ -373,9 +392,9 @@
     fcWireShopCards();
   });
 
-  const fcSection = document.getElementById('shopify-section-{{ section.id }}');
+  const fcSection = document.getElementById('fc-grid')?.closest('.shopify-section');
   if (fcSection) {
-    new MutationObserver(() => {
+    new MutationObserver(function () {
       if (document.getElementById('fc-collection-track')) {
         fcInitCarousel();
         fcInitCards();

@@ -36,7 +36,7 @@
 }
 .fc-card__price {
   font-family: var(--fc-font);
-  font-size: clamp(11px, 1vw, 14px);
+  font-size: clamp(10px, 0.9vw, 12px);
   font-weight: 700;
   color: #000000;
   letter-spacing: -0.01em;
@@ -50,9 +50,77 @@
   letter-spacing: inherit;
   margin-right: 2px;
 }
+
+/* ── FC PRICE SCRATCH (sale / compare-at) ── */
+.fc-price-scratch {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  gap: 0.35em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.fc-price-scratch__from {
+  margin-right: 2px;
+}
+
+.fc-price-scratch__now {
+  font-weight: 700;
+}
+
+.fc-price-scratch--sale .fc-price-scratch__was {
+  position: relative;
+  display: inline-block;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.42);
+  font-size: 0.88em;
+  letter-spacing: -0.01em;
+}
+
+.fc-price-scratch--sale .fc-price-scratch__now {
+  color: #000000;
+}
+
+/* Diagonal scratch through original price */
+.fc-price-scratch--diagonal.fc-price-scratch--sale .fc-price-scratch__was::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 52%;
+  height: 0;
+  border-top: 1.5px solid rgba(0, 0, 0, 0.55);
+  transform: rotate(-14deg);
+  pointer-events: none;
+}
+
+/* Vertical scratch */
+.fc-price-scratch--vertical.fc-price-scratch--sale .fc-price-scratch__was::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 8%;
+  bottom: 8%;
+  width: 1.5px;
+  background: rgba(0, 0, 0, 0.55);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.fc-card__tag .fc-price-scratch {
+  font-family: var(--fc-font);
+  font-size: clamp(10px, 0.9vw, 12px);
+  letter-spacing: -0.01em;
+  color: #000000;
+}
+
+.fc-card__tag .fc-price-scratch__now {
+  color: #000000;
+}
 .fc-card__name {
   font-family: var(--fc-font);
-  font-size: clamp(13px, 1.2vw, 16px);
+  font-size: clamp(12px, 1.05vw, 14px);
   font-weight: 700;
   color: #000000;
   letter-spacing: -0.03em;
@@ -142,6 +210,33 @@
 
 .fc-dl-grid {
   margin-top: 0;
+}
+
+/* Product guide inside Support tab — fewer columns, larger cards */
+.fc-support-wrap:has(.fc-support-panel[data-tab="guide"].fc-sup-active) {
+  max-width: min(1080px, 100%);
+}
+
+.fc-dl-page--support {
+  padding: 0;
+}
+
+.fc-dl-page--support .fc-dl-grid {
+  --fc-max-cols: 3;
+  grid-template-columns: repeat(min(var(--fc-product-cols), var(--fc-max-cols)), minmax(0, 360px));
+  gap: clamp(28px, 5vw, 56px) clamp(20px, 4vw, 48px);
+}
+
+.fc-dl-page--support .fc-dl-card-name {
+  font-size: clamp(12px, 1.3vw, 16px);
+  margin-top: 16px;
+}
+
+@media screen and (max-width: 749px) {
+  .fc-dl-page--support .fc-dl-grid {
+    --fc-max-cols: 2;
+    grid-template-columns: repeat(min(var(--fc-product-cols), var(--fc-max-cols)), minmax(0, 280px));
+  }
 }
 
 a.fc-dl-card {
@@ -385,15 +480,6 @@ a.fc-dl-card {
 
 .fc-card.fc-hidden {
   display: none;
-}
-
-@keyframes fc-card-in {
-  from { opacity: 0; transform: translateY(12px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.fc-card-appear {
-  animation: fc-card-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .fc-shop-page .fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover)) .fc-card__img {

@@ -7,12 +7,26 @@
     { key: 'terms-and-conditions', id: 'fc-pol-terms'    },
   ];
 
-  function applyPolicy(key) {
-    document.querySelectorAll('.fc-policy-panel').forEach(panel => {
-      panel.classList.remove('fc-pol-active');
-      if (panel.dataset.policy === key) panel.classList.add('fc-pol-active');
+  function getInitialPolicyKey() {
+    var urlPolicy = new URLSearchParams(window.location.search).get('policy');
+    if (urlPolicy && POLICIES.some(function (p) { return p.key === urlPolicy; })) return urlPolicy;
+    return 'privacy-policy';
+  }
+
+  function applyPolicy(key, opts) {
+    opts = opts || {};
+    var animate = opts.animate === true;
+
+    document.querySelectorAll('.fc-policy-panel').forEach(function (panel) {
+      var isActive = panel.dataset.policy === key;
+      panel.classList.remove('fc-pol-active', 'fc-panel-animate');
+      if (isActive) {
+        panel.classList.add('fc-pol-active');
+        if (animate) panel.classList.add('fc-panel-animate');
+      }
     });
-    const url = new URL(window.location.href);
+
+    var url = new URL(window.location.href);
     if (key === 'privacy-policy') {
       url.searchParams.delete('policy');
     } else {
@@ -30,10 +44,12 @@
       extraSwipeThreshold: 72,
       extraSwipeHorizontalRatio: 2.25,
       N: POLICIES.length,
-      onSlide: function (logIdx) { applyPolicy(POLICIES[logIdx].key); },
+      onSlide: function (logIdx, meta) {
+        applyPolicy(POLICIES[logIdx].key, { animate: !(meta && meta.initial) });
+      },
       getInitialIdx: function () {
-        var urlPolicy = new URLSearchParams(window.location.search).get('policy');
-        var idx = urlPolicy ? POLICIES.findIndex(function (p) { return p.key === urlPolicy; }) : -1;
+        var key = getInitialPolicyKey();
+        var idx = POLICIES.findIndex(function (p) { return p.key === key; });
         return idx >= 0 ? idx : 0;
       }
     }).init();
@@ -41,6 +57,7 @@
 
   function init() {
     if (!document.getElementById('fc-policies-header')) return;
+    applyPolicy(getInitialPolicyKey(), { initial: true });
     initCarousel();
   }
 

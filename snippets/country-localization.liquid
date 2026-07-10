@@ -41,9 +41,11 @@
     aria-describedby="{{ localPosition }}Label"
   >
     <span{% if fc_header_nav_text %} class="fc-header-nav-text"{% endif %}>
-      {{- localization.country.name }} |
-      {{ localization.country.currency.iso_code }}
-      {{ localization.country.currency.symbol -}}
+      {{- localization.country.name -}}
+      {%- if show_currencies -%}
+        | {{ localization.country.currency.iso_code }}
+        {{ localization.country.currency.symbol -}}
+      {%- endif -%}
     </span>
     {%- unless fc_header_nav_text -%}
       {{ 'icon-caret.svg' | inline_asset_content }}
@@ -55,14 +57,14 @@
         <div class="field">
           <input
             class="country-filter__input field__input"
-            id="country-filter-input"
+            id="{{ localPosition }}-country-filter-input"
             type="search"
             name="country_filter"
             value=""
             placeholder="{{ 'localization.search' | t }}"
             role="combobox"
-            aria-owns="country-results"
-            aria-controls="country-results"
+            aria-owns="{{ localPosition }}-country-results"
+            aria-controls="{{ localPosition }}-country-results"
             aria-haspopup="listbox"
             aria-autocomplete="list"
             autocorrect="off"
@@ -70,7 +72,7 @@
             autocapitalize="off"
             spellcheck="false"
           >
-          <label class="field__label" for="country-filter-input">{{ 'localization.search' | t }}</label>
+          <label class="field__label" for="{{ localPosition }}-country-filter-input">{{ 'localization.search' | t }}</label>
           <button
             type="reset"
             class="country-filter__reset-button field__button hidden"
@@ -111,7 +113,7 @@
                   aria-current="true"
                 {% endif %}
                 data-value="{{ country.iso_code }}"
-                id="{{ country.name }}"
+                id="{{ localPosition }}-{{ country.iso_code }}"
               >
                 <span
                   {% if country.iso_code != localization.country.iso_code %}
@@ -140,7 +142,7 @@
                 aria-current="true"
               {% endif %}
               data-value="{{ country.iso_code }}"
-              id="{{ country.name }}"
+              id="{{ localPosition }}-{{ country.iso_code }}"
             >
               <span
                 {% if country.iso_code != localization.country.iso_code %}

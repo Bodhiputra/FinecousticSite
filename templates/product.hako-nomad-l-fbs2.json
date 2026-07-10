@@ -4,27 +4,27 @@
       "type": "fc-pdp-unified",
       "settings": {
         "desktop_stacked_layout": true,
+        "enable_video_looping": true,
+        "video": "shopify://files/videos/WebsiteNomad.mp4",
+        "video_description": "HAKO Nomad product video",
         "sibling_1_label": "S",
         "sibling_1_url": "/products/hako-nomad-fbs1",
         "sibling_2_label": "L",
-        "sibling_2_url": "/products/hako-nomad-l-fbs2"
-      }
-    },
-    "fc_pdp_specs_inbox": {
-      "type": "fc-pdp-specs-inbox",
-      "settings": {
+        "sibling_2_url": "/products/hako-nomad-l-fbs2",
         "table_title": "Specifications",
         "table1_button_label": "",
         "table2_button_label": "",
-        "specs_table_1": "Model Number | FBS2\nConnectivity | BT 5.3 \u00b7 AUX \u00b7 TF Card \u00b7 USB Flash Drive\nBT Version | 5.3\nSpeaker Output | 65 W\nDriver Size | 1 \u00d7 Woofer \u00d886.5mm \u00b7 2 \u00d7 Tweeters \u00d824.5mm\nSpeaker Layout | 2.0 (Stereo)\nFrequency Response | 60 Hz \u2013 20 kHz\nBuilt-in EQ Mode | Music Mode \u00b7 Outdoor Mode \u00b7 Game Mode\nBuilt-in Mic | Yes\nTWS Mode | Yes\nAmbient Light | 3 Color Presets\nTF Card Support | Up to 32 GB\nUSB Flash Drive | Up to 32 GB\nBattery Capacity | 4500 mAh\nBattery Life | Up to 15 hours\nWeight | 2060 g\nSize | 230 \u00d7 119.5 \u00d7 102.5 mm",
+        "specs_table_1": "Model Number | FBS2\nConnectivity | BT 5.3 · AUX · TF Card · USB Flash Drive\nBT Version | 5.3\nSpeaker Output | 65 W\nDriver Size | 1 × Woofer Φ89×61.5H · 2 × Tweeters 40.2×50.7×13H · 2 × Passive Radiators 58×95\nSpeaker Layout | 2.0 (Stereo)\nFrequency Response | 60 Hz – 20 kHz\nBuilt-in EQ Mode | Music Mode · Outdoor Mode · Game Mode\nBuilt-in Mic | Yes\nTWS Mode | Yes\nAmbient Light | 3 Color Presets\nTF Card Support | Up to 32 GB\nUSB Flash Drive | Up to 32 GB\nBattery Capacity | 4500 mAh\nBattery Life | Up to 15 hours\nWeight | 2060 g\nSize | 230 × 119.5 × 102.5 mm",
         "specs_table_2": "",
         "inbox_title": "In The Box",
-        "inbox_asset": "FBS2_InTheBox.png"
+        "inbox_asset": "FBS2_InTheBox.png",
+        "enable_preorder_gate": true,
+        "preorder_button_label": "Reveal Preorder Offers",
+        "preorder_marketing_label": "Be the first to experience what's next in sound."
       }
     }
   },
   "order": [
-    "fc_pdp_unified",
-    "fc_pdp_specs_inbox"
+    "fc_pdp_unified"
   ]
 }

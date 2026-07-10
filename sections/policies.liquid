@@ -20,14 +20,7 @@
 }
 
 .fc-policy-panel { display: none; }
-.fc-policy-panel.fc-pol-active {
-  display: block;
-  animation: fc-pol-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-@keyframes fc-pol-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+.fc-policy-panel.fc-pol-active { display: block; }
 
 /* Prose */
 .fc-policy-panel h1,
@@ -87,7 +80,7 @@
 
 <div class="fc-page-swipe-zone fc-policy-wrap" id="fc-policy-wrap">
 
-  <div class="fc-policy-panel" id="fc-pol-privacy" data-policy="privacy-policy">
+  <div class="fc-policy-panel fc-pol-active" id="fc-pol-privacy" data-policy="privacy-policy">
     {%- if shop.privacy_policy.body != blank -%}
       {{ shop.privacy_policy.body }}
     {%- else -%}

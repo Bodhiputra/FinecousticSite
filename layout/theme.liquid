@@ -2,6 +2,10 @@
 <html class="js" lang="{{ request.locale.iso_code }}">
   <head>
     <meta charset="utf-8">
+    {%- if template.name == 'cart' -%}
+      <script>window.location.replace({{ routes.root_url | json }});</script>
+      <meta http-equiv="refresh" content="0; url={{ routes.root_url }}">
+    {%- endif -%}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="">
@@ -14,7 +18,7 @@
       <link
         rel="preload"
         as="image"
-        href="{{ 'HeroSectionFinal-Mobile.webp' | asset_url }}"
+        href="{{ 'WebsiteHeroNomad-Mobile.webp' | asset_url }}"
         type="image/webp"
         media="(max-width: 749px)"
         fetchpriority="high"
@@ -22,7 +26,7 @@
       <link
         rel="preload"
         as="image"
-        href="{{ 'HeroSectionFinal.webp' | asset_url }}"
+        href="{{ 'WebsiteHeroNomad.webp' | asset_url }}"
         type="image/webp"
         media="(min-width: 750px)"
         fetchpriority="high"
@@ -37,8 +41,6 @@
         imagesizes="92vw"
         fetchpriority="high"
       >
-    {%- else -%}
-      <link rel="preload" as="image" href="{{ 'FinecouBG.webp' | asset_url }}" type="image/webp">
     {%- endif -%}
 
     {%- unless template.name == 'index' -%}
@@ -205,8 +207,10 @@
         --drawer-shadow-vertical-offset: {{ settings.drawer_shadow_vertical_offset }}px;
         --drawer-shadow-blur-radius: {{ settings.drawer_shadow_blur }}px;
 
-        --fc-body-bg: url('{{ 'FinecouBG.webp' | asset_url }}');
-        --fc-nav-footer-bg: url('{{ 'FinecousticBGLighter.webp' | asset_url }}');
+        --fc-body-bg: url('{{ 'FinecousticBG.webp' | asset_url }}');
+        --fc-nav-footer-bg: url('{{ 'FinecousticBG-Lighter.png' | asset_url }}');
+        --fc-bg-tile-size: 512px;
+        --fc-nav-bg-tile-size: 512px;
 
         --spacing-sections-desktop: {{ settings.spacing_sections }}px;
         --spacing-sections-mobile: {% if settings.spacing_sections < 24 %}{{ settings.spacing_sections }}{% else %}{{ settings.spacing_sections | times: 0.7 | round | at_least: 20 }}{% endif %}px;
@@ -282,10 +286,10 @@
         font-family: var(--font-body-family);
         font-style: var(--font-body-style);
         font-weight: var(--font-body-weight);
-        background-image: url('{{ "FinecouBG.webp" | asset_url }}');
-        background-size: cover;
-        background-position: center top;
-        background-repeat: no-repeat;
+        background-color: #050505;
+        background-image: url('{{ "FinecousticBG.webp" | asset_url }}');
+        background-repeat: repeat;
+        background-size: 512px 512px;
         background-attachment: scroll;
       }
 
@@ -325,10 +329,8 @@
       #MainContent:has(> .shopify-section:first-child .website-hero),
       #MainContent:has(> .shopify-section:first-child .fc-pdp-u),
       #MainContent:has(> .shopify-section:first-child .fc-pdp-video-hero),
-      #MainContent:has(> .shopify-section:first-child .fc-pdp-showcases),
-      #MainContent:has(> .shopify-section:first-child .fc-pdp-showcase),
-      #MainContent:has(> .shopify-section:first-child .fc-pdp-specs-inbox),
-      #MainContent:has(> .shopify-section:first-child .responsive-bg-section) {
+      #MainContent:has(> .shopify-section:first-child .fc-preorder-offers),
+      #MainContent:has(> .shopify-section:first-child .fc-preorder-questionnaire) {
         padding-top: 0;
       }
     </style>
@@ -349,7 +351,7 @@
       {{- 'fc-shop.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
 
-    {%- if template.name == 'product' -%}
+    {%- if template.name == 'product' or template.name == 'index' -%}
       {{- 'fc-pdp.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'fc-pdp-dock.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
@@ -357,6 +359,15 @@
     {%- if template.name == 'search' -%}
       {{- 'fc-shop.css' | asset_url | stylesheet_tag }}
       {{- 'fc-search.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+
+    {%- if template.name == 'index' or template.suffix == 'preorder-offers' or template.suffix == 'preorder-questionnaire' -%}
+      {{- 'fc-preorder.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+
+    {%- if template.suffix == 'preorder-offers' or template.suffix == 'preorder-questionnaire' -%}
+      <script src="{{ 'fc-preorder-questionnaire-data.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'fc-preorder.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
@@ -381,7 +392,7 @@
     </script>
   </head>
 
-  <body class="gradient template-{{ template.name }}{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
+  <body class="gradient template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>

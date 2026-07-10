@@ -1,0 +1,26 @@
+{% doc %}
+  Marketing consent checkbox (checkout / sign-in style).
+
+  @param {string} [id] - Unique id for input/label
+  @param {string} [name] - Form field name (default contact[accepts_marketing])
+  @param {string} [label] - Visible label text
+{% enddoc %}
+
+{%- liquid
+  assign checkbox_id = id | default: 'fc-marketing'
+  assign checkbox_name = name | default: 'contact[accepts_marketing]'
+  assign checkbox_label = label | default: 'Be the first to hear from Finecoustic'
+-%}
+
+<div class="fc-marketing-checkbox">
+  <input
+    type="checkbox"
+    class="fc-marketing-checkbox__input"
+    id="{{ checkbox_id }}"
+    name="{{ checkbox_name }}"
+    value="true"
+  >
+  <label class="fc-marketing-checkbox__label" for="{{ checkbox_id }}">
+    {{ checkbox_label | escape }}
+  </label>
+</div>

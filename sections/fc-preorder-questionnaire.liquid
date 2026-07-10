@@ -1,0 +1,103 @@
+{%- liquid
+  assign preorder_product = section.settings.preorder_product
+  if preorder_product == blank
+    assign preorder_product = all_products['hako-nomad-preorder']
+  endif
+  if preorder_product != blank
+    assign preorder_variant = preorder_product.selected_or_first_available_variant
+  endif
+-%}
+
+<section
+  class="fc-preorder-questionnaire"
+  id="fc-preorder-questionnaire-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-done-decline="{{ section.settings.done_decline | escape }}"
+  data-decline-redirect="{{ section.settings.decline_redirect_url | default: routes.root_url | escape }}"
+  data-checkout-url="{{ routes.checkout_url | escape }}"
+  data-survey-webhook="{{ section.settings.survey_webhook_url | escape }}"
+  data-survey-secret="{{ section.settings.survey_webhook_secret | escape }}"
+  {% if preorder_variant != blank %}
+    data-variant-id="{{ preorder_variant.id }}"
+  {% endif %}
+>
+  <div class="fc-preorder-questionnaire__inner">
+    <div class="fc-preorder-q" data-fc-preorder-q-root hidden>
+      <header class="fc-preorder-q__head">
+        <div class="fc-preorder-q__progress-track" aria-hidden="true">
+          <span class="fc-preorder-q__progress-fill" data-fc-q-progress-fill></span>
+        </div>
+        <p class="fc-preorder-q__progress" data-fc-q-progress aria-live="polite"></p>
+        <h1 class="fc-preorder-q__title" data-fc-q-title></h1>
+        <p class="fc-preorder-q__hint" data-fc-q-hint hidden></p>
+      </header>
+
+      <div class="fc-preorder-q__options" data-fc-q-options role="listbox" aria-multiselectable="false"></div>
+
+      <footer class="fc-preorder-q__foot">
+        <div class="fc-preorder-q__foot-nav">
+          <button type="button" class="fc-preorder-q__back" data-fc-q-back aria-label="Previous question" hidden>
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+              <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <p class="fc-preorder-q__keys" data-fc-q-keys>Press a letter key or tap an answer.</p>
+        <p class="fc-preorder-q__error" data-fc-q-error role="alert" hidden></p>
+      </footer>
+    </div>
+
+    <div class="fc-preorder-questionnaire__done" data-fc-q-done hidden>
+      <p class="fc-preorder-questionnaire__done-text" data-fc-q-done-text></p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Preorder Questionnaire",
+  "tag": "section",
+  "class": "section-fc-preorder-questionnaire",
+  "settings": [
+    {
+      "type": "text",
+      "id": "done_decline",
+      "label": "Message after decline path",
+      "default": "Thank you for your support in helping us grow!"
+    },
+    {
+      "type": "url",
+      "id": "decline_redirect_url",
+      "label": "Decline redirect URL",
+      "info": "Where to send users after the decline thank-you message. Defaults to homepage."
+    },
+    {
+      "type": "product",
+      "id": "preorder_product",
+      "label": "Preorder digital product ($2)",
+      "info": "Default: hako-nomad-preorder — checkout after reserve survey."
+    },
+    {
+      "type": "header",
+      "content": "Survey → Fine Hub (Neon)"
+    },
+    {
+      "type": "text",
+      "id": "survey_webhook_url",
+      "label": "Survey webhook URL",
+      "info": "Fine Hub public endpoint, e.g. https://YOUR-HUB.vercel.app/api/public/preorder-survey"
+    },
+    {
+      "type": "text",
+      "id": "survey_webhook_secret",
+      "label": "Survey webhook secret",
+      "info": "Must match PREORDER_SURVEY_SECRET on Fine Hub (Vercel env)."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Preorder Questionnaire"
+    }
+  ]
+}
+{% endschema %}

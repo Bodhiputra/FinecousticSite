@@ -1,0 +1,36 @@
+{% doc %}
+  Sale price with scratched original (compare-at).
+
+  @param {number} price - Current price in cents
+  @param {number} [compare_at_price] - Original price in cents
+  @param {boolean} [price_varies] - Show "From" prefix
+  @param {string} [scratch] - diagonal (default) or vertical
+{% enddoc %}
+
+{%- liquid
+  assign scratch_style = scratch | default: 'diagonal'
+  assign on_sale = false
+  if compare_at_price != blank and compare_at_price > price
+    assign on_sale = true
+  endif
+-%}
+
+<span class="fc-price-scratch fc-price-scratch--{{ scratch_style }}{% if on_sale %} fc-price-scratch--sale{% endif %}">
+  {%- if on_sale -%}
+    <span class="visually-hidden">
+      {{- 'products.product.price.sale_price' | t | default: 'Sale price' -}}
+      {{ price | money }}.
+      {{- 'products.product.price.regular_price' | t | default: 'Regular price' -}}
+      {{ compare_at_price | money }}
+    </span>
+  {%- endif -%}
+  {%- if price_varies -%}
+    <span class="fc-price-scratch__from" aria-hidden="true">From</span>
+  {%- endif -%}
+  {%- if on_sale -%}
+    <span class="fc-price-scratch__was" aria-hidden="true">{{ compare_at_price | money }}</span>
+    <span class="fc-price-scratch__now" aria-hidden="true">{{ price | money }}</span>
+  {%- else -%}
+    <span class="fc-price-scratch__now">{{ price | money }}</span>
+  {%- endif -%}
+</span>

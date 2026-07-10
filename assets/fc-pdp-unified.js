@@ -28,9 +28,7 @@
   }
 
   function scheduleHeroVideos() {
-    var run = function () { syncSlideVideos(); };
-    if (window.requestIdleCallback) requestIdleCallback(run, { timeout: 600 });
-    else setTimeout(run, 0);
+    syncSlideVideos();
   }
 
   var desktopStack = root.hasAttribute('data-fc-desktop-stack');
@@ -44,10 +42,11 @@
     if (!gallery) return;
     var slidesEl = gallery.querySelector('.fc-pdp-u__slides');
     if (!slidesEl) return;
-    slidesEl.classList.remove('fc-ig-viewport', 'is-dragging', 'is-animating');
+    slidesEl.classList.remove('fc-ig-viewport', 'fc-ig-viewport--vertical', 'is-dragging', 'is-animating');
     slidesEl.style.height = '';
     slidesEl.style.maxHeight = '';
     delete slidesEl.dataset.fcIgGalleryBound;
+    delete slidesEl.dataset.fcIgDragBound;
     var track = slidesEl.querySelector('.fc-ig-track');
     if (track) {
       Array.from(track.children).forEach(function (node) {
@@ -59,10 +58,10 @@
     }
   }
 
-  function teardownHorizontalGallery() {
+  function teardownGallery() {
     if (!gallery) return;
     gallery.querySelectorAll('.fc-ig-dots').forEach(function (el) { el.remove(); });
-    gallery.classList.remove('fc-ig-viewport', 'is-dragging', 'is-animating');
+    gallery.classList.remove('fc-ig-viewport', 'fc-ig-viewport--vertical', 'is-dragging', 'is-animating');
     resetSlidesViewport();
     delete gallery.dataset.fcIgGalleryBound;
     if (!isDesktopStack()) {
@@ -72,56 +71,74 @@
     }
   }
 
-  var desktopScrollIo = null;
+  var desktopScrollRaf = null;
+  var desktopScrollLastActive = null;
 
   function destroyDesktopScrollGallery() {
-    if (desktopScrollIo) {
-      desktopScrollIo.disconnect();
-      desktopScrollIo = null;
+    window.removeEventListener('scroll', onDesktopScrollGalleryScroll);
+    if (desktopScrollRaf) {
+      cancelAnimationFrame(desktopScrollRaf);
+      desktopScrollRaf = null;
     }
+    desktopScrollLastActive = null;
+  }
+
+  function findActiveScrollSlide() {
+    if (window.scrollY < 48 && slides[0]) return slides[0];
+    var focusY = window.innerHeight * 0.33;
+    var active = slides[0];
+    for (var i = slides.length - 1; i >= 0; i--) {
+      var rect = slides[i].getBoundingClientRect();
+      if (rect.top <= focusY) {
+        active = slides[i];
+        break;
+      }
+    }
+    return active;
+  }
+
+  function setActiveScrollSlide(activeSlide) {
+    if (!activeSlide || activeSlide === desktopScrollLastActive) return;
+    desktopScrollLastActive = activeSlide;
+    root.querySelectorAll('.fc-pdp-u__slide').forEach(function (s) {
+      s.classList.toggle('is-active', s === activeSlide);
+    });
+    syncSlideVideos();
+  }
+
+  function onDesktopScrollGalleryScroll() {
+    if (desktopScrollRaf) return;
+    desktopScrollRaf = requestAnimationFrame(function () {
+      desktopScrollRaf = null;
+      var centered = findActiveScrollSlide();
+      if (centered) setActiveScrollSlide(centered);
+    });
   }
 
   function initDesktopScrollGallery() {
     destroyDesktopScrollGallery();
-    resetSlidesViewport();
     if (!isDesktopStack() || variantGallery || total <= 1) {
       if (isDesktopStack()) {
         root.querySelectorAll('.fc-pdp-u__slide').forEach(function (slide) {
           slide.classList.add('is-active');
         });
       }
+      scheduleHeroVideos();
       return;
     }
 
-    root.querySelectorAll('.fc-pdp-u__slide').forEach(function (slide, i) {
-      slide.classList.toggle('is-active', i === 0);
-    });
-
-    desktopScrollIo = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          var slide = entry.target;
-          root.querySelectorAll('.fc-pdp-u__slide').forEach(function (s) {
-            s.classList.toggle('is-active', s === slide);
-          });
-          syncSlideVideos();
-        });
-      },
-      { root: null, rootMargin: '-42% 0px -42% 0px', threshold: 0 }
-    );
-
-    slides.forEach(function (slide) {
-      desktopScrollIo.observe(slide);
-    });
+    setActiveScrollSlide(slides[0]);
+    window.addEventListener('scroll', onDesktopScrollGalleryScroll, { passive: true });
+    onDesktopScrollGalleryScroll();
     scheduleHeroVideos();
   }
 
   function initHorizontalGallery() {
     if (!gallery || variantGallery || total <= 1 || !window.FcIgGallery) return;
-    if (gallery.dataset.fcIgGalleryBound === '1') return;
+    var slidesEl = gallery.querySelector('.fc-pdp-u__slides');
+    if (!slidesEl || slidesEl.dataset.fcIgGalleryBound === '1') return;
     window.FcIgGallery({
-      viewport: gallery.querySelector('.fc-pdp-u__slides'),
+      viewport: slidesEl,
       slideSelector: '.fc-pdp-u__slide',
       loop: true,
       onChange: syncSlideVideos
@@ -129,54 +146,69 @@
     scheduleHeroVideos();
   }
 
-  function layoutDesktopAccordions() {
-    if (!desktopStack) return;
-    var slot = root.querySelector('[data-fc-desktop-accordions]');
-    var specsInner = document.querySelector('[data-fc-specs-inbox-inner]');
-    var specsMount = document.querySelector('[data-fc-specs-inbox-mount]');
-    if (!slot || !specsInner || !specsMount) return;
-
-    if (isDesktopStack()) {
-      slot.appendChild(specsInner);
-    } else if (specsInner.parentElement !== specsMount) {
-      specsMount.appendChild(specsInner);
-    }
-  }
-
   function updateGalleryMode() {
+    teardownGallery();
+    destroyDesktopScrollGallery();
+
     if (isDesktopStack()) {
-      teardownHorizontalGallery();
       initDesktopScrollGallery();
       return;
     }
 
-    destroyDesktopScrollGallery();
-
-    if (variantGallery && gallery) {
-      gallery.querySelectorAll('.fc-ig-dots').forEach(function (el) { el.remove(); });
-      gallery.classList.remove('fc-ig-viewport');
-      resetSlidesViewport();
+    if (variantGallery) {
       scheduleHeroVideos();
-    } else {
-      initHorizontalGallery();
-      if (!gallery || gallery.dataset.fcIgGalleryBound !== '1') scheduleHeroVideos();
+      return;
     }
-  }
 
-  function runDesktopLayout() {
-    layoutDesktopAccordions();
-    updateGalleryMode();
+    initHorizontalGallery();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runDesktopLayout);
+    document.addEventListener('DOMContentLoaded', updateGalleryMode);
   } else {
-    runDesktopLayout();
+    updateGalleryMode();
   }
 
   if (desktopStack) {
-    desktopMq.addEventListener('change', runDesktopLayout);
+    desktopMq.addEventListener('change', updateGalleryMode);
   }
+
+  function bindExclusiveAccordions(container) {
+    if (!container || container.dataset.fcAccExclusiveBound === '1') return;
+    container.dataset.fcAccExclusiveBound = '1';
+
+    container.querySelectorAll('details.fc-pdp-acc > summary').forEach(function (summary) {
+      summary.addEventListener('click', function () {
+        var clicked = summary.parentElement;
+        container.querySelectorAll('details.fc-pdp-acc').forEach(function (other) {
+          if (other !== clicked) other.removeAttribute('open');
+        });
+      });
+    });
+  }
+
+  function bindSpecTabs(container) {
+    if (!container || container.dataset.fcSpecTabsBound === '1') return;
+    container.dataset.fcSpecTabsBound = '1';
+    container.querySelectorAll('[data-spec-tab]').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var target = tab.getAttribute('data-spec-tab');
+        container.querySelectorAll('[data-spec-tab]').forEach(function (btn) {
+          var active = btn.getAttribute('data-spec-tab') === target;
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        container.querySelectorAll('[data-spec-panel]').forEach(function (panel) {
+          panel.classList.toggle('is-active', panel.getAttribute('data-spec-panel') === target);
+        });
+      });
+    });
+  }
+
+  root.querySelectorAll('.fc-pdp-specs-inbox__inner').forEach(function (inner) {
+    bindExclusiveAccordions(inner);
+    bindSpecTabs(inner);
+  });
 
   function swapVariantHero(src, alt) {
     if (!heroImg || !src) return;
@@ -202,6 +234,11 @@
     return '';
   }
 
+  function priceHtmlForVariant(id) {
+    var tpl = root.querySelector('template.fc-vprice-tpl[data-variant-id="' + id + '"]');
+    return tpl ? tpl.innerHTML.trim() : '';
+  }
+
   function syncPrices(html) {
     document.querySelectorAll('#fc-pdp-u-dock-' + sId + ' [data-fc-pdp-price], #' + root.id + ' [data-fc-pdp-price]').forEach(function (el) {
       el.innerHTML = html;
@@ -217,14 +254,118 @@
     }
   }
 
-  function syncAtcState(available) {
-    document.querySelectorAll('#fc-pdp-u-dock-' + sId + ' .fc-pdp-u__atc, #' + root.id + ' .fc-pdp-u__atc').forEach(function (atc) {
-      atc.classList.toggle('is-oos', !available);
-      atc.disabled = !available;
-      atc.setAttribute('aria-disabled', available ? 'false' : 'true');
+  function allAtcButtons() {
+    return document.querySelectorAll('#fc-pdp-u-dock-' + sId + ' .fc-pdp-u__atc, #' + root.id + ' .fc-pdp-u__atc');
+  }
+
+  function variantFromData(id) {
+    if (!fcProductData || !fcProductData.variants) return null;
+    var targetId = Number(id);
+    if (!targetId) return null;
+    for (var i = 0; i < fcProductData.variants.length; i++) {
+      if (Number(fcProductData.variants[i].id) === targetId) return fcProductData.variants[i];
+    }
+    return null;
+  }
+
+  function variantPurchasable(v) {
+    return !!(v && v.available);
+  }
+
+  function atcQtyMaxForVariant(v) {
+    if (!v || !v.available) return null;
+    var max = null;
+    if (v.quantityRuleMax != null && v.quantityRuleMax !== '') max = Number(v.quantityRuleMax);
+    if (v.inventoryManagement === 'shopify' && v.inventoryPolicy !== 'continue') {
+      var inv = Number(v.inventoryQuantity);
+      if (Number.isFinite(inv) && inv > 0 && (max === null || inv < max)) max = inv;
+    }
+    return max;
+  }
+
+  function canAddVariant(v, qtyInCart) {
+    if (!variantPurchasable(v)) return false;
+    var maxQty = atcQtyMaxForVariant(v);
+    if (maxQty !== null && qtyInCart >= maxQty) return false;
+    return true;
+  }
+
+  function restoreServerAtcLabels() {
+    allAtcButtons().forEach(function (atc) {
+      var purchasable = atc.dataset.fcPurchasable !== 'false';
+      var defaultLabel = atc.dataset.fcAtcLabelDefault;
       var label = atc.querySelector('[data-fc-pdp-atc-label]');
-      if (label) label.textContent = available ? 'Add to bag' : 'Sold Out';
+      if (label && defaultLabel) label.textContent = defaultLabel;
+      atc.disabled = false;
+      if (purchasable) {
+        atc.classList.remove('is-oos');
+        atc.removeAttribute('aria-disabled');
+      } else {
+        atc.classList.add('is-oos');
+        atc.setAttribute('aria-disabled', 'true');
+      }
     });
+  }
+
+  function applyVariantMetaToAtc(v, updateLabel) {
+    if (!v) return;
+    var maxQty = atcQtyMaxForVariant(v);
+    allAtcButtons().forEach(function (atc) {
+      atc.dataset.variantId = String(variantId);
+      if (maxQty !== null && maxQty > 0) atc.dataset.qtyMax = String(maxQty);
+      else delete atc.dataset.qtyMax;
+      atc.disabled = false;
+      if (!updateLabel) return;
+      var label = atc.querySelector('[data-fc-pdp-atc-label]');
+      if (v.available) {
+        atc.dataset.fcPurchasable = 'true';
+        atc.dataset.fcAtcLabelDefault = 'Add to bag';
+        atc.classList.remove('is-oos');
+        atc.removeAttribute('aria-disabled');
+        if (label) label.textContent = 'Add to bag';
+      } else {
+        atc.dataset.fcPurchasable = 'false';
+        atc.dataset.fcAtcLabelDefault = 'Sold Out';
+        atc.classList.add('is-oos');
+        atc.setAttribute('aria-disabled', 'true');
+        if (label) label.textContent = 'Sold Out';
+      }
+    });
+  }
+
+  function syncAtcStateForVariant(id, updateLabel) {
+    applyVariantMetaToAtc(variantFromData(id), !!updateLabel);
+  }
+
+  function syncAtcQtyFromCart(cart) {
+    if (window.fcSyncPriceTagsFromCart) {
+      window.fcSyncPriceTagsFromCart(cart);
+    }
+    if (!cart || !Array.isArray(cart.items)) return;
+
+    var qty = 0;
+    cart.items.forEach(function (item) {
+      if (Number(item.variant_id) === variantId) qty += Number(item.quantity || 0);
+    });
+
+    if (window.fcApplyPdpAtcQty) {
+      allAtcButtons().forEach(function (atc) {
+        window.fcApplyPdpAtcQty(atc, qty);
+      });
+    }
+
+    syncAtcStateForVariant(variantId);
+  }
+
+  function fetchCartQtySync() {
+    return fetch('/cart.js')
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (cart) {
+        syncAtcQtyFromCart(cart);
+      })
+      .catch(function () {});
   }
 
   root.querySelectorAll('.fc-pdp-u__variant').forEach(function (btn) {
@@ -235,63 +376,60 @@
         b.classList.toggle('is-selected', selected);
         b.setAttribute('aria-pressed', selected ? 'true' : 'false');
       });
-      if (btn.dataset.variantPrice) syncPrices(btn.dataset.variantPrice);
-      syncAtcState(btn.dataset.variantAvailable === 'true');
+      if (btn.dataset.variantId) {
+        var html = priceHtmlForVariant(variantId);
+        if (html) syncPrices(html);
+      }
+      syncAtcStateForVariant(variantId, true);
       if (variantGallery) {
         var nextSrc = btn.dataset.variantImage || variantImageForId(variantId);
         swapVariantHero(nextSrc, btn.textContent ? btn.textContent.trim() : '');
       }
+      fetchCartQtySync();
     });
   });
 
-  root.querySelectorAll('.fc-pdp-u__atc').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      if (btn.disabled) return;
-      if (!window.fcAddToCart) return;
-      // Optimistic UI: immediately disable and show feedback so INP is < 100ms
-      btn.disabled = true;
-      var label = btn.querySelector('[data-fc-pdp-atc-label]');
-      var prevText = label ? label.textContent : null;
-      if (label) label.textContent = 'Adding…';
-      // Fire fetch without awaiting — user gets instant visual response
-      window.fcAddToCart(variantId, 1).then(function () {
-        // Restore after 1.2s so user sees confirmation
-        setTimeout(function () {
-          btn.disabled = false;
-          if (label && prevText) label.textContent = prevText;
-        }, 1200);
-      }).catch(function () {
-        btn.disabled = false;
-        if (label && prevText) label.textContent = prevText;
-      });
-    });
-  });
+  allAtcButtons().forEach(function (btn) {
+    btn.addEventListener('click', async function () {
+      var v = variantFromData(variantId);
+      var prevQty = Number(btn.dataset.fcQty || 0);
 
-  /* Accordion open/close animation — wrap body in grid container */
-  document.querySelectorAll('details.fc-pdp-acc').forEach(function (acc) {
-    var body = acc.querySelector('.fc-pdp-acc__body');
-    if (!body || body.parentElement.classList.contains('fc-pdp-acc__body-wrap')) return;
-    var wrap = document.createElement('div');
-    wrap.className = 'fc-pdp-acc__body-wrap';
-    var inner = document.createElement('div');
-    inner.className = 'fc-pdp-acc__body-inner';
-    acc.insertBefore(wrap, body);
-    wrap.appendChild(inner);
-    inner.appendChild(body);
-
-    acc.addEventListener('click', function (e) {
-      if (e.target.closest('summary') === null) return;
-      e.preventDefault();
-      if (acc.open) {
-        acc.classList.add('is-closing');
-        wrap.addEventListener('transitionend', function handler() {
-          wrap.removeEventListener('transitionend', handler);
-          acc.removeAttribute('open');
-          acc.classList.remove('is-closing');
-        });
-      } else {
-        acc.setAttribute('open', '');
+      if (!canAddVariant(v, prevQty)) {
+        if (window.fcOpenCartDrawer) await window.fcOpenCartDrawer();
+        return;
       }
+
+      if (!window.fcAddToCart) return;
+
+      var nextQty = prevQty + 1;
+      if (window.fcApplyPdpAtcQty) {
+        allAtcButtons().forEach(function (atc) {
+          window.fcApplyPdpAtcQty(atc, nextQty);
+        });
+      }
+
+      var ok = await window.fcAddToCart(variantId, 1);
+      if (!ok) {
+        if (window.fcApplyPdpAtcQty) {
+          allAtcButtons().forEach(function (atc) {
+            window.fcApplyPdpAtcQty(atc, prevQty);
+          });
+        }
+        if (window.fcOpenCartDrawer) await window.fcOpenCartDrawer();
+        return;
+      }
+      fetchCartQtySync();
     });
   });
+
+  restoreServerAtcLabels();
+  syncAtcStateForVariant(variantId, false);
+  fetchCartQtySync().then(restoreServerAtcLabels);
+
+  if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+    subscribe(PUB_SUB_EVENTS.cartUpdate, function (event) {
+      if (event && event.cartData) syncAtcQtyFromCart(event.cartData);
+      else fetchCartQtySync();
+    });
+  }
 })();

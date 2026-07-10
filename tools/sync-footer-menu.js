@@ -16,7 +16,6 @@ const MENU_TITLE = 'Footer bottom bar';
 
 const ITEMS = [
   { title: 'Policies', url: '/pages/policies' },
-  { title: 'Product Guide', url: '/pages/download-page' },
   { title: 'Support', url: '/pages/support' },
 ];
 
