@@ -3,7 +3,10 @@
   Output: URL string only (capture in parent). Requires `product`.
 {%- endcomment -%}
 {%- liquid
-  assign fc_qsg = product.metafields.custom.quick_start_guide_url.value
+  assign fc_qsg = blank
+  if product != blank
+    assign fc_qsg = product.metafields.custom.quick_start_guide_url.value
+  endif
   if fc_qsg == blank and override != blank
     assign fc_qsg = override
   endif

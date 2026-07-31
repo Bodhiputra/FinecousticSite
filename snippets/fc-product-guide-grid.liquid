@@ -18,22 +18,27 @@
     {%- assign dl_card_index = 0 -%}
     {%- for block in blocks -%}
       {%- if block.type == guide_block_type -%}
-        {%- assign dl_product = all_products[block.settings.product_handle] -%}
-        {%- capture fc_qsg_url -%}
-          {%- render 'fc-product-qsg-url', product: dl_product, override: block.settings.download_url -%}
-        {%- endcapture -%}
-        {%- assign fc_qsg_url = fc_qsg_url | strip -%}
+        {%- liquid
+          assign dl_handle = block.settings.product_handle | strip | downcase
+          assign dl_product = all_products[block.settings.product_handle]
+          if dl_product == blank and dl_handle != blank
+            for p in collections.all.products
+              if p.handle == dl_handle
+                assign dl_product = p
+                break
+              endif
+            endfor
+          endif
+
+          assign fc_qsg_url = block.settings.download_url | strip
+          if fc_qsg_url == blank and dl_product != blank
+            assign fc_qsg_url = dl_product.metafields.custom.quick_start_guide_url.value | strip
+          endif
+        -%}
         {%- if fc_qsg_url == blank -%}{%- continue -%}{%- endif -%}
         {%- liquid
           assign fc_exclude_product = false
-          if dl_product != blank
-            assign fc_handle = dl_product.handle | downcase
-          elsif block.settings.product_handle != blank
-            assign fc_handle = block.settings.product_handle | downcase
-          else
-            assign fc_handle = ''
-          endif
-          if fc_handle contains 'sonara-ufm1-test'
+          if dl_handle contains 'sonara-ufm1-test'
             assign fc_exclude_product = true
           endif
         -%}
@@ -52,7 +57,7 @@
           {{ block.shopify_attributes }}
         >
           <div class="fc-card__image">
-            {%- if block.settings.product_handle != blank and dl_product != blank and dl_product.featured_image -%}
+            {%- if dl_product != blank and dl_product.featured_image -%}
               {{ dl_product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: dl_name }}
             {%- elsif block.settings.image != blank -%}
               {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: dl_name | escape }}

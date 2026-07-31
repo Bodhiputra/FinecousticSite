@@ -5,16 +5,19 @@
 {% endcomment %}
 
 <div class="fc-footer__bottom-social{% if class != blank %} {{ class }}{% endif %}">
-  {%- liquid
-    assign fc_about_url = pages['about-us'].url | default: '/pages/about-us'
-  -%}
-  {%- unless hide_about_us -%}
-    <a href="{{ fc_about_url }}" class="fc-footer__bottom-link">About Us</a>
-  {%- endunless -%}
   {%- if settings.social_instagram_link != blank -%}
-    {%- unless hide_about_us -%}
-      <span class="fc-footer__bottom-sep" aria-hidden="true">|</span>
-    {%- endunless -%}
     <a href="{{ settings.social_instagram_link }}" class="fc-footer__bottom-link">Instagram</a>
+  {%- endif -%}
+  {%- if settings.social_youtube_link != blank -%}
+    {%- if settings.social_instagram_link != blank -%}
+      <span class="fc-footer__bottom-sep" aria-hidden="true">|</span>
+    {%- endif -%}
+    <a href="{{ settings.social_youtube_link }}" class="fc-footer__bottom-link">YouTube</a>
+  {%- endif -%}
+  {%- if settings.social_twitter_link != blank -%}
+    {%- if settings.social_instagram_link != blank or settings.social_youtube_link != blank -%}
+      <span class="fc-footer__bottom-sep" aria-hidden="true">|</span>
+    {%- endif -%}
+    <a href="{{ settings.social_twitter_link }}" class="fc-footer__bottom-link">X</a>
   {%- endif -%}
 </div>

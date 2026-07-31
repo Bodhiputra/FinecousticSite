@@ -145,11 +145,13 @@
 
       <div class="fc-pdp-u__meta">
         <div class="fc-pdp-u__meta-center">
+        <div class="fc-pdp-u__lead">
         <h1 class="fc-pdp-u__title">{{ product.title | escape }}</h1>
 
         {%- if pdp_description != blank -%}
           <div class="fc-pdp-u__description rte">{{ pdp_description }}</div>
         {%- endif -%}
+        </div>
 
         {%- unless product.has_only_default_variant -%}
           <div class="fc-pdp-u__variants" data-fc-pdp-variants>
@@ -496,6 +498,18 @@
     align-items: center;
     text-align: center;
   }
+
+  .fc-pdp-u__lead {
+    align-self: center;
+  }
+}
+
+.fc-pdp-u__lead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: min(560px, 100%);
 }
 
 .fc-pdp-u__title {
@@ -506,6 +520,8 @@
   letter-spacing: -0.02em;
   color: #ffffff;
   margin: 0 0 12px;
+  width: 100%;
+  text-align: left;
 }
 
 .fc-pdp-u__price-from {
@@ -519,7 +535,7 @@
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.72);
   margin: 0 0 20px;
-  max-width: min(560px, 100%);
+  width: 100%;
   text-align: justify;
 }
 
@@ -854,6 +870,7 @@
 @media screen and (max-width: 989px) {
   .fc-pdp-u.fc-pdp-hero {
     padding-bottom: clamp(12px, 2.5vw, 16px);
+    padding-top: var(--fc-nav-clearance);
   }
 
   .fc-pdp-u.fc-pdp-hero .fc-pdp-u__inner {
@@ -875,6 +892,20 @@
     max-width: min(100%, 520px);
     min-height: 0;
     margin: 0 auto;
+    padding-top: clamp(8px, 2vw, 16px);
+  }
+
+  .fc-pdp-u__preorder .fc-preorder-hero-form__email,
+  .fc-pdp-u__preorder .fc-preorder-hero-form__submit {
+    font-size: clamp(11px, 2.8vw, 12px);
+    padding: clamp(6px, 1.6vw, 8px) clamp(8px, 2.2vw, 10px);
+    min-height: 0;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  .fc-pdp-u__preorder .fc-preorder-hero-form__inner {
+    gap: clamp(6px, 1.6vw, 8px);
   }
 
   .fc-pdp-u__gallery {

@@ -439,6 +439,8 @@
     var hintEl = section.querySelector('[data-fc-q-hint]');
     var optionsEl = section.querySelector('[data-fc-q-options]');
     var backBtn = section.querySelector('[data-fc-q-back]');
+    var nextBtn = section.querySelector('[data-fc-q-next]');
+    var keysEl = section.querySelector('[data-fc-q-keys]');
     var errorEl = section.querySelector('[data-fc-q-error]');
     var doneEl = section.querySelector('[data-fc-q-done]');
     var doneTextEl = section.querySelector('[data-fc-q-done-text]');
@@ -498,10 +500,30 @@
     function setQuestionnaireLoading(loading) {
       root.classList.toggle('is-loading', loading);
       if (backBtn) backBtn.disabled = loading;
+      if (nextBtn) nextBtn.disabled = loading;
     }
 
     function updateBackButton() {
       if (backBtn) backBtn.hidden = step === 0;
+    }
+
+    function updateNextButton() {
+      if (!nextBtn) return;
+
+      var q = currentQuestion();
+      var resp = currentResponse();
+      var showOtherNext = isOtherSelected(q, resp);
+
+      nextBtn.hidden = !showOtherNext;
+      nextBtn.disabled = showOtherNext && !(resp.other || '').trim();
+
+      if (keysEl) {
+        if (showOtherNext) {
+          keysEl.textContent = 'Type your answer, then tap Next.';
+        } else {
+          keysEl.textContent = 'Press a letter key or tap an answer.';
+        }
+      }
     }
 
     function currentQuestion() {
@@ -551,6 +573,7 @@
 
       if (resp.letters.indexOf(letter) !== -1) {
         updateOptionSelectionUI();
+        updateNextButton();
         return true;
       }
 
@@ -565,6 +588,7 @@
 
       clearError();
       updateOptionSelectionUI();
+      updateNextButton();
       return true;
     }
 
@@ -626,15 +650,15 @@
               resp.other = otherInput.value;
               if ((resp.other || '').trim()) {
                 selectOtherOption(opt.letter);
-                maybeAutoAdvance();
               }
+              updateNextButton();
             });
 
             otherInput.addEventListener('keydown', function (event) {
               if (event.key === 'Enter') {
                 event.preventDefault();
                 syncOtherInputs();
-                maybeAutoAdvance(true);
+                tryCompleteOrNext();
                 return;
               }
               event.stopPropagation();
@@ -682,6 +706,7 @@
       }
 
       updateBackButton();
+      updateNextButton();
     }
 
     function syncOtherInputs() {
@@ -871,7 +896,7 @@
       syncOtherInputs();
 
       if (!resp.letters.length) return;
-      if (isOtherSelected(q, resp) && !(resp.other || '').trim()) return;
+      if (isOtherSelected(q, resp)) return;
 
       clearAdvanceTimer();
 
@@ -963,6 +988,12 @@
 
     if (backBtn) {
       backBtn.addEventListener('click', onBack);
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function () {
+        tryCompleteOrNext();
+      });
     }
 
     document.addEventListener('keydown', onKeyDown);

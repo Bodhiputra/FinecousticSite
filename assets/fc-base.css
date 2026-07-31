@@ -117,6 +117,14 @@ body.gradient {
   background-attachment: scroll;
 }
 
+/* 512px grain — half tile on Retina so 1 source pixel ≈ 1 device pixel (no upscale blur) */
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
+  :root {
+    --fc-bg-tile-size: 256px;
+    --fc-nav-bg-tile-size: 256px;
+  }
+}
+
 /* ── FC site shell (universal sticky footer) ──
    body          flex column, min-height 100vh
    #MainContent   flex: 1 — absorbs leftover viewport on short pages

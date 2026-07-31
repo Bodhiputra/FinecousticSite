@@ -60,28 +60,36 @@ html.fc-preorder-flow .fc-preorder-offers {
   border-radius: 3px;
 }
 
-/* ── Hero PDP hotspot (center of hero image only) ── */
-.website-hero__pdp-hotspot {
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: clamp(100px, 16vw, 220px);
-  height: clamp(120px, 22vh, 280px);
+/* ── Hero learn more (above email input) ── */
+.website-hero__learn-more {
+  align-self: center;
   margin: 0;
   padding: 0;
   border: 0;
   background: transparent;
+  font-family: var(--fc-font, sans-serif);
+  font-size: clamp(13px, 1.5vw, 16px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
   cursor: pointer;
-  text-decoration: none;
+  pointer-events: auto;
   -webkit-tap-highlight-color: transparent;
 }
 
-.website-hero__pdp-hotspot:focus-visible {
+.website-hero__learn-more:hover {
+  color: var(--fc-yellow, #ffd300);
+  opacity: 1;
+}
+
+.website-hero__learn-more:focus-visible {
   outline: 2px solid var(--fc-yellow, #ffd300);
   outline-offset: 3px;
-  border-radius: 6px;
+  border-radius: 2px;
 }
 
 /* ── Hero split title ── */
@@ -147,22 +155,24 @@ html.fc-preorder-flow .fc-preorder-offers {
     font-size: clamp(30px, 8.2vw, 40px);
   }
 
-  .fc-preorder-hero-form__inner {
-    gap: clamp(8px, 2vw, 11px);
-  }
-
   .fc-preorder-hero-form__email {
-    font-size: clamp(13px, 3.2vw, 15px);
-    padding: clamp(8px, 2vw, 10px) clamp(10px, 2.5vw, 14px);
-    min-height: clamp(36px, 9vw, 42px);
-    border-radius: 5px;
+    font-size: clamp(11px, 2.8vw, 12px);
+    padding: clamp(6px, 1.6vw, 8px) clamp(8px, 2.2vw, 10px);
+    min-height: 0;
+    height: auto;
+    border-radius: 4px;
   }
 
   .fc-preorder-hero-form__submit {
-    font-size: clamp(14px, 3.4vw, 16px);
-    padding: clamp(8px, 2vw, 10px) clamp(14px, 3.5vw, 18px);
-    min-height: clamp(36px, 9vw, 42px);
-    border-radius: 5px;
+    font-size: clamp(11px, 2.8vw, 12px);
+    padding: clamp(6px, 1.6vw, 8px) clamp(10px, 2.5vw, 12px);
+    min-height: 0;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  .fc-preorder-hero-form__inner {
+    gap: clamp(6px, 1.6vw, 8px);
   }
 
   .fc-preorder-hero-form .fc-marketing-checkbox {
@@ -316,7 +326,7 @@ html.fc-preorder-flow .fc-preorder-offers {
   background-color: #ffd300;
   background-image: url('FinecousticBG-Yellow.webp');
   background-repeat: repeat;
-  background-size: 512px 512px;
+  background-size: var(--fc-bg-tile-size, 512px) var(--fc-bg-tile-size, 512px);
   color: #000;
 }
 
@@ -1068,7 +1078,39 @@ html.fc-preorder-flow .fc-preorder-offers {
 .fc-preorder-q__foot-nav {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   min-height: clamp(44px, 8vw, 52px);
+}
+
+.fc-preorder-q__next {
+  margin-left: auto;
+  font-family: var(--fc-font, sans-serif);
+  font-size: clamp(14px, 2vw, 16px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: #000;
+  background: var(--fc-yellow, #ffd300);
+  border: none;
+  border-radius: 6px;
+  padding: clamp(10px, 2vw, 12px) clamp(18px, 3.5vw, 24px);
+  min-height: clamp(40px, 7vw, 44px);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.fc-preorder-q__next[hidden] {
+  display: none;
+}
+
+.fc-preorder-q__next:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.fc-preorder-q__next:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .fc-preorder-q__back {
@@ -1108,6 +1150,11 @@ html.fc-preorder-flow .fc-preorder-offers {
 
 .fc-preorder-q.is-loading .fc-preorder-q__back {
   pointer-events: none;
+}
+
+.fc-preorder-q.is-loading .fc-preorder-q__next {
+  pointer-events: none;
+  opacity: 0.45;
 }
 
 .fc-preorder-q__keys {

@@ -103,6 +103,12 @@
     {%- else -%}
       <p class="fc-preorder-hero-form__error" id="fc-preorder-hero-error-{{ form_uid }}" role="alert" hidden></p>
     {%- endif -%}
+
+    {%- if form.posted_successfully? -%}
+      <script>
+        window.location.replace({{ offers_path | json }});
+      </script>
+    {%- endif -%}
   {% endform %}
 </div>
 
@@ -111,7 +117,6 @@
     var form = document.getElementById({{ form_dom_id | json }});
     if (!form) return;
 
-    var offersPath = {{ offers_path | json }};
     var emailInput = form.querySelector('[name="contact[email]"]');
     var marketingInput = form.querySelector('[name="contact[accepts_marketing]"][type="checkbox"]');
     var defaultMarketing = {{ customer_accepts_marketing | json }};
@@ -170,9 +175,5 @@
       if (errorEl) errorEl.hidden = true;
       persistSession(nextEmail, resolveMarketing());
     });
-
-    {%- if form.posted_successfully? -%}
-      window.location.replace(offersPath);
-    {%- endif -%}
   })();
 </script>

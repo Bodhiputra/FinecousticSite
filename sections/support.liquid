@@ -153,6 +153,15 @@
 
 /* ── FORMS ── */
 .fc-form { display: flex; flex-direction: column; gap: 20px; }
+.fc-form-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 .fc-field { display: flex; flex-direction: column; gap: 8px; }
 .fc-field label { font-family: var(--fc-font); font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); letter-spacing: -0.01em; }
 .fc-field label .fc-label-opt { color: rgba(255,255,255,0.25); font-weight: 400; text-transform: none; }
@@ -313,6 +322,7 @@
     </div>
 
     {%- form 'contact', id: 'fc-contact-form', class: 'fc-form' -%}
+      <fieldset id="fc-contact-fieldset" class="fc-form-fieldset">
       {%- if form.errors -%}
         <p class="fc-form-status fc-form-status--error" role="alert">
           Something went wrong sending your message. Please check your details and try again.
@@ -358,6 +368,7 @@
       </div>
 
       <button type="submit" class="button fc-submit">Send Message</button>
+      </fieldset>
     {%- endform -%}
 
   </div>
@@ -373,6 +384,7 @@
     </div>
 
     {%- form 'contact', id: 'fc-aftersales-form', class: 'fc-form' -%}
+      <fieldset id="fc-aftersales-fieldset" class="fc-form-fieldset">
       {%- if form.errors -%}
         <p class="fc-form-status fc-form-status--error" role="alert">
           Something went wrong sending your request. Please check your details and try again.
@@ -436,7 +448,7 @@
 
       <div class="fc-field">
         <label for="support-message" id="fc-message-label">Describe your issue</label>
-        <textarea id="support-message" name="contact[body]" placeholder="Please describe your issue in detail..."></textarea>
+        <textarea id="support-message" name="contact[body]" placeholder="Please describe your issue in detail..." required></textarea>
       </div>
 
       <div class="fc-field fc-sup-field-photo fc-sup-field--hidden">
@@ -460,6 +472,7 @@
       </div>
 
       <button type="submit" class="button fc-submit">Submit Request</button>
+      </fieldset>
     {%- endform -%}
 
   </div>

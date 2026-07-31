@@ -121,7 +121,8 @@
           "settings": {
             "product_handle": "hako-nomad-fbs1",
             "title": "HAKO NOMAD",
-            "image": ""
+            "image": "",
+            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/QSG-FBS1.png?v=1784096946"
           }
         },
         "guide_hako_l": {
@@ -129,7 +130,8 @@
           "settings": {
             "product_handle": "hako-nomad-l-fbs2",
             "title": "HAKO NOMAD L",
-            "image": ""
+            "image": "",
+            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/QSG-FBS2.png?v=1784096946"
           }
         }
       },

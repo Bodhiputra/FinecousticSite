@@ -47,8 +47,8 @@ const QSG_BY_HANDLE = {
   'groove-ows-ft21': 'https://cdn.shopify.com/s/files/1/0661/0229/6650/files/GROOVE_OWS_FT21_OSG_202509032.pdf?v=1760151795',
   'resono-wfm1': 'https://cdn.shopify.com/s/files/1/0661/0229/6650/files/WFM1_QSG_20250926.pdf?v=1762999963',
   'sonara-ufm1': 'https://cdn.shopify.com/s/files/1/0661/0229/6650/files/UFM1_QSG_20250926.pdf?v=1762999919',
-  'hako-nomad-fbs1': 'https://cdn.shopify.com/s/files/1/0661/0229/6650/files/FBS1.jpg?v=1783310032',
-  'hako-nomad-l-fbs2': 'https://cdn.shopify.com/s/files/1/0661/0229/6650/files/FBS2.jpg?v=1783310033',
+  'hako-nomad-fbs1': 'https://cdn.shopify.com/s/files/1/0661/0229/6650/files/QSG-FBS1.png?v=1784096946',
+  'hako-nomad-l-fbs2': 'https://cdn.shopify.com/s/files/1/0661/0229/6650/files/QSG-FBS2.png?v=1784096946',
 };
 
 async function gql(query, variables = {}) {

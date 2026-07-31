@@ -30,9 +30,6 @@
   assign title_parts = product_title | split: ' '
   assign title_left = title_parts[0] | default: 'Hako'
   assign title_right = title_parts[1] | default: 'Nomad'
-
-  assign hero_pdp_aria = section.settings.preorder_learn_more_label | default: 'Learn more about'
-  assign hero_pdp_aria = hero_pdp_aria | append: ' ' | append: product_title
 -%}
 
 <section
@@ -75,14 +72,6 @@
       -}}
     {%- endif -%}
   </picture>
-
-  {%- if hero_pdp_url != blank -%}
-    <a
-      class="website-hero__pdp-hotspot"
-      href="{{ hero_pdp_url }}"
-      aria-label="{{ hero_pdp_aria | escape }}"
-    ></a>
-  {%- endif -%}
 
   {%- if section.settings.show_overlay -%}
     <div class="website-hero__overlay" aria-hidden="true"></div>
@@ -135,6 +124,14 @@
           <h2 class="fc-preorder-hero-title__part fc-preorder-hero-title__part--right">{{ title_right | escape }}</h2>
         </div>
       </div>
+      {%- if hero_pdp_url != blank -%}
+        <a
+          class="website-hero__learn-more"
+          href="{{ hero_pdp_url }}"
+        >
+          {{ section.settings.preorder_learn_more_label | default: 'Learn more' | escape }}
+        </a>
+      {%- endif -%}
       {%- render 'fc-preorder-hero-form', section: section -%}
     </div>
   {%- endif -%}
@@ -358,7 +355,7 @@
       "id": "preorder_learn_more_label",
       "label": "Learn more link label",
       "default": "Learn more",
-      "info": "Screen-reader label for the product hotspot on the hero image."
+      "info": "Visible link above the pre-order email field."
     },
     {
       "type": "text",

@@ -1,12 +1,8 @@
 {%- if tag_mode == 'coming_soon' -%}
-<div class="fc-tag-oos-wrap fc-tag-coming-soon-wrap {{ tag_class }}">
-  <div class="fc-card__tag fc-tag--coming-soon">
-    <div class="fc-card__tag-body">
-      <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
-    </div>
-  </div>
-  <div class="fc-tag-fragment">
-    <span class="fc-tag-fragment__label">Coming soon</span>
+<div class="fc-card__tag fc-tag--coming-soon {{ tag_class }}">
+  <div class="fc-card__tag-body">
+    <span class="fc-tag__status">Coming soon.</span>
+    <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
   </div>
 </div>
 {%- elsif available -%}

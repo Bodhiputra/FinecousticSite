@@ -14,6 +14,74 @@
     if (grid) window.FcDownloadGrid.init(grid);
   }
 
+  function protectSupportFormCaptcha(tabKey) {
+    if (!window.Shopify || !window.Shopify.captcha || typeof window.Shopify.captcha.protect !== 'function') {
+      return;
+    }
+
+    var formId = tabKey === 'contact' ? 'fc-contact-form' : 'fc-aftersales-form';
+    var form = document.getElementById(formId);
+    if (!form || form.dataset.fcCaptchaBound === '1') {
+      return;
+    }
+
+    window.Shopify.captcha.protect(form);
+    form.dataset.fcCaptchaBound = '1';
+  }
+
+  function scheduleSupportFormCaptcha(tabKey) {
+    if (tabKey !== 'contact' && tabKey !== 'support') return;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        protectSupportFormCaptcha(tabKey);
+      });
+    });
+  }
+
+  function resetCaptchaBinding(formId) {
+    var form = document.getElementById(formId);
+    if (form) delete form.dataset.fcCaptchaBound;
+  }
+
+  /* Both forms stay in DOM — disable the inactive one so Shopify hCaptcha binds to the active tab only. */
+  function setActiveContactForm(activeKey) {
+    var contactActive = activeKey === 'contact';
+    var supportActive = activeKey === 'support';
+    var contactFs = document.getElementById('fc-contact-fieldset');
+    var aftersalesFs = document.getElementById('fc-aftersales-fieldset');
+    var contactForm = document.getElementById('fc-contact-form');
+    var aftersalesForm = document.getElementById('fc-aftersales-form');
+
+    if (contactFs) contactFs.disabled = !contactActive;
+    if (aftersalesFs) aftersalesFs.disabled = !supportActive;
+
+    if (contactForm) {
+      if (contactActive) contactForm.setAttribute('data-shopify-captcha', 'true');
+      else contactForm.removeAttribute('data-shopify-captcha');
+      resetCaptchaBinding('fc-contact-form');
+    }
+    if (aftersalesForm) {
+      if (supportActive) aftersalesForm.setAttribute('data-shopify-captcha', 'true');
+      else aftersalesForm.removeAttribute('data-shopify-captcha');
+      resetCaptchaBinding('fc-aftersales-form');
+    }
+
+    if (contactActive) scheduleSupportFormCaptcha('contact');
+    if (supportActive) scheduleSupportFormCaptcha('support');
+  }
+
+  function initFormCaptchaFocus() {
+    ['fc-contact-form', 'fc-aftersales-form'].forEach(function (formId) {
+      var form = document.getElementById(formId);
+      if (!form) return;
+
+      form.addEventListener('focusin', function onFocus() {
+        var tabKey = formId === 'fc-contact-form' ? 'contact' : 'support';
+        protectSupportFormCaptcha(tabKey);
+      }, { once: true });
+    });
+  }
+
   function applyTab(key, opts) {
     opts = opts || {};
     var animate = opts.animate === true;
@@ -31,6 +99,7 @@
     key === 'faq' ? url.searchParams.delete('tab') : url.searchParams.set('tab', key);
     history.pushState(null, '', url.toString());
     if (key === 'guide') requestAnimationFrame(refreshGuideGrid);
+    setActiveContactForm(key);
   }
 
   /* ── FAQ CATEGORIES ── */
@@ -211,33 +280,59 @@
     }
   }
 
-  /* ── FORM VALIDATION ── */
+  function validateAftersalesForm() {
+    const type       = document.getElementById('support-type')?.value;
+    const photoTypes = ['refund', 'warranty'];
+    const orderTypes = ['refund', 'warranty', 'complaint'];
+    const photoError = document.getElementById('fc-photo-error');
+    const orderError = document.getElementById('fc-order-error');
+    const orderInput = document.getElementById('support-order');
+    const photoLink  = document.getElementById('support-photo');
+    let valid = true;
+
+    if (orderTypes.includes(type) && orderInput && !orderInput.value.trim()) {
+      if (orderError) orderError.style.display = 'block';
+      valid = false;
+    } else if (orderError) orderError.style.display = 'none';
+
+    if (photoTypes.includes(type) && photoLink && !photoLink.value.trim()) {
+      if (photoError) photoError.style.display = 'block';
+      valid = false;
+    } else if (photoError) photoError.style.display = 'none';
+
+    return valid;
+  }
+
+  /* ── FORM VALIDATION (aftersales — validate on click, not submit, so hCaptcha can intercept) ── */
   function initFileUpload() {
     const form = document.getElementById('fc-aftersales-form');
     if (!form) return;
 
-    form.addEventListener('submit', e => {
-      const type       = document.getElementById('support-type')?.value;
-      const photoTypes = ['refund', 'warranty'];
-      const orderTypes = ['refund', 'warranty', 'complaint'];
-      const photoError = document.getElementById('fc-photo-error');
-      const orderError = document.getElementById('fc-order-error');
-      const orderInput = document.getElementById('support-order');
-      const photoLink  = document.getElementById('support-photo');
-      let valid = true;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (!submitBtn) return;
 
-      if (orderTypes.includes(type) && orderInput && !orderInput.value.trim()) {
-        if (orderError) orderError.style.display = 'block';
-        valid = false;
-      } else if (orderError) orderError.style.display = 'none';
+    submitBtn.addEventListener('click', function () {
+      protectSupportFormCaptcha('support');
+    }, true);
 
-      if (photoTypes.includes(type) && photoLink && !photoLink.value.trim()) {
-        if (photoError) photoError.style.display = 'block';
-        valid = false;
-      } else if (photoError) photoError.style.display = 'none';
+    submitBtn.addEventListener('click', function (event) {
+      if (!validateAftersalesForm()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    }, true);
+  }
 
-      if (!valid) e.preventDefault();
-    });
+  function initContactFormCaptcha() {
+    const form = document.getElementById('fc-contact-form');
+    if (!form) return;
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (!submitBtn) return;
+
+    submitBtn.addEventListener('click', function () {
+      protectSupportFormCaptcha('contact');
+    }, true);
   }
 
   /* ── TRACK ORDER ── */
@@ -275,7 +370,9 @@
     initFormSuccessReset();
     initSmartForm();
     initFileUpload();
+    initContactFormCaptcha();
     initTrackOrder();
+    initFormCaptchaFocus();
   }
 
   function initCarousel() {

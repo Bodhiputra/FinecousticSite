@@ -331,8 +331,26 @@ a.fc-dl-card {
   max-height: 59px;
   overflow: hidden;
 }
-.fc-tag-oos-wrap .fc-card__tag.fc-tag--oos,
-.fc-tag-coming-soon-wrap .fc-card__tag.fc-tag--coming-soon {
+.fc-card__tag.fc-tag--coming-soon {
+  padding: 5px 10px 6px;
+  cursor: default;
+}
+
+.fc-card__tag.fc-tag--coming-soon .fc-card__tag-body {
+  gap: 4px;
+}
+
+.fc-tag__status {
+  font-family: var(--fc-font);
+  font-size: clamp(10px, 0.9vw, 12px);
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.fc-tag-oos-wrap .fc-card__tag.fc-tag--oos {
   flex: none;
   width: auto;
   max-width: none;
@@ -343,14 +361,6 @@ a.fc-dl-card {
   cursor: default;
   clip-path: polygon(0% 0%,93% 0%,90% 13%,95% 27%,89% 41%,94% 55%,89% 68%,94% 82%,91% 100%,0% 100%);
   border-radius: 3px 0 0 3px;
-}
-.fc-tag-coming-soon-wrap .fc-card__tag-body {
-  display: flex;
-  align-items: center;
-  min-height: 100%;
-}
-.fc-tag-coming-soon-wrap .fc-card__name {
-  margin: 0;
 }
 .fc-tag-fragment {
   flex: none;
@@ -390,8 +400,7 @@ a.fc-dl-card {
   box-sizing: border-box;
   overflow: hidden;
 }
-.fc-grid .fc-tag-oos-wrap,
-.fc-grid .fc-tag-coming-soon-wrap {
+.fc-grid .fc-tag-oos-wrap {
   width: min(100%, var(--fc-tag-max-w));
   max-width: var(--fc-tag-max-w);
   max-height: 59px;
@@ -399,13 +408,15 @@ a.fc-dl-card {
   box-sizing: border-box;
   overflow: hidden;
 }
-.fc-grid .fc-tag-oos-wrap .fc-card__tag.fc-tag--oos,
-.fc-grid .fc-tag-coming-soon-wrap .fc-card__tag.fc-tag--coming-soon {
+.fc-grid .fc-tag-oos-wrap .fc-card__tag.fc-tag--oos {
   flex: 1 1 0;
   min-width: 0;
   width: auto;
   padding-right: 5px;
   overflow: hidden;
+}
+.fc-grid .fc-card__tag.fc-tag--coming-soon {
+  padding-right: 10px;
 }
 .fc-grid .fc-card__tag-body {
   min-width: 0;
@@ -493,7 +504,7 @@ a.fc-dl-card {
   display: none;
 }
 
-.fc-shop-page .fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover, .fc-tag-coming-soon-wrap:hover)) .fc-card__img {
+.fc-shop-page .fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover)) .fc-card__img {
   transform: scale(1.07);
 }
 
