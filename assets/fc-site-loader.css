@@ -1,0 +1,115 @@
+/* Finecoustic first-visit loading screen — Figma Loading Screen (9543:114) */
+
+.fc-site-loader {
+  --fc-loader-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--fc-black, #000);
+  background-image: url('FinecousticBG.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+html.fc-site-loader-pending .fc-site-loader,
+html.fc-site-loader-active .fc-site-loader {
+  display: flex;
+}
+
+.fc-site-loader__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 14px);
+  text-align: center;
+  padding: 24px;
+  opacity: 0;
+  transform: scale(0.92);
+}
+
+.fc-site-loader.is-entering .fc-site-loader__inner {
+  animation: fc-loader-content-in 0.9s var(--fc-loader-ease) forwards;
+}
+
+.fc-site-loader.is-exiting {
+  opacity: 0;
+  transition: opacity 0.7s var(--fc-loader-ease);
+  pointer-events: none;
+}
+
+.fc-site-loader.is-exiting .fc-site-loader__inner {
+  animation: fc-loader-content-out 0.7s var(--fc-loader-ease) forwards;
+}
+
+.fc-site-loader__logo {
+  width: clamp(32px, 4.2vw, 40px);
+  height: auto;
+}
+
+.fc-site-loader__tagline {
+  margin: 0;
+  font-family: var(--fc-font, 'Alte Haas Grotesk', sans-serif);
+  font-size: clamp(16px, 1.4vw, 20px);
+  font-weight: 700;
+  line-height: 1.065;
+  letter-spacing: -0.07em;
+  color: var(--fc-yellow, #ffd300);
+}
+
+@keyframes fc-loader-content-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fc-loader-content-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+
+/* Outro: reveal homepage under the fading loader (crossfade) */
+html.fc-site-loader-revealing body > :not(#fc-site-loader) {
+  visibility: visible !important;
+}
+
+html.fc-site-loader-pending,
+html.fc-site-loader-pending body,
+html.fc-site-loader-active,
+html.fc-site-loader-active body {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-site-loader__inner {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .fc-site-loader.is-exiting .fc-site-loader__inner {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+
+  .fc-site-loader.is-exiting {
+    transition-duration: 0.15s;
+  }
+}

@@ -97,10 +97,23 @@
         "button_margin_right": 0,
         "text_position_left": 6
       }
+    },
+    "fc_nomad_video_duo": {
+      "type": "fc-nomad-video-duo",
+      "name": "Nomad video duo",
+      "settings": {
+        "video_fbs1_url": "https://cdn.shopify.com/videos/c/o/v/e48e87f84d124f48aa8e7d9a218d4f1e.mp4",
+        "product_handle_fbs1": "hako-nomad-fbs1",
+        "label_fbs1": "Hako Nomad",
+        "video_fbs2_url": "https://cdn.shopify.com/videos/c/o/v/00674a48cc5f4a6183343f142efc1f09.mp4",
+        "product_handle_fbs2": "hako-nomad-l-fbs2",
+        "label_fbs2": "Hako Nomad L"
+      }
     }
   },
   "order": [
     "website_hero_home",
+    "fc_nomad_video_duo",
     "flexible_image_banner_aARpeR",
     "one_style_main_page_banner_79hTJp"
   ]

@@ -22,7 +22,7 @@
   transition: opacity 0.2s ease;
   width: fit-content;
 }
-.fc-card__tag:not(.fc-tag-active):not(.fc-tag--oos):not(.fc-tag--coming-soon) .fc-card__tag-body {
+.fc-card__tag:not(.fc-tag-active):not(.fc-tag--oos):not(.fc-tag--coming-soon):not(.fc-tag--launch-locked) .fc-card__tag-body {
   cursor: pointer;
 }
 .fc-card__tag-body {
@@ -32,11 +32,11 @@
   gap: 5px;
 }
 @media (hover: hover) {
-  .fc-card__tag:hover:not(.fc-tag-active):not(.fc-tag--oos):not(.fc-tag--coming-soon) { opacity: 0.75; }
+  .fc-card__tag:hover:not(.fc-tag-active):not(.fc-tag--oos):not(.fc-tag--coming-soon):not(.fc-tag--launch-locked) { opacity: 0.75; }
 }
 .fc-card__price {
   font-family: var(--fc-font);
-  font-size: clamp(10px, 0.9vw, 12px);
+  font-size: clamp(13px, 1.15vw, 15px);
   font-weight: 700;
   color: #000000;
   letter-spacing: -0.01em;
@@ -110,7 +110,7 @@
 
 .fc-card__tag .fc-price-scratch {
   font-family: var(--fc-font);
-  font-size: clamp(10px, 0.9vw, 12px);
+  font-size: clamp(13px, 1.15vw, 15px);
   letter-spacing: -0.01em;
   color: #000000;
 }
@@ -120,7 +120,7 @@
 }
 .fc-card__name {
   font-family: var(--fc-font);
-  font-size: clamp(12px, 1.05vw, 14px);
+  font-size: clamp(11px, 1.15vw, 14px);
   font-weight: 700;
   color: #000000;
   letter-spacing: -0.03em;
@@ -185,6 +185,41 @@
 .fc-card__atc-plus.fc-active .fc-qty-label {
   display: block;
   animation: fc-qty-pop 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.fc-card__atc-lock {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: clamp(18px, 2.2vw, 24px);
+  height: clamp(18px, 2.2vw, 24px);
+  border-radius: 50%;
+  background: #000;
+  color: rgba(255, 211, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.fc-card__atc-lock svg {
+  width: 58%;
+  height: 58%;
+  display: block;
+}
+
+.fc-card__tag.fc-tag--launch-locked {
+  cursor: default;
+}
+
+.fc-card__tag.fc-tag--launch-locked .fc-card__tag-body {
+  cursor: default;
+}
+
+.fc-grid .fc-card__tag.fc-tag--launch-locked {
+  padding-right: clamp(30px, 3.5vw, 34px);
 }
 
 /* Product Guide page */
@@ -342,7 +377,7 @@ a.fc-dl-card {
 
 .fc-tag__status {
   font-family: var(--fc-font);
-  font-size: clamp(10px, 0.9vw, 12px);
+  font-size: clamp(12px, 1.15vw, 16px);
   font-weight: 700;
   color: #000000;
   letter-spacing: -0.02em;

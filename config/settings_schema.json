@@ -1451,5 +1451,26 @@
         "default": "scheme-1"
       }
     ]
+  },
+  {
+    "name": "Finecoustic launch",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Schedule uses US Central Standard Time (UTC-6). Pre-order closes 12 Aug 2026 00:00 CST; launch 14 Aug 2026 10:00 CST. URL ?fc_phase= does not work on Shopify — use this override to preview."
+      },
+      {
+        "type": "select",
+        "id": "fc_launch_phase_override",
+        "label": "Launch phase preview",
+        "default": "auto",
+        "options": [
+          { "value": "auto", "label": "Auto (follow schedule)" },
+          { "value": "preorder", "label": "Pre-order landing" },
+          { "value": "countdown", "label": "Countdown landing" },
+          { "value": "launched", "label": "Launched (shop live)" }
+        ]
+      }
+    ]
   }
 ]

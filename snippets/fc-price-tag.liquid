@@ -5,6 +5,25 @@
     <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
   </div>
 </div>
+{%- elsif tag_mode == 'launch_locked' -%}
+<div class="fc-card__tag fc-tag--launch-locked {{ tag_class }}" data-variant-id="{{ variant_id }}" data-fc-launch-locked="true">
+  <div class="fc-card__tag-body">
+    {%- render 'fc-price-scratch',
+      price: price,
+      compare_at_price: compare_at_price,
+      price_varies: price_varies,
+      scratch: 'diagonal'
+    -%}
+    <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
+  </div>
+  <span class="fc-tag-rip"></span>
+  <span class="fc-card__atc-lock" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="5" y="11" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="2"/>
+      <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </span>
+</div>
 {%- elsif available -%}
 {%- liquid
   assign fc_tag_qty_max = qty_max

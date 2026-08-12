@@ -607,3 +607,199 @@
   }
 }
 
+/* ── Footer newsletter (countdown phase) — Figma copy, site typography scale ── */
+.fc-footer__newsletter-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(24px, 4vw, 40px);
+}
+
+.fc-newsletter--footer {
+  width: min(100%, 232px);
+  text-align: left;
+}
+
+.fc-newsletter__title {
+  margin: 0 0 8px;
+  font-family: var(--fc-font);
+  font-size: clamp(1.4rem, 1.2vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.fc-newsletter__body {
+  margin: 0 0 12px;
+  font-family: var(--fc-font);
+  font-size: clamp(1rem, 0.95vw, 1.2rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.fc-newsletter__field {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  gap: 0;
+  border: 1px solid var(--fc-yellow, #ffd300);
+  background: #000;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.fc-newsletter__field:focus-within {
+  border-color: #ffd300;
+}
+
+.fc-newsletter__input {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  margin: 0;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-family: var(--fc-font);
+  font-size: clamp(1rem, 0.95vw, 1.2rem);
+  letter-spacing: -0.01em;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.fc-newsletter__input:focus,
+.fc-newsletter__input:focus-visible,
+.fc-newsletter__input.focused {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+  border: 0;
+}
+
+.fc-newsletter__input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.fc-newsletter__submit {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  border-radius: 0;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.fc-newsletter__submit:focus,
+.fc-newsletter__submit:focus-visible,
+.fc-newsletter__submit.focused {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+}
+
+@media (hover: hover) {
+  .fc-newsletter__submit:hover {
+    color: var(--fc-yellow, #ffd300);
+    background: rgba(255, 211, 0, 0.08);
+  }
+}
+
+.fc-newsletter__submit:active {
+  background: rgba(255, 211, 0, 0.14);
+  color: var(--fc-yellow, #ffd300);
+}
+
+.fc-newsletter__confirm {
+  display: none;
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  padding: 0 10px;
+  align-items: center;
+  font-family: var(--fc-font);
+  font-size: clamp(1rem, 0.95vw, 1.2rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: #ffd300;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc-newsletter__field.is-confirming {
+  border: none;
+  background: transparent;
+}
+
+.fc-newsletter__field.is-confirming .fc-newsletter__input,
+.fc-newsletter__field.is-confirming .fc-newsletter__submit {
+  display: none;
+}
+
+.fc-newsletter__field.is-confirming .fc-newsletter__confirm {
+  display: flex;
+  padding: 0;
+  height: auto;
+  min-height: 34px;
+}
+
+.fc-newsletter__msg {
+  margin: 8px 0 0;
+  font-family: var(--fc-font);
+  font-size: clamp(1rem, 0.95vw, 1.2rem);
+  letter-spacing: -0.01em;
+}
+
+.fc-newsletter__msg--error { color: #ff6666; }
+.fc-newsletter__msg--success { color: rgba(255, 255, 255, 0.7); }
+
+@media screen and (max-width: 749px) {
+  .fc-footer__newsletter-wrap {
+    order: -1;
+    margin-bottom: clamp(20px, 5vw, 28px);
+  }
+
+  .fc-footer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fc-newsletter--footer {
+    width: min(100%, 280px);
+    margin: 0 auto;
+  }
+}
+
+/* PDP buy-area newsletter during countdown */
+.fc-pdp-u__newsletter {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.fc-newsletter--pdp {
+  text-align: center;
+}
+
+.fc-newsletter--pdp .fc-newsletter__field {
+  margin: 0 auto;
+}
+

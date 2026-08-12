@@ -1,4 +1,6 @@
 {%- liquid
+  include 'fc-launch-gates'
+
   assign variant = product.selected_or_first_available_variant
   assign media_count = product.media.size
   assign is_available = variant.available
@@ -51,11 +53,22 @@
     assign fc_atc_label = 'Sold Out'
   endif
 
-  assign fc_preorder_gate = section.settings.enable_preorder_gate
-  if fc_preorder_gate == false
-    assign fc_handle_down = product.handle | downcase
+  assign fc_preorder_gate = false
+  if fc_launch_phase == 'preorder'
+    assign fc_preorder_gate = section.settings.enable_preorder_gate
+    if fc_preorder_gate == false
+      assign fc_handle_down = product.handle | downcase
+      if fc_handle_down == 'hako-nomad-fbs1' or fc_handle_down == 'hako-nomad-l-fbs2'
+        assign fc_preorder_gate = true
+      endif
+    endif
+  endif
+
+  assign fc_show_drop_countdown = false
+  assign fc_handle_down = product.handle | downcase
+  if fc_launch_phase == 'countdown'
     if fc_handle_down == 'hako-nomad-fbs1' or fc_handle_down == 'hako-nomad-l-fbs2'
-      assign fc_preorder_gate = true
+      assign fc_show_drop_countdown = true
     endif
   endif
 -%}
@@ -73,6 +86,9 @@
   data-product-handle="{{ product.handle }}"
   {% if fc_desktop_stack %}data-fc-desktop-stack="true"{% endif %}
 >
+  {%- if fc_show_drop_countdown -%}
+    {%- render 'fc-countdown', variant: 'pdp', launch_ts: fc_launch_ts -%}
+  {%- endif -%}
   <div class="fc-pdp-u__inner">
     <div class="fc-pdp-u__hero">
       <div class="fc-pdp-u__visual">
@@ -213,6 +229,26 @@
                 form_id_suffix: section.id
               -%}
             </div>
+          {%- elsif fc_show_drop_countdown -%}
+          <button
+            type="button"
+            class="fc-pdp-u__atc is-launch-locked"
+            data-variant-id="{{ variant.id }}"
+            data-fc-purchasable="false"
+            data-fc-launch-locked="true"
+            data-fc-atc-label-default="{{ fc_atc_label | escape }}"
+            disabled
+            aria-disabled="true"
+          >
+            <span class="fc-pdp-u__atc-price" data-fc-pdp-price>
+              {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
+              {{ variant.price | money }}
+            </span>
+            <span class="fc-pdp-u__atc-sep fc-pdp-u__atc-sep--qty" data-fc-pdp-atc-qty-sep hidden aria-hidden="true">·</span>
+            <span class="fc-pdp-u__atc-qty" data-fc-pdp-atc-qty hidden></span>
+            <span class="fc-pdp-u__atc-sep" aria-hidden="true">·</span>
+            <span class="fc-pdp-u__atc-label" data-fc-pdp-atc-label>{{ fc_atc_label }}</span>
+          </button>
           {%- else -%}
           <button
             type="button"
@@ -251,8 +287,14 @@
       </div>
     </div>
 
+  </div>
+
     {%- liquid
       assign fc_video = section.settings.video
+      assign fc_video_mp4 = section.settings.video_mp4_url
+      if fc_video_mp4 == blank and fc_handle_down == 'hako-nomad-fbs1'
+        assign fc_video_mp4 = 'https://cdn.shopify.com/videos/c/o/v/e48e87f84d124f48aa8e7d9a218d4f1e.mp4'
+      endif
       assign fc_video_url = section.settings.video_url
       assign fc_video_loop = section.settings.enable_video_looping
       assign fc_video_poster = section.settings.video.preview_image | default: section.settings.cover_image
@@ -260,7 +302,7 @@
       assign fc_video_desc = section.settings.video_description
       assign fc_video_id = section.settings.video_url.id
     -%}
-    {%- if fc_video != null or fc_video_url != null or section.settings.cover_image != null -%}
+    {%- if fc_video != null or fc_video_mp4 != blank or fc_video_url != null or section.settings.cover_image != null -%}
     <div class="fc-pdp-u__video-wrap" data-fc-pdp-video-wrap>
       {%- unless fc_video_heading == blank -%}
         <h2 class="fc-pdp-u__video-heading">{{ fc_video_heading | escape }}</h2>
@@ -269,7 +311,31 @@
         class="fc-pdp-u__video-media fc-video-always-on"
         data-fc-loop="{% if fc_video_loop %}true{% else %}false{% endif %}"
       >
-        {%- if fc_video == null and fc_video_url != null -%}
+        {%- if fc_video != null -%}
+          {{
+            fc_video
+            | video_tag:
+              class: 'fc-video-always-on__video fc-pdp-u__video-video',
+              image_size: '1400x',
+              autoplay: true,
+              loop: false,
+              controls: false,
+              muted: true,
+              playsinline: true,
+              preload: 'metadata',
+              poster: fc_video_poster
+          }}
+        {%- elsif fc_video_mp4 != blank -%}
+          <video
+            class="fc-video-always-on__video fc-pdp-u__video-video"
+            autoplay
+            muted
+            playsinline
+            preload="metadata"
+          >
+            <source src="{{ fc_video_mp4 | escape }}" type="video/mp4">
+          </video>
+        {%- elsif fc_video_url != null -%}
           {%- liquid
             assign loop_param = ''
             if fc_video_loop
@@ -293,20 +359,6 @@
               title="{{ fc_video_desc | default: fc_video_heading | escape }}"
             ></iframe>
           {%- endif -%}
-        {%- elsif fc_video != null -%}
-          {{
-            fc_video
-            | video_tag:
-              class: 'fc-video-always-on__video fc-pdp-u__video-video',
-              image_size: '1400x',
-              autoplay: true,
-              loop: false,
-              controls: false,
-              muted: true,
-              playsinline: true,
-              preload: 'metadata',
-              poster: fc_video_poster
-          }}
         {%- elsif section.settings.cover_image != null -%}
           {{
             section.settings.cover_image
@@ -314,7 +366,7 @@
             | image_tag:
               class: 'fc-pdp-u__video-poster',
               loading: 'lazy',
-              sizes: '(min-width: 990px) 80vw, 92vw',
+              sizes: '100vw',
               widths: '750, 1100, 1500, 2000',
               alt: fc_video_desc | default: fc_video_heading | escape
           }}
@@ -322,18 +374,17 @@
       </div>
     </div>
     {%- endif -%}
-  </div>
 </section>
 
 {%- unless fc_preorder_gate -%}
 <div class="fc-pdp-u__dock" id="fc-pdp-u-dock-{{ section.id }}" hidden>
   <button
     type="button"
-    class="fc-pdp-u__atc fc-pdp-u__atc--dock{% if fc_variant_sold_out == 'true' %} is-oos{% endif %}"
+    class="fc-pdp-u__atc fc-pdp-u__atc--dock{% if fc_variant_sold_out == 'true' %} is-oos{% endif %}{% if fc_show_drop_countdown %} is-launch-locked{% endif %}"
     data-variant-id="{{ variant.id }}"
-    data-fc-purchasable="{% if fc_variant_sold_out == 'true' %}false{% else %}true{% endif %}"
+    data-fc-purchasable="{% if fc_show_drop_countdown or fc_variant_sold_out == 'true' %}false{% else %}true{% endif %}"
     data-fc-atc-label-default="{{ fc_atc_label | escape }}"
-    {% if fc_variant_sold_out == 'true' %}aria-disabled="true"{% endif %}
+    {% if fc_show_drop_countdown %}data-fc-launch-locked="true" disabled aria-disabled="true"{% elsif fc_variant_sold_out == 'true' %}aria-disabled="true"{% endif %}
   >
     <span class="fc-pdp-u__atc-price" data-fc-pdp-price>
       {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
@@ -677,6 +728,23 @@
 .fc-pdp-u__atc:disabled {
   opacity: 0.72;
   cursor: not-allowed;
+}
+
+.fc-pdp-u__atc.is-launch-locked {
+  background: rgba(255, 211, 0, 0.38);
+  color: rgba(18, 18, 18, 0.52);
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+.fc-pdp-u__atc.is-launch-locked .fc-pdp-u__atc-sep {
+  opacity: 0.45;
+}
+
+@media (hover: hover) {
+  .fc-pdp-u__atc.is-launch-locked:hover {
+    opacity: 1;
+  }
 }
 
 .fc-pdp-u__atc-sep {
@@ -1023,6 +1091,38 @@
   position: relative;
 }
 
+/* FBS Nomad PDP — edge-to-edge product video */
+.fc-pdp-u[data-product-handle="hako-nomad-fbs1"] .fc-pdp-u__video-wrap,
+.fc-pdp-u[data-product-handle="hako-nomad-l-fbs2"] .fc-pdp-u__video-wrap {
+  width: 100%;
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.fc-pdp-u[data-product-handle="hako-nomad-fbs1"] .fc-pdp-u__video-media,
+.fc-pdp-u[data-product-handle="hako-nomad-l-fbs2"] .fc-pdp-u__video-media {
+  max-width: none;
+  max-height: none;
+  aspect-ratio: auto;
+}
+
+.fc-pdp-u[data-product-handle="hako-nomad-fbs1"] .fc-pdp-u__video-video,
+.fc-pdp-u[data-product-handle="hako-nomad-l-fbs2"] .fc-pdp-u__video-video,
+.fc-pdp-u[data-product-handle="hako-nomad-fbs1"] .fc-pdp-u__video-poster,
+.fc-pdp-u[data-product-handle="hako-nomad-l-fbs2"] .fc-pdp-u__video-poster {
+  width: 100%;
+  height: auto;
+  max-height: none;
+  aspect-ratio: unset;
+  object-fit: cover;
+}
+
+.fc-pdp-u[data-product-handle="hako-nomad-fbs1"] .fc-pdp-u__video-media:has(.fc-pdp-u__video-iframe),
+.fc-pdp-u[data-product-handle="hako-nomad-l-fbs2"] .fc-pdp-u__video-media:has(.fc-pdp-u__video-iframe) {
+  aspect-ratio: 16 / 9;
+}
+
 .fc-pdp-u__video-video,
 .fc-pdp-u__video-iframe,
 .fc-pdp-u__video-poster {
@@ -1040,7 +1140,7 @@
 {% endstylesheet %}
 
 <script src="{{ 'fc-pdp-unified.js' | asset_url }}" defer></script>
-{%- if section.settings.video != blank -%}
+{%- if section.settings.video != blank or section.settings.video_mp4_url != blank -%}
 <script src="{{ 'fc-pdp-video.js' | asset_url }}" defer></script>
 {%- endif -%}
 
@@ -1103,6 +1203,12 @@
       "type": "video",
       "id": "video",
       "label": "Video"
+    },
+    {
+      "type": "text",
+      "id": "video_mp4_url",
+      "label": "Video MP4 URL",
+      "info": "Direct MP4 URL (e.g. Shopify CDN). Used when no uploaded video is set."
     },
     {
       "type": "video_url",

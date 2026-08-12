@@ -1,0 +1,44 @@
+{%- liquid
+  assign countdown_variant = variant | default: 'hero'
+  assign countdown_suffix = suffix | default: 'till Nomad drop'
+  assign countdown_launch_ts = launch_ts | default: fc_launch_ts
+-%}
+
+{{ 'fc-countdown.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'fc-countdown.js' | asset_url }}" defer="defer"></script>
+
+<div
+  class="fc-countdown fc-countdown--{{ countdown_variant }}"
+  data-fc-countdown
+  data-launch-ts="{{ countdown_launch_ts }}"
+  role="timer"
+  aria-live="polite"
+>
+  <div class="fc-countdown__row">
+    <div class="fc-countdown__timer" data-fc-countdown-timer>
+      <div class="fc-countdown__segment">
+        <span class="fc-countdown__value" data-fc-countdown-days>0</span>
+        <span class="fc-countdown__label">days</span>
+      </div>
+      <span class="fc-countdown__sep" aria-hidden="true">:</span>
+      <div class="fc-countdown__segment">
+        <span class="fc-countdown__value" data-fc-countdown-hours>0</span>
+        <span class="fc-countdown__label">hours</span>
+      </div>
+      <span class="fc-countdown__sep" aria-hidden="true">:</span>
+      <div class="fc-countdown__segment">
+        <span class="fc-countdown__value" data-fc-countdown-minutes>0</span>
+        <span class="fc-countdown__label">minutes</span>
+      </div>
+      <span class="fc-countdown__sep" aria-hidden="true">:</span>
+      <div class="fc-countdown__segment">
+        <span class="fc-countdown__value" data-fc-countdown-seconds>0</span>
+        <span class="fc-countdown__label">seconds</span>
+      </div>
+      <div class="fc-countdown__suffix-col">
+        <span class="fc-countdown__suffix" style="color:#ffd300;-webkit-text-fill-color:#ffd300">{{ countdown_suffix | escape }}</span>
+        <span class="fc-countdown__suffix-spacer" aria-hidden="true">seconds</span>
+      </div>
+    </div>
+  </div>
+</div>

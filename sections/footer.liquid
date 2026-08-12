@@ -1,5 +1,6 @@
 {% comment %}theme-check-disable UndefinedObject{% endcomment %}
 {%- liquid
+  include 'fc-launch-gates'
   assign fc_footer_nav = section.settings.bottom_nav_menu
 -%}
 
@@ -120,6 +121,11 @@
 
 <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
   <div class="fc-footer page-width">
+    {%- if fc_launch_phase == 'countdown' -%}
+      <div class="fc-footer__newsletter-wrap">
+        {%- render 'fc-newsletter-signup', form_id_suffix: section.id, layout: 'footer' -%}
+      </div>
+    {%- endif -%}
     <div class="fc-footer__bottom-links">
       <nav class="fc-footer__bottom-nav" aria-label="Footer">
         {%- liquid

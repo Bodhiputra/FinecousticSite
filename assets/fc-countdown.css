@@ -1,0 +1,163 @@
+/* Drop countdown — typography aligned with hero pre-order stack, not Figma px */
+
+.fc-countdown {
+  pointer-events: none;
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
+}
+
+.fc-countdown__row {
+  display: flex;
+  justify-content: center;
+}
+
+.fc-countdown__timer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: clamp(8px, 1.4vw, 12px);
+}
+
+.fc-countdown__segment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 2.5ch;
+}
+
+.fc-countdown__value {
+  font-family: var(--fc-font, sans-serif);
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-align: center;
+}
+
+.fc-countdown__label {
+  font-family: var(--fc-font, sans-serif);
+  font-size: clamp(11px, 1.2vw, 16px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.fc-countdown__sep {
+  font-family: var(--fc-font, sans-serif);
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  align-self: flex-start;
+  margin-top: 0.05em;
+}
+
+.fc-countdown__suffix-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  align-self: flex-end;
+  gap: 4px;
+  margin-left: clamp(2px, 0.6vw, 8px);
+  height: 100%;
+}
+
+.fc-countdown__suffix {
+  order: 1;
+  font-family: var(--fc-font, sans-serif);
+  font-size: clamp(12px, 1.2vw, 16px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: #ffd300;
+  -webkit-text-fill-color: #ffd300;
+  opacity: 1;
+  text-shadow: none;
+  white-space: nowrap;
+}
+
+.fc-countdown__suffix-spacer {
+  order: 2;
+  font-family: var(--fc-font, sans-serif);
+  font-size: clamp(11px, 1.2vw, 16px);
+  font-weight: 700;
+  line-height: 1.2;
+  visibility: hidden;
+  white-space: nowrap;
+}
+
+.fc-countdown .fc-countdown__suffix {
+  color: #ffd300;
+  -webkit-text-fill-color: #ffd300;
+}
+
+/* Homepage hero — below Nomad L speaker in hero art */
+.fc-preorder-hero-stack--countdown {
+  top: auto;
+  bottom: clamp(10vh, 12vh, 16vh);
+  transform: translateX(-50%);
+  width: auto;
+  max-width: calc(100% - clamp(24px, 6vw, 48px));
+  align-items: center;
+}
+
+.fc-preorder-hero-stack--countdown .fc-countdown--hero {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.fc-countdown--hero {
+  width: 100%;
+}
+
+@media screen and (max-width: 749px) {
+  .fc-preorder-hero-stack--countdown {
+    bottom: clamp(40px, 9vh, 72px);
+  }
+
+  .fc-countdown--hero .fc-countdown__value,
+  .fc-countdown--hero .fc-countdown__sep {
+    font-size: clamp(22px, 6.5vw, 36px);
+  }
+
+  .fc-countdown--hero .fc-countdown__suffix {
+    font-size: clamp(10px, 2.8vw, 13px);
+  }
+}
+
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .fc-preorder-hero-stack--countdown {
+    bottom: clamp(8vh, 10vh, 12vh);
+  }
+}
+
+/* PDP — static at top of product section (scrolls with page).
+   Nav clearance comes from .fc-pdp-u.fc-pdp-hero padding-top — do not duplicate here. */
+.fc-countdown--pdp {
+  position: relative;
+  width: 100%;
+  padding: clamp(8px, 1.5vw, 12px) var(--fc-page-gutter-sm, 16px);
+  box-sizing: border-box;
+}
+
+.fc-countdown--pdp .fc-countdown__row {
+  justify-content: center;
+}
+
+@media screen and (max-width: 749px) {
+  .fc-countdown--pdp .fc-countdown__value {
+    font-size: clamp(22px, 6vw, 32px);
+  }
+
+  .fc-countdown--pdp .fc-countdown__sep {
+    font-size: clamp(22px, 6vw, 32px);
+  }
+}

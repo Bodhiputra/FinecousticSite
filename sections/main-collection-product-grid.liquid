@@ -1,5 +1,7 @@
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
+{%- include 'fc-launch-gates' -%}
+
 
 {%- style -%}
 
@@ -59,7 +61,7 @@
   transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform: scale(1);
 }
-.fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover, .fc-tag-coming-soon-wrap:hover)) .fc-card__img {
+.fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover, .fc-tag-coming-soon-wrap:hover, .fc-tag--launch-locked:hover)) .fc-card__img {
   transform: scale(1.07);
 }
 
@@ -69,7 +71,7 @@
   object-position: center center;
   transform: scale(0.9);
 }
-.fc-card[data-category="speakers"]:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover, .fc-tag-coming-soon-wrap:hover)) .fc-card__img {
+.fc-card[data-category="speakers"]:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover, .fc-tag-coming-soon-wrap:hover, .fc-tag--launch-locked:hover)) .fc-card__img {
   transform: scale(0.95);
 }
 
@@ -367,8 +369,15 @@
       assign fc_card_available = product.available
       assign fc_handle_down = product.handle | downcase
       assign fc_preorder_coming_soon = false
-      if fc_handle_down == 'hako-nomad-fbs1' or fc_handle_down == 'hako-nomad-l-fbs2'
-        assign fc_preorder_coming_soon = true
+      assign fc_launch_locked = false
+      if fc_launch_phase != 'launched'
+        if fc_handle_down == 'hako-nomad-fbs1' or fc_handle_down == 'hako-nomad-l-fbs2'
+          if fc_launch_phase == 'countdown'
+            assign fc_launch_locked = true
+          else
+            assign fc_preorder_coming_soon = true
+          endif
+        endif
       endif
     -%}
     <div class="fc-card"
@@ -389,6 +398,18 @@
       {%- if fc_preorder_coming_soon -%}
       {%- render 'fc-price-tag',
         tag_mode: 'coming_soon',
+        title: product.title,
+        name_class: '',
+        tag_class: ''
+      -%}
+      {%- elsif fc_launch_locked -%}
+      {%- render 'fc-price-tag',
+        tag_mode: 'launch_locked',
+        variant: fc_card_variant,
+        variant_id: fc_variant_id,
+        price: product.price,
+        compare_at_price: product.compare_at_price,
+        price_varies: product.price_varies,
         title: product.title,
         name_class: '',
         tag_class: ''

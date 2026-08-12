@@ -1,0 +1,29 @@
+{%- comment -%}
+  US Central Standard Time (CST, UTC-6) — fixed offsets, not America/Chicago DST.
+  preorder_close: 2026-08-12 00:00 CST  → 2026-08-12 14:00 BJT
+  launch:         2026-08-14 10:00 CST  → 2026-08-15 00:00 BJT
+
+  Sets:
+    fc_launch_phase — preorder | countdown | launched
+    fc_launch_ts    — Unix target for drop countdown (launch only)
+{%- endcomment -%}
+{%- liquid
+  assign fc_preorder_close_ts = 1786514400
+  assign fc_launch_ts = 1786723200
+  assign fc_now_ts = 'now' | date: '%s' | times: 1
+
+  assign fc_launch_phase = 'preorder'
+  if fc_now_ts >= fc_launch_ts
+    assign fc_launch_phase = 'launched'
+  elsif fc_now_ts >= fc_preorder_close_ts
+    assign fc_launch_phase = 'countdown'
+  endif
+
+  comment
+    Dev preview: Theme settings → Finecoustic launch → Launch phase preview.
+    URL ?fc_phase= is not available in Shopify Liquid (request.query_string is empty).
+  endcomment
+  if settings.fc_launch_phase_override != blank and settings.fc_launch_phase_override != 'auto'
+    assign fc_launch_phase = settings.fc_launch_phase_override
+  endif
+-%}

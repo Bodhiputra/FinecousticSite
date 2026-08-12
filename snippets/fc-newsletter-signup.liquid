@@ -1,0 +1,61 @@
+{%- liquid
+  assign form_uid = form_id_suffix | default: 'footer'
+  assign form_dom_id = 'fc-newsletter-form-' | append: form_uid
+  assign layout_mode = layout | default: 'footer'
+
+  assign newsletter_title = title | default: 'Tune in with us.'
+  assign newsletter_body = body | default: 'Subscribe to our newsletter for early updates about products, exclusive offers, and upcoming projects from Finecoustic.'
+
+  assign customer_email = ''
+  if customer
+    assign customer_email = customer.email
+  endif
+-%}
+
+<div class="fc-newsletter fc-newsletter--{{ layout_mode }}" id="fc-newsletter-{{ form_uid }}">
+  <h2 class="fc-newsletter__title">{{ newsletter_title | escape }}</h2>
+  <p class="fc-newsletter__body">{{ newsletter_body | escape }}</p>
+
+  {% form 'customer', id: form_dom_id, class: 'fc-newsletter__form', novalidate: 'novalidate' %}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+
+    {%- if customer_email != blank -%}
+      <input type="hidden" name="contact[email]" value="{{ customer_email | escape }}">
+    {%- endif -%}
+
+    <div class="fc-newsletter__field">
+      <label class="visually-hidden" for="fc-newsletter-email-{{ form_uid }}">Email</label>
+      <input
+        id="fc-newsletter-email-{{ form_uid }}"
+        class="fc-newsletter__input"
+        type="email"
+        name="contact[email]"
+        value="{{ form.email }}"
+        placeholder="Enter Email"
+        autocomplete="email"
+        autocorrect="off"
+        autocapitalize="off"
+        {% if customer_email != blank %}readonly{% endif %}
+        required
+        {% if form.errors contains 'email' %}
+          aria-invalid="true"
+          aria-describedby="fc-newsletter-error-{{ form_uid }}"
+        {% endif %}
+      >
+      <button type="submit" class="fc-newsletter__submit" aria-label="Subscribe">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <span class="fc-newsletter__confirm" aria-live="polite">Please check your email.</span>
+    </div>
+
+    {%- if form.errors -%}
+      <p class="fc-newsletter__msg fc-newsletter__msg--error" id="fc-newsletter-error-{{ form_uid }}">
+        {{ form.errors.messages.email | first | default: 'Please enter a valid email.' }}
+      </p>
+    {%- endif -%}
+  {% endform %}
+</div>
+
+<script src="{{ 'fc-newsletter.js' | asset_url }}"></script>

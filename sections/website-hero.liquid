@@ -1,4 +1,6 @@
 {%- liquid
+  include 'fc-launch-gates'
+
   if section.settings.hero_image != blank
     assign hero_img = section.settings.hero_image
     assign hero_is_asset = false
@@ -111,6 +113,7 @@
   {%- endif -%}
 
   {%- if section.settings.show_preorder_form -%}
+    {%- if fc_launch_phase == 'preorder' -%}
     <div class="fc-preorder-hero-title fc-preorder-hero-title--desktop">
       <div class="fc-preorder-hero-title__inner">
         <h2 class="fc-preorder-hero-title__part fc-preorder-hero-title__part--left">{{ title_left | escape }}</h2>
@@ -134,6 +137,11 @@
       {%- endif -%}
       {%- render 'fc-preorder-hero-form', section: section -%}
     </div>
+    {%- elsif fc_launch_phase == 'countdown' -%}
+    <div class="fc-preorder-hero-stack fc-preorder-hero-stack--countdown" id="fc-preorder-hero-stack-{{ section.id }}">
+      {%- render 'fc-countdown', variant: 'hero', launch_ts: fc_launch_ts -%}
+    </div>
+    {%- endif -%}
   {%- endif -%}
 </section>
 

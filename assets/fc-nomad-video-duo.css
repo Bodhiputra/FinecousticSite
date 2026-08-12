@@ -1,0 +1,97 @@
+.fc-nomad-video-duo {
+  background: #000;
+}
+
+.fc-nomad-video-duo__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+
+@media screen and (min-width: 750px) {
+  .fc-nomad-video-duo__grid {
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+    min-height: 480px;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .fc-nomad-video-duo__grid {
+    min-height: 100vh;
+  }
+}
+
+.fc-nomad-video-duo__panel {
+  position: relative;
+  display: block;
+  height: 100vh;
+  min-height: 480px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  overflow: hidden;
+  isolation: isolate;
+  contain: layout style;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 750px) {
+  .fc-nomad-video-duo__panel {
+    height: 100%;
+    min-height: 0;
+  }
+}
+
+.fc-nomad-video-duo__media {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.fc-nomad-video-duo__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  pointer-events: none;
+}
+
+.fc-nomad-video-duo__placeholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.fc-nomad-video-duo__panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0);
+  transition: box-shadow 0.2s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@media (hover: hover) {
+  .fc-nomad-video-duo__panel:hover::after,
+  .fc-nomad-video-duo__panel:focus-visible::after {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 1);
+  }
+}
+
+.fc-nomad-video-duo__label {
+  position: absolute;
+  left: clamp(12px, 1.2vw, 16px);
+  bottom: clamp(12px, 1.6vw, 20px);
+  z-index: 3;
+  font-family: var(--fc-font, 'Alte Haas Grotesk', sans-serif);
+  font-size: clamp(1.2rem, 1.2vw, 1.6rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+}

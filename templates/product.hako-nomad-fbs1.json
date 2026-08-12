@@ -5,7 +5,7 @@
       "settings": {
         "desktop_stacked_layout": true,
         "enable_video_looping": true,
-        "video": "shopify://files/videos/WebsiteNomad.mp4",
+        "video_mp4_url": "https://cdn.shopify.com/videos/c/o/v/e48e87f84d124f48aa8e7d9a218d4f1e.mp4",
         "video_description": "HAKO Nomad product video",
         "sibling_1_label": "S",
         "sibling_1_url": "/products/hako-nomad-fbs1",

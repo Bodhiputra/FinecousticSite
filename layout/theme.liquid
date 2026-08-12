@@ -1,5 +1,8 @@
 <!doctype html>
-<html class="js" lang="{{ request.locale.iso_code }}">
+<html
+  class="js{% if template.name == 'index' and request.design_mode == false %} fc-site-loader-pending{% endif %}"
+  lang="{{ request.locale.iso_code }}"
+>
   <head>
     <meta charset="utf-8">
     {%- if template.name == 'cart' -%}
@@ -333,8 +336,28 @@
       #MainContent:has(> .shopify-section:first-child .fc-preorder-questionnaire) {
         padding-top: 0;
       }
+      /* 5. Site loader — hide homepage until loader finishes (index only) */
+      html.fc-site-loader-pending body > :not(#fc-site-loader) {
+        visibility: hidden !important;
+      }
+      html.fc-site-loader-pending #fc-site-loader {
+        display: flex !important;
+      }
+      html.shopify-design-mode.fc-site-loader-pending body > * {
+        visibility: visible !important;
+      }
+      html.shopify-design-mode.fc-site-loader-pending #fc-site-loader {
+        display: none !important;
+      }
+      #fc-site-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 100000;
+        background: #000;
+      }
     </style>
 
+    {{ 'fc-site-loader.css' | asset_url | stylesheet_tag }}
     {{ 'base.css' | asset_url | stylesheet_tag }}
 
     {{- 'fc-base.css' | asset_url | stylesheet_tag }}
@@ -393,6 +416,10 @@
   </head>
 
   <body class="gradient template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
+    {%- if template.name == 'index' -%}
+      {%- render 'fc-site-loader' -%}
+      <script src="{{ 'fc-site-loader.js' | asset_url }}"></script>
+    {%- endif -%}
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>

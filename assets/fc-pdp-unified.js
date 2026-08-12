@@ -292,6 +292,13 @@
 
   function restoreServerAtcLabels() {
     allAtcButtons().forEach(function (atc) {
+      if (atc.dataset.fcLaunchLocked === 'true' || atc.classList.contains('is-launch-locked')) {
+        atc.disabled = true;
+        atc.classList.add('is-launch-locked');
+        atc.dataset.fcPurchasable = 'false';
+        atc.setAttribute('aria-disabled', 'true');
+        return;
+      }
       var purchasable = atc.dataset.fcPurchasable !== 'false';
       var defaultLabel = atc.dataset.fcAtcLabelDefault;
       var label = atc.querySelector('[data-fc-pdp-atc-label]');
@@ -311,6 +318,13 @@
     if (!v) return;
     var maxQty = atcQtyMaxForVariant(v);
     allAtcButtons().forEach(function (atc) {
+      if (atc.dataset.fcLaunchLocked === 'true' || atc.classList.contains('is-launch-locked')) {
+        atc.disabled = true;
+        atc.classList.add('is-launch-locked');
+        atc.dataset.fcPurchasable = 'false';
+        atc.setAttribute('aria-disabled', 'true');
+        return;
+      }
       atc.dataset.variantId = String(variantId);
       if (maxQty !== null && maxQty > 0) atc.dataset.qtyMax = String(maxQty);
       else delete atc.dataset.qtyMax;
@@ -391,6 +405,7 @@
 
   allAtcButtons().forEach(function (btn) {
     btn.addEventListener('click', async function () {
+      if (btn.disabled || btn.dataset.fcLaunchLocked === 'true' || btn.classList.contains('is-launch-locked')) return;
       var v = variantFromData(variantId);
       var prevQty = Number(btn.dataset.fcQty || 0);
 
