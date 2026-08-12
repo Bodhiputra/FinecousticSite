@@ -17,6 +17,21 @@
   <p class="fc-newsletter__body">{{ newsletter_body | escape }}</p>
 
   {% form 'customer', id: form_dom_id, class: 'fc-newsletter__form', novalidate: 'novalidate' %}
+    <script>
+      (function () {
+        var form = document.getElementById({{ form_dom_id | json }});
+        if (!form || form.dataset.fcNewsletterInline === 'true') return;
+        form.dataset.fcNewsletterInline = 'true';
+        form.addEventListener(
+          'submit',
+          function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          },
+          true
+        );
+      })();
+    </script>
     <input type="hidden" name="contact[tags]" value="newsletter">
 
     {%- if customer_email != blank -%}
@@ -42,7 +57,12 @@
           aria-describedby="fc-newsletter-error-{{ form_uid }}"
         {% endif %}
       >
-      <button type="submit" class="fc-newsletter__submit" aria-label="Subscribe">
+      <button
+        type="button"
+        class="fc-newsletter__submit"
+        data-fc-newsletter-submit
+        aria-label="Subscribe"
+      >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
