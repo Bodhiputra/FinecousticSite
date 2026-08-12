@@ -1,4 +1,4 @@
-/* Drop countdown — typography aligned with hero pre-order stack, not Figma px */
+/* Drop countdown — roll-up digit transitions */
 
 .fc-countdown {
   pointer-events: none;
@@ -27,12 +27,38 @@
   min-width: 2.5ch;
 }
 
-.fc-countdown__value {
+.fc-countdown__roll {
+  display: inline-block;
+  min-width: 2ch;
   font-family: var(--fc-font, sans-serif);
   font-size: clamp(28px, 4vw, 48px);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1;
+  text-align: center;
+}
+
+.fc-countdown__roll-viewport {
+  height: 1em;
+  overflow: hidden;
+}
+
+.fc-countdown__roll-track {
+  display: flex;
+  flex-direction: column;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.fc-countdown__roll-track.is-rolling {
+  transform: translate3d(0, -50%, 0);
+}
+
+.fc-countdown__roll-value {
+  display: block;
+  height: 1em;
+  line-height: 1em;
   text-align: center;
 }
 
@@ -123,7 +149,7 @@
     bottom: clamp(40px, 9vh, 72px);
   }
 
-  .fc-countdown--hero .fc-countdown__value,
+  .fc-countdown--hero .fc-countdown__roll,
   .fc-countdown--hero .fc-countdown__sep {
     font-size: clamp(22px, 6.5vw, 36px);
   }
@@ -153,11 +179,14 @@
 }
 
 @media screen and (max-width: 749px) {
-  .fc-countdown--pdp .fc-countdown__value {
-    font-size: clamp(22px, 6vw, 32px);
-  }
-
+  .fc-countdown--pdp .fc-countdown__roll,
   .fc-countdown--pdp .fc-countdown__sep {
     font-size: clamp(22px, 6vw, 32px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-countdown__roll-track {
+    transition: none;
   }
 }
