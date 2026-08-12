@@ -292,9 +292,6 @@
     {%- liquid
       assign fc_video = section.settings.video
       assign fc_video_mp4 = section.settings.video_mp4_url
-      if fc_video_mp4 == blank and fc_handle_down == 'hako-nomad-fbs1'
-        assign fc_video_mp4 = 'https://cdn.shopify.com/videos/c/o/v/e48e87f84d124f48aa8e7d9a218d4f1e.mp4'
-      endif
       assign fc_video_url = section.settings.video_url
       assign fc_video_loop = section.settings.enable_video_looping
       assign fc_video_poster = section.settings.video.preview_image | default: section.settings.cover_image
