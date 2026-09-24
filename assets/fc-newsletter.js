@@ -10,6 +10,9 @@
 
     field.classList.add('is-confirming');
 
+    var confirm = field.querySelector('.fc-newsletter__confirm');
+    if (confirm) confirm.hidden = false;
+
     var timer = window.setTimeout(function () {
       hideConfirm(field);
     }, CONFIRM_MS);
@@ -21,6 +24,9 @@
     if (!field) return;
 
     field.classList.remove('is-confirming');
+
+    var confirm = field.querySelector('.fc-newsletter__confirm');
+    if (confirm) confirm.hidden = true;
 
     if (field.dataset.fcConfirmTimer) {
       window.clearTimeout(parseInt(field.dataset.fcConfirmTimer, 10));

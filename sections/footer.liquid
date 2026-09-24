@@ -1,22 +1,24 @@
 {% comment %}theme-check-disable UndefinedObject{% endcomment %}
 {%- liquid
-  include 'fc-launch-gates'
   assign fc_footer_nav = section.settings.bottom_nav_menu
 -%}
 
 {%- style -%}
+  html:not(.shopify-design-mode) .fc-footer__newsletter-wrap,
   html:not(.shopify-design-mode) .fc-footer__bottom-links {
     opacity: 0;
     transform: translateY(24px);
     transition: opacity 1.5s cubic-bezier(0.22,1,0.36,1), transform 1.5s cubic-bezier(0.22,1,0.36,1);
   }
 
+  html.shopify-design-mode .fc-footer__newsletter-wrap,
   html.shopify-design-mode .fc-footer__bottom-links {
     opacity: 1;
     transform: none;
   }
 
   @media screen and (max-width: 749px) {
+    html:not(.shopify-design-mode) .fc-footer__newsletter-wrap,
     html:not(.shopify-design-mode) .fc-footer__bottom-links {
       opacity: 1;
       transform: none;
@@ -121,11 +123,9 @@
 
 <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
   <div class="fc-footer page-width">
-    {%- if fc_launch_phase == 'countdown' -%}
-      <div class="fc-footer__newsletter-wrap">
-        {%- render 'fc-newsletter-signup', form_id_suffix: section.id, layout: 'footer' -%}
-      </div>
-    {%- endif -%}
+    <div class="fc-footer__newsletter-wrap">
+      {%- render 'fc-newsletter-signup', form_id_suffix: section.id, layout: 'footer' -%}
+    </div>
     <div class="fc-footer__bottom-links">
       <nav class="fc-footer__bottom-nav" aria-label="Footer">
         {%- liquid
@@ -134,7 +134,7 @@
         <a href="{{ fc_about_url }}" class="fc-footer__bottom-link">About Us</a>
         {%- if fc_footer_nav != blank and fc_footer_nav.links.size > 0 -%}
           {%- for link in fc_footer_nav.links -%}
-            {%- unless link.handle == 'about-us' -%}
+            {%- unless link.handle == 'about-us' or link.handle == 'about-us-page' -%}
             <a href="{{ link.url }}" class="fc-footer__bottom-link"{% if link.current %} aria-current="page"{% endif %}>
               {{- link.title | escape -}}
             </a>

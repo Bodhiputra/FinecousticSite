@@ -1,4 +1,4 @@
-<div id="fc-search-overlay" role="dialog" aria-modal="true" aria-label="{{ 'general.search.search' | t }}">
+<div id="fc-search-overlay" role="dialog" aria-modal="true" aria-label="{{ 'general.search.search' | t }}" data-lenis-prevent>
 
   <div class="fc-search-top">
     <input
@@ -23,13 +23,14 @@
         {%- for product in collections.all.products limit: 20 -%}
           {%- include 'fc-exclude-product', product: product -%}
           {%- unless fc_exclude_product -%}
+            {%- capture fc_se_alt -%}{% render 'fc-product-display-name', fc_product: product %}{%- endcapture -%}
             <a class="fc-se-card" href="{{ product.url }}">
               <div class="fc-se-card__img-wrap">
                 {%- if product.featured_image -%}
-                  {{ product.featured_image | image_url: width: 300 | image_tag: loading: 'lazy', alt: product.title }}
+                  {{ product.featured_image | image_url: width: 300 | image_tag: loading: 'lazy', alt: fc_se_alt | strip }}
                 {%- endif -%}
               </div>
-              <p class="fc-se-card__name">{{ product.title }}</p>
+              <p class="fc-se-card__name">{% render 'fc-product-display-name', fc_product: product %}</p>
               <p class="fc-se-card__price">{{ product.price | money }}</p>
             </a>
           {%- endunless -%}
@@ -61,6 +62,7 @@
 
 </div>
 
+<script src="{{ 'fc-product-display-name.js' | asset_url }}"></script>
 <script>
 (function () {
   const overlay = document.getElementById('fc-search-overlay');
@@ -133,7 +135,7 @@
       prodListEl.innerHTML = products.map(p => `
         <a class="fc-sr-prod" href="${p.url}">
           ${p.featured_image ? `<img class="fc-sr-prod__img" src="${p.featured_image.url.replace(/\?.*$/, '')}?width=120" alt="${esc(p.title)}" width="52" height="52" loading="lazy">` : ''}
-          <p class="fc-sr-prod__name">${esc(p.title)}</p>
+          <p class="fc-sr-prod__name">${esc((window.fcProductDisplayName || function (t) { return t; })(p.title, p.handle))}</p>
         </a>`).join('');
     } else {
       prodSec.style.display = 'none';
@@ -177,7 +179,8 @@
       if (!res.ok) throw new Error();
       const data = await res.json();
       const r = data?.resources?.results || {};
-      const products = r.products || [];
+      const exclude = window.fcExcludeProduct || function () { return false; };
+      const products = (r.products || []).filter(function (p) { return !exclude(p.handle); });
       const pages = r.pages || [];
       if (!products.length && !pages.length) showNone(q);
       else showResults(products, pages, q);

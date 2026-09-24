@@ -5,8 +5,8 @@
     var footer = document.querySelector('footer.footer');
     if (!footer) return;
 
-    var bottomLinks = footer.querySelector('.fc-footer__bottom-links');
-    if (!bottomLinks) return;
+    var revealTargets = footer.querySelectorAll('.fc-footer__newsletter-wrap, .fc-footer__bottom-links');
+    if (!revealTargets.length) return;
 
     var revealed = false;
 
@@ -14,8 +14,10 @@
       if (revealed) return;
       revealed = true;
       setTimeout(function () {
-        bottomLinks.style.opacity = '1';
-        bottomLinks.style.transform = 'translateY(0)';
+        revealTargets.forEach(function (el) {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
       }, baseDelay);
     }
 

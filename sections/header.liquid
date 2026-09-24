@@ -406,7 +406,14 @@
     }
 
     setHeaderHeight() {
-      document.documentElement.style.setProperty('--header-height', `${this.header.offsetHeight}px`);
+      const newsSection = document.querySelector(
+        '.shopify-section-group-header-group.announcement-bar-section'
+      );
+      const navSection = document.querySelector('.shopify-section-group-header-group.section-header');
+      const newsH = newsSection ? newsSection.offsetHeight : 0;
+      const navH = navSection ? navSection.offsetHeight : this.header.offsetHeight;
+      document.documentElement.style.setProperty('--fc-news-height', `${newsH}px`);
+      document.documentElement.style.setProperty('--header-height', `${newsH + navH}px`);
     }
 
     disconnectedCallback() {

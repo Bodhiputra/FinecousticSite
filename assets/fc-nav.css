@@ -1,6 +1,7 @@
 :root {
   --fc-nav-bar-max-width: min(1200px, calc(100vw - 48px));
   --fc-nav-bar-gutter: 24px;
+  --fc-news-height: 0px;
 }
 
 .desktop-localization-wrapper,
@@ -8,42 +9,71 @@
   display: none !important;
 }
 
-/* Fixed nav — floating pill overlays content */
-.shopify-section-group-header-group {
+/*
+  Shopify header group = two sibling fixed sections (announcement + header),
+  each with class shopify-section-group-header-group — not one shared wrapper.
+*/
+.shopify-section.shopify-section-group-header-group.announcement-bar-section {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
-  z-index: 10005;
-  padding: max(10px, env(safe-area-inset-top, 0px)) var(--fc-nav-bar-gutter, 12px) 0;
+  max-width: none !important;
+  z-index: 10006;
+  margin: 0;
+  padding: env(safe-area-inset-top, 0px) 0 0;
   box-sizing: border-box;
-  pointer-events: none;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  /* Prevent flex-body from stretching this to full page height */
-  align-self: flex-start;
+  pointer-events: auto;
+  display: block;
   height: auto;
 }
 
-/* Dawn injects position:sticky on .section-header for Safari z-index fix; override when
-   the section IS the floating header group so it doesn't stretch to body flex height */
+.shopify-section.shopify-section-group-header-group.section-header {
+  position: fixed !important;
+  top: calc(env(safe-area-inset-top, 0px) + var(--fc-news-height, 0px));
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: none;
+  z-index: 10005;
+  margin: 0;
+  padding: clamp(8px, 2vw, 12px) var(--fc-nav-bar-gutter, 12px) 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  display: block;
+  height: auto !important;
+  background: transparent;
+  transition: transform 0.3s ease, top 0.3s ease;
+}
+
 body > .shopify-section-group-header-group.section-header,
 body > .section-header.shopify-section-group-header-group {
-  position: fixed !important;
-  height: auto !important;
   align-self: flex-start !important;
 }
 
-.shopify-section-group-header-group .section-header,
-.shopify-section-group-header-group > .shopify-section {
+.shopify-section-group-header-group.section-header sticky-header,
+.shopify-section-group-header-group.section-header .header-wrapper {
   pointer-events: auto;
   width: 100%;
   max-width: var(--fc-nav-bar-max-width, calc(100vw - 24px));
   margin-left: auto;
   margin-right: auto;
-  flex: 0 1 var(--fc-nav-bar-max-width, calc(100vw - 24px));
+}
+
+.shopify-section-group-header-group.section-header.shopify-section-header-sticky,
+.shopify-section-group-header-group.section-header.shopify-section-header-hidden {
+  position: fixed !important;
+  top: calc(env(safe-area-inset-top, 0px) + var(--fc-news-height, 0px)) !important;
+}
+
+body.nav-hidden .shopify-section-group-header-group.announcement-bar-section {
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+
+body.nav-hidden .shopify-section-group-header-group.section-header {
+  transform: translateY(calc(-100% - var(--fc-news-height, 0px)));
 }
 
 .header {
@@ -560,13 +590,8 @@ sticky-header.header-wrapper {
 }
 
 @media screen and (min-width: 990px) {
-  .shopify-section-group-header-group {
-    padding-left: var(--fc-nav-bar-gutter, 12px);
-    padding-right: var(--fc-nav-bar-gutter, 12px);
-  }
-
   .shopify-section-group-header-group .section-header,
-  .shopify-section-group-header-group > .shopify-section,
+  .shopify-section-group-header-group > .shopify-section:not(.announcement-bar-section),
   .section-header {
     max-width: var(--fc-nav-bar-max-width, calc(100vw - 24px));
     flex: 0 1 var(--fc-nav-bar-max-width, calc(100vw - 24px));
@@ -653,7 +678,7 @@ sticky-header.header-wrapper {
   min-height: 52px;
 }
 
-body.nav-hidden .section-header {
+body.nav-hidden .section-header:not(.shopify-section-group-header-group) {
   top: calc(-1 * var(--header-height, 70px));
 }
 

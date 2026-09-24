@@ -4,12 +4,15 @@
   assign layout_mode = layout | default: 'footer'
 
   assign newsletter_title = title | default: 'Tune in with us.'
-  assign newsletter_body = body | default: 'Subscribe to our newsletter for early updates about products, exclusive offers, and upcoming projects from Finecoustic.'
+  assign newsletter_body = body | default: 'Get early updates about products, exclusive offers, and upcoming projects from Finecoustic.'
 
   assign customer_email = ''
   if customer
     assign customer_email = customer.email
   endif
+
+  assign fc_policies_url = pages['policies'].url | default: '/pages/policies'
+  assign fc_privacy_url = fc_policies_url | append: '?policy=privacy-policy'
 -%}
 
 <div class="fc-newsletter fc-newsletter--{{ layout_mode }}" id="fc-newsletter-{{ form_uid }}">
@@ -67,8 +70,13 @@
           <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <span class="fc-newsletter__confirm" aria-live="polite">Please check your email.</span>
+      <span class="fc-newsletter__confirm" hidden aria-live="polite">Please check your email.</span>
     </div>
+
+    <p class="fc-newsletter__legal">
+      By providing your email, you agree to our
+      <a href="{{ fc_privacy_url }}">Privacy Policy</a>.
+    </p>
 
     {%- if form.errors -%}
       <p class="fc-newsletter__msg fc-newsletter__msg--error" id="fc-newsletter-error-{{ form_uid }}">

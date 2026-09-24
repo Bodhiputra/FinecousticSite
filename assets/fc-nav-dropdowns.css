@@ -533,6 +533,18 @@ cart-drawer .fc-cart-drawer__close svg {
   color: #fff;
 }
 
+/* Empty bag: header + empty-state both ship a close button — keep one */
+cart-drawer.is-empty .drawer__header .fc-cart-drawer__close {
+  display: none !important;
+}
+
+/* Desktop: header bag icon already toggles to X when open */
+@media screen and (min-width: 750px) {
+  body.fc-cart-open cart-drawer .fc-cart-drawer__close {
+    display: none !important;
+  }
+}
+
 /* Mobile — full-viewport cart drawer */
 @media screen and (max-width: 749px) {
   cart-drawer .cart-drawer {

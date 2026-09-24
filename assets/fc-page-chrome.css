@@ -239,23 +239,74 @@
   }
 }
 
-/* ── Announcement bar — seamless scrolling marquee on mobile ── */
+/* ── Announcement bar — full-width strip above nav, running caption ── */
 @keyframes fc-marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
 
-@media (max-width: 749px) {
-  .announcement-bar {
-    overflow: hidden;
-    justify-content: flex-start;
+.announcement-bar-section .utility-bar {
+  min-height: 0;
+  padding: 0;
+}
+
+.announcement-bar-section .utility-bar__grid {
+  padding: 0;
+}
+
+.announcement-bar-section .announcement-bar {
+  overflow: hidden;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 26px;
+  padding: 4px 0;
+  width: 100%;
+}
+
+.announcement-bar-section .announcement-bar__message,
+.announcement-bar-section .fc-marquee-segment {
+  font-family: var(--fc-font, 'Alte Haas Grotesk', sans-serif);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: -0.02em;
+}
+
+.announcement-bar-section .announcement-bar__message {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  font-size: clamp(11px, 2.6vw, 13px);
+  line-height: 1.25;
+}
+
+.announcement-bar-section .fc-marquee-track {
+  display: inline-flex;
+  width: max-content;
+  animation: fc-marquee 38s linear infinite;
+  will-change: transform;
+}
+
+.announcement-bar-section .fc-marquee-segment {
+  display: inline-block;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcement-bar-section .fc-marquee-track {
+    animation: none;
+    width: 100%;
+    justify-content: center;
   }
-  .announcement-bar__message {
-    display: block;
-    width: max-content;
-    white-space: nowrap;
-    margin: 0;
-    animation: fc-marquee 20s linear infinite;
+
+  .announcement-bar-section .fc-marquee-segment[aria-hidden='true'] {
+    display: none;
+  }
+
+  .announcement-bar-section .fc-marquee-segment {
+    text-align: center;
+    width: 100%;
   }
 }
 

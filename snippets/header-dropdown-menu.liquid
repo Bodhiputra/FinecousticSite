@@ -5,14 +5,24 @@
   {% render 'header-dropdown-menu' %}
 {% endcomment %}
 
+{%- liquid
+  assign fc_shop_collection_url = routes.all_products_collection_url | append: '?sort_by=created-descending'
+-%}
+
 <nav class="header__inline-menu">
   <ul class="list-menu list-menu--inline" role="list">
     {%- for link in section.settings.menu.links -%}
       {%- unless link.handle == 'about-us' or link.handle == 'contact' or link.handle == 'contact-us' or link.handle == 'downloads' -%}
+      {%- liquid
+        assign fc_menu_href = link.url
+        if link.handle == 'products' or link.url == routes.all_products_collection_url or link.url == '/collections/all'
+          assign fc_menu_href = fc_shop_collection_url
+        endif
+      -%}
       <li>
         <a
           id="HeaderMenu-{{ link.handle }}"
-          href="{%- if link.handle == 'products' -%}/collections/all?sort_by=created-descending{%- else -%}{{ link.url }}{%- endif -%}"
+          href="{{ fc_menu_href }}"
           class="header__menu-item list-menu__item link link--text focus-inset"
           {% if link.current %}
             aria-current="page"

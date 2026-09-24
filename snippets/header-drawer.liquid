@@ -5,6 +5,10 @@
   {% render 'header-drawer' %}
 {% endcomment %}
 
+{%- liquid
+  assign fc_shop_collection_url = routes.all_products_collection_url | append: '?sort_by=created-descending'
+-%}
+
 <header-drawer data-breakpoint="{% if section.settings.menu_type_desktop == 'drawer' %}desktop{% else %}tablet{% endif %}">
   <details id="Details-menu-drawer-container" class="menu-drawer-container">
     <summary
@@ -25,7 +29,7 @@
         </span>
       </span>
     </summary>
-    <div id="menu-drawer" class="gradient menu-drawer motion-reduce color-{{ section.settings.menu_color_scheme }}">
+    <div id="menu-drawer" class="gradient menu-drawer motion-reduce color-{{ section.settings.menu_color_scheme }}" data-lenis-prevent>
       <div class="menu-drawer__inner-container">
         <div class="menu-drawer__navigation-container">
           <nav class="menu-drawer__navigation">
@@ -130,9 +134,15 @@
                       </div>
                     </details>
                   {%- else -%}
+                    {%- liquid
+                      assign fc_menu_href = link.url
+                      if link.handle == 'products' or link.url == routes.all_products_collection_url or link.url == '/collections/all'
+                        assign fc_menu_href = fc_shop_collection_url
+                      endif
+                    -%}
                     <a
                       id="HeaderDrawer-{{ link.handle }}"
-                      href="{%- if link.handle == 'products' -%}/collections/all?sort_by=created-descending{%- else -%}{{ link.url }}{%- endif -%}"
+                      href="{{ fc_menu_href }}"
                       class="menu-drawer__menu-item list-menu__item link link--text focus-inset fc-menu-drawer__primary{% if link.current %} menu-drawer__menu-item--active{% endif %}"
                       {% if link.current %}
                         aria-current="page"

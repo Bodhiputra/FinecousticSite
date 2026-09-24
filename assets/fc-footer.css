@@ -4,7 +4,9 @@
   isolation: isolate;
   z-index: 2;
   flex-shrink: 0;
-  margin-top: auto;
+  margin-top: 0;
+  padding-top: clamp(20px, 3vh, 32px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .shopify-section-group-footer-group .footer.gradient {
@@ -616,14 +618,14 @@
 }
 
 .fc-newsletter--footer {
-  width: min(100%, 232px);
+  width: min(100%, 320px);
   text-align: left;
 }
 
 .fc-newsletter__title {
   margin: 0 0 8px;
   font-family: var(--fc-font);
-  font-size: clamp(1.4rem, 1.2vw, 1.6rem);
+  font-size: clamp(14px, 1.2vw, 18px);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -633,7 +635,7 @@
 .fc-newsletter__body {
   margin: 0 0 12px;
   font-family: var(--fc-font);
-  font-size: clamp(1rem, 0.95vw, 1.2rem);
+  font-size: clamp(10px, 0.95vw, 14px);
   font-weight: 400;
   letter-spacing: -0.01em;
   line-height: 1.45;
@@ -770,6 +772,31 @@
 
 .fc-newsletter__msg--error { color: #ff6666; }
 .fc-newsletter__msg--success { color: rgba(255, 255, 255, 0.7); }
+
+.fc-newsletter__legal {
+  margin: 8px 0 0;
+  font-family: var(--fc-font);
+  font-size: clamp(10px, 0.8vw, 12px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.fc-newsletter__legal a {
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.25);
+  text-underline-offset: 2px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+@media (hover: hover) {
+  .fc-newsletter__legal a:hover {
+    color: var(--fc-yellow, #ffd300);
+    text-decoration-color: rgba(255, 211, 0, 0.45);
+  }
+}
 
 @media screen and (max-width: 749px) {
   .fc-footer__newsletter-wrap {

@@ -11,6 +11,35 @@
   "name": "t:sections.header.name",
   "type": "header",
   "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_oob": {
+          "type": "announcement",
+          "settings": {
+            "text": "Out of office: September 25 to October 8",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement_oob"
+      ],
+      "custom_css": [
+        ".utility-bar { background-color: var(--fc-yellow) !important; border-bottom: none !important; }",
+        ".announcement-bar { background-color: var(--fc-yellow) !important; }",
+        ".announcement-bar * { color: #000000 !important; font-family: var(--fc-font); font-weight: 400; }"
+      ],
+      "settings": {
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "color_scheme": "scheme-1",
+        "show_line_separator": false,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    },
     "header_link_menu_aw8CkQ": {
       "type": "header-link-menu",
       "disabled": true,
@@ -57,6 +86,7 @@
     }
   },
   "order": [
+    "announcement-bar",
     "header_link_menu_aw8CkQ",
     "custom_liquid_HBtfH3",
     "header"
