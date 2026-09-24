@@ -46,15 +46,18 @@
             <div class="fc-grid fc-search-grid" data-cols="{{ section.settings.columns_desktop }}">
               {%- for item in search.results -%}
                 {%- if item.object_type == 'product' -%}
-                  {%- unless item.title contains 'FBS2' -%}
+                  {%- include 'fc-exclude-product', product: item -%}
+                  {%- unless fc_exclude_product -%}
                     {%- liquid
                       assign fc_variant = item.selected_or_first_available_variant | default: item.variants.first
                     -%}
+                    {%- capture fc_search_name -%}{% render 'fc-product-display-name', fc_product: item %}{%- endcapture -%}
+                    {%- assign fc_search_name = fc_search_name | strip -%}
                     <div class="fc-card fc-card--search">
                       <a href="{{ item.url }}" class="fc-card__media-link" tabindex="-1" aria-hidden="true">
                         <div class="fc-card__image">
                           {%- if item.featured_image -%}
-                            {{ item.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: item.title }}
+                            {{ item.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img fc-img-active', alt: fc_search_name }}
                           {%- endif -%}
                         </div>
                       </a>
@@ -63,7 +66,7 @@
                         variant_id: fc_variant.id,
                         price: item.price,
                         price_varies: item.price_varies,
-                        title: item.title,
+                        fc_tag_product: item,
                         available: item.available,
                         name_class: '',
                         tag_class: ''

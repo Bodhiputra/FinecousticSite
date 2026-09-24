@@ -39,6 +39,11 @@
   color: var(--fc-text-muted);
 }
 
+#MainContent .website-hero__available-copy {
+  color: #ffffff;
+  opacity: 1;
+}
+
 /* Dawn caption utility — override wide tracking */
 #MainContent .caption-with-letter-spacing,
 #MainContent .caption-with-letter-spacing--medium,

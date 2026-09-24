@@ -1,5 +1,11 @@
 {%- liquid
   assign og_title = page_title | default: shop.name
+  if request.page_type == 'product' and product != blank
+    capture og_title
+      render 'fc-product-display-name', fc_product: product
+    endcapture
+    assign og_title = og_title | strip
+  endif
   assign og_url = canonical_url | default: request.origin
   assign og_type = 'website'
   assign og_description = page_description | default: shop.description | default: shop.name

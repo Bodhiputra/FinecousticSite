@@ -1,92 +1,125 @@
-{%- include 'fc-launch-gates' -%}
-{%- unless fc_launch_phase == 'countdown' -%}
-  {%- comment -%}Only visible between pre-order close and product launch.{%- endcomment -%}
-{%- else -%}
-  {{ 'fc-nomad-video-duo.css' | asset_url | stylesheet_tag }}
+{{ 'fc-nomad-video-duo.css' | asset_url | stylesheet_tag }}
 
-  {%- liquid
-    assign fbs1_product = all_products[section.settings.product_handle_fbs1]
-    assign fbs2_product = all_products[section.settings.product_handle_fbs2]
-    assign fbs1_url = fbs1_product.url | default: '/products/hako-nomad-fbs1'
-    assign fbs2_url = fbs2_product.url | default: '/products/hako-nomad-l-fbs2'
-    if section.settings.link_fbs1 != blank
-      assign fbs1_url = section.settings.link_fbs1
-    endif
-    if section.settings.link_fbs2 != blank
-      assign fbs2_url = section.settings.link_fbs2
-    endif
-    assign label_fbs1 = section.settings.label_fbs1 | default: 'Hako Nomad'
-    assign label_fbs2 = section.settings.label_fbs2 | default: 'Hako Nomad L'
-  -%}
+{%- liquid
+  assign fbs1_product = all_products[section.settings.product_handle_fbs1]
+  assign fbs2_product = all_products[section.settings.product_handle_fbs2]
+  assign fbs1_url = fbs1_product.url | default: '/products/hako-nomad-fbs1'
+  assign fbs2_url = fbs2_product.url | default: '/products/hako-nomad-l-fbs2'
+  if section.settings.link_fbs1 != blank
+    assign fbs1_url = section.settings.link_fbs1
+  endif
+  if section.settings.link_fbs2 != blank
+    assign fbs2_url = section.settings.link_fbs2
+  endif
+  assign label_fbs1 = section.settings.label_fbs1 | default: 'Hako Nomad'
+  assign label_fbs2 = section.settings.label_fbs2 | default: 'Hako Nomad L'
+-%}
 
-  <section
-    class="fc-nomad-video-duo"
-    id="fc-nomad-video-duo-{{ section.id }}"
-    data-section-id="{{ section.id }}"
-  >
-    <div class="fc-nomad-video-duo__grid">
-      <a class="fc-nomad-video-duo__panel" href="{{ fbs1_url }}" aria-label="{{ label_fbs1 | escape }}">
-        <div class="fc-nomad-video-duo__media">
-          {%- if section.settings.video_fbs1 != blank -%}
-            {{ section.settings.video_fbs1 | video_tag:
-              class: 'fc-nomad-video-duo__video',
-              autoplay: true,
-              loop: true,
-              muted: true,
-              playsinline: true,
-              controls: false,
-              preload: 'metadata'
-            }}
-          {%- elsif section.settings.video_fbs1_url != blank -%}
-            <video
-              class="fc-nomad-video-duo__video"
-              autoplay
-              muted
-              loop
-              playsinline
-              preload="metadata"
-            >
-              <source src="{{ section.settings.video_fbs1_url | escape }}" type="video/mp4">
-            </video>
-          {%- else -%}
-            <div class="fc-nomad-video-duo__placeholder" aria-hidden="true"></div>
-          {%- endif -%}
-        </div>
-        <span class="fc-nomad-video-duo__label">{{ label_fbs1 | escape }}</span>
-      </a>
+<section
+  class="fc-nomad-video-duo"
+  id="fc-nomad-video-duo-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+>
+<script>
+(function () {
+  if (window.__fcCreatorFeedbackLoader) return;
+  window.__fcCreatorFeedbackLoader = true;
+  function run() {
+    if (document.querySelector('.fc-creator-feedback')) return;
+    var anchor = document.querySelector('.fc-nomad-video-duo-section');
+    if (!anchor || !anchor.id) return;
+    var base = anchor.id.replace(/^shopify-section-/, '').replace(/__fc_nomad_video_duo$/, '');
+    var keys = [base + '__fc_creator_feedback_home', base + '__fc_creator_feedback'];
+    function inject(html) {
+      anchor.insertAdjacentHTML('beforebegin', html);
+      if (!document.querySelector('link[href*="fc-creator-feedback.css"]')) {
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = {{ 'fc-creator-feedback.css' | asset_url | json }};
+        document.head.appendChild(link);
+      }
+      if (!document.querySelector('script[src*="fc-creator-feedback.js"]')) {
+        var script = document.createElement('script');
+        script.src = {{ 'fc-creator-feedback.js' | asset_url | json }};
+        script.defer = true;
+        document.body.appendChild(script);
+      }
+    }
+    function tryKey(i) {
+      if (i >= keys.length) return;
+      fetch('/?sections=' + encodeURIComponent(keys[i]))
+        .then(function (r) { return r.json(); })
+        .then(function (d) { d[keys[i]] ? inject(d[keys[i]]) : tryKey(i + 1); })
+        .catch(function () { tryKey(i + 1); });
+    }
+    tryKey(0);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
+</script>
+  <div class="fc-nomad-video-duo__grid">
+    <a class="fc-nomad-video-duo__panel" href="{{ fbs1_url }}" aria-label="{{ label_fbs1 | escape }}">
+      <div class="fc-nomad-video-duo__media">
+        {%- if section.settings.video_fbs1 != blank -%}
+          {{ section.settings.video_fbs1 | video_tag:
+            class: 'fc-nomad-video-duo__video',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            playsinline: true,
+            controls: false,
+            preload: 'metadata'
+          }}
+        {%- elsif section.settings.video_fbs1_url != blank -%}
+          <video
+            class="fc-nomad-video-duo__video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src="{{ section.settings.video_fbs1_url | escape }}" type="video/mp4">
+          </video>
+        {%- else -%}
+          <div class="fc-nomad-video-duo__placeholder" aria-hidden="true"></div>
+        {%- endif -%}
+      </div>
+      <span class="fc-nomad-video-duo__label">{{ label_fbs1 | escape }}</span>
+    </a>
 
-      <a class="fc-nomad-video-duo__panel" href="{{ fbs2_url }}" aria-label="{{ label_fbs2 | escape }}">
-        <div class="fc-nomad-video-duo__media">
-          {%- if section.settings.video_fbs2 != blank -%}
-            {{ section.settings.video_fbs2 | video_tag:
-              class: 'fc-nomad-video-duo__video',
-              autoplay: true,
-              loop: true,
-              muted: true,
-              playsinline: true,
-              controls: false,
-              preload: 'metadata'
-            }}
-          {%- elsif section.settings.video_fbs2_url != blank -%}
-            <video
-              class="fc-nomad-video-duo__video"
-              autoplay
-              muted
-              loop
-              playsinline
-              preload="metadata"
-            >
-              <source src="{{ section.settings.video_fbs2_url | escape }}" type="video/mp4">
-            </video>
-          {%- else -%}
-            <div class="fc-nomad-video-duo__placeholder" aria-hidden="true"></div>
-          {%- endif -%}
-        </div>
-        <span class="fc-nomad-video-duo__label">{{ label_fbs2 | escape }}</span>
-      </a>
-    </div>
-  </section>
-{%- endunless -%}
+    <a class="fc-nomad-video-duo__panel" href="{{ fbs2_url }}" aria-label="{{ label_fbs2 | escape }}">
+      <div class="fc-nomad-video-duo__media">
+        {%- if section.settings.video_fbs2 != blank -%}
+          {{ section.settings.video_fbs2 | video_tag:
+            class: 'fc-nomad-video-duo__video',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            playsinline: true,
+            controls: false,
+            preload: 'metadata'
+          }}
+        {%- elsif section.settings.video_fbs2_url != blank -%}
+          <video
+            class="fc-nomad-video-duo__video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src="{{ section.settings.video_fbs2_url | escape }}" type="video/mp4">
+          </video>
+        {%- else -%}
+          <div class="fc-nomad-video-duo__placeholder" aria-hidden="true"></div>
+        {%- endif -%}
+      </div>
+      <span class="fc-nomad-video-duo__label">{{ label_fbs2 | escape }}</span>
+    </a>
+  </div>
+</section>
 
 {% schema %}
 {
@@ -96,7 +129,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Shown only during the drop countdown phase (after pre-order closes, before launch). Add MP4 URLs from Shopify Files or pick uploaded videos."
+      "content": "Side-by-side FBS1 / FBS2 autoplay videos on the homepage. Add MP4 URLs from Shopify Files or pick uploaded videos."
     },
     {
       "type": "video",

@@ -1,5 +1,12 @@
 <div class="custom-max-height flexible-text-banner" style="position: relative; width: 100%; height: 100%;">
 
+  {%- liquid
+    assign banner_button_url = section.settings.button_link
+    if banner_button_url == blank or banner_button_url == '/collections/all' or banner_button_url == routes.all_products_collection_url
+      assign banner_button_url = routes.all_products_collection_url | append: '?sort_by=created-descending'
+    endif
+  -%}
+
   {% if section.settings.background_image != blank or section.settings.banner_image_mobile != blank %}
     <picture class="flexible-banner-picture">
       {% if section.settings.background_image != blank %}
@@ -54,9 +61,9 @@
     <p class="subheading">{{ section.settings.subheading }}</p>
     <p class="heading">{{ section.settings.heading }}</p>
 
-    {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+    {% if section.settings.button_label != blank %}
       <a 
-        href="{{ section.settings.button_link }}" 
+        href="{{ banner_button_url }}" 
         class="button flexible-banner-btn"
       >
         {{ section.settings.button_label }}
@@ -411,7 +418,7 @@
       "type": "url",
       "id": "button_link",
       "label": "Button Link",
-      "default": "/collections/all"
+      "info": "Leave empty to use the shop page with newest-first sort."
     },
     {
       "type": "color",

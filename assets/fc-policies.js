@@ -55,9 +55,17 @@
     }).init();
   }
 
+  function animateInitialPanel() {
+    if (typeof Shopify !== 'undefined' && Shopify.designMode) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var panel = document.querySelector('.fc-policy-panel.fc-pol-active');
+    if (panel) panel.classList.add('fc-panel-animate');
+  }
+
   function init() {
     if (!document.getElementById('fc-policies-header')) return;
     applyPolicy(getInitialPolicyKey(), { initial: true });
+    animateInitialPanel();
     initCarousel();
   }
 

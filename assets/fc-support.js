@@ -388,9 +388,17 @@
     }).init();
   }
 
+  function animateInitialPanel() {
+    if (typeof Shopify !== 'undefined' && Shopify.designMode) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var panel = document.querySelector('.fc-support-panel.fc-sup-active');
+    if (panel) panel.classList.add('fc-panel-animate');
+  }
+
   function init() {
     if (!document.getElementById('fc-support-header')) return;
     applyTab(TABS[getInitialTabIdx()].key, { initial: true });
+    animateInitialPanel();
     initCarousel();
     initSupportContent();
   }

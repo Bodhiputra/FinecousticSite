@@ -56,10 +56,8 @@
   }
 
   .fc-title-carousel.fc-collection-header.is-stuck {
-    background-color: #050505;
-    background-image: var(--fc-body-bg);
-    background-repeat: repeat;
-    background-size: var(--fc-bg-tile-size, 512px) var(--fc-bg-tile-size, 512px);
+    background-color: #000000;
+    background-image: none;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
   }
 
@@ -185,6 +183,91 @@
 @keyframes fc-card-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Store locator page enter ── */
+@keyframes fc-locator-title-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fc-locator-card-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fc-sl-title.fc-locator-enter {
+  animation: fc-locator-title-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fc-locator-card.fc-locator-enter {
+  animation: fc-locator-card-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Cart + price-tag add feedback ── */
+@keyframes fc-cart-feedback {
+  0%, 100% { transform: scale(1); }
+  35% { transform: scale(1.14); }
+  65% { transform: scale(0.96); }
+}
+
+@keyframes fc-tag-feedback {
+  0%, 100% { transform: scale(1); }
+  40% { transform: scale(1.04); }
+  70% { transform: scale(0.98); }
+}
+
+#cart-icon-bubble.fc-cart-feedback .fc-nav-icon-toggle,
+#cart-icon-bubble.fc-cart-feedback .fc-header-icon-label {
+  animation: fc-cart-feedback 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fc-card__tag.fc-tag-feedback {
+  animation: fc-tag-feedback 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fc-pdp-u__atc.fc-atc-feedback {
+  animation: fc-tag-feedback 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Customer account (logged-in) enter ── */
+@keyframes fc-account-block-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.customer.account > div.fc-account-enter-block,
+.customer.order > div.fc-account-enter-block,
+.customer.addresses > div.fc-account-enter-block {
+  animation: fc-account-block-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.customer.account > .fc-account-enter-block,
+.customer.order > .fc-account-enter-block,
+.customer.addresses > .fc-account-enter-block {
+  animation: fc-account-block-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-sl-title.fc-locator-enter,
+  .fc-locator-card.fc-locator-enter,
+  .fc-card.fc-card-animate,
+  .fc-policy-panel.fc-pol-active.fc-panel-animate,
+  .fc-support-panel.fc-sup-active.fc-panel-animate,
+  .customer.account > div.fc-account-enter-block,
+  .customer.order > div.fc-account-enter-block,
+  .customer.addresses > div.fc-account-enter-block,
+  .customer.account > .fc-account-enter-block,
+  .customer.order > .fc-account-enter-block,
+  .customer.addresses > .fc-account-enter-block,
+  #cart-icon-bubble.fc-cart-feedback .fc-nav-icon-toggle,
+  #cart-icon-bubble.fc-cart-feedback .fc-header-icon-label,
+  .fc-card__tag.fc-tag-feedback,
+  .fc-pdp-u__atc.fc-atc-feedback {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 @keyframes fc-arrow-prev {

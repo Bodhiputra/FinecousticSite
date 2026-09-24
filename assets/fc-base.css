@@ -87,15 +87,15 @@ small, .caption, .caption-with-letter-spacing {
   letter-spacing: 0em;
 }
 
-/* ── Global background: 512×512 repeating tile (theme.liquid sets --fc-body-bg) ── */
+/* ── Global background: solid black ── */
 html {
-  background-color: #050505;
+  background-color: #000000;
   color-scheme: dark;
   min-height: 100vh;
 }
 
 body {
-  background-color: #050505;
+  background-color: #000000;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -108,29 +108,24 @@ body {
   max-width: 100%;
 }
 
-/* Dawn's .gradient shorthand wipes background-image — restore repeating tile */
+/* Dawn's .gradient shorthand can override body bg — keep solid black */
 body.gradient {
-  background-color: #050505 !important;
-  background-image: var(--fc-body-bg);
-  background-repeat: repeat;
-  background-size: var(--fc-bg-tile-size, 512px) var(--fc-bg-tile-size, 512px);
-  background-attachment: scroll;
+  background-color: #000000 !important;
+  background-image: none;
 }
 
-/* 512px grain — half tile on Retina so 1 source pixel ≈ 1 device pixel (no upscale blur) */
+/* Nav/drawer tile — half size on Retina so 1 source pixel ≈ 1 device pixel */
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
   :root {
-    --fc-bg-tile-size: 256px;
     --fc-nav-bg-tile-size: 256px;
   }
 }
 
-/* ── FC site shell (universal sticky footer) ──
+/* ── FC site shell ──
    body          flex column, min-height 100vh
-   #MainContent   flex: 1 — absorbs leftover viewport on short pages
-   footer group   flex-shrink: 0, margin-top: auto — pinned to viewport bottom
-   Nav is fixed; #MainContent gets padding-top = nav height so ALL pages
-   naturally start below the navbar with zero per-page overrides needed. */
+   #MainContent   min one viewport tall (footer below the fold on short pages)
+   footer group   flows after main — no margin-top:auto pin (avoids ATF footer stack)
+   Nav is fixed; #MainContent gets padding-top = nav height. */
 .content-for-layout {
   padding-top: 0;
   padding-bottom: 0;
@@ -140,39 +135,36 @@ body.gradient {
    Applied once here. Every page type respects it automatically.
    Full-bleed heroes (homepage hero, PDP) override to 0 below. */
 #MainContent {
-  flex: 1 0 auto;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 0;
+  box-sizing: border-box;
   padding-top: var(--fc-nav-clearance);
+  /* Main column = one viewport (padding included); footer starts after scroll */
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+/* Full-bleed heroes define their own height — don't stack min-height */
+#MainContent:has(> .shopify-section:first-child .website-hero),
+#MainContent:has(> .shopify-section:first-child .fc-pdp-u),
+#MainContent:has(> .shopify-section:first-child .fc-pdp-video-hero),
+#MainContent:has(> .shopify-section:first-child .fc-preorder-offers),
+#MainContent:has(> .shopify-section:first-child .fc-preorder-questionnaire) {
+  min-height: 0;
 }
 
 #MainContent > .shopify-section {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
   min-height: 0;
   box-sizing: border-box;
   padding-top: 0;
   padding-bottom: 0;
-}
-
-/* Short pages — lone section grows so content + footer fill the viewport */
-/* Exclude website-hero: it's already 100vh, stretching it adds a gap before the footer */
-#MainContent > .shopify-section:only-child:not(:has(.fc-shop-page)):not(:has(.fc-search-page)):not(:has(.website-hero)) {
-  flex: 1 0 auto;
-}
-
-#MainContent > .shopify-section:only-child:has(.fc-policy-wrap),
-#MainContent > .shopify-section:only-child:has(.fc-support-wrap),
-#MainContent > .shopify-section:only-child:has(.fc-dl-page) {
-  flex: 1 0 auto;
-}
-
-/* Landing — hero section absorbs any leftover flex space so no gap appears before footer */
-#MainContent > .shopify-section:only-child:has(.website-hero) {
-  flex: 1 0 auto;
 }
 
 /* Full-bleed heroes — cancel #MainContent clearance so hero fills from top of viewport.
@@ -187,7 +179,7 @@ body.gradient {
   padding-top: 0;
 }
 
-/* Shop / search — content natural height; global shell pins footer on short pages */
+/* Shop / search — natural content height, modest bottom rhythm before footer */
 #MainContent .fc-shop-page,
 #MainContent .fc-search-page {
   flex: 0 0 auto;
@@ -196,6 +188,7 @@ body.gradient {
   width: 100%;
   min-height: 0;
   box-sizing: border-box;
+  padding-bottom: clamp(32px, 5vh, 56px);
 }
 
 .fc-shop-swipe-zone,
@@ -205,21 +198,18 @@ body.gradient {
   touch-action: pan-y;
 }
 
-/* Tabbed pages — section + swipe zone fill main on short content */
+/* Tabbed pages — natural height, no flex stretch between tabs and body */
 #MainContent .fc-policy-wrap,
 #MainContent .fc-support-wrap {
-  flex: 1 0 auto;
+  flex: 0 0 auto;
   min-height: 0;
+  padding-bottom: clamp(24px, 4vh, 48px);
 }
 
-/* Speakers Soon — stretch section for centered placeholder */
-#MainContent > .shopify-section:only-child:has(.fc-shop-swipe-zone--soon) {
-  flex: 1 0 auto;
-  min-height: 0;
-}
-
+/* Speakers Soon — compact placeholder, no 50vh stretch */
+#MainContent > .shopify-section:only-child:has(.fc-shop-swipe-zone--soon),
 #MainContent .fc-shop-page:has(.fc-shop-swipe-zone--soon) {
-  flex: 1 0 auto;
+  flex: 0 0 auto;
   min-height: 0;
 }
 
@@ -230,21 +220,18 @@ body.gradient {
 }
 
 .fc-shop-swipe-zone--soon {
-  flex: 1 1 auto;
-  min-height: min(50vh, 420px);
-  justify-content: center;
+  flex: 0 0 auto;
+  min-height: 0;
+  justify-content: flex-start;
   align-items: center;
+  padding: clamp(24px, 6vh, 48px) 0;
 }
 
-/* Title-carousel pages — natural section height (100svh forced extra compositing + odd scroll) */
+/* Title-carousel pages — natural height (no swipe-zone flex stretch) */
 @media screen and (max-width: 989px) {
-  #MainContent > .shopify-section:has(.fc-title-carousel) {
-    flex: 1 0 auto;
-    min-height: 0;
-  }
-
+  #MainContent > .shopify-section:has(.fc-title-carousel),
   #MainContent .fc-shop-page:has(.fc-title-carousel) {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-height: 0;
   }
 
@@ -255,31 +242,33 @@ body.gradient {
 
   .fc-title-carousel + .fc-page-swipe-zone,
   .fc-title-carousel + .fc-shop-swipe-zone {
-    flex: 1 1 auto;
-    min-height: 12rem;
+    flex: 0 0 auto;
+    min-height: 0;
   }
 }
 
-/* Customer login — centered in main column */
+/* Customer login — top-aligned with comfortable inset (no vertical float) */
 #MainContent .fc-login-page {
-  flex: 1;
+  flex: 0 0 auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   min-height: 0;
-  padding: clamp(24px, 4vw, 48px) 20px;
+  padding: clamp(48px, 10vh, 96px) 20px clamp(32px, 5vh, 56px);
   box-sizing: border-box;
   background: none;
   background-attachment: unset;
 }
 
-/* About — vertically centered in main column */
+/* About — top-aligned; min-height on #MainContent handles scroll-to-footer */
 #MainContent .fc-about {
-  flex: 1;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding: clamp(48px, 10vh, 96px) var(--fc-page-gutter, 24px) clamp(32px, 5vh, 56px);
+  box-sizing: border-box;
 }
 
 .utility-bar {
@@ -326,4 +315,19 @@ body.gradient {
 /* Hide product prices site-wide */
 .fc-card-price {
   display: none !important;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
