@@ -5,7 +5,7 @@
   {% render 'cart-drawer' %}
 {% endcomment %}
 
-<link rel="stylesheet" href="{{ 'quantity-popover.css' | asset_url }}" media="print" onload="this.media='all'">
+{{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 
 <script>
 (function () {
@@ -41,25 +41,32 @@
   document.addEventListener(
     'pointerdown',
     function (e) {
-      if (e.target.closest('#cart-icon-bubble, .header__icon--cart, cart-drawer, .fc-card__tag, .fc-card__atc-plus')) {
+      if (
+        e.target.closest(
+          '#cart-icon-bubble, .header__icon--cart, cart-drawer, .fc-card__tag, .fc-card__atc-plus, .fc-pdp-u__atc'
+        )
+      ) {
         loadCartScripts();
       }
     },
     { capture: true, passive: true }
   );
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(function () { loadCartScripts(); }, { timeout: 3000 });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadCartScripts, { once: true });
   } else {
-    setTimeout(loadCartScripts, 3000);
+    loadCartScripts();
   }
 })();
 </script>
 <script>
 (function() {
   function setFcHeaderVars() {
-    var newsBar = document.querySelector('.announcement-bar');
+    var newsSection = document.querySelector('.shopify-section-group-header-group.announcement-bar-section');
     var navBar = document.querySelector('.header-wrapper');
-    document.documentElement.style.setProperty('--fc-news-height', (newsBar ? newsBar.offsetHeight : 36) + 'px');
+    document.documentElement.style.setProperty(
+      '--fc-news-height',
+      (newsSection ? newsSection.offsetHeight : 0) + 'px'
+    );
     document.documentElement.style.setProperty('--fc-navbar-height', (navBar ? navBar.offsetHeight : 64) + 'px');
   }
 
@@ -151,6 +158,91 @@
   .drawer {
     visibility: hidden;
   }
+  /* Critical: qty controls must paint with the row (async cart CSS caused visible delay). */
+  .cart-drawer .cart-item {
+    display: grid;
+    grid-template-columns: clamp(64px, 10vw, 80px) 1fr;
+    grid-template-rows: auto auto;
+    gap: 0 clamp(8px, 2vw, 10px);
+    align-items: start;
+  }
+  .cart-drawer .cart-item__media {
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+  .cart-drawer .cart-item__details {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .cart-drawer .cart-item__quantity {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .cart-drawer .cart-item__quantity-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+  }
+  .cart-drawer .cart-item__quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .cart-drawer .quantity {
+    display: flex;
+    width: 64px;
+    min-height: 28px;
+    align-items: center;
+  }
+  .cart-drawer .quantity__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    min-height: 28px;
+    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.45);
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+  .cart-drawer .quantity__button .svg-wrapper {
+    display: flex;
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+  .cart-drawer .quantity__input {
+    font-size: 12px;
+    font-weight: 700;
+    color: #ffd300;
+    min-height: 28px;
+    text-align: center;
+    background: transparent;
+    border: 0;
+    width: 100%;
+    padding: 0;
+  }
+  .cart-drawer .cart-item cart-remove-button .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    min-height: 28px;
+    color: rgba(255, 255, 255, 0.45);
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+  .fc-cart-line--optimistic .quantity__input,
+  .fc-cart-line--optimistic .quantity__button,
+  .fc-cart-line--optimistic cart-remove-button {
+    pointer-events: none;
+  }
 </style>
 
 <cart-drawer class="drawer{% if cart == empty %} is-empty{% endif %}">
@@ -158,6 +250,7 @@
     <div id="CartDrawer-Overlay" class="cart-drawer__overlay"></div>
     <div
       class="drawer__inner gradient color-{{ settings.cart_color_scheme }}"
+      data-lenis-prevent
       role="dialog"
       aria-modal="true"
       aria-label="{{ 'sections.cart.title' | t }}"
@@ -201,7 +294,7 @@
                   {{ 'general.continue_shopping' | t }}
                 </button>
               {%- else -%}
-                <a href="{{ routes.all_products_collection_url }}?sort_by=created-descending" class="button">
+                <a href="{% render 'fc-shop-url' %}" class="button">
                   {{ 'general.continue_shopping' | t }}
                 </a>
               {%- endif -%}
@@ -263,6 +356,7 @@
                         id="CartDrawer-Item-{{ item.index | plus: 1 }}"
                         class="cart-item{% if item.parent_relationship.parent != null %} cart-item__nested-line{% endif %}"
                         role="row"
+                        data-fc-unit-price-cents="{{ item.final_price }}"
                         {% if item.parent_relationship.parent != null %}
                           aria-label="{{- 'products.product.nested_label' | t: title: item.product.title, parent_title: item.parent_relationship.parent.title | escape -}}"
                         {% endif %}
@@ -292,7 +386,7 @@
                           {%- endif -%}
 
                           <a href="{{ item.url }}" class="cart-item__name h4 break">
-                            {{- item.product.title | escape -}}
+                            {%- render 'fc-product-display-name', fc_product: item.product -%}
                           </a>
 
                           {%- if item.product.has_only_default_variant == false

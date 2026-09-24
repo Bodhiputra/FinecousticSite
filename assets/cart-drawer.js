@@ -38,8 +38,12 @@ class CartDrawer extends HTMLElement {
     if (triggeredBy) this.setActiveElement(triggeredBy);
     const cartDrawerNote = this.querySelector('[id^="Details-"] summary');
     if (cartDrawerNote && !cartDrawerNote.hasAttribute('role')) this.setSummaryAccessibility(cartDrawerNote);
-    // here the animation doesn't seem to always get triggered. A timeout seem to help
-    setTimeout(() => {
+
+    document.body.classList.add('overflow-hidden', 'fc-cart-open');
+    const cartLink = document.querySelector('#cart-icon-bubble');
+    if (cartLink) cartLink.setAttribute('aria-expanded', 'true');
+
+    requestAnimationFrame(() => {
       this.classList.add('animate', 'active');
     });
 
@@ -54,10 +58,6 @@ class CartDrawer extends HTMLElement {
       },
       { once: true }
     );
-
-    document.body.classList.add('overflow-hidden', 'fc-cart-open');
-    const cartLink = document.querySelector('#cart-icon-bubble');
-    if (cartLink) cartLink.setAttribute('aria-expanded', 'true');
   }
 
   close() {
@@ -83,6 +83,16 @@ class CartDrawer extends HTMLElement {
     cartDrawerNote.parentElement.addEventListener('keyup', onKeyUpEscape);
   }
 
+  applyEmptyState() {
+    this.classList.add('is-empty');
+    const drawerItems = this.querySelector('cart-drawer-items');
+    if (drawerItems) drawerItems.classList.add('is-empty');
+    const heading = this.querySelector('#CartDrawer-Heading');
+    if (heading) heading.hidden = true;
+    const headingQty = this.querySelector('#CartDrawer-BagQty');
+    if (headingQty) headingQty.textContent = '';
+  }
+
   clearEmptyState() {
     this.classList.remove('is-empty');
     const drawerItems = this.querySelector('cart-drawer-items');
@@ -92,10 +102,28 @@ class CartDrawer extends HTMLElement {
     this.querySelector('.drawer__inner-empty')?.remove();
   }
 
+  sectionHtmlHasCartItems(sectionHtml) {
+    if (!sectionHtml) return null;
+    const parsed = new DOMParser().parseFromString(sectionHtml, 'text/html');
+    return !!parsed.querySelector('.cart-item');
+  }
+
   renderContents(parsedState) {
-    this.clearEmptyState();
+    const sectionHtml = parsedState.sections?.['cart-drawer'];
+    const hasItems =
+      typeof parsedState.item_count === 'number'
+        ? parsedState.item_count > 0
+        : this.sectionHtmlHasCartItems(sectionHtml);
+
+    if (hasItems) {
+      this.clearEmptyState();
+    } else if (typeof this.applyEmptyState === 'function') {
+      this.applyEmptyState();
+    }
+
     this.querySelector('.drawer__inner')?.classList.remove('is-empty');
     this.productId = parsedState.id;
+    var wasOpen = this.classList.contains('active');
     this.getSectionsToRender().forEach((section) => {
       const sectionHtml = parsedState.sections?.[section.id];
       if (!sectionHtml) return;
@@ -108,13 +136,22 @@ class CartDrawer extends HTMLElement {
       sectionElement.innerHTML = this.getSectionInnerHTML(sectionHtml, section.selector);
     });
 
-    this.clearEmptyState();
+    if (hasItems) {
+      this.clearEmptyState();
+    } else {
+      this.applyEmptyState();
+      if (typeof window.fcSyncCartDrawerEmptyMarkup === 'function' && sectionHtml) {
+        const sectionRoot = new DOMParser().parseFromString(sectionHtml, 'text/html').querySelector('#CartDrawer');
+        if (sectionRoot) window.fcSyncCartDrawerEmptyMarkup(this, sectionRoot);
+      }
+    }
 
-    setTimeout(() => {
-      this.querySelector('#CartDrawer-Overlay')?.addEventListener('click', this.close.bind(this));
-      this.setHeaderCartIconAccessibility();
-      this.open();
-    });
+    var overlay = this.querySelector('#CartDrawer-Overlay');
+    if (overlay) {
+      overlay.addEventListener('click', this.close.bind(this));
+    }
+    this.setHeaderCartIconAccessibility();
+    if (!wasOpen) this.open();
   }
 
   getSectionInnerHTML(html, selector = '.shopify-section') {
