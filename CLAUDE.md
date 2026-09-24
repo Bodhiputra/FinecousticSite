@@ -1,9 +1,16 @@
 # Shopify Store Development Rules
 
 ## Session Start (Every Session — Required)
-1. Read `context/shopify-context.md` — rolling state, last decisions, in-progress work
-2. Read `context/codebase-summary.md` — semantic map of what every section, snippet, asset, and template does. Load this instead of reading source files cold.
-3. Run full codebase index: `find . -type f | grep -v node_modules | grep -v ".git/" | sort > context/codebase-index.md` — write to file, do NOT dump into context window. Read specific parts from it only when needed.
+
+**Before any theme work**, load in order and announce in a **"Loaded:"** line:
+
+1. `.cursor/skills/shopify-theme/SKILL.md`
+2. This file (`CLAUDE.md`)
+3. `context/shopify-context.md` — rolling state (if present)
+4. `context/codebase-summary.md` — section/snippet map (if present)
+5. The specialized skill for the task (`shopify-liquid`, `shopify-use-shopify-cli`, etc.)
+
+Run full codebase index when needed: `find . -type f | grep -v node_modules | grep -v ".git/" | sort > context/codebase-index.md` — write to file, do NOT dump into context window.
 
 ## CRITICAL SAFETY RULES
 - NEVER run mutations without asking me first

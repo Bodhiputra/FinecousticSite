@@ -7,9 +7,9 @@ alwaysApply: true
 
 This folder is a **separate git repo** from `finecoustic/` (Deku). When the user mentions **Shopify** or you edit theme files here, use **this repo only** — not Deku bootstrap.
 
-## Session start (required)
+## Session start (required — every Shopify task)
 
-When Shopify is in scope (user said "shopify", theme file edit, or theme task):
+**Non-negotiable.** When Shopify is in scope (user said "shopify", theme file edit, or theme task), load these **before writing code or replying with implementation** — not mid-task, not after guessing:
 
 1. **Skip** Deku reads (`.claude/BOOTSTRAP.md`, `context/brand-context.md`, `context/session-context.md`) unless the user explicitly asks for brand/KOL/ops context
 2. Read `.cursor/skills/shopify-theme/SKILL.md`
@@ -17,11 +17,14 @@ When Shopify is in scope (user said "shopify", theme file edit, or theme task):
 4. Read `.cursor/rules/admin-configurable-content.mdc` when adding/changing merchant-facing copy or product data
 5. Read `context/shopify-context.md` and `context/codebase-summary.md` when they exist
 6. For broad file lookup, use `context/codebase-index.md` if present — do not dump the full index into chat
-7. **First reply:** announce which Shopify skills/files you loaded, then proceed
+7. Read the **specialized skill** that matches the task (see table below) — read its `SKILL.md` fully before implementing
+8. **Every reply:** open with a short **"Loaded:"** line listing which Shopify skills/files you read, then proceed
 
-## Load skills before coding
+If you skipped step 2–7, stop and load them before continuing.
 
-Skills live in **`.cursor/skills/`** (symlinks to Shopify’s official toolkit). Read the `SKILL.md` that matches the task:
+## Load skills before coding (required)
+
+Skills live in **`.cursor/skills/`** (symlinks to Shopify’s official toolkit). Read the `SKILL.md` that matches the task **before** editing files:
 
 | Task | Skill |
 |------|--------|
@@ -29,8 +32,9 @@ Skills live in **`.cursor/skills/`** (symlinks to Shopify’s official toolkit).
 | `shopify theme dev/check/preview`, CLI auth or execute | `shopify-use-shopify-cli` |
 | Metafields / metaobjects in theme | `shopify-custom-data` |
 | General Shopify API / docs lookup | `shopify-dev` |
+| Store locator — add/change retailers | `store-locator-sanctions.mdc` (OFAC blacklist — never list sanctioned countries) |
 
-Announce which skill you loaded when it governs the work.
+**Announce** which specialized skill you loaded in the **"Loaded:"** line at the start of each reply.
 
 ## Hard rules (from CLAUDE.md)
 

@@ -12,11 +12,11 @@ const API_VERSION = process.env.SHOPIFY_API_VERSION || '2024-10';
 
 const SHIPPING_POLICY_BODY = `<h2>1. Where We Ship</h2>
 <p>We currently ship to the following countries:</p>
-<p><strong>Asia:</strong> Bahrain, Brunei, India, Israel, Japan, Jordan, Kuwait, Malaysia, Philippines, Qatar, Saudi Arabia, Singapore, South Korea, Thailand, United Arab Emirates (UAE), Vietnam</p>
+<p><strong>Asia:</strong> Bahrain, India, Japan, Jordan, Malaysia, Philippines, Qatar, Saudi Arabia, Singapore, South Korea, Thailand, United Arab Emirates (UAE), Vietnam</p>
 <p><strong>Oceania:</strong> Australia, New Zealand</p>
 <p><strong>North America:</strong> Canada, Mexico, United States</p>
 <p><strong>South America:</strong> Chile, Colombia, Peru</p>
-<p><strong>Europe:</strong> Austria, Belgium, Bulgaria, Croatia, Cyprus, Czechia, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, Netherlands, Norway, Poland, Portugal, Romania, Serbia, Slovakia, Slovenia, Spain, Sweden, Switzerland, T&uuml;rkiye, Ukraine, United Kingdom</p>
+<p><strong>Europe:</strong> Austria, Belgium, Bulgaria, Croatia, Cyprus, Czechia, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, Netherlands, Norway, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden, Switzerland, Ukraine, United Kingdom</p>
 <p><strong>Africa:</strong> South Africa</p>
 <p>Don&rsquo;t see your country listed? Check our <a href="/pages/store-locator">Store Locator</a> for authorized retailers near you, or reach out through our <a href="/pages/support?tab=contact">Contact page</a> &mdash; we&rsquo;ll do our best to advise if delivery is possible.</p>
 <h2>2. Shipping Carrier</h2>
@@ -29,9 +29,9 @@ const SHIPPING_POLICY_BODY = `<h2>1. Where We Ship</h2>
 <li><strong>5&ndash;11 business days:</strong> Thailand</li>
 <li><strong>7&ndash;14 business days:</strong> Singapore, South Korea</li>
 <li><strong>11&ndash;15 business days:</strong> Malaysia, Philippines, India</li>
-<li><strong>8&ndash;16 business days:</strong> United Arab Emirates (UAE), Israel, Saudi Arabia, Kuwait</li>
+<li><strong>8&ndash;16 business days:</strong> United Arab Emirates (UAE), Saudi Arabia</li>
 <li><strong>8&ndash;13 business days:</strong> Bahrain</li>
-<li><strong>10&ndash;16 business days:</strong> Brunei, Qatar, Jordan</li>
+<li><strong>10&ndash;16 business days:</strong> Qatar, Jordan</li>
 </ul>
 <h3>Oceania</h3>
 <ul><li><strong>8&ndash;17 business days:</strong> Australia, New Zealand</li></ul>
@@ -54,7 +54,7 @@ const SHIPPING_POLICY_BODY = `<h2>1. Where We Ship</h2>
 <li><strong>8&ndash;13 business days:</strong> France, Portugal</li>
 <li><strong>9&ndash;11 business days:</strong> Austria</li>
 <li><strong>10&ndash;12 business days:</strong> Italy, Netherlands, Belgium, Luxembourg, Switzerland</li>
-<li><strong>7&ndash;16 business days:</strong> Bulgaria, Croatia, Cyprus, Czechia, Denmark, Estonia, Finland, Greece, Hungary, Ireland, Latvia, Lithuania, Malta, Norway, Romania, Serbia, Slovakia, Slovenia, Sweden, T&uuml;rkiye, Ukraine</li>
+<li><strong>7&ndash;16 business days:</strong> Bulgaria, Croatia, Cyprus, Czechia, Denmark, Estonia, Finland, Greece, Hungary, Ireland, Latvia, Lithuania, Malta, Norway, Romania, Slovakia, Slovenia, Sweden, Ukraine</li>
 </ul>
 <h3>Africa</h3>
 <ul><li><strong>15&ndash;32 business days:</strong> South Africa</li></ul>
