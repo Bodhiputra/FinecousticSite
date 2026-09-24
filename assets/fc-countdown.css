@@ -6,6 +6,11 @@
   text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
 }
 
+.fc-countdown.is-complete,
+.fc-countdown[hidden] {
+  display: none !important;
+}
+
 .fc-countdown__row {
   display: flex;
   justify-content: center;
