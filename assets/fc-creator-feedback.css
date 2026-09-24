@@ -1,0 +1,853 @@
+.fc-creator-feedback-section.shopify-section {
+  width: 100%;
+  min-height: 100svh;
+  min-height: 100dvh;
+  padding: 0;
+  margin: 0;
+}
+
+.fc-creator-feedback {
+  --fc-feedback-rail: clamp(152px, 21vw, 240px);
+  --fc-feedback-post-total: calc(447px + 52px + 14px);
+  --fc-feedback-main-inline-pad: clamp(18px, 3vw, 32px);
+  width: 100%;
+  min-height: 100svh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  padding: clamp(16px, 3vw, 32px) var(--fc-page-gutter, clamp(16px, 4vw, 64px));
+}
+
+#MainContent .fc-creator-feedback__name {
+  color: #ffffff;
+  opacity: 1;
+}
+
+#MainContent .fc-creator-feedback__body,
+#MainContent .fc-creator-feedback__body p,
+#MainContent .fc-creator-feedback__post-body,
+#MainContent .fc-creator-feedback__post-body p {
+  color: #ffffff;
+  opacity: 1;
+}
+
+.fc-creator-feedback__outer {
+  width: fit-content;
+  max-width: min(
+    calc(
+      var(--fc-feedback-rail) + 1px + (var(--fc-feedback-main-inline-pad) * 2) +
+        var(--fc-feedback-post-total)
+    ),
+    100%
+  );
+  margin: 0 auto;
+  padding-inline: 0;
+  box-sizing: border-box;
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(20px, 3vh, 36px);
+}
+
+#MainContent .fc-creator-feedback__title {
+  margin: 0;
+  padding: 0;
+  font-family: var(--fc-font, 'Alte Haas Grotesk', sans-serif);
+  font-size: clamp(34px, 4.5vw, 48px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.fc-creator-feedback__card {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  width: fit-content;
+  max-width: 100%;
+  height: clamp(480px, 85vh, 1000px);
+  max-height: min(1000px, calc(100svh - clamp(24px, 4vw, 48px)));
+  max-height: min(1000px, calc(100dvh - clamp(24px, 4vw, 48px)));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 26px;
+  overflow: hidden;
+  background-color: #141414;
+  isolation: isolate;
+}
+
+.fc-creator-feedback__card::before {
+  display: none;
+}
+
+.fc-creator-feedback__rail,
+.fc-creator-feedback__divider,
+.fc-creator-feedback__main {
+  position: relative;
+  z-index: 1;
+}
+
+.fc-creator-feedback__rail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(28px, 5vh, 52px);
+  flex: 0 0 var(--fc-feedback-rail);
+  width: var(--fc-feedback-rail);
+  padding: clamp(20px, 3vw, 28px) clamp(16px, 2vw, 24px);
+  box-sizing: border-box;
+  min-height: 0;
+}
+
+.fc-creator-feedback__logo {
+  display: block;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+.fc-creator-feedback__logo img {
+  display: block;
+  width: clamp(20px, 2.4vw, 24px);
+  height: auto;
+}
+
+.fc-creator-feedback__product-nav {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 3vh, 28px);
+  width: 100%;
+}
+
+.fc-creator-feedback__product-tab {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--fc-font, 'Alte Haas Grotesk', sans-serif);
+  font-size: clamp(16px, 1.6vw, 20px);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.52);
+  transition: color 0.22s ease;
+  -webkit-tap-highlight-color: transparent;
+  width: 100%;
+}
+
+.fc-creator-feedback__product-tab-inner {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1vw, 12px);
+  min-width: 0;
+  transition: transform 0.24s cubic-bezier(0.34, 1.12, 0.64, 1);
+}
+
+.fc-creator-feedback__rail--desktop .fc-creator-feedback__product-tab:hover .fc-creator-feedback__product-tab-inner,
+.fc-creator-feedback__rail--desktop .fc-creator-feedback__product-tab:focus-visible .fc-creator-feedback__product-tab-inner {
+  transform: translateX(4px);
+}
+
+.fc-creator-feedback__product-thumb {
+  flex: 0 0 auto;
+  width: clamp(20px, 2vw, 24px);
+  height: clamp(20px, 2vw, 24px);
+  border-radius: 0;
+  overflow: hidden;
+  background: transparent;
+  transition: transform 0.22s cubic-bezier(0.34, 1.12, 0.64, 1);
+}
+
+.fc-creator-feedback__product-thumb-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.fc-creator-feedback__product-label {
+  min-width: 0;
+  text-align: left;
+  transition: font-weight 0.18s ease;
+}
+
+.fc-creator-feedback__rail--desktop .fc-creator-feedback__product-label {
+  white-space: nowrap;
+}
+
+.fc-creator-feedback__rail--desktop .fc-creator-feedback__product-tab:hover,
+.fc-creator-feedback__rail--desktop .fc-creator-feedback__product-tab:focus-visible {
+  color: #ffffff;
+  outline: none;
+}
+
+.fc-creator-feedback__product-tab:hover,
+.fc-creator-feedback__product-tab:focus-visible {
+  outline: none;
+}
+
+.fc-creator-feedback__product-tab.is-active {
+  color: #ffffff;
+  font-weight: 400;
+}
+
+.fc-creator-feedback__product-tab.is-active .fc-creator-feedback__product-label {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.fc-creator-feedback__product-tab:focus-visible {
+  outline: 2px solid var(--fc-yellow, #ffd300);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+div.fc-creator-feedback__divider.fc-creator-feedback__divider--vertical {
+  display: block;
+  flex: 0 0 1px;
+  width: 1px;
+  min-width: 1px;
+  height: auto;
+  align-self: stretch;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.fc-creator-feedback__main {
+  --fc-post-avatar-size: 52px;
+  --fc-post-gutter: 14px;
+  --fc-post-media-max: min(447px, calc(100% - var(--fc-post-avatar-size) - var(--fc-post-gutter)));
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  width: calc(var(--fc-feedback-post-total) + (var(--fc-feedback-main-inline-pad) * 2));
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: clamp(16px, 2.4vw, 24px) 0 clamp(12px, 2vw, 16px);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.fc-creator-feedback__post:last-child .fc-creator-feedback__post-divider {
+  display: none;
+}
+
+.fc-creator-feedback__mobile-nav {
+  display: none;
+  flex-shrink: 0;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 6px var(--fc-feedback-main-inline-pad) 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.fc-creator-feedback__mobile-nav::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.fc-creator-feedback__mobile-nav .fc-creator-feedback__product-tab {
+  flex: 0 0 auto;
+  width: auto;
+  white-space: nowrap;
+  text-align: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid transparent;
+  transition:
+    color 0.2s ease,
+    background 0.22s ease,
+    border-color 0.22s ease,
+    transform 0.22s cubic-bezier(0.34, 1.12, 0.64, 1),
+    box-shadow 0.22s ease;
+}
+
+.fc-creator-feedback__mobile-nav .fc-creator-feedback__product-tab:hover,
+.fc-creator-feedback__mobile-nav .fc-creator-feedback__product-tab:focus-visible {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+}
+
+.fc-creator-feedback__mobile-nav .fc-creator-feedback__product-tab:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.fc-creator-feedback__mobile-nav .fc-creator-feedback__product-tab:hover .fc-creator-feedback__product-thumb,
+.fc-creator-feedback__mobile-nav .fc-creator-feedback__product-tab:focus-visible .fc-creator-feedback__product-thumb {
+  transform: scale(1.06);
+}
+
+.fc-creator-feedback__mobile-nav .fc-creator-feedback__product-tab-inner {
+  justify-content: center;
+}
+
+.fc-creator-feedback__mobile-nav .fc-creator-feedback__product-tab.is-active {
+  color: #ffffff;
+  background: rgba(255, 211, 0, 0.12);
+  border-color: rgba(255, 211, 0, 0.38);
+  box-shadow: inset 0 0 0 1px rgba(255, 211, 0, 0.14);
+}
+
+.fc-creator-feedback__viewport {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding-inline: var(--fc-feedback-main-inline-pad);
+  box-sizing: border-box;
+  overflow: hidden;
+  overscroll-behavior-y: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.fc-creator-feedback__viewport::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.fc-creator-feedback__card.is-interactive .fc-creator-feedback__viewport {
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fc-creator-feedback__panel {
+  display: none;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.fc-creator-feedback__panel.is-active {
+  display: flex;
+}
+
+.fc-creator-feedback__track {
+  display: flex;
+  flex-direction: column;
+}
+
+.fc-creator-feedback__track-set {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 4vw, 40px);
+  flex-shrink: 0;
+  padding-bottom: 8px;
+}
+
+.fc-creator-feedback__post {
+  --fc-post-avatar-size: 52px;
+  --fc-post-gutter: 14px;
+  --fc-post-media-max: min(447px, calc(100% - var(--fc-post-avatar-size) - var(--fc-post-gutter)));
+  display: grid;
+  grid-template-columns: var(--fc-post-avatar-size) minmax(0, var(--fc-post-media-max));
+  column-gap: var(--fc-post-gutter);
+  row-gap: 12px;
+  align-items: start;
+  width: 100%;
+  max-width: calc(var(--fc-post-media-max) + var(--fc-post-avatar-size) + var(--fc-post-gutter));
+  flex-shrink: 0;
+}
+
+.fc-creator-feedback__post-avatar {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.fc-creator-feedback__post-head {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.fc-creator-feedback__post-body {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+}
+
+.fc-creator-feedback__post-media {
+  grid-column: 2;
+  grid-row: 3;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
+}
+
+.fc-creator-feedback__post-media--instagram {
+  border-radius: 12px;
+  background: #000;
+  isolation: isolate;
+  transform: translateZ(0);
+  overflow: hidden;
+}
+
+.fc-creator-feedback__post-media--portrait:not(.fc-creator-feedback__post-media--instagram) {
+  aspect-ratio: 9 / 16;
+}
+
+/* IG iframe has fixed chrome — crop window drives height, not full 9:16. */
+.fc-creator-feedback__post-media--portrait.fc-creator-feedback__post-media--instagram {
+  aspect-ratio: auto;
+  height: auto;
+}
+
+.fc-creator-feedback__post-media--landscape {
+  aspect-ratio: 16 / 9;
+}
+
+.fc-creator-feedback__post-media--square {
+  aspect-ratio: 1 / 1;
+}
+
+.fc-creator-feedback__post-divider {
+  grid-column: 1 / -1;
+  grid-row: 4;
+}
+
+div.fc-creator-feedback__divider.fc-creator-feedback__divider--horizontal.fc-creator-feedback__post-divider {
+  width: calc(100% + (var(--fc-feedback-main-inline-pad) * 2));
+  max-width: none;
+  margin-inline: calc(-1 * var(--fc-feedback-main-inline-pad));
+  margin-block: 0;
+}
+
+.fc-creator-feedback__avatar {
+  flex: 0 0 auto;
+  width: var(--fc-post-avatar-size);
+  height: var(--fc-post-avatar-size);
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.fc-creator-feedback__avatar-img,
+.fc-creator-feedback__avatar-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fc-creator-feedback__avatar-fallback {
+  background: linear-gradient(145deg, rgba(255, 211, 0, 0.35), rgba(255, 255, 255, 0.08));
+}
+
+.fc-creator-feedback__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.fc-creator-feedback__name {
+  margin: 0;
+  font-family: var(--fc-font, sans-serif);
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1.15;
+  color: #ffffff;
+}
+
+.fc-creator-feedback__handle {
+  font-family: var(--fc-font, sans-serif);
+  font-size: clamp(13px, 1.4vw, 15px);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1.2;
+  color: var(--fc-yellow, #ffd300);
+  text-decoration: none;
+}
+
+a.fc-creator-feedback__handle:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.fc-creator-feedback__body,
+.fc-creator-feedback__body.rte,
+.fc-creator-feedback__post-body {
+  margin: 0;
+  font-family: var(--fc-font, sans-serif);
+  font-size: clamp(15px, 1.5vw, 18px);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1.4;
+  color: #ffffff;
+}
+
+.fc-creator-feedback__body p {
+  margin: 0;
+  max-width: none;
+  color: #ffffff;
+}
+
+div.fc-creator-feedback__divider.fc-creator-feedback__divider--horizontal {
+  display: block;
+  flex: 0 0 auto;
+  height: 1px;
+  min-height: 1px;
+  padding: 0;
+  margin-block: 0;
+  border: 0;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* IG default embed width at column size; crop hides header/footer chrome. */
+.fc-creator-feedback__embed-crop {
+  --fc-ig-embed-width: 100%;
+  --fc-ig-embed-height: 860px;
+  --fc-ig-crop-top: 60px;
+  --fc-ig-crop-bottom: 236px;
+  --fc-ig-media-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+  height: calc(var(--fc-ig-embed-height) - var(--fc-ig-crop-top) - var(--fc-ig-crop-bottom));
+  min-height: 0;
+  position: relative;
+  background: #000;
+  border-radius: var(--fc-ig-media-radius);
+  clip-path: inset(0 round var(--fc-ig-media-radius));
+  contain: layout paint;
+  isolation: isolate;
+}
+
+.fc-creator-feedback__embed-crop--carousel {
+  --fc-ig-crop-bottom: 310px;
+  --fc-ig-embed-height: 920px;
+}
+
+.fc-creator-feedback__embed-crop--reel {
+  --fc-ig-crop-bottom: 300px;
+  --fc-ig-embed-height: 880px;
+}
+
+.fc-creator-feedback__embed-crop .fc-creator-feedback__embed,
+.fc-creator-feedback__embed-crop iframe {
+  display: block;
+  width: var(--fc-ig-embed-width) !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  height: var(--fc-ig-embed-height) !important;
+  margin-top: calc(-1 * var(--fc-ig-crop-top)) !important;
+  margin-bottom: 0 !important;
+  border: 0 !important;
+  background: #000 !important;
+  box-shadow: none !important;
+}
+
+.fc-creator-feedback__post-media--landscape .fc-creator-feedback__embed--youtube,
+.fc-creator-feedback__embed--youtube {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.fc-creator-feedback__embed {
+  width: 100%;
+  min-height: 0;
+  margin: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.fc-creator-feedback__post-media .fc-creator-feedback__embed--placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.03);
+  box-sizing: border-box;
+  padding: 24px;
+  text-align: center;
+}
+
+.fc-creator-feedback__embed-label {
+  font-family: var(--fc-font, sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.fc-creator-feedback__embed-hint {
+  font-family: var(--fc-font, sans-serif);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.fc-creator-feedback__empty {
+  margin: 0;
+  padding: 24px 0;
+  font-family: var(--fc-font, sans-serif);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.fc-creator-feedback__post-media--ig-thumb {
+  aspect-ratio: auto;
+  width: 100%;
+}
+
+.fc-creator-feedback__ig-thumb {
+  display: block;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #0a0a0a;
+  text-decoration: none;
+  color: inherit;
+}
+
+.fc-creator-feedback__ig-thumb::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.fc-creator-feedback__ig-thumb::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -9px 0 0 -5px;
+  border-style: solid;
+  border-width: 10px 0 10px 16px;
+  border-color: transparent transparent transparent rgba(255, 255, 255, 0.95);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.fc-creator-feedback__post-media--portrait .fc-creator-feedback__ig-thumb {
+  aspect-ratio: 9 / 16;
+}
+
+.fc-creator-feedback__post-media--landscape .fc-creator-feedback__ig-thumb {
+  aspect-ratio: 16 / 9;
+}
+
+.fc-creator-feedback__post-media--square .fc-creator-feedback__ig-thumb {
+  aspect-ratio: 1 / 1;
+}
+
+.fc-creator-feedback__ig-thumb-img {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  background: #0a0a0a;
+}
+
+.fc-creator-feedback__ig-thumb:not(:has(.fc-creator-feedback__ig-thumb-img[src])) .fc-creator-feedback__ig-thumb-img,
+.fc-creator-feedback__ig-thumb-img:not([src]),
+.fc-creator-feedback__ig-thumb-img[src=''] {
+  min-height: clamp(240px, 42vw, 447px);
+  background: linear-gradient(160deg, #1a1a1a 0%, #0a0a0a 100%);
+}
+
+.fc-creator-feedback__ig-thumb:focus-visible {
+  outline: 2px solid rgba(255, 211, 0, 0.55);
+  outline-offset: 2px;
+}
+
+@media screen and (max-width: 749px) {
+  .fc-creator-feedback-section.shopify-section {
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
+
+  .fc-creator-feedback-section .fc-creator-feedback,
+  .fc-creator-feedback {
+    min-height: 100svh;
+    min-height: 100dvh;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    --fc-page-gutter: 48px;
+    padding-top: clamp(12px, 3vw, 20px);
+    padding-bottom: clamp(12px, 3vw, 20px);
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+
+  .fc-creator-feedback__outer {
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(14px, 2.5vh, 24px);
+  }
+
+  #MainContent .fc-creator-feedback__title {
+    font-size: clamp(28px, 7vw, 36px);
+    flex-shrink: 0;
+  }
+
+  .fc-creator-feedback__card {
+    flex-direction: column;
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    height: clamp(360px, calc(100svh - 120px), calc(100dvh - 120px));
+    max-height: calc(100dvh - 120px);
+    touch-action: pan-y;
+  }
+
+  .fc-creator-feedback__main {
+    --fc-post-media-max: min(360px, calc(100% - var(--fc-post-avatar-size) - var(--fc-post-gutter)));
+    flex: 1 1 auto;
+    width: 100%;
+    padding-top: 10px;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fc-creator-feedback__viewport {
+    overflow: hidden;
+    overscroll-behavior-y: none;
+  }
+
+  .fc-creator-feedback__card.is-interactive .fc-creator-feedback__viewport {
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  .fc-creator-feedback__post {
+    --fc-post-media-max: min(360px, calc(100% - var(--fc-post-avatar-size) - var(--fc-post-gutter)));
+    max-width: 100%;
+    row-gap: 10px;
+  }
+
+  .fc-creator-feedback__embed-crop {
+    --fc-ig-embed-height-effective: var(--fc-ig-embed-height-mobile, var(--fc-ig-embed-height));
+    --fc-ig-crop-top-effective: var(--fc-ig-crop-top-mobile, var(--fc-ig-crop-top));
+    --fc-ig-crop-bottom-effective: var(--fc-ig-crop-bottom-mobile, var(--fc-ig-crop-bottom));
+    height: calc(
+      var(--fc-ig-embed-height-effective) - var(--fc-ig-crop-top-effective) - var(--fc-ig-crop-bottom-effective)
+    );
+  }
+
+  .fc-creator-feedback__embed-crop .fc-creator-feedback__embed,
+  .fc-creator-feedback__embed-crop iframe {
+    height: var(--fc-ig-embed-height-effective, var(--fc-ig-embed-height)) !important;
+    margin-top: calc(-1 * var(--fc-ig-crop-top-effective, var(--fc-ig-crop-top))) !important;
+  }
+
+  .fc-creator-feedback__post-media--portrait .fc-creator-feedback__ig-thumb {
+    max-height: min(56vh, 360px);
+  }
+
+  .fc-creator-feedback__ig-thumb {
+    --fc-ig-thumb-trim-bottom: var(--fc-ig-thumb-trim-bottom-mobile, 0px);
+  }
+
+  .fc-creator-feedback__ig-thumb-img {
+    height: calc(100% + var(--fc-ig-thumb-trim-bottom, 0px));
+    object-position: center top;
+  }
+
+  .fc-creator-feedback__rail--desktop {
+    display: none;
+  }
+
+  .fc-creator-feedback__divider--vertical {
+    display: none !important;
+  }
+
+  .fc-creator-feedback__mobile-nav {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    min-height: 40px;
+    padding-top: 6px;
+    padding-bottom: 10px;
+    margin-bottom: 8px;
+  }
+
+  .fc-creator-feedback__mobile-nav .fc-creator-feedback__product-tab:hover,
+  .fc-creator-feedback__mobile-nav .fc-creator-feedback__product-tab:focus-visible {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-creator-feedback__card.is-interactive .fc-creator-feedback__viewport {
+    overflow-y: auto;
+  }
+
+  .fc-creator-feedback__product-tab,
+  .fc-creator-feedback__product-tab-inner,
+  .fc-creator-feedback__product-thumb {
+    transition: none;
+  }
+
+  .fc-creator-feedback__rail--desktop .fc-creator-feedback__product-tab:hover .fc-creator-feedback__product-tab-inner,
+  .fc-creator-feedback__rail--desktop .fc-creator-feedback__product-tab:focus-visible .fc-creator-feedback__product-tab-inner,
+  .fc-creator-feedback__mobile-nav .fc-creator-feedback__product-tab:hover,
+  .fc-creator-feedback__mobile-nav .fc-creator-feedback__product-tab:focus-visible {
+    transform: none;
+    box-shadow: none;
+  }
+}

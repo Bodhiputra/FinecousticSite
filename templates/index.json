@@ -98,6 +98,115 @@
         "text_position_left": 6
       }
     },
+    "fc_creator_feedback_home": {
+      "type": "fc-creator-feedback",
+      "blocks": {
+        "review_luis": {
+          "type": "review",
+          "settings": {
+            "product_group": "fbs1",
+            "creator_name": "Luis Aguilar",
+            "creator_handle": "la.arts.studio",
+            "avatar_asset": "luis-aguilar-avatar.png",
+            "profile_url": "https://www.instagram.com/la.arts.studio/",
+            "review_text": "Only had it for about 10 minutes and easily became my new favorite compact speaker, sound is superb for a speaker the size of the Hako Nomad, the aesthetics and build quality are simply a massive plus and what sets it apart from other speakers I have tried in this size.",
+            "instagram_post_url": "https://www.instagram.com/p/DbdfgU9EZhF/?img_index=1"
+          }
+        },
+        "review_yash": {
+          "type": "review",
+          "settings": {
+            "product_group": "fbs1",
+            "creator_name": "Yash Patel",
+            "creator_handle": "techzie_",
+            "avatar_asset": "yash-patel-avatar.png",
+            "profile_url": "https://www.instagram.com/techzie_/",
+            "review_text": "This was great speaker. Enjoyed unboxing experience and first time listening. For its size, it definitely creates room filling sound.",
+            "instagram_post_url": "https://www.instagram.com/p/DbrZ45ElnOZ/?img_index=1"
+          }
+        },
+        "review_wiwit": {
+          "type": "review",
+          "settings": {
+            "product_group": "fbs1",
+            "creator_name": "Wiwit Jaya",
+            "creator_handle": "wiwit_jaya",
+            "avatar_asset": "wiwit-jaya-avatar.png",
+            "profile_url": "https://www.instagram.com/wiwit_jaya/",
+            "review_text": "the product build is no joke!! You'll be seeing this a lot in my posts.😮‍💨🔥🔥",
+            "instagram_post_url": "https://www.instagram.com/reel/Db-f5Elz8Q2/"
+          }
+        },
+        "review_espindesk": {
+          "type": "review",
+          "settings": {
+            "product_group": "fbs2",
+            "creator_name": "Espindesk",
+            "creator_handle": "espindesk",
+            "avatar_asset": "espindesk-avatar.png",
+            "profile_url": "https://www.instagram.com/espindesk/",
+            "review_text": "speaker is really great! I really like the possibility of changing the lighting, the design, the sound quality, and also its compact size.",
+            "instagram_post_url": "https://www.instagram.com/p/DbJIdTPA85z/",
+            "instagram_display": "thumbnail",
+            "instagram_thumbnail_asset": "espindesk-reel-thumb.jpg"
+          }
+        },
+        "review_lorenz": {
+          "type": "review",
+          "settings": {
+            "product_group": "fbs2",
+            "creator_name": "Lorenz Groche",
+            "creator_handle": "lorenzgroche",
+            "avatar_asset": "lorenz-groche-avatar.png",
+            "profile_url": "https://www.instagram.com/lorenzgroche/",
+            "review_text": "it's fantastic, very good quality.",
+            "instagram_post_url": "https://www.instagram.com/p/Dbdl1KXAhSV/?img_index=1"
+          }
+        },
+        "review_denis": {
+          "type": "review",
+          "settings": {
+            "product_group": "fbs2",
+            "creator_name": "Denis",
+            "creator_handle": "deskculture",
+            "avatar_asset": "denis-deskculture-avatar.png",
+            "profile_url": "https://www.instagram.com/deskculture/",
+            "review_text": "The Hako Nomad might just be the most aesthetically pleasing wireless speaker I have seen. The built quality and the design of the speaker is really well thought out - and that's just the visuals. The sound quality and the bass it is able to produce amazes me as well. I could not believe a bluetooth speaker could deliver such clear sound and such bass while being so loud.",
+            "instagram_post_url": "https://www.instagram.com/p/DblTAcjjDUt/?img_index=1"
+          }
+        },
+        "review_fiandcorput": {
+          "type": "review",
+          "settings": {
+            "product_group": "fbs1",
+            "creator_name": "Fian Dannic Corput",
+            "creator_handle": "fiandcorput",
+            "avatar_asset": "fiandcorput-avatar.png",
+            "profile_url": "https://www.instagram.com/fiandcorput/",
+            "review_text": "You know, this is the first best small speaker i've ever had. The sound quality it's just clean, not to boomy but it's clear. I've been using this as my main sound on my setup. The most I like about this speaker is the ambient light at the bottom, i choose the warm light and it makes more luxury feel.\n\nIt's clean, compact, and ready to go. Well done✨💯",
+            "instagram_post_url": "https://www.instagram.com/reel/DcgWO4RPM6L/",
+            "instagram_embed_type": "reel"
+          }
+        }
+      },
+      "block_order": [
+        "review_luis",
+        "review_yash",
+        "review_wiwit",
+        "review_fiandcorput",
+        "review_espindesk",
+        "review_lorenz",
+        "review_denis"
+      ],
+      "settings": {
+        "label_fbs1": "Hako Nomad",
+        "label_fbs2": "Hako Nomad L",
+        "product_handle_fbs1": "hako-nomad-fbs1",
+        "product_handle_fbs2": "hako-nomad-l-fbs2",
+        "dwell_multi_seconds": 12,
+        "dwell_single_seconds": 10
+      }
+    },
     "fc_nomad_video_duo": {
       "type": "fc-nomad-video-duo",
       "name": "Nomad video duo",
@@ -113,6 +222,7 @@
   },
   "order": [
     "website_hero_home",
+    "fc_creator_feedback_home",
     "fc_nomad_video_duo",
     "flexible_image_banner_aARpeR",
     "one_style_main_page_banner_79hTJp"

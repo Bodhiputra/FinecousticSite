@@ -1,0 +1,434 @@
+{{ 'fc-creator-feedback.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'fc-creator-feedback.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign label_fbs1 = section.settings.label_fbs1 | default: 'Hako Nomad'
+  assign label_fbs2 = section.settings.label_fbs2 | default: 'Hako Nomad L'
+  assign product_handle_fbs1 = section.settings.product_handle_fbs1 | default: 'hako-nomad-fbs1'
+  assign product_handle_fbs2 = section.settings.product_handle_fbs2 | default: 'hako-nomad-l-fbs2'
+  assign fbs1_product = all_products[product_handle_fbs1]
+  assign fbs2_product = all_products[product_handle_fbs2]
+  assign thumb_fbs1 = section.settings.image_fbs1 | default: fbs1_product.featured_image
+  assign thumb_fbs2 = section.settings.image_fbs2 | default: fbs2_product.featured_image
+  assign has_instagram_embed = false
+  assign count_fbs1 = 0
+  assign count_fbs2 = 0
+
+  for block in section.blocks
+    if block.type == 'review'
+      assign group = block.settings.product_group | default: 'fbs1'
+      if group == 'fbs2'
+        assign count_fbs2 = count_fbs2 | plus: 1
+      else
+        assign count_fbs1 = count_fbs1 | plus: 1
+      endif
+      assign ig_url = block.settings.instagram_post_url | strip
+      assign ig_display = block.settings.instagram_display | default: 'embed'
+      if ig_url != blank and ig_display == 'embed'
+        assign has_instagram_embed = true
+      endif
+    endif
+  endfor
+
+  assign dwell_multi = section.settings.dwell_multi_seconds | default: 12 | times: 1000
+  assign dwell_single = section.settings.dwell_single_seconds | default: 10 | times: 1000
+  assign section_heading = section.settings.heading | default: 'The Finest Thoughts.'
+-%}
+
+<section
+  class="fc-creator-feedback"
+  id="fc-creator-feedback-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-dwell-multi="{{ dwell_multi }}"
+  data-dwell-single="{{ dwell_single }}"
+  data-has-embed="{% if has_instagram_embed %}1{% else %}0{% endif %}"
+  aria-label="Creator feedback"
+>
+  <div class="fc-creator-feedback__outer">
+    {%- if section_heading != blank -%}
+      <h2 class="fc-creator-feedback__title">{{ section_heading | escape }}</h2>
+    {%- endif -%}
+    <div class="fc-creator-feedback__card" data-fc-feedback-page>
+      <aside class="fc-creator-feedback__rail fc-creator-feedback__rail--desktop" aria-label="Product subsections">
+        <a class="fc-creator-feedback__logo link" href="{{ routes.root_url }}" aria-label="Finecoustic home">
+          <img
+            src="{{ 'FLogo-mark-yellow.svg' | asset_url }}"
+            alt=""
+            width="24"
+            height="24"
+            loading="lazy"
+            decoding="async"
+          >
+        </a>
+        <div class="fc-creator-feedback__product-nav" role="tablist" aria-label="Feedback subsections">
+          {% render 'fc-creator-feedback-tab',
+            label: label_fbs1,
+            image: thumb_fbs1,
+            subsection: 'fbs1',
+            post_count: count_fbs1,
+            active: true
+          %}
+          {% render 'fc-creator-feedback-tab',
+            label: label_fbs2,
+            image: thumb_fbs2,
+            subsection: 'fbs2',
+            post_count: count_fbs2,
+            active: false
+          %}
+        </div>
+      </aside>
+
+      <div class="fc-creator-feedback__divider fc-creator-feedback__divider--vertical" aria-hidden="true"></div>
+
+      <div class="fc-creator-feedback__main">
+        <div class="fc-creator-feedback__mobile-nav" role="tablist" aria-label="Feedback subsections">
+          {% render 'fc-creator-feedback-tab',
+            label: label_fbs1,
+            image: thumb_fbs1,
+            subsection: 'fbs1',
+            post_count: count_fbs1,
+            active: true
+          %}
+          {% render 'fc-creator-feedback-tab',
+            label: label_fbs2,
+            image: thumb_fbs2,
+            subsection: 'fbs2',
+            post_count: count_fbs2,
+            active: false
+          %}
+        </div>
+
+        <div class="fc-creator-feedback__viewport" data-fc-feedback-viewport tabindex="0">
+          <div class="fc-creator-feedback__panel is-active" data-subsection="fbs1" role="tabpanel" data-post-count="{{ count_fbs1 }}">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'review' -%}
+                {%- assign group = block.settings.product_group | default: 'fbs1' -%}
+                {%- if group != 'fbs2' -%}
+                  {% render 'fc-creator-feedback-post', block: block %}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if count_fbs1 == 0 -%}
+              <p class="fc-creator-feedback__empty">No creator posts for {{ label_fbs1 | escape }} yet.</p>
+            {%- endif -%}
+          </div>
+
+          <div class="fc-creator-feedback__panel" data-subsection="fbs2" role="tabpanel" hidden data-post-count="{{ count_fbs2 }}">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'review' -%}
+                {%- assign group = block.settings.product_group | default: 'fbs1' -%}
+                {%- if group == 'fbs2' -%}
+                  {% render 'fc-creator-feedback-post', block: block %}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if count_fbs2 == 0 -%}
+              <p class="fc-creator-feedback__empty">No creator posts for {{ label_fbs2 | escape }} yet.</p>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Creator feedback",
+  "tag": "section",
+  "class": "fc-creator-feedback-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Creator feeds by product. Auto-scroll pauses only while the cursor or touch is over the feedback card — then visitors can scroll and click freely."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "The Finest Thoughts."
+    },
+    {
+      "type": "text",
+      "id": "label_fbs1",
+      "label": "Subsection label — Hako Nomad",
+      "default": "Hako Nomad"
+    },
+    {
+      "type": "text",
+      "id": "label_fbs2",
+      "label": "Subsection label — Hako Nomad L",
+      "default": "Hako Nomad L"
+    },
+    {
+      "type": "text",
+      "id": "product_handle_fbs1",
+      "label": "Product handle — Hako Nomad",
+      "default": "hako-nomad-fbs1",
+      "info": "Used for subsection thumbnail when no custom image is set."
+    },
+    {
+      "type": "text",
+      "id": "product_handle_fbs2",
+      "label": "Product handle — Hako Nomad L",
+      "default": "hako-nomad-l-fbs2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_fbs1",
+      "label": "Subsection image — Hako Nomad",
+      "info": "Optional. Defaults to the product featured image."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_fbs2",
+      "label": "Subsection image — Hako Nomad L",
+      "info": "Optional. Defaults to the product featured image."
+    },
+    {
+      "type": "range",
+      "id": "dwell_multi_seconds",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "unit": "s",
+      "label": "Scroll seconds per post (multiple in subsection)",
+      "default": 12,
+      "info": "Controls how long the feed takes to drift through each creator post."
+    },
+    {
+      "type": "range",
+      "id": "dwell_single_seconds",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "s",
+      "label": "Scroll seconds (single-post subsection)",
+      "default": 10,
+      "info": "Drift speed when a subsection has only one creator post."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Creator review",
+      "settings": [
+        {
+          "type": "select",
+          "id": "product_group",
+          "label": "Product subsection",
+          "options": [
+            { "value": "fbs1", "label": "Hako Nomad" },
+            { "value": "fbs2", "label": "Hako Nomad L" }
+          ],
+          "default": "fbs1"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Profile picture"
+        },
+        {
+          "type": "text",
+          "id": "avatar_asset",
+          "label": "Profile picture asset",
+          "info": "Theme asset filename (e.g. luis-aguilar-avatar.png). Used when no image is picked above."
+        },
+        {
+          "type": "text",
+          "id": "creator_name",
+          "label": "Creator name",
+          "default": "Luis Aguilar"
+        },
+        {
+          "type": "text",
+          "id": "creator_handle",
+          "label": "Creator handle",
+          "default": "la.arts.studio",
+          "info": "With or without @"
+        },
+        {
+          "type": "url",
+          "id": "profile_url",
+          "label": "Creator profile URL",
+          "info": "Optional — defaults to instagram.com/{handle}"
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review text",
+          "default": "Only had it for about 10 minutes and easily became my new favorite compact speaker, sound is superb for a speaker the size of the Hako Nomad, the aesthetics and build quality are simply a massive plus and what sets it apart from other speakers I have tried in this size."
+        },
+        {
+          "type": "select",
+          "id": "media_layout",
+          "label": "Media shape",
+          "options": [
+            { "value": "portrait", "label": "Vertical (9:16)" },
+            { "value": "landscape", "label": "Horizontal (16:9)" },
+            { "value": "square", "label": "Square (1:1)" }
+          ],
+          "default": "portrait",
+          "info": "Sets the media frame. Use vertical for reels; horizontal for YouTube-style posts."
+        },
+        {
+          "type": "url",
+          "id": "instagram_post_url",
+          "label": "Instagram post URL",
+          "info": "Reel or post link for the embed (query params like ?img_index=1 are OK)."
+        },
+        {
+          "type": "select",
+          "id": "instagram_display",
+          "label": "Instagram media display",
+          "options": [
+            { "value": "embed", "label": "Embed (inline play when IG allows)" },
+            { "value": "thumbnail", "label": "Thumbnail (Watch on Instagram posts)" }
+          ],
+          "default": "embed",
+          "info": "Embed uses auto-crop after load. Use Thumbnail for reels that only show “Watch on Instagram”, or for zero crop tuning."
+        },
+        {
+          "type": "image_picker",
+          "id": "instagram_thumbnail",
+          "label": "Instagram thumbnail",
+          "info": "Cover image for thumbnail mode (recommended). Upload a sharp frame from the reel or post."
+        },
+        {
+          "type": "text",
+          "id": "instagram_thumbnail_asset",
+          "label": "Instagram thumbnail asset",
+          "info": "Theme asset filename for thumbnail mode (e.g. espindesk-reel-thumb.jpg). Used when no image is picked above."
+        },
+        {
+          "type": "select",
+          "id": "instagram_embed_type",
+          "label": "Instagram embed type",
+          "options": [
+            { "value": "auto", "label": "Auto (from URL)" },
+            { "value": "reel", "label": "Reel" },
+            { "value": "carousel", "label": "Carousel / multi-image" },
+            { "value": "post", "label": "Single post" }
+          ],
+          "default": "auto",
+          "info": "Used for mobile crop presets. Carousel URLs with img_index= auto-detect as carousel."
+        },
+        {
+          "type": "checkbox",
+          "id": "ig_crop_custom_mobile",
+          "label": "Manual crop overrides",
+          "default": false,
+          "info": "Leave off for auto-calibration (recommended). Turn on only to override with the sliders below."
+        },
+        {
+          "type": "header",
+          "content": "Desktop crop (embed mode)"
+        },
+        {
+          "type": "range",
+          "id": "ig_embed_height",
+          "min": 780,
+          "max": 980,
+          "step": 4,
+          "unit": "px",
+          "label": "IG embed iframe height — desktop",
+          "default": 860,
+          "info": "Increase if media looks clipped after cropping."
+        },
+        {
+          "type": "range",
+          "id": "ig_crop_top",
+          "min": 40,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "label": "IG embed top crop",
+          "default": 60,
+          "info": "Increase if white IG header shows above the media."
+        },
+        {
+          "type": "range",
+          "id": "ig_crop_bottom",
+          "min": 160,
+          "max": 340,
+          "step": 2,
+          "unit": "px",
+          "label": "IG embed bottom crop",
+          "default": 236,
+          "info": "Increase if “View more on Instagram” or the likes bar shows below the media. Carousel presets use ~284px."
+        },
+        {
+          "type": "header",
+          "content": "Mobile crop (embed mode)"
+        },
+        {
+          "type": "range",
+          "id": "ig_crop_top_mobile",
+          "min": 40,
+          "max": 120,
+          "step": 2,
+          "unit": "px",
+          "label": "IG embed top crop — mobile",
+          "default": 60
+        },
+        {
+          "type": "range",
+          "id": "ig_crop_bottom_mobile",
+          "min": 200,
+          "max": 360,
+          "step": 2,
+          "unit": "px",
+          "label": "IG embed bottom crop — mobile",
+          "default": 268,
+          "info": "Hides “View more on Instagram” and likes bar on phones. Carousel presets use ~304px."
+        },
+        {
+          "type": "range",
+          "id": "ig_embed_height_mobile",
+          "min": 780,
+          "max": 980,
+          "step": 4,
+          "unit": "px",
+          "label": "IG embed iframe height — mobile",
+          "default": 880,
+          "info": "Match IG iframe height on narrow screens. Increase if media looks clipped after cropping."
+        },
+        {
+          "type": "header",
+          "content": "Mobile crop (thumbnail mode)"
+        },
+        {
+          "type": "range",
+          "id": "ig_thumb_trim_bottom_mobile",
+          "min": 0,
+          "max": 160,
+          "step": 4,
+          "unit": "px",
+          "label": "Thumbnail bottom trim — mobile",
+          "default": 0,
+          "info": "Trims pixels from the bottom of thumbnail images on phones (e.g. IG UI baked into thumb)."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Creator feedback",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "product_group": "fbs1",
+            "creator_name": "Luis Aguilar",
+            "creator_handle": "la.arts.studio",
+            "avatar_asset": "luis-aguilar-avatar.png",
+            "profile_url": "https://www.instagram.com/la.arts.studio/",
+            "instagram_post_url": "https://www.instagram.com/p/DbdfgU9EZhF/?img_index=1"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,33 @@
+{%- liquid
+  assign tab_label = label | escape
+  assign tab_subsection = subsection | default: 'fbs1'
+  assign tab_count = post_count | default: 0
+  assign tab_active = active | default: false
+  assign tab_image = image
+-%}
+<button
+  type="button"
+  class="fc-creator-feedback__product-tab{% if tab_active %} is-active{% endif %}"
+  role="tab"
+  aria-selected="{% if tab_active %}true{% else %}false{% endif %}"
+  data-subsection="{{ tab_subsection }}"
+  data-post-count="{{ tab_count }}"
+>
+  <span class="fc-creator-feedback__product-tab-inner">
+    {%- if tab_image != blank -%}
+      <span class="fc-creator-feedback__product-thumb">
+        {{
+          tab_image
+          | image_url: width: 72
+          | image_tag:
+            class: 'fc-creator-feedback__product-thumb-img',
+            widths: '36, 72',
+            sizes: '36px',
+            loading: 'lazy',
+            alt: ''
+        }}
+      </span>
+    {%- endif -%}
+    <span class="fc-creator-feedback__product-label">{{ tab_label }}</span>
+  </span>
+</button>

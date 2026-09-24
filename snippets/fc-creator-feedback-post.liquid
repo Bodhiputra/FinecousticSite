@@ -1,0 +1,231 @@
+{%- liquid
+  assign creator_name = block.settings.creator_name | strip
+  assign creator_handle = block.settings.creator_handle | strip
+  assign profile_url = block.settings.profile_url
+  assign review_text = block.settings.review_text
+  assign instagram_post_url_raw = block.settings.instagram_post_url | strip
+  assign instagram_embed_type = block.settings.instagram_embed_type | default: 'auto'
+  if instagram_embed_type == 'auto' and instagram_post_url_raw != blank
+    if instagram_post_url_raw contains '/reel/'
+      assign instagram_embed_type = 'reel'
+    elsif instagram_post_url_raw contains 'img_index'
+      assign instagram_embed_type = 'carousel'
+    else
+      assign instagram_embed_type = 'reel'
+    endif
+  endif
+  assign instagram_url = instagram_post_url_raw | split: '?' | first | split: '#' | first
+  if instagram_embed_type == 'reel' and instagram_url contains '/p/'
+    assign ig_slug = instagram_url | split: '/p/' | last | remove: '/'
+    if ig_slug != blank
+      assign instagram_url = 'https://www.instagram.com/reel/' | append: ig_slug | append: '/'
+    endif
+  endif
+  assign avatar_asset = block.settings.avatar_asset | strip
+  assign media_layout = block.settings.media_layout | default: 'portrait'
+  assign ig_crop_top = block.settings.ig_crop_top | default: 68
+  assign ig_crop_bottom = block.settings.ig_crop_bottom | default: 310
+  assign ig_embed_height = block.settings.ig_embed_height | default: 920
+  assign ig_crop_top_mobile = block.settings.ig_crop_top_mobile | default: 64
+  assign ig_crop_bottom_mobile = block.settings.ig_crop_bottom_mobile | default: 450
+  assign ig_embed_height_mobile = block.settings.ig_embed_height_mobile | default: 920
+  assign ig_thumb_trim_bottom_mobile = block.settings.ig_thumb_trim_bottom_mobile | default: 0
+  unless block.settings.ig_crop_custom_mobile
+    case instagram_embed_type
+      when 'carousel'
+        assign ig_crop_top = 68
+        assign ig_crop_bottom = 310
+        assign ig_embed_height = 920
+        assign ig_crop_top_mobile = 64
+        assign ig_crop_bottom_mobile = 450
+        assign ig_embed_height_mobile = 920
+      when 'reel'
+        assign ig_crop_top = 68
+        assign ig_crop_bottom = 310
+        assign ig_embed_height = 920
+        assign ig_crop_top_mobile = 64
+        assign ig_crop_bottom_mobile = 450
+        assign ig_embed_height_mobile = 920
+      when 'post'
+        assign ig_crop_top = 68
+        assign ig_crop_bottom = 310
+        assign ig_embed_height = 920
+        assign ig_crop_top_mobile = 64
+        assign ig_crop_bottom_mobile = 450
+        assign ig_embed_height_mobile = 920
+    endcase
+  endunless
+  assign instagram_display = block.settings.instagram_display | strip | downcase
+  if instagram_display == blank
+    assign instagram_display = 'embed'
+  endif
+  assign instagram_thumbnail = block.settings.instagram_thumbnail
+  assign instagram_thumbnail_asset = block.settings.instagram_thumbnail_asset | strip
+  if instagram_thumbnail_asset == blank and block.id == 'review_espindesk'
+    assign instagram_thumbnail_asset = 'espindesk-reel-thumb.jpg'
+  endif
+  if avatar_asset == blank and block.id == 'review_luis'
+    assign avatar_asset = 'luis-aguilar-avatar.png'
+  endif
+  assign handle_href = profile_url
+  if handle_href == blank and creator_handle != blank
+    assign handle_clean = creator_handle | remove: '@'
+    assign handle_href = 'https://www.instagram.com/' | append: handle_clean | append: '/'
+  endif
+-%}
+<article
+  class="fc-creator-feedback__post fc-creator-feedback__post--media-{{ media_layout }}"
+  id="fc-creator-post-{{ block.id }}"
+  data-post-id="{{ block.id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="fc-creator-feedback__post-avatar">
+    <div class="fc-creator-feedback__avatar">
+      {%- if block.settings.avatar != blank -%}
+        {{
+          block.settings.avatar
+          | image_url: width: 120
+          | image_tag:
+            class: 'fc-creator-feedback__avatar-img',
+            widths: '52, 104, 120',
+            sizes: '52px',
+            loading: 'lazy',
+            alt: creator_name
+        }}
+      {%- elsif avatar_asset != blank -%}
+        <img
+          class="fc-creator-feedback__avatar-img"
+          src="{{ avatar_asset | asset_url }}"
+          alt="{{ creator_name | escape }}"
+          width="52"
+          height="52"
+          loading="lazy"
+          decoding="async"
+        >
+      {%- else -%}
+        <span class="fc-creator-feedback__avatar-fallback" aria-hidden="true"></span>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <header class="fc-creator-feedback__post-head">
+    <div class="fc-creator-feedback__identity">
+      {%- if creator_name != blank -%}
+        <p class="fc-creator-feedback__name">{{ creator_name | escape }}</p>
+      {%- endif -%}
+      {%- if creator_handle != blank -%}
+        {%- assign handle_label = creator_handle -%}
+        {%- unless handle_label contains '@' -%}
+          {%- assign handle_label = '@' | append: handle_label -%}
+        {%- endunless -%}
+        {%- if handle_href != blank -%}
+          <a
+            class="fc-creator-feedback__handle link"
+            href="{{ handle_href }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{- handle_label | escape -}}
+          </a>
+        {%- else -%}
+          <span class="fc-creator-feedback__handle">{{ handle_label | escape }}</span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </header>
+
+  {%- if review_text != blank -%}
+    <div class="fc-creator-feedback__post-body fc-creator-feedback__body rte">
+      {{ review_text | newline_to_br }}
+    </div>
+  {%- endif -%}
+
+  <div class="fc-creator-feedback__post-media fc-creator-feedback__post-media--{{ media_layout }}{% if instagram_url != blank %} fc-creator-feedback__post-media--instagram{% endif %}{% if instagram_display == 'thumbnail' %} fc-creator-feedback__post-media--ig-thumb{% endif %}">
+    {%- if instagram_url != blank -%}
+      {%- if instagram_display == 'thumbnail' -%}
+        <a
+          class="fc-creator-feedback__ig-thumb"
+          href="{{ instagram_url | escape }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-fc-ig-thumbnail
+          data-oembed-url="{{ instagram_url | escape }}"
+          aria-label="{{ creator_name | escape }} on Instagram — opens in a new tab"
+          style="--fc-ig-thumb-trim-bottom-mobile: {{ ig_thumb_trim_bottom_mobile }}px;"
+        >
+          {%- if instagram_thumbnail != blank -%}
+            {{
+              instagram_thumbnail
+              | image_url: width: 900
+              | image_tag:
+                class: 'fc-creator-feedback__ig-thumb-img',
+                widths: '320, 447, 640, 900',
+                sizes: '(max-width: 749px) 100vw, 447px',
+                loading: 'lazy',
+                alt: creator_name
+            }}
+          {%- elsif instagram_thumbnail_asset != blank -%}
+            <img
+              class="fc-creator-feedback__ig-thumb-img"
+              src="{{ instagram_thumbnail_asset | asset_url }}"
+              alt="{{ creator_name | escape }}"
+              width="447"
+              height="794"
+              loading="lazy"
+              decoding="async"
+            >
+          {%- else -%}
+            <img
+              class="fc-creator-feedback__ig-thumb-img"
+              alt="{{ creator_name | escape }}"
+              width="447"
+              height="794"
+              loading="lazy"
+              decoding="async"
+            >
+          {%- endif -%}
+        </a>
+      {%- else -%}
+        {%- liquid
+          assign ig_crop_manual = block.settings.ig_crop_custom_mobile
+        -%}
+        <div
+          class="fc-creator-feedback__embed-crop fc-creator-feedback__embed-crop--{{ instagram_embed_type }}"
+          data-fc-ig-crop
+          data-fc-ig-embed-type="{{ instagram_embed_type }}"
+          data-fc-ig-crop-mode="{% if ig_crop_manual %}manual{% else %}auto{% endif %}"
+          data-fc-ig-preset-top="{{ ig_crop_top }}"
+          data-fc-ig-preset-bottom="{{ ig_crop_bottom }}"
+          data-fc-ig-preset-height="{{ ig_embed_height }}"
+          data-fc-ig-preset-top-mobile="{{ ig_crop_top_mobile }}"
+          data-fc-ig-preset-bottom-mobile="{{ ig_crop_bottom_mobile }}"
+          data-fc-ig-preset-height-mobile="{{ ig_embed_height_mobile }}"
+          style="
+            --fc-ig-crop-top: {{ ig_crop_top }}px;
+            --fc-ig-crop-bottom: {{ ig_crop_bottom }}px;
+            --fc-ig-embed-height: {{ ig_embed_height }}px;
+            --fc-ig-crop-top-mobile: {{ ig_crop_top_mobile }}px;
+            --fc-ig-crop-bottom-mobile: {{ ig_crop_bottom_mobile }}px;
+            --fc-ig-embed-height-mobile: {{ ig_embed_height_mobile }}px;
+          "
+        >
+          <blockquote
+            class="instagram-media fc-creator-feedback__embed"
+            data-instgrm-permalink="{{ instagram_url | escape }}"
+            data-instgrm-version="14"
+          ></blockquote>
+        </div>
+      {%- endif -%}
+    {%- else -%}
+      <div class="fc-creator-feedback__embed fc-creator-feedback__embed--placeholder">
+        <span class="fc-creator-feedback__embed-label">Creator media</span>
+        <span class="fc-creator-feedback__embed-hint">Add a post URL in the theme editor</span>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div
+    class="fc-creator-feedback__divider fc-creator-feedback__divider--horizontal fc-creator-feedback__post-divider"
+    aria-hidden="true"
+  ></div>
+</article>
