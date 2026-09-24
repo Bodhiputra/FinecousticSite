@@ -2,6 +2,19 @@
 
 {%- include 'fc-launch-gates' -%}
 
+{%- if collection.handle == 'all' and request.design_mode == false -%}
+  {%- comment -%}
+    Use JS for sort redirect — request.query_string is often empty in theme dev / Liquid,
+    which caused an infinite reload loop on /collections/all?sort_by=created-descending.
+  {%- endcomment -%}
+  <script>
+    (function () {
+      if (window.location.search.indexOf('sort_by=') !== -1) return;
+      window.location.replace({{ routes.all_products_collection_url | append: '?sort_by=created-descending' | json }});
+    })();
+  </script>
+{%- endif -%}
+
 
 {%- style -%}
 
@@ -84,6 +97,19 @@
 
 /* ── HIDDEN CARD STATE ── */
 .fc-card.fc-hidden { display: none; }
+
+/* First paint: hide cards until JS applies enter animation (avoids static flash → re-animate) */
+.fc-grid[data-fc-shop-enter="pending"] .fc-card:not(.fc-hidden) {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-grid[data-fc-shop-enter="pending"] .fc-card:not(.fc-hidden) {
+    opacity: 1;
+    transform: none;
+  }
+}
 
 /* ── FILTER APPEAR ANIMATION ── */
 /* ── CATEGORY PLACEHOLDER ── */
@@ -339,7 +365,24 @@
 {%- for product in collection.products -%}
   {%- include 'fc-exclude-product', product: product -%}
   {%- if fc_exclude_product -%}{%- continue -%}{%- endif -%}
-  {%- render 'fc-product-data', product: product -%}
+  {%- liquid
+    assign fc_h = product.handle | downcase | strip
+    assign fc_display_name = product.title
+    if fc_h contains 'hako-nomad-l'
+      assign fc_display_name = 'Hako Nomad L'
+    elsif fc_h contains 'hako-nomad'
+      assign fc_display_name = 'Hako Nomad'
+    elsif fc_h contains 'resono'
+      assign fc_display_name = 'Resono'
+    elsif fc_h contains 'sonara'
+      assign fc_display_name = 'Sonara'
+    elsif fc_h contains 'groove-ows'
+      assign fc_display_name = 'Groove OWS'
+    elsif fc_h contains 'groove-anc'
+      assign fc_display_name = 'Groove ANC'
+    endif
+  -%}
+  {%- render 'fc-product-data', product: product, fc_display_title: fc_display_name -%}
 {%- endfor -%}
 
 <div class="fc-shop-page">
@@ -351,7 +394,7 @@
 
 {%- comment -%} Product grid {%- endcomment -%}
 <div class="fc-page-swipe-zone fc-shop-swipe-zone" id="fc-shop-swipe-zone">
-<div class="fc-grid" id="fc-grid" data-cols="{{ section.settings.columns_desktop }}">
+<div class="fc-grid" id="fc-grid" data-cols="{{ section.settings.columns_desktop }}" data-fc-shop-enter="pending">
   {%- for product in collection.products -%}
     {%- include 'fc-exclude-product', product: product -%}
     {%- unless fc_exclude_product -%}
@@ -395,10 +438,27 @@
         {%- endif -%}
       </div>
 
+      {%- liquid
+        assign fc_h = product.handle | downcase | strip
+        assign fc_display_name = product.title
+        if fc_h contains 'hako-nomad-l'
+          assign fc_display_name = 'Hako Nomad L'
+        elsif fc_h contains 'hako-nomad'
+          assign fc_display_name = 'Hako Nomad'
+        elsif fc_h contains 'resono'
+          assign fc_display_name = 'Resono'
+        elsif fc_h contains 'sonara'
+          assign fc_display_name = 'Sonara'
+        elsif fc_h contains 'groove-ows'
+          assign fc_display_name = 'Groove OWS'
+        elsif fc_h contains 'groove-anc'
+          assign fc_display_name = 'Groove ANC'
+        endif
+      -%}
       {%- if fc_preorder_coming_soon -%}
       {%- render 'fc-price-tag',
         tag_mode: 'coming_soon',
-        title: product.title,
+        title: fc_display_name,
         name_class: '',
         tag_class: ''
       -%}
@@ -410,7 +470,7 @@
         price: product.price,
         compare_at_price: product.compare_at_price,
         price_varies: product.price_varies,
-        title: product.title,
+        title: fc_display_name,
         name_class: '',
         tag_class: ''
       -%}
@@ -421,7 +481,7 @@
         price: product.price,
         compare_at_price: product.compare_at_price,
         price_varies: product.price_varies,
-        title: product.title,
+        title: fc_display_name,
         available: fc_card_available,
         name_class: '',
         tag_class: ''
@@ -479,6 +539,49 @@
 
 </div>
 
+<script>
+  (function () {
+    function fcRevealShopGridFallback() {
+      if (window.__fcShopGridEnterDone) return;
+      var grid = document.getElementById('fc-grid');
+      if (!grid || grid.getAttribute('data-fc-shop-enter') !== 'pending') return;
+
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        grid.querySelectorAll('.fc-card:not(.fc-hidden)').forEach(function (card, index) {
+          card.style.animationDelay = Math.min(index * 55, 420) + 'ms';
+          card.classList.add('fc-card-animate');
+        });
+      }
+      grid.removeAttribute('data-fc-shop-enter');
+      window.__fcShopGridEnterDone = true;
+    }
+
+    function fcScheduleShopGridFallback() {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(fcRevealShopGridFallback);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fcScheduleShopGridFallback, { once: true });
+    } else {
+      fcScheduleShopGridFallback();
+    }
+
+    /* Never leave products invisible if deferred JS fails to load. */
+    setTimeout(function () {
+      var grid = document.getElementById('fc-grid');
+      if (grid && grid.getAttribute('data-fc-shop-enter') === 'pending') {
+        grid.removeAttribute('data-fc-shop-enter');
+        window.__fcShopGridEnterDone = true;
+      }
+    }, 1200);
+  })();
+</script>
+
+<script src="{{ 'quantity-popover.js' | asset_url }}" defer></script>
+<script src="{{ 'cart.js' | asset_url }}" defer></script>
+<script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
 <script src="{{ 'fc-shop-grid.js' | asset_url }}" defer></script>
 
 {% schema %}

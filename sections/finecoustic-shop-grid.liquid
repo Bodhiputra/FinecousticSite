@@ -29,7 +29,7 @@
               {% endif %}
             </div>
             <div class="fc-card-body">
-              <h3 class="fc-card-name">{{ product.title }}</h3>
+              <h3 class="fc-card-name">{% render 'fc-product-display-name', fc_product: product %}</h3>
               <p class="fc-card-price">{{ product.price | money }}</p>
               <span class="fc-card-cta">Shop Now &rarr;</span>
             </div>

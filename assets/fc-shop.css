@@ -22,7 +22,10 @@
   transition: opacity 0.2s ease;
   width: fit-content;
 }
-.fc-card__tag:not(.fc-tag-active):not(.fc-tag--oos):not(.fc-tag--coming-soon):not(.fc-tag--launch-locked) .fc-card__tag-body {
+.fc-card__tag:not(.fc-tag--oos):not(.fc-tag--coming-soon):not(.fc-tag--launch-locked) {
+  cursor: pointer;
+}
+.fc-card__tag:not(.fc-tag--oos):not(.fc-tag--coming-soon):not(.fc-tag--launch-locked) .fc-card__tag-body {
   cursor: pointer;
 }
 .fc-card__tag-body {
@@ -32,7 +35,7 @@
   gap: 5px;
 }
 @media (hover: hover) {
-  .fc-card__tag:hover:not(.fc-tag-active):not(.fc-tag--oos):not(.fc-tag--coming-soon):not(.fc-tag--launch-locked) { opacity: 0.75; }
+  .fc-card__tag:hover:not(.fc-tag--oos):not(.fc-tag--coming-soon):not(.fc-tag--launch-locked) { opacity: 0.75; }
 }
 .fc-card__price {
   font-family: var(--fc-font);
@@ -118,10 +121,13 @@
 .fc-card__tag .fc-price-scratch__now {
   color: #000000;
 }
-.fc-card__name {
+.fc-card__tag h3.fc-card__name,
+.fc-tag-oos-wrap h3.fc-card__name,
+h3.fc-card__name {
   font-family: var(--fc-font);
   font-size: clamp(11px, 1.15vw, 14px);
   font-weight: 700;
+  font-style: normal;
   color: #000000;
   letter-spacing: -0.03em;
   line-height: 1;
