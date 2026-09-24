@@ -1,0 +1,91 @@
+---
+description: Store locator — OFAC + HSBC sanctioned/blocked countries must never be added as retailers
+globs: templates/page.store-locator.json,sections/store-locator.liquid
+alwaysApply: false
+---
+
+# Store locator — sanctioned country blacklist
+
+Finecoustic is US-based. **Never add stores** in blacklisted countries/regions to `templates/page.store-locator.json` (or via Theme Editor blocks). If the user requests one, **refuse**, cite OFAC + HSBC risk, and offer a non-sanctioned country instead.
+
+**Always verify before edge cases:**
+- [US OFAC Sanctions Programs](https://ofac.treasury.gov/sanctions-programs-and-country-information)
+- [HSBC Sanctions Exposure Questionnaire Definitions](https://www.business.hsbc.com/en-gb/regulations/sanctions-exposure-questionnaire-definitions) — **Blocked Governments**
+- [OFAC SDN Search](https://sanctionssearch.ofac.treas.gov/) — screen retailer name when in doubt
+
+Use the **union** of both lists (strictest wins).
+
+---
+
+## HSBC Blocked Governments (comprehensive — never list)
+
+Per [HSBC](https://www.business.hsbc.com/en-gb/regulations/sanctions-exposure-questionnaire-definitions):
+
+| Country | Notes |
+|---------|--------|
+| **Iran** | Blocked Government |
+| **Syria** | Blocked Government (HSBC — still comprehensive; do not list even if OFAC eased) |
+| **North Korea (DPRK)** | Blocked Government |
+| **Venezuela** | Blocked Government |
+| **Cuba** | Blocked Government for US persons / US-origin business (Finecoustic qualifies) |
+
+---
+
+## OFAC Tier 1 — Comprehensive (never list)
+
+| Country / region |
+|------------------|
+| Cuba |
+| Iran |
+| North Korea (DPRK) |
+| Russia |
+| Crimea, Donetsk, Luhansk (Ukraine regions) |
+
+*(Syria and Venezuela also appear on HSBC Blocked Governments above.)*
+
+---
+
+## Tier 2 — Targeted / selective (never list)
+
+OFAC targeted programs **plus** HSBC selective restrictions. Reject unless legal/compliance explicitly clears:
+
+| Country |
+|---------|
+| Afghanistan |
+| Balkans (Western Balkans) |
+| Belarus |
+| Burma (Myanmar) |
+| Central African Republic |
+| Democratic Republic of the Congo |
+| Ethiopia |
+| Hong Kong (targeted parties/activities) |
+| Iraq |
+| Lebanon |
+| Libya |
+| Mali |
+| Nicaragua |
+| Somalia |
+| South Sudan |
+| Sudan |
+| Zimbabwe |
+| Yemen |
+
+*(Russia and Venezuela also subject to HSBC sectoral/selective restrictions.)*
+
+---
+
+## When adding a store
+
+1. Check **country** against HSBC Blocked Governments, OFAC Tier 1, and Tier 2 — reject if matched.
+2. Screen **retailer name** on [OFAC SDN Search](https://sanctionssearch.ofac.treas.gov/).
+3. Sort order is automatic in `sections/store-locator.liquid` (country A→Z, then store name).
+
+---
+
+## Currently allowed examples
+
+Jordan, Indonesia, Philippines, Malaysia, Australia, Nepal, Cambodia, Chile, Serbia, Bangladesh, Thailand — **not** on the combined blacklist (verify entity is not SDN-listed).
+
+## Flag for review
+
+**Syria** is on the live locator but is an **HSBC Blocked Government** — recommend removal for full compliance.

@@ -98,20 +98,98 @@
             "address": "",
             "phone": ""
           }
+        },
+        "store_9": {
+          "type": "store",
+          "settings": {
+            "country_filter": "nepal",
+            "country": "Nepal",
+            "name": "Fantech Nepal",
+            "website_url": "https://fantech.com.np/",
+            "website_label": "fantech.com.np",
+            "address": "Newroad, Opposite Krishi Bikas Bank, Kathmandu",
+            "phone": "+977 9863473726"
+          }
+        },
+        "store_10": {
+          "type": "store",
+          "settings": {
+            "country_filter": "malaysia",
+            "country": "Malaysia",
+            "name": "Fantech Malaysia",
+            "website_url": "https://fantechmalaysia.com.my/",
+            "website_label": "fantechmalaysia.com.my",
+            "address": "",
+            "phone": ""
+          }
+        },
+        "store_12": {
+          "type": "store",
+          "settings": {
+            "country_filter": "jordan",
+            "country": "Jordan",
+            "name": "Midas Computer Center",
+            "website_url": "https://mcc-jo.com/",
+            "website_label": "mcc-jo.com",
+            "address": "",
+            "phone": ""
+          }
+        },
+        "store_13": {
+          "type": "store",
+          "settings": {
+            "country_filter": "syria",
+            "country": "Syria",
+            "name": "Midas Computer Center",
+            "website_url": "https://midassy.com/en",
+            "website_label": "midassy.com",
+            "address": "",
+            "phone": ""
+          }
+        },
+        "store_14": {
+          "type": "store",
+          "settings": {
+            "country_filter": "australia",
+            "country": "Australia",
+            "name": "Mastex",
+            "website_url": "https://mastex.com.au/",
+            "website_label": "mastex.com.au",
+            "address": "Mastex Corporation Pty Ltd, 12/163-179 Forster Road, Mount Waverley, VIC, 3149, Australia",
+            "phone": "(03) 9548 0524"
+          }
+        },
+        "store_15": {
+          "type": "store",
+          "settings": {
+            "country_filter": "australia",
+            "country": "Australia",
+            "name": "Fantech Australia",
+            "website_url": "https://fantechworld.com.au/",
+            "website_label": "fantechworld.com.au",
+            "address": "Unit 12, 163–179 Forster Road, Mount Waverley, VIC 3149",
+            "phone": "(03) 9548 0524"
+          }
         }
       },
       "block_order": [
-        "store_1",
-        "store_2",
-        "store_3",
+        "store_15",
+        "store_14",
         "store_4",
+        "store_8",
         "store_5",
+        "store_1",
         "store_6",
+        "store_12",
+        "store_10",
+        "store_9",
+        "store_2",
         "store_7",
-        "store_8"
+        "store_13",
+        "store_3"
       ],
       "settings": {
-        "footnote_cta_label": "Become a retailer \u2192"
+        "footnote_cta_label": "Become our partner \u2192"
       }
     }
   },
