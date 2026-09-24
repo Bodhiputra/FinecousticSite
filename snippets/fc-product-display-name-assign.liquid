@@ -1,0 +1,31 @@
+{%- comment -%}
+  Sets fc_display_name from fc_tag_product and/or handle + title params.
+  Use with {% include %} from sections (not inside {% render %} snippets).
+{%- endcomment -%}
+{%- liquid
+  assign fc_h = handle | default: '' | downcase | strip
+  if fc_h == blank and fc_tag_product != blank
+    assign fc_h = fc_tag_product.handle | downcase | strip
+  endif
+
+  assign fc_display_name = title
+  if fc_display_name == blank and fc_tag_product != blank
+    assign fc_display_name = fc_tag_product.title
+  endif
+
+  if fc_h != blank
+    if fc_h contains 'hako-nomad-l'
+      assign fc_display_name = 'Hako Nomad L'
+    elsif fc_h contains 'hako-nomad'
+      assign fc_display_name = 'Hako Nomad'
+    elsif fc_h contains 'resono'
+      assign fc_display_name = 'Resono'
+    elsif fc_h contains 'sonara'
+      assign fc_display_name = 'Sonara'
+    elsif fc_h contains 'groove-ows'
+      assign fc_display_name = 'Groove OWS'
+    elsif fc_h contains 'groove-anc'
+      assign fc_display_name = 'Groove ANC'
+    endif
+  endif
+-%}
