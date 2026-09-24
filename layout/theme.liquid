@@ -12,6 +12,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="">
+    {%- include 'fc-launch-gates' -%}
+    <meta name="fc-launch-ts" content="{{ fc_launch_ts }}">
+    <meta name="fc-store-launched" content="{% if fc_store_launched %}true{% else %}false{% endif %}">
+    {%- comment -%}
+      Stale-cache heal (launch-locked, countdown, sold-out tags). Must load on live too —
+      return visitors can keep pre-launch HTML in browser cache after drop.
+    {%- endcomment -%}
+    <script src="{{ 'fc-launch-live.js' | asset_url }}"></script>
     <link rel="canonical" href="{{ canonical_url }}">
 
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
@@ -54,11 +62,20 @@
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     {%- endunless -%}
 
+    {%- liquid
+      assign fc_page_title = page_title
+      if request.page_type == 'product' and product != blank
+        capture fc_page_title
+          render 'fc-product-display-name', fc_product: product
+        endcapture
+        assign fc_page_title = fc_page_title | strip
+      endif
+    -%}
     <title>
-      {{ page_title }}
+      {{ fc_page_title }}
       {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
       {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+      {%- unless fc_page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
     </title>
 
     {% if page_description %}
@@ -75,6 +92,9 @@
     {%- endif -%}
     <script src="{{ 'fc-price-tag.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'fc-cart.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'fc-micro-motion.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'lenis.min.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'fc-smooth-scroll.js' | asset_url }}" defer="defer"></script>
 
     {%- if settings.animations_reveal_on_scroll -%}
       <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
@@ -210,9 +230,7 @@
         --drawer-shadow-vertical-offset: {{ settings.drawer_shadow_vertical_offset }}px;
         --drawer-shadow-blur-radius: {{ settings.drawer_shadow_blur }}px;
 
-        --fc-body-bg: url('{{ 'FinecousticBG.webp' | asset_url }}');
         --fc-nav-footer-bg: url('{{ 'FinecousticBG-Lighter.png' | asset_url }}');
-        --fc-bg-tile-size: 512px;
         --fc-nav-bg-tile-size: 512px;
 
         --spacing-sections-desktop: {{ settings.spacing_sections }}px;
@@ -289,11 +307,7 @@
         font-family: var(--font-body-family);
         font-style: var(--font-body-style);
         font-weight: var(--font-body-weight);
-        background-color: #050505;
-        background-image: url('{{ "FinecousticBG.webp" | asset_url }}');
-        background-repeat: repeat;
-        background-size: var(--fc-bg-tile-size, 512px) var(--fc-bg-tile-size, 512px);
-        background-attachment: scroll;
+        background-color: #000000;
       }
 
       @media screen and (min-width: 750px) {
@@ -343,6 +357,13 @@
       html.fc-site-loader-pending #fc-site-loader {
         display: flex !important;
       }
+      /* Newsletter confirm — hide until JS/CSS (fc-footer.css loads async) */
+      .fc-newsletter__confirm {
+        display: none !important;
+      }
+      .fc-newsletter__field.is-confirming .fc-newsletter__confirm {
+        display: flex !important;
+      }
       html.shopify-design-mode.fc-site-loader-pending body > * {
         visibility: visible !important;
       }
@@ -366,7 +387,7 @@
     <link rel="stylesheet" href="{{ 'fc-footer.css' | asset_url }}" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="{{ 'fc-typography.css' | asset_url }}" media="print" onload="this.media='all'">
 
-    {%- if template.name == 'collection' or template.name == 'index' or template.name == 'page' or template.name == 'product' -%}
+    {%- if template.name == 'collection' or template.name == 'index' or template.name == 'page' or template.name == 'product' or template.directory == 'customers' -%}
       {{- 'fc-carousel.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
 
@@ -393,14 +414,14 @@
       <script src="{{ 'fc-preorder.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
-    <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
+    {{ 'component-cart-items.css' | asset_url | stylesheet_tag }}
 
     {%- if settings.cart_type == 'drawer' -%}
-      <link rel="stylesheet" href="{{ 'component-cart-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
-      <link rel="stylesheet" href="{{ 'component-cart.css' | asset_url }}" media="print" onload="this.media='all'">
-      <link rel="stylesheet" href="{{ 'component-totals.css' | asset_url }}" media="print" onload="this.media='all'">
-      <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
-      <link rel="stylesheet" href="{{ 'component-discounts.css' | asset_url }}" media="print" onload="this.media='all'">
+      {{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
+      {{ 'component-cart.css' | asset_url | stylesheet_tag }}
+      {{ 'component-totals.css' | asset_url | stylesheet_tag }}
+      {{ 'component-price.css' | asset_url | stylesheet_tag }}
+      {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
 
     {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
@@ -413,6 +434,22 @@
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
+    {%- if template.name == 'index' and request.design_mode == false -%}
+      <script>
+        (function () {
+          try {
+            var nav = performance.getEntriesByType('navigation')[0];
+            if (nav && nav.type === 'reload') {
+              document.documentElement.classList.remove('fc-site-loader-pending');
+              return;
+            }
+            if (sessionStorage.getItem('fc-site-loader-seen') === '1') {
+              document.documentElement.classList.remove('fc-site-loader-pending');
+            }
+          } catch (e) {}
+        })();
+      </script>
+    {%- endif -%}
   </head>
 
   <body class="gradient template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
@@ -456,6 +493,14 @@
         quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
       };
 
+      {%- capture fc_cart_empty_shop_url -%}{%- render 'fc-shop-url' -%}{%- endcapture -%}
+      window.fcCartDrawerEmpty = {
+        emptyText: {{ 'sections.cart.empty' | t | json }},
+        continueLabel: {{ 'general.continue_shopping' | t | json }},
+        shopUrl: {{ fc_cart_empty_shop_url | strip | json }},
+        closeOnShop: {% if request.path == '/collections/all' %}true{% else %}false{% endif %},
+      };
+
       window.variantStrings = {
         addToCart: `{{ 'products.product.add_to_cart' | t }}`,
         soldOut: `{{ 'products.product.sold_out' | t }}`,
@@ -486,43 +531,14 @@
       };
     </script>
 
-    {%- if settings.cart_type == 'drawer' -%}
-      {%- if template.name == 'index' -%}
-      <script>
-        (function () {
-          var scripts = [
-            {{ 'cart-drawer.js' | asset_url | json }}
-          ];
-          var loaded = false;
-          function loadCartUiScripts() {
-            if (loaded) return;
-            loaded = true;
-            scripts.forEach(function (src) {
-              var el = document.createElement('script');
-              el.src = src;
-              el.defer = true;
-              document.head.appendChild(el);
-            });
-          }
-          document.addEventListener(
-            'pointerdown',
-            function (e) {
-              if (e.target.closest('#cart-icon-bubble, .header__icon--cart, cart-drawer')) {
-                loadCartUiScripts();
-              }
-            },
-            { capture: true, passive: true }
-          );
-          if ('requestIdleCallback' in window) {
-            requestIdleCallback(loadCartUiScripts, { timeout: 5000 });
-          } else {
-            setTimeout(loadCartUiScripts, 5000);
-          }
-        })();
-      </script>
-      {%- else -%}
+    {%- comment -%}
+      cart-drawer.js must load before shop grid / PDP wire add-to-cart.
+      Collection loads it from main-collection-product-grid; all other templates load here.
+    {%- endcomment -%}
+    {%- if settings.cart_type == 'drawer' and template.name != 'collection' -%}
+      <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
-      {%- endif -%}
     {%- endif -%}
 
     <script>
@@ -554,25 +570,82 @@
     </script>
 
     <script>
-      /* Announcement bar marquee — duplicate text for seamless mobile loop */
+      /* Announcement bar marquee — duplicate text for seamless loop (all viewports) */
       (function () {
+        function buildMarqueeSegment(text, minWidthPx, font) {
+          var sep = ' \u00a0\u00b7\u00a0 ';
+          var unit = text + sep;
+          var seg = '';
+          var probe = document.createElement('span');
+          probe.style.cssText = 'position:absolute;left:-9999px;top:0;visibility:hidden;white-space:nowrap;';
+          if (font) probe.style.font = font;
+          document.body.appendChild(probe);
+          while (probe.offsetWidth < minWidthPx) {
+            seg += unit;
+            probe.textContent = seg;
+          }
+          document.body.removeChild(probe);
+          return seg;
+        }
+
         function initMarquee() {
-          if (window.innerWidth > 749) return;
-          var msg = document.querySelector('.announcement-bar__message');
-          if (!msg || msg.dataset.marquee) return;
-          msg.dataset.marquee = '1';
-          var span = msg.querySelector('span');
-          if (!span) return;
-          var text = span.textContent.trim();
-          var sep = '  ·   ';
-          var copy = text + sep;
-          msg.innerHTML = '<span>' + copy + copy + '</span>';
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          var msg = document.querySelector('.announcement-bar-section .announcement-bar__message');
+          if (!msg || msg.dataset.marqueeBuilt === '1') return;
+          var source = msg.querySelector('span:not(.fc-marquee-track):not(.fc-marquee-segment)');
+          if (!source && msg.dataset.marqueeSource) {
+            source = { textContent: msg.dataset.marqueeSource };
+          }
+          if (!source) return;
+          var text = source.textContent.trim();
+          if (!text) return;
+          msg.dataset.marqueeSource = text;
+          var bar = msg.closest('.announcement-bar');
+          var barWidth = bar ? bar.clientWidth : window.innerWidth;
+          var font = getComputedStyle(msg).font;
+          var segment = buildMarqueeSegment(text, Math.max(barWidth, window.innerWidth), font);
+          msg.dataset.marqueeBuilt = '1';
+          msg.innerHTML =
+            '<span class="fc-marquee-track">' +
+            '<span class="fc-marquee-segment">' +
+            segment +
+            '</span>' +
+            '<span class="fc-marquee-segment" aria-hidden="true">' +
+            segment +
+            '</span>' +
+            '</span>';
+        }
+        function syncNewsHeight() {
+          var newsSection = document.querySelector(
+            '.shopify-section-group-header-group.announcement-bar-section'
+          );
+          var navSection = document.querySelector('.shopify-section-group-header-group.section-header');
+          var newsH = newsSection ? newsSection.offsetHeight : 0;
+          var navH = navSection ? navSection.offsetHeight : 0;
+          document.documentElement.style.setProperty('--fc-news-height', newsH + 'px');
+          document.documentElement.style.setProperty('--header-height', newsH + navH + 'px');
+        }
+        function bootAnnouncement() {
+          initMarquee();
+          syncNewsHeight();
         }
         if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', initMarquee);
+          document.addEventListener('DOMContentLoaded', bootAnnouncement);
         } else {
-          initMarquee();
+          bootAnnouncement();
         }
+        window.addEventListener('resize', function () {
+          var msg = document.querySelector('.announcement-bar-section .announcement-bar__message');
+          if (msg) {
+            delete msg.dataset.marqueeBuilt;
+            if (msg.dataset.marqueeSource) {
+              msg.textContent = '';
+              msg.innerHTML = '<span>' + msg.dataset.marqueeSource + '</span>';
+            }
+          }
+          initMarquee();
+          syncNewsHeight();
+        });
       })();
     </script>
 
@@ -623,5 +696,57 @@
         observer.observe(body, { attributes: true, attributeFilter: ['class'] });
       })();
     </script>
+
+    {%- if template.name == 'index' -%}
+    <script>
+      (function () {
+        function loadCreatorFeedbackSection() {
+          if (document.querySelector('.fc-creator-feedback')) return;
+          var anchor = document.querySelector('.fc-nomad-video-duo-section');
+          if (!anchor || !anchor.id) return;
+
+          var base = anchor.id.replace(/^shopify-section-/, '').replace(/__fc_nomad_video_duo$/, '');
+          var keys = [base + '__fc_creator_feedback_home', base + '__fc_creator_feedback'];
+
+          function tryKey(i) {
+            if (i >= keys.length) return;
+            fetch('/?sections=' + encodeURIComponent(keys[i]) + '&variant=' + Date.now(), { cache: 'no-store' })
+              .then(function (res) { return res.json(); })
+              .then(function (data) {
+                var html = data[keys[i]];
+                if (!html) {
+                  tryKey(i + 1);
+                  return;
+                }
+                anchor.insertAdjacentHTML('beforebegin', html);
+                var cssHref = {{ 'fc-creator-feedback.css' | asset_url | json }};
+                if (!document.querySelector('link[href="' + cssHref + '"]')) {
+                  var link = document.createElement('link');
+                  link.rel = 'stylesheet';
+                  link.href = cssHref;
+                  document.head.appendChild(link);
+                }
+                var jsSrc = {{ 'fc-creator-feedback.js' | asset_url | json }};
+                if (!document.querySelector('script[src="' + jsSrc + '"]')) {
+                  var script = document.createElement('script');
+                  script.src = jsSrc;
+                  script.defer = true;
+                  document.body.appendChild(script);
+                }
+              })
+              .catch(function () { tryKey(i + 1); });
+          }
+
+          tryKey(0);
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', loadCreatorFeedbackSection);
+        } else {
+          loadCreatorFeedbackSection();
+        }
+      })();
+    </script>
+    {%- endif -%}
   </body>
 </html>

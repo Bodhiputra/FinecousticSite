@@ -8,11 +8,7 @@
   display: none;
   align-items: center;
   justify-content: center;
-  background-color: var(--fc-black, #000);
-  background-image: url('FinecousticBG.webp');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-color: #000000;
   opacity: 1;
   visibility: visible;
   pointer-events: all;
@@ -40,12 +36,12 @@ html.fc-site-loader-active .fc-site-loader {
 
 .fc-site-loader.is-exiting {
   opacity: 0;
-  transition: opacity 0.7s var(--fc-loader-ease);
+  transition: opacity 0.85s var(--fc-loader-ease);
   pointer-events: none;
 }
 
 .fc-site-loader.is-exiting .fc-site-loader__inner {
-  animation: fc-loader-content-out 0.7s var(--fc-loader-ease) forwards;
+  animation: fc-loader-content-out 0.85s var(--fc-loader-ease) forwards;
 }
 
 .fc-site-loader__logo {
