@@ -47,6 +47,20 @@ window.fcApplyPriceTagQty = function (tag, qty) {
   }
 };
 
+function fcPulsePriceTag(tag) {
+  if (!tag || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  tag.classList.remove('fc-tag-feedback');
+  void tag.offsetWidth;
+  tag.classList.add('fc-tag-feedback');
+  tag.addEventListener(
+    'animationend',
+    function () {
+      tag.classList.remove('fc-tag-feedback');
+    },
+    { once: true }
+  );
+}
+
 window.fcSyncPriceTagsFromCart = function (cart) {
   if (!cart || !Array.isArray(cart.items)) return;
 
@@ -75,6 +89,9 @@ window.fcSyncPriceTagsFromCart = function (cart) {
       !document.querySelector('.fc-pdp-u__atc[data-variant-id]')
     ) {
       return Promise.resolve();
+    }
+    if (window.fcFetchCartForUiSync) {
+      return window.fcFetchCartForUiSync().catch(function () {});
     }
     return fetch('/cart.js')
       .then(function (res) {
@@ -107,6 +124,10 @@ window.fcSyncPriceTagsFromCart = function (cart) {
   } else {
     initCartSync();
   }
+
+  window.addEventListener('pageshow', function () {
+    syncFromCartEndpoint();
+  });
 })();
 
 window.fcWirePriceTag = function (tag, options) {
@@ -117,7 +138,11 @@ window.fcWirePriceTag = function (tag, options) {
       return Number(tag.dataset.variantId);
     };
   var onAdd = options.onAdd;
-  if (!tag || tag.classList.contains('fc-tag--oos') || tag.classList.contains('fc-tag--coming-soon') || tag.classList.contains('fc-tag--launch-locked') || tag.dataset.fcLaunchLocked === 'true' || typeof onAdd !== 'function') return;
+  if (!tag || tag.classList.contains('fc-tag--oos') || tag.classList.contains('fc-tag--coming-soon') || typeof onAdd !== 'function') return;
+  var launchLive = typeof window.fcIsLaunchLive === 'function' && window.fcIsLaunchLive();
+  if (!launchLive) {
+    if (tag.classList.contains('fc-tag--launch-locked') || tag.dataset.fcLaunchLocked === 'true') return;
+  }
   if (tag.dataset.fcPriceTagBound === '1') return;
   tag.dataset.fcPriceTagBound = '1';
 
@@ -127,37 +152,40 @@ window.fcWirePriceTag = function (tag, options) {
   async function handleAtc(e) {
     e.preventDefault();
     e.stopPropagation();
+    if (tag.dataset.fcAtcPending === '1') return;
     var variantId = getVariantId();
     if (!variantId) return;
 
     var prevQty = Number(tag.dataset.fcQty || 0);
     var maxQty = tag.dataset.qtyMax ? Number(tag.dataset.qtyMax) : null;
     if (maxQty !== null && !Number.isNaN(maxQty) && prevQty >= maxQty) {
-      if (window.fcOpenCartDrawer) await window.fcOpenCartDrawer();
+      if (window.fcOpenCartDrawerImmediate) window.fcOpenCartDrawerImmediate();
+      else if (window.fcOpenCartDrawer) await window.fcOpenCartDrawer();
+      fcPulsePriceTag(tag);
       return;
     }
 
     var nextQty = prevQty + 1;
 
-    window.fcApplyPriceTagQty(tag, nextQty);
+    tag.dataset.fcAtcPending = '1';
+    try {
+      window.fcApplyPriceTagQty(tag, nextQty);
+      fcPulsePriceTag(tag);
 
-    var ok = await onAdd(variantId, 1);
-    if (!ok) window.fcApplyPriceTagQty(tag, prevQty);
+      var ok = await onAdd(variantId, 1);
+      if (!ok) {
+        if (window.fcReconcileCartUi) await window.fcReconcileCartUi();
+        else window.fcApplyPriceTagQty(tag, prevQty);
+      }
+    } finally {
+      tag.dataset.fcAtcPending = '0';
+    }
   }
 
   plus.addEventListener('click', handleAtc);
 
-  var body = tag.querySelector('.fc-card__tag-body');
-  if (body) {
-    body.addEventListener('click', function (e) {
-      if (e.target.closest('.fc-card__atc-plus')) return;
-      if (tag.classList.contains('fc-tag-active')) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (window.fcOpenCartDrawer) window.fcOpenCartDrawer();
-        return;
-      }
-      handleAtc(e);
-    });
-  }
+  tag.addEventListener('click', function (e) {
+    if (e.target.closest('.fc-card__atc-plus')) return;
+    handleAtc(e);
+  });
 };

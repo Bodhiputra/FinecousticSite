@@ -44,8 +44,11 @@
         -%}
         {%- if fc_exclude_product -%}{%- continue -%}{%- endif -%}
         {%- assign dl_name = block.settings.title -%}
-        {%- if dl_name == blank and dl_product != blank -%}
-          {%- assign dl_name = dl_product.title -%}
+        {%- if dl_product != blank -%}
+          {%- capture dl_name -%}{% render 'fc-product-display-name', fc_product: dl_product %}{%- endcapture -%}
+          {%- assign dl_name = dl_name | strip -%}
+        {%- elsif dl_name == blank -%}
+          {%- assign dl_name = '' -%}
         {%- endif -%}
         <a
           class="fc-card fc-dl-card"

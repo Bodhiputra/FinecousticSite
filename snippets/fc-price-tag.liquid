@@ -1,8 +1,9 @@
+{%- assign fc_tag_name = title -%}
 {%- if tag_mode == 'coming_soon' -%}
 <div class="fc-card__tag fc-tag--coming-soon {{ tag_class }}">
   <div class="fc-card__tag-body">
     <span class="fc-tag__status">Coming soon.</span>
-    <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
+    <h3 class="fc-card__name {{ name_class }}">{{ fc_tag_name }}</h3>
   </div>
 </div>
 {%- elsif tag_mode == 'launch_locked' -%}
@@ -14,7 +15,7 @@
       price_varies: price_varies,
       scratch: 'diagonal'
     -%}
-    <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
+    <h3 class="fc-card__name {{ name_class }}">{{ fc_tag_name }}</h3>
   </div>
   <span class="fc-tag-rip"></span>
   <span class="fc-card__atc-lock" aria-hidden="true">
@@ -33,8 +34,16 @@
     endcapture
     assign fc_tag_qty_max = fc_tag_qty_max | strip
   endif
+  assign fc_tag_cart_qty = 0
+  if variant_id != blank
+    for item in cart.items
+      if item.variant_id == variant_id
+        assign fc_tag_cart_qty = fc_tag_cart_qty | plus: item.quantity
+      endif
+    endfor
+  endif
 -%}
-<div class="fc-card__tag {{ tag_class }}" data-variant-id="{{ variant_id }}"{% if fc_tag_qty_max != blank %} data-qty-max="{{ fc_tag_qty_max }}"{% endif %}>
+<div class="fc-card__tag{% if fc_tag_cart_qty > 0 %} fc-tag-active{% endif %} {{ tag_class }}" data-variant-id="{{ variant_id }}" data-fc-qty="{{ fc_tag_cart_qty }}"{% if fc_tag_qty_max != blank %} data-qty-max="{{ fc_tag_qty_max }}"{% endif %}>
   <div class="fc-card__tag-body">
     {%- unless hide_price -%}
     {%- render 'fc-price-scratch',
@@ -48,12 +57,12 @@
       <span class="fc-card__atc-label">{{ atc_label }}</span>
     {%- endif -%}
     {%- unless hide_name -%}
-      <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
+      <h3 class="fc-card__name {{ name_class }}">{{ fc_tag_name }}</h3>
     {%- endunless -%}
   </div>
   <span class="fc-tag-rip"></span>
-  <button class="fc-card__atc-plus" data-variant-id="{{ variant_id }}" type="button" aria-label="Add to cart">
-    <span class="fc-qty-label"></span>
+  <button class="fc-card__atc-plus{% if fc_tag_cart_qty > 0 %} fc-active{% endif %}" data-variant-id="{{ variant_id }}" type="button" aria-label="Add to cart">
+    <span class="fc-qty-label">{% if fc_tag_cart_qty > 0 %}{{ fc_tag_cart_qty }}{% endif %}</span>
   </button>
 </div>
 {%- else -%}
@@ -63,7 +72,7 @@
       <span class="fc-card__price">
         {%- render 'fc-price-scratch', price: price, compare_at_price: compare_at_price, scratch: 'diagonal' -%}
       </span>
-      <h3 class="fc-card__name {{ name_class }}">{{ title }}</h3>
+      <h3 class="fc-card__name {{ name_class }}">{{ fc_tag_name }}</h3>
     </div>
   </div>
   <div class="fc-tag-fragment">

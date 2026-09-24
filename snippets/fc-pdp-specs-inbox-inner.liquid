@@ -186,7 +186,7 @@
     href="{{ fc_qsg_url }}"
     target="_blank"
     rel="noopener"
-    aria-label="Quick Start Guide — {{ product.title | escape }}"
+    aria-label="Quick Start Guide — {% render 'fc-product-display-name', fc_product: product %}"
   >
     <span class="fc-pdp-guide-row__label">Quick Start Guide</span>
     <span class="fc-pdp-guide-row__arrow" aria-hidden="true">→</span>

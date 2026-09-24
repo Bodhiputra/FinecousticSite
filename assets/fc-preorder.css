@@ -92,6 +92,102 @@ html.fc-preorder-flow .fc-preorder-offers {
   border-radius: 2px;
 }
 
+/* Hero Discover More — launched phase (solid yellow CTA, below speaker art) */
+.fc-preorder-hero-launched-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.website-hero__available-copy,
+#MainContent .website-hero .website-hero__available-copy {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-family: var(--fc-font, sans-serif);
+  font-size: clamp(14px, 2.4vw, 24px);
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 1.2;
+  color: #ffffff;
+  opacity: 1;
+  text-shadow: none;
+  white-space: nowrap;
+}
+
+.website-hero__discover-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  width: 100%;
+  margin: 0;
+  min-height: 48px;
+  height: auto;
+  padding: 14px 20px;
+  border: none;
+  background: var(--fc-yellow, #ffd300);
+  font-family: var(--fc-font, sans-serif);
+  font-size: clamp(15px, 1.8vw, 18px);
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 1.2;
+  color: #000;
+  text-decoration: none;
+  border-radius: 5px;
+  text-shadow: none;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 749px) {
+  .website-hero__available-copy {
+    font-size: clamp(14px, 4vw, 22px);
+    white-space: normal;
+  }
+
+  .website-hero__discover-more {
+    min-height: 44px;
+    padding: 12px 18px;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .website-hero__available-copy {
+    font-size: clamp(16px, 2vw, 24px);
+  }
+
+  .website-hero__discover-more {
+    min-height: 52px;
+    padding: 15px 22px;
+    font-size: 18px;
+    border-radius: 5px;
+  }
+}
+
+.website-hero__discover-more:hover {
+  background: #ffe033;
+  color: #000;
+  opacity: 1;
+}
+
+.website-hero__discover-more:active {
+  transform: scale(0.98);
+}
+
+.website-hero__discover-more:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
 /* ── Hero split title ── */
 .fc-preorder-hero-title,
 .fc-preorder-hero-title * {
@@ -187,6 +283,30 @@ html.fc-preorder-flow .fc-preorder-offers {
   .fc-preorder-hero-form .fc-marketing-checkbox__label {
     font-size: clamp(10px, 2.6vw, 12px);
     line-height: 1.3;
+  }
+}
+
+/* Launched — Discover More stack (must follow base .fc-preorder-hero-stack) */
+.fc-preorder-hero-stack.fc-preorder-hero-stack--launched {
+  top: auto;
+  bottom: calc(clamp(10vh, 12vh, 16vh) + 52px - 80px);
+  transform: translateX(-50%);
+  width: auto;
+  max-width: calc(100% - clamp(24px, 6vw, 48px));
+  align-items: center;
+  gap: clamp(10px, 2vw, 14px);
+}
+
+@media screen and (max-width: 749px) {
+  .fc-preorder-hero-stack.fc-preorder-hero-stack--launched {
+    width: auto;
+    bottom: calc(clamp(40px, 9vh, 72px) + 52px - 80px);
+  }
+}
+
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .fc-preorder-hero-stack.fc-preorder-hero-stack--launched {
+    bottom: calc(clamp(8vh, 10vh, 12vh) + 52px - 80px);
   }
 }
 

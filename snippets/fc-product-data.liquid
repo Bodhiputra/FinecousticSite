@@ -7,11 +7,30 @@
       assign color_option_pos = forloop.index0
     endif
   endfor
+
+  assign fc_data_title = fc_display_title
+  if fc_data_title == blank
+    assign fc_data_title = product.title
+    assign fc_h = product.handle | downcase | strip
+    if fc_h contains 'hako-nomad-l'
+      assign fc_data_title = 'Hako Nomad L'
+    elsif fc_h contains 'hako-nomad'
+      assign fc_data_title = 'Hako Nomad'
+    elsif fc_h contains 'resono'
+      assign fc_data_title = 'Resono'
+    elsif fc_h contains 'sonara'
+      assign fc_data_title = 'Sonara'
+    elsif fc_h contains 'groove-ows'
+      assign fc_data_title = 'Groove OWS'
+    elsif fc_h contains 'groove-anc'
+      assign fc_data_title = 'Groove ANC'
+    endif
+  endif
 -%}
 <script type="application/json" id="fc-data-{{ product.id }}">
 {
   "id": {{ product.id }},
-  "title": {{ product.title | json }},
+  "title": {{ fc_data_title | json }},
   "type": {{ product.type | json }},
   "price": "{{ product.price | money }}",
   "priceRaw": {{ product.price }},
@@ -37,7 +56,14 @@
       "compareAtPrice": "{{ variant.compare_at_price | money }}",
       "compareAtPriceRaw": {{ variant.compare_at_price | default: 0 }},
       "color": {% if has_color %}{{ variant.options[color_option_pos] | json }}{% else %}null{% endif %},
-      "image": {% if variant.featured_media %}"{{ variant.featured_media.preview_image | image_url: width: 900 }}"{% elsif variant.image %}"{{ variant.image | image_url: width: 900 }}"{% else %}null{% endif %}
+      "image": {% if variant.featured_media %}"{{ variant.featured_media.preview_image | image_url: width: 900 }}"{% elsif variant.image %}"{{ variant.image | image_url: width: 900 }}"{% else %}null{% endif %},
+      "cartQty": {%- assign v_cart_qty = 0 -%}
+        {%- for item in cart.items -%}
+          {%- if item.variant_id == variant.id -%}
+            {%- assign v_cart_qty = v_cart_qty | plus: item.quantity -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {{ v_cart_qty }}
     }{%- unless forloop.last -%},{%- endunless -%}
     {%- endfor -%}
   ]

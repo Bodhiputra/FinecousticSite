@@ -1,6 +1,5 @@
+{%- include 'fc-launch-gates' -%}
 {%- liquid
-  include 'fc-launch-gates'
-
   assign variant = product.selected_or_first_available_variant
   assign media_count = product.media.size
   assign is_available = variant.available
@@ -71,6 +70,17 @@
       assign fc_show_drop_countdown = true
     endif
   endif
+
+  if fc_show_drop_countdown
+    assign fc_atc_label = 'Add to bag'
+  endif
+
+  assign fc_variant_cart_qty = 0
+  for item in cart.items
+    if item.variant_id == variant.id
+      assign fc_variant_cart_qty = fc_variant_cart_qty | plus: item.quantity
+    endif
+  endfor
 -%}
 
 {%- if fc_preorder_gate -%}
@@ -84,6 +94,7 @@
   id="fc-pdp-u-{{ section.id }}"
   data-section-id="{{ section.id }}"
   data-product-handle="{{ product.handle }}"
+  data-fc-launch-ts="{{ fc_launch_ts }}"
   {% if fc_desktop_stack %}data-fc-desktop-stack="true"{% endif %}
 >
   {%- if fc_show_drop_countdown -%}
@@ -162,7 +173,9 @@
       <div class="fc-pdp-u__meta">
         <div class="fc-pdp-u__meta-center">
         <div class="fc-pdp-u__lead">
-        <h1 class="fc-pdp-u__title">{{ product.title | escape }}</h1>
+        {%- assign fc_tag_product = product -%}
+        {%- include 'fc-product-display-name-assign' -%}
+        <h1 class="fc-pdp-u__title">{{ fc_display_name | escape }}</h1>
 
         {%- if pdp_description != blank -%}
           <div class="fc-pdp-u__description rte">{{ pdp_description }}</div>
@@ -252,8 +265,9 @@
           {%- else -%}
           <button
             type="button"
-            class="fc-pdp-u__atc{% if fc_variant_sold_out == 'true' %} is-oos{% endif %}"
+            class="fc-pdp-u__atc{% if fc_variant_sold_out == 'true' %} is-oos{% endif %}{% if fc_variant_cart_qty > 0 %} fc-atc-active{% endif %}"
             data-variant-id="{{ variant.id }}"
+            data-fc-qty="{{ fc_variant_cart_qty }}"
             data-fc-purchasable="{% if fc_variant_sold_out == 'true' %}false{% else %}true{% endif %}"
             data-fc-atc-label-default="{{ fc_atc_label | escape }}"
             {% if fc_variant_sold_out == 'true' %}aria-disabled="true"{% endif %}
@@ -262,8 +276,8 @@
               {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
               {{ variant.price | money }}
             </span>
-            <span class="fc-pdp-u__atc-sep fc-pdp-u__atc-sep--qty" data-fc-pdp-atc-qty-sep hidden aria-hidden="true">·</span>
-            <span class="fc-pdp-u__atc-qty" data-fc-pdp-atc-qty hidden></span>
+            <span class="fc-pdp-u__atc-sep fc-pdp-u__atc-sep--qty" data-fc-pdp-atc-qty-sep{% if fc_variant_cart_qty == 0 %} hidden{% endif %} aria-hidden="true">·</span>
+            <span class="fc-pdp-u__atc-qty" data-fc-pdp-atc-qty{% if fc_variant_cart_qty == 0 %} hidden{% endif %}>{{ fc_variant_cart_qty }}</span>
             <span class="fc-pdp-u__atc-sep" aria-hidden="true">·</span>
             <span class="fc-pdp-u__atc-label" data-fc-pdp-atc-label>{{ fc_atc_label }}</span>
           </button>
@@ -377,8 +391,9 @@
 <div class="fc-pdp-u__dock" id="fc-pdp-u-dock-{{ section.id }}" hidden>
   <button
     type="button"
-    class="fc-pdp-u__atc fc-pdp-u__atc--dock{% if fc_variant_sold_out == 'true' %} is-oos{% endif %}{% if fc_show_drop_countdown %} is-launch-locked{% endif %}"
+    class="fc-pdp-u__atc fc-pdp-u__atc--dock{% if fc_variant_sold_out == 'true' %} is-oos{% endif %}{% if fc_show_drop_countdown %} is-launch-locked{% endif %}{% if fc_variant_cart_qty > 0 %} fc-atc-active{% endif %}"
     data-variant-id="{{ variant.id }}"
+    data-fc-qty="{{ fc_variant_cart_qty }}"
     data-fc-purchasable="{% if fc_show_drop_countdown or fc_variant_sold_out == 'true' %}false{% else %}true{% endif %}"
     data-fc-atc-label-default="{{ fc_atc_label | escape }}"
     {% if fc_show_drop_countdown %}data-fc-launch-locked="true" disabled aria-disabled="true"{% elsif fc_variant_sold_out == 'true' %}aria-disabled="true"{% endif %}
@@ -387,8 +402,8 @@
       {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
       {{ variant.price | money }}
     </span>
-    <span class="fc-pdp-u__atc-sep fc-pdp-u__atc-sep--qty" data-fc-pdp-atc-qty-sep hidden aria-hidden="true">·</span>
-    <span class="fc-pdp-u__atc-qty" data-fc-pdp-atc-qty hidden></span>
+    <span class="fc-pdp-u__atc-sep fc-pdp-u__atc-sep--qty" data-fc-pdp-atc-qty-sep{% if fc_variant_cart_qty == 0 %} hidden{% endif %} aria-hidden="true">·</span>
+    <span class="fc-pdp-u__atc-qty" data-fc-pdp-atc-qty{% if fc_variant_cart_qty == 0 %} hidden{% endif %}>{{ fc_variant_cart_qty }}</span>
     <span class="fc-pdp-u__atc-sep" aria-hidden="true">·</span>
     <span class="fc-pdp-u__atc-label" data-fc-pdp-atc-label>{{ fc_atc_label }}</span>
   </button>
