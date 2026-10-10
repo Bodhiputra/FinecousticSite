@@ -5,10 +5,6 @@
   {% render 'header-drawer' %}
 {% endcomment %}
 
-{%- liquid
-  assign fc_shop_collection_url = routes.all_products_collection_url | append: '?sort_by=created-descending'
--%}
-
 <header-drawer data-breakpoint="{% if section.settings.menu_type_desktop == 'drawer' %}desktop{% else %}tablet{% endif %}">
   <details id="Details-menu-drawer-container" class="menu-drawer-container">
     <summary
@@ -35,15 +31,14 @@
           <nav class="menu-drawer__navigation">
             <ul class="menu-drawer__menu has-submenu list-menu" role="list">
               {%- for link in section.settings.menu.links -%}
-                {%- unless link.handle == 'about-us' or link.handle == 'contact' or link.handle == 'contact-us' or link.handle == 'downloads' -%}
                 <li>
-                  {%- if link.links != blank and link.handle != 'products' -%}
+                  {%- if link.links != blank -%}
                     <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
                       <summary
                         id="HeaderDrawer-{{ link.handle }}"
                         class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
                       >
-                        {%- if link.title == 'Products' -%}Shop{%- else -%}{{ link.title | escape }}{%- endif -%}
+                        {{ link.title | escape }}
                         <span class="svg-wrapper">
                           {{- 'icon-arrow.svg' | inline_asset_content -}}
                         </span>
@@ -61,7 +56,7 @@
                             <span class="svg-wrapper">
                               {{- 'icon-arrow.svg' | inline_asset_content -}}
                             </span>
-                            {%- if link.title == 'Products' -%}Shop{%- else -%}{{ link.title | escape }}{%- endif -%}
+                            {{ link.title | escape }}
                           </button>
                           <ul class="menu-drawer__menu list-menu" role="list" tabindex="-1">
                             {%- for childlink in link.links -%}
@@ -134,37 +129,19 @@
                       </div>
                     </details>
                   {%- else -%}
-                    {%- liquid
-                      assign fc_menu_href = link.url
-                      if link.handle == 'products' or link.url == routes.all_products_collection_url or link.url == '/collections/all'
-                        assign fc_menu_href = fc_shop_collection_url
-                      endif
-                    -%}
                     <a
                       id="HeaderDrawer-{{ link.handle }}"
-                      href="{{ fc_menu_href }}"
+                      href="{{ link.url }}"
                       class="menu-drawer__menu-item list-menu__item link link--text focus-inset fc-menu-drawer__primary{% if link.current %} menu-drawer__menu-item--active{% endif %}"
                       {% if link.current %}
                         aria-current="page"
                       {% endif %}
                     >
-                      {%- if link.title == 'Products' -%}Shop{%- else -%}{{ link.title | escape }}{%- endif -%}
+                      {{ link.title | escape }}
                     </a>
                   {%- endif -%}
                 </li>
-                {%- endunless -%}
               {%- endfor -%}
-              {%- liquid
-                assign fc_store_locator_url = pages['store-locator'].url | default: '/pages/store-locator'
-              -%}
-              <li>
-                <a
-                  href="{{ fc_store_locator_url }}"
-                  class="menu-drawer__menu-item list-menu__item link link--text focus-inset fc-menu-drawer__primary"
-                >
-                  Store Locator
-                </a>
-              </li>
             </ul>
           </nav>
         </div>

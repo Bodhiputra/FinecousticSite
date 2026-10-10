@@ -7,17 +7,14 @@
       "settings": {
         "bottom_nav_menu": "footer-bottom-bar",
         "color_scheme": "scheme-4",
-        "newsletter_enable": false,
-        "newsletter_heading": "Join our newsletter",
-        "enable_follow_on_shop": false,
+        "newsletter_enable": true,
+        "newsletter_heading": "Tune in with us.",
+        "newsletter_body": "Get early updates about products, exclusive offers, and upcoming projects from Finecoustic.",
         "show_social": true,
         "enable_country_selector": false,
-        "enable_language_selector": true,
-        "payment_enable": false,
-        "show_policy": false,
         "margin_top": 0,
         "padding_top": 24,
-        "padding_bottom": 20
+        "padding_bottom": 24
       }
     }
   },

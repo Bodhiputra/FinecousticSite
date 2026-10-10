@@ -2,28 +2,27 @@
   Mobile header nav — Shop text + Store Locator map pin (replaces hamburger below 990px).
 {% endcomment %}
 {%- liquid
-  assign fc_store_locator_url = '/pages/store-locator'
-  if pages['store-locator']
-    assign fc_store_locator_url = pages['store-locator'].url
-  endif
-
-  assign fc_locator_active = false
-  if request.page_type == 'page' and page.handle == 'store-locator'
-    assign fc_locator_active = true
-  endif
+  assign fc_mobile_primary_link = section.settings.menu.links.first
+  assign fc_mobile_secondary_link = section.settings.menu.links[1]
 -%}
 <nav class="fc-header-mobile-nav" aria-label="Primary">
+  {%- if fc_mobile_primary_link != blank -%}
   <a
-    href="{% render 'fc-shop-url' %}"
+    href="{{ fc_mobile_primary_link.url }}"
     class="fc-header-mobile-nav__shop link focus-inset"
+    {% if fc_mobile_primary_link.current %}aria-current="page"{% endif %}
   >
-    <span class="fc-header-nav-text">Shop</span>
+    <span class="fc-header-nav-text">{{ fc_mobile_primary_link.title | escape }}</span>
   </a>
+  {%- endif -%}
+  {%- if fc_mobile_secondary_link != blank -%}
   <a
-    href="{{ fc_store_locator_url }}"
-    class="header__icon header__icon--store-locator fc-header-mobile-nav__locator link focus-inset{% if fc_locator_active %} fc-header-mobile-nav__link--active{% endif %}"
-    aria-label="Store Locator"
+    href="{{ fc_mobile_secondary_link.url }}"
+    class="header__icon header__icon--store-locator fc-header-mobile-nav__locator link focus-inset{% if fc_mobile_secondary_link.current %} fc-header-mobile-nav__link--active{% endif %}"
+    aria-label="{{ fc_mobile_secondary_link.title | escape }}"
+    {% if fc_mobile_secondary_link.current %}aria-current="page"{% endif %}
   >
     <span class="svg-wrapper">{{ 'icon-store-locator.svg' | inline_asset_content }}</span>
   </a>
+  {%- endif -%}
 </nav>

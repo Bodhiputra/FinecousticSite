@@ -56,8 +56,8 @@
     min-height: 0;
     max-height: none;
     overflow: visible;
-    padding-top: 24px;
-    padding-bottom: 24px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
   }
 
   #shopify-section-{{ section.id }} .fc-footer__bottom-links {
@@ -123,26 +123,24 @@
 
 <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
   <div class="fc-footer page-width">
+    {%- if section.settings.newsletter_enable -%}
     <div class="fc-footer__newsletter-wrap">
-      {%- render 'fc-newsletter-signup', form_id_suffix: section.id, layout: 'footer' -%}
+      {%- render 'fc-newsletter-signup',
+        form_id_suffix: section.id,
+        layout: 'footer',
+        title: section.settings.newsletter_heading,
+        body: section.settings.newsletter_body
+      -%}
     </div>
+    {%- endif -%}
     <div class="fc-footer__bottom-links">
       <nav class="fc-footer__bottom-nav" aria-label="Footer">
-        {%- liquid
-          assign fc_about_url = pages['about-us'].url | default: '/pages/about-us'
-        -%}
-        <a href="{{ fc_about_url }}" class="fc-footer__bottom-link">About Us</a>
         {%- if fc_footer_nav != blank and fc_footer_nav.links.size > 0 -%}
           {%- for link in fc_footer_nav.links -%}
-            {%- unless link.handle == 'about-us' or link.handle == 'about-us-page' -%}
             <a href="{{ link.url }}" class="fc-footer__bottom-link"{% if link.current %} aria-current="page"{% endif %}>
               {{- link.title | escape -}}
             </a>
-            {%- endunless -%}
           {%- endfor -%}
-        {%- else -%}
-          <a href="{{ pages['policies'].url | default: '/pages/policies' }}" class="fc-footer__bottom-link">Policies</a>
-          <a href="{{ pages['support'].url | default: '/pages/support' }}" class="fc-footer__bottom-link">Support</a>
         {%- endif -%}
         {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
           <localization-form data-prevent-hide>
@@ -156,7 +154,9 @@
         {%- endif -%}
       </nav>
       <span class="fc-footer__bottom-copy">&copy; Finecoustic {{ 'now' | date: '%Y' }}</span>
+      {%- if section.settings.show_social -%}
       {%- render 'fc-social-icons' -%}
+      {%- endif -%}
     </div>
   </div>
 </footer>
@@ -166,105 +166,6 @@
 {% schema %}
 {
   "name": "t:sections.footer.name",
-  "blocks": [
-    {
-      "type": "@app"
-    },
-    {
-      "type": "link_list",
-      "name": "t:sections.footer.blocks.link_list.name",
-      "settings": [
-        {
-          "type": "inline_richtext",
-          "id": "heading",
-          "default": "t:sections.footer.blocks.link_list.settings.heading.default",
-          "label": "t:sections.footer.blocks.link_list.settings.heading.label"
-        },
-        {
-          "type": "link_list",
-          "id": "menu",
-          "default": "footer",
-          "label": "t:sections.footer.blocks.link_list.settings.menu.label"
-        }
-      ]
-    },
-    {
-      "type": "brand_information",
-      "name": "t:sections.footer.blocks.brand_information.name",
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "t:sections.footer.blocks.brand_information.settings.paragraph.content"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_social",
-          "default": true,
-          "label": "t:sections.footer.blocks.brand_information.settings.show_social.label",
-          "info": "t:sections.footer.blocks.brand_information.settings.show_social.info"
-        }
-      ]
-    },
-    {
-      "type": "text",
-      "name": "t:sections.footer.blocks.text.name",
-      "settings": [
-        {
-          "type": "inline_richtext",
-          "id": "heading",
-          "default": "t:sections.footer.blocks.text.settings.heading.default",
-          "label": "t:sections.footer.blocks.text.settings.heading.label"
-        },
-        {
-          "type": "richtext",
-          "id": "subtext",
-          "default": "t:sections.footer.blocks.text.settings.subtext.default",
-          "label": "t:sections.footer.blocks.text.settings.subtext.label"
-        }
-      ]
-    },
-    {
-      "type": "image",
-      "name": "Image",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "range",
-          "id": "image_width",
-          "min": 50,
-          "max": 550,
-          "step": 5,
-          "unit": "px",
-          "label": "Width",
-          "default": 100
-        },
-        {
-          "type": "select",
-          "id": "alignment",
-          "label": "Alignment",
-          "options": [
-            {
-              "value": "",
-              "label": "Left"
-            },
-            {
-              "value": "center",
-              "label": "Center"
-            },
-            {
-              "value": "right",
-              "label": "Right"
-            }
-          ],
-          "default": "center"
-        }
-      ]
-    }
-  ],
   "settings": [
     {
       "type": "link_list",
@@ -290,21 +191,16 @@
       "label": "t:sections.footer.settings.newsletter_enable.label"
     },
     {
-      "type": "inline_richtext",
+      "type": "text",
       "id": "newsletter_heading",
-      "default": "t:sections.footer.settings.newsletter_heading.default",
-      "label": "t:sections.footer.settings.newsletter_heading.label"
+      "default": "Tune in with us.",
+      "label": "Newsletter heading"
     },
     {
-      "type": "header",
-      "content": "t:sections.footer.settings.header__9.content"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_follow_on_shop",
-      "default": true,
-      "label": "t:sections.footer.settings.enable_follow_on_shop.label",
-      "info": "t:sections.footer.settings.enable_follow_on_shop.info"
+      "type": "textarea",
+      "id": "newsletter_body",
+      "default": "Get early updates about products, exclusive offers, and upcoming projects from Finecoustic.",
+      "label": "Newsletter body"
     },
     {
       "type": "checkbox",
@@ -319,26 +215,6 @@
       "default": true,
       "label": "t:sections.footer.settings.enable_country_selector.label",
       "info": "t:sections.footer.settings.enable_country_selector.info"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_language_selector",
-      "default": true,
-      "label": "t:sections.footer.settings.enable_language_selector.label",
-      "info": "t:sections.footer.settings.enable_language_selector.info"
-    },
-    {
-      "type": "checkbox",
-      "id": "payment_enable",
-      "default": true,
-      "label": "t:sections.footer.settings.payment_enable.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_policy",
-      "default": true,
-      "label": "t:sections.footer.settings.show_policy.label",
-      "info": "t:sections.footer.settings.show_policy.info"
     },
     {
       "type": "header",
@@ -378,16 +254,6 @@
       "label": "t:sections.all.padding.padding_bottom",
       "default": 0
     }
-  ],
-  "default": {
-    "blocks": [
-      {
-        "type": "link_list"
-      },
-      {
-        "type": "text"
-      }
-    ]
-  }
+  ]
 }
 {% endschema %}

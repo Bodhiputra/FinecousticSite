@@ -5,43 +5,23 @@
   {% render 'header-dropdown-menu' %}
 {% endcomment %}
 
-{%- liquid
-  assign fc_shop_collection_url = routes.all_products_collection_url | append: '?sort_by=created-descending'
--%}
-
 <nav class="header__inline-menu">
   <ul class="list-menu list-menu--inline" role="list">
     {%- for link in section.settings.menu.links -%}
-      {%- unless link.handle == 'about-us' or link.handle == 'contact' or link.handle == 'contact-us' or link.handle == 'downloads' -%}
-      {%- liquid
-        assign fc_menu_href = link.url
-        if link.handle == 'products' or link.url == routes.all_products_collection_url or link.url == '/collections/all'
-          assign fc_menu_href = fc_shop_collection_url
-        endif
-      -%}
       <li>
         <a
           id="HeaderMenu-{{ link.handle }}"
-          href="{{ fc_menu_href }}"
+          href="{{ link.url }}"
           class="header__menu-item list-menu__item link link--text focus-inset"
           {% if link.current %}
             aria-current="page"
           {% endif %}
         >
           <span class="fc-header-nav-text{% if link.current or link.child_active %} header__active-menu-item{% endif %}">
-            {%- if link.title == 'Products' -%}Shop{%- else -%}{{- link.title | escape -}}{%- endif -%}
+            {{- link.title | escape -}}
           </span>
         </a>
       </li>
-      {%- endunless -%}
     {%- endfor -%}
-    {%- liquid
-      assign fc_store_locator_url = pages['store-locator'].url | default: '/pages/store-locator'
-    -%}
-    <li>
-      <a href="{{ fc_store_locator_url }}" class="header__menu-item list-menu__item link link--text focus-inset">
-        <span class="fc-header-nav-text">Store Locator</span>
-      </a>
-    </li>
   </ul>
 </nav>
