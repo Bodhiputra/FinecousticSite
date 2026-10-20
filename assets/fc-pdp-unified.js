@@ -518,34 +518,87 @@
     return false;
   }
 
-  root.querySelectorAll('.fc-pdp-u__variant').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      variantId = parseInt(btn.dataset.variantId, 10);
-      root.querySelectorAll('.fc-pdp-u__variant').forEach(function (b) {
-        var selected = b === btn;
-        b.classList.toggle('is-selected', selected);
-        b.setAttribute('aria-pressed', selected ? 'true' : 'false');
-      });
-      if (btn.dataset.variantId) {
-        var html = priceHtmlForVariant(variantId);
-        if (html) syncPrices(html);
+  function waitForStudioHeroImage() {
+    return new Promise(function (resolve) {
+      var studioImg = root.querySelector('.fc-pdp-u__slide.is-active .fc-pdp-u__slide-media');
+      if (!studioImg || studioImg.tagName !== 'IMG') {
+        resolve();
+        return;
       }
-      syncAtcStateForVariant(variantId, true);
-      if (variantGallery) {
-        var nextSrc = btn.dataset.variantImage || variantImageForId(variantId);
-        swapVariantHero(nextSrc, btn.textContent ? btn.textContent.trim() : '');
-      } else if (isStudioPdp) {
-        var studioSrc = btn.dataset.variantImage || variantImageForId(variantId);
-        if (studioSrc) {
-          var studioImg = root.querySelector('.fc-pdp-u__slide.is-active .fc-pdp-u__slide-media');
-          if (studioImg && studioImg.tagName === 'IMG') {
-            studioImg.src = studioSrc;
-            studioImg.removeAttribute('srcset');
-            studioImg.removeAttribute('sizes');
-          }
+      if (studioImg.complete && studioImg.naturalWidth > 0) {
+        resolve();
+        return;
+      }
+      var settled = false;
+      function done() {
+        if (settled) return;
+        settled = true;
+        resolve();
+      }
+      studioImg.addEventListener('load', done, { once: true });
+      studioImg.addEventListener('error', done, { once: true });
+      window.setTimeout(done, 4000);
+    });
+  }
+
+  function applyVariantSwitch(btn) {
+    variantId = parseInt(btn.dataset.variantId, 10);
+    root.querySelectorAll('.fc-pdp-u__variant').forEach(function (b) {
+      var selected = b === btn;
+      b.classList.toggle('is-selected', selected);
+      if (b.tagName === 'BUTTON') {
+        b.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      }
+    });
+    if (btn.dataset.variantId) {
+      var html = priceHtmlForVariant(variantId);
+      if (html) syncPrices(html);
+    }
+    syncAtcStateForVariant(variantId, true);
+    if (variantGallery) {
+      var nextSrc = btn.dataset.variantImage || variantImageForId(variantId);
+      swapVariantHero(nextSrc, btn.textContent ? btn.textContent.trim() : '');
+    } else if (isStudioPdp) {
+      var studioSrc = btn.dataset.variantImage || variantImageForId(variantId);
+      if (studioSrc) {
+        var studioImg = root.querySelector('.fc-pdp-u__slide.is-active .fc-pdp-u__slide-media');
+        if (studioImg && studioImg.tagName === 'IMG') {
+          studioImg.src = studioSrc;
+          studioImg.removeAttribute('srcset');
+          studioImg.removeAttribute('sizes');
         }
       }
-      fetchCartQtySync();
+    }
+    fetchCartQtySync();
+  }
+
+  root.querySelectorAll('.fc-pdp-u__variant').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      if (btn.classList.contains('is-selected')) return;
+
+      if (btn.classList.contains('fc-pdp-u__sibling') && btn.tagName === 'A' && btn.href) {
+        e.preventDefault();
+        if (window.fcTransitionLoader && window.fcTransitionLoader.navigate) {
+          window.fcTransitionLoader.navigate(btn.href);
+        } else {
+          window.location.assign(btn.href);
+        }
+        return;
+      }
+
+      if (!btn.dataset.variantId) return;
+
+      e.preventDefault();
+
+      if (isStudioPdp && window.fcTransitionLoader && window.fcTransitionLoader.run) {
+        window.fcTransitionLoader.run(function () {
+          applyVariantSwitch(btn);
+          return waitForStudioHeroImage();
+        });
+        return;
+      }
+
+      applyVariantSwitch(btn);
     });
   });
 

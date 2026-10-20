@@ -1,7 +1,14 @@
+{%- liquid
+  assign fc_loader_id = loader_id | default: 'fc-site-loader'
+  assign fc_show_tagline = true
+  if show_tagline == false
+    assign fc_show_tagline = false
+  endif
+-%}
 <div
-  id="fc-site-loader"
-  class="fc-site-loader"
-  aria-hidden="false"
+  id="{{ fc_loader_id }}"
+  class="fc-site-loader{% unless fc_show_tagline %} fc-site-loader--logo-only{% endunless %}"
+  aria-hidden="{% if fc_loader_id == 'fc-site-loader' %}false{% else %}true{% endif %}"
   aria-live="polite"
   aria-label="Loading Finecoustic"
 >
@@ -15,6 +22,8 @@
       decoding="sync"
       fetchpriority="high"
     >
-    <p class="fc-site-loader__tagline">fine sound inside.</p>
+    {%- if fc_show_tagline -%}
+      <p class="fc-site-loader__tagline">fine sound inside.</p>
+    {%- endif -%}
   </div>
 </div>

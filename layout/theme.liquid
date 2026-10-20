@@ -445,6 +445,12 @@
       {%- render 'fc-site-loader' -%}
       <script src="{{ 'fc-site-loader.js' | asset_url }}"></script>
     {%- endif -%}
+    {%- if template.name == 'product' -%}
+      {%- if template.suffix == 'hako-studio-301' or template.suffix == 'hako-studio-302' -%}
+        {%- render 'fc-site-loader', loader_id: 'fc-transition-loader', show_tagline: false -%}
+        <script src="{{ 'fc-transition-loader.js' | asset_url }}" defer="defer"></script>
+      {%- endif -%}
+    {%- endif -%}
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>

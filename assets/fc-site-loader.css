@@ -49,6 +49,24 @@ html.fc-site-loader-active .fc-site-loader {
   height: auto;
 }
 
+.fc-site-loader--logo-only .fc-site-loader__tagline {
+  display: none;
+}
+
+.fc-site-loader--logo-only .fc-site-loader__inner {
+  gap: 0;
+}
+
+/* PDP variant / product switch overlay (logo only — no tagline) */
+html.fc-transition-loader-active .fc-site-loader#fc-transition-loader {
+  display: flex;
+}
+
+html.fc-transition-loader-active,
+html.fc-transition-loader-active body {
+  overflow: hidden;
+}
+
 .fc-site-loader__tagline {
   margin: 0;
   font-family: var(--fc-font, 'Alte Haas Grotesk', sans-serif);
