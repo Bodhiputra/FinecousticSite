@@ -1478,13 +1478,13 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "Hako Studio 301/302 are hidden from the shop grid and search on the live (main) theme by default. They still appear when previewing a Development or unpublished theme, or when the toggle below is on."
+        "content": "When off, Hako Studio 301/302 are hidden from the shop grid and search on the live theme (still visible on development/unpublished themes)."
       },
       {
         "type": "checkbox",
         "id": "fc_show_hako_studio_in_shop",
         "label": "Show Hako Studio on shop (public)",
-        "default": false
+        "default": true
       }
     ]
   }

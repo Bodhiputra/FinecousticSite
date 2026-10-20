@@ -130,6 +130,7 @@
     "show_cart_note": false,
     "cart_drawer_collection": "",
     "cart_color_scheme": "scheme-1",
+    "fc_show_hako_studio_in_shop": true,
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
