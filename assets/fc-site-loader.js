@@ -19,12 +19,19 @@
     } catch (e) {}
   }
 
+  function notifyLoaderDone() {
+    try {
+      document.dispatchEvent(new CustomEvent('fcSiteLoaderDone'));
+    } catch (e) {}
+  }
+
   function init() {
     var loader = document.getElementById('fc-site-loader');
     var root = document.documentElement;
     if (!loader || shouldSkipLoader()) {
       if (loader) loader.remove();
       root.classList.remove('fc-site-loader-pending', 'fc-site-loader-active', 'fc-site-loader-revealing');
+      notifyLoaderDone();
       return;
     }
 
@@ -45,6 +52,7 @@
         'fc-site-loader-active',
         'fc-site-loader-revealing'
       );
+      notifyLoaderDone();
     }
 
     function beginExit() {

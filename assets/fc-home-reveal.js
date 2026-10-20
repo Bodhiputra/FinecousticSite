@@ -26,21 +26,38 @@
     });
   }
 
+  function isStudioHero(wrap) {
+    return wrap && wrap.classList && wrap.classList.contains('fc-home-studio-landing-section');
+  }
+
   function reveal(wrap) {
     if (wrap.classList.contains('fc-home-reveal--shown')) return;
     wrap.classList.add('fc-home-reveal--shown');
+  }
+
+  function revealAfterPaint(wrap) {
+    if (reducedMotion) {
+      reveal(wrap);
+      return;
+    }
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        reveal(wrap);
+      });
+    });
   }
 
   function onIntersect(entries, observer) {
     entries.forEach(function (entry) {
       if (!entry.isIntersecting) return;
       if (entry.intersectionRatio < MIN_RATIO) return;
-      reveal(entry.target);
+      revealAfterPaint(entry.target);
       observer.unobserve(entry.target);
     });
   }
 
-  function watchSections(sections) {
+  function watchSections(sections, opts) {
+    opts = opts || {};
     if (!sections.length) return;
 
     if (reducedMotion) {
@@ -50,17 +67,41 @@
 
     var observer = new IntersectionObserver(onIntersect, REVEAL_IO);
     sections.forEach(function (wrap) {
+      if (isStudioHero(wrap) && opts.deferHero) return;
+
       var rect = wrap.getBoundingClientRect();
       if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
-        reveal(wrap);
+        revealAfterPaint(wrap);
         return;
       }
       observer.observe(wrap);
     });
   }
 
+  function revealStudioHero(sections) {
+    var hero = sections.find(isStudioHero);
+    if (!hero) return;
+    revealAfterPaint(hero);
+  }
+
   function init(root) {
-    watchSections(homeSections(root));
+    var sections = homeSections(root);
+    var loaderPending = document.documentElement.classList.contains('fc-site-loader-pending');
+
+    if (loaderPending && !reducedMotion) {
+      watchSections(sections, { deferHero: true });
+      document.addEventListener(
+        'fcSiteLoaderDone',
+        function onDone() {
+          document.removeEventListener('fcSiteLoaderDone', onDone);
+          revealStudioHero(sections);
+        },
+        { once: true }
+      );
+      return;
+    }
+
+    watchSections(sections);
   }
 
   if (document.readyState === 'loading') {
