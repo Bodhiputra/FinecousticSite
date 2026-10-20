@@ -90,14 +90,14 @@
 
     if (loaderPending && !reducedMotion) {
       watchSections(sections, { deferHero: true });
-      document.addEventListener(
-        'fcSiteLoaderDone',
-        function onDone() {
-          document.removeEventListener('fcSiteLoaderDone', onDone);
-          revealStudioHero(sections);
-        },
-        { once: true }
-      );
+      var heroRevealed = false;
+      function revealHeroOnce() {
+        if (heroRevealed) return;
+        heroRevealed = true;
+        revealStudioHero(sections);
+      }
+      document.addEventListener('fcSiteLoaderDone', revealHeroOnce, { once: true });
+      window.setTimeout(revealHeroOnce, 3200);
       return;
     }
 
