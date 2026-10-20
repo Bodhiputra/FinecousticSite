@@ -40,6 +40,50 @@
   --fc-carousel-gutter: clamp(64px, 18vw, 120px);
   --fc-carousel-band: min(700px, 100%);
   --fc-nav-clearance: calc(var(--header-height, 70px) + clamp(12px, 3vw, 24px));
+  /* Space from bottom of floating nav to section H2 (Figma studio PDP ~24px) */
+  --fc-pdp-section-title-gap: 24px;
+  --fc-clickable-icon-hover-scale: 1.18;
+}
+
+/* Clickable icon hit targets — subtle expand on hover (gallery arrows, etc.) */
+.fc-clickable-icon__mark {
+  display: inline-block;
+  transform-origin: center;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), color 0.22s ease;
+}
+
+.fc-clickable-icon {
+  transition: color 0.22s ease;
+}
+
+@media (hover: hover) {
+  .fc-clickable-icon:not(:disabled):hover,
+  .fc-clickable-icon:not([disabled]):hover {
+    color: var(--fc-yellow);
+  }
+
+  .fc-clickable-icon--prev:not(:disabled):hover .fc-clickable-icon__mark,
+  .fc-clickable-icon--prev:not([disabled]):hover .fc-clickable-icon__mark {
+    transform: scale(var(--fc-clickable-icon-hover-scale)) translateX(-2px);
+  }
+
+  .fc-clickable-icon--next:not(:disabled):hover .fc-clickable-icon__mark,
+  .fc-clickable-icon--next:not([disabled]):hover .fc-clickable-icon__mark {
+    transform: scale(var(--fc-clickable-icon-hover-scale)) translateX(2px);
+  }
+
+  .fc-clickable-icon:not(.fc-clickable-icon--prev):not(.fc-clickable-icon--next):not(:disabled):hover
+    .fc-clickable-icon__mark,
+  .fc-clickable-icon:not(.fc-clickable-icon--prev):not(.fc-clickable-icon--next):not([disabled]):hover
+    .fc-clickable-icon__mark {
+    transform: scale(var(--fc-clickable-icon-hover-scale));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-clickable-icon__mark {
+    transition: none;
+  }
 }
 
 /* Display hero — 56–72px */
@@ -123,36 +167,59 @@ body.gradient {
 
 /* ── FC site shell ──
    body          flex column, min-height 100vh
-   #MainContent   min one viewport tall (footer below the fold on short pages)
+   #MainContent   no top padding — each section owns nav clearance (see below)
    footer group   flows after main — no margin-top:auto pin (avoids ATF footer stack)
-   Nav is fixed; #MainContent gets padding-top = nav height. */
+   Nav is fixed; use --fc-nav-clearance on section wrappers or inner content. */
 .content-for-layout {
   padding-top: 0;
   padding-bottom: 0;
 }
 
-/* ── THE ONE TRUE CLEARANCE RULE ──
-   Applied once here. Every page type respects it automatically.
-   Full-bleed heroes (homepage hero, PDP) override to 0 below. */
 #MainContent {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   width: 100%;
   box-sizing: border-box;
-  padding-top: var(--fc-nav-clearance);
-  /* Main column = one viewport (padding included); footer starts after scroll */
+  padding-top: 0;
   min-height: 100svh;
   min-height: 100dvh;
 }
 
-/* Full-bleed heroes define their own height — don't stack min-height */
+/* Full-bleed heroes define their own height — grow main so footer sits at viewport bottom */
 #MainContent:has(> .shopify-section:first-child .website-hero),
+#MainContent:has(> .shopify-section:first-child .fc-home-studio-landing),
 #MainContent:has(> .shopify-section:first-child .fc-pdp-u),
-#MainContent:has(> .shopify-section:first-child .fc-pdp-video-hero),
-#MainContent:has(> .shopify-section:first-child .fc-preorder-offers),
-#MainContent:has(> .shopify-section:first-child .fc-preorder-questionnaire) {
+#MainContent:has(> .shopify-section:first-child .fc-pdp-studio),
+#MainContent:has(> .shopify-section:first-child .fc-pdp-video-hero) {
   min-height: 0;
+  flex: 1 1 auto;
+}
+
+/* Studio catalog block — first section fills one viewport */
+#MainContent > .shopify-section.fc-pdp-studio-section:first-child {
+  min-height: 100svh;
+  min-height: 100dvh;
+  flex: 0 0 auto;
+}
+
+/* Home index — each major block at least one small viewport (mobile URL bar stable) */
+#MainContent > .shopify-section.fc-home-hako-series-section,
+#MainContent > .shopify-section.section-website-hero,
+#MainContent > .shopify-section.fc-creator-feedback-section,
+#MainContent > .shopify-section.fc-nomad-video-duo-section {
+  min-height: 100svh;
+  min-height: 100dvh;
+  flex: 0 0 auto;
+}
+
+/* Studio home hero — exactly one viewport (min-height alone can grow with img in flow) */
+#MainContent > .shopify-section.fc-home-studio-landing-section {
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  overflow: hidden;
+  flex: 0 0 auto;
 }
 
 #MainContent > .shopify-section {
@@ -163,20 +230,101 @@ body.gradient {
   justify-content: flex-start;
   min-height: 0;
   box-sizing: border-box;
-  padding-top: 0;
+  padding-top: var(--fc-nav-clearance);
   padding-bottom: 0;
 }
 
-/* Full-bleed heroes — cancel #MainContent clearance so hero fills from top of viewport.
-   These sections handle their own internal positioning. */
-#MainContent:has(> .shopify-section:first-child .website-hero),
-#MainContent:has(> .shopify-section:first-child .fc-pdp-u),
-#MainContent:has(> .shopify-section:first-child .fc-pdp-video-hero),
-#MainContent:has(> .shopify-section:first-child .fc-pdp-showcases),
-#MainContent:has(> .shopify-section:first-child .fc-pdp-showcase),
-#MainContent:has(> .shopify-section:first-child .fc-pdp-specs-inbox),
-#MainContent:has(> .shopify-section:first-child .responsive-bg-section) {
+/* Section-owned clearance opt-out: full-bleed heroes or inner content already pads (nav + title gap). */
+#MainContent > .shopify-section.fc-section--flush-top,
+#MainContent > .shopify-section.fc-pdp-studio-section,
+#MainContent > .shopify-section.fc-pdp-studio-io-section,
+#MainContent > .shopify-section.fc-pdp-studio-specs-section,
+#MainContent > .shopify-section.fc-pdp-studio-features-section,
+#MainContent > .shopify-section.fc-pdp-studio-driver-section,
+#MainContent > .shopify-section:has(.fc-login-page),
+#MainContent > .shopify-section:has(.fc-about),
+#MainContent > .shopify-section:has(> .website-hero),
+#MainContent > .shopify-section:has(> .fc-nomad-video-duo),
+#MainContent > .shopify-section:has(> .fc-creator-feedback),
+#MainContent > .shopify-section:has(> .fc-home-hako-series),
+#MainContent > .shopify-section:has(> .fc-home-studio-landing),
+#MainContent > .shopify-section:has(> .fc-pdp-u.fc-pdp-hero),
+#MainContent > .shopify-section:has(> .fc-pdp-video-hero),
+#MainContent > .shopify-section:has(> .fc-pdp-showcases),
+#MainContent > .shopify-section:has(> .fc-pdp-showcase),
+#MainContent > .shopify-section:has(> .fc-pdp-specs-inbox),
+#MainContent > .shopify-section:has(> .responsive-bg-section) {
   padding-top: 0;
+}
+
+/* Reusable inner padding — e.g. section title below floating nav */
+.fc-nav-clearance {
+  padding-top: var(--fc-nav-clearance);
+}
+
+.fc-nav-clearance--section-title {
+  padding-top: calc(var(--fc-nav-clearance) + var(--fc-pdp-section-title-gap));
+}
+
+/* Studio driver spotlights — edge-to-edge split panels */
+#MainContent .shopify-section.fc-pdp-studio-features-section {
+  width: 100%;
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0;
+  line-height: 0;
+}
+
+#MainContent .shopify-section.fc-pdp-studio-features-section .fc-pdp-studio-features__copy {
+  line-height: normal;
+}
+
+#MainContent .shopify-section.fc-pdp-studio-driver-section {
+  width: 100%;
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0;
+  gap: 0;
+  line-height: 0;
+}
+
+#MainContent .shopify-section.fc-pdp-studio-driver-section .fc-pdp-studio-driver__copy {
+  line-height: normal;
+}
+
+/* Driver frames are full-bleed edge-to-edge (Figma 1440 artboard scales to 100vw) */
+#MainContent .shopify-section.fc-pdp-studio-driver-section .fc-pdp-studio-driver--figma-tweeter,
+#MainContent .shopify-section.fc-pdp-studio-driver-section .fc-pdp-studio-driver--figma-woofer {
+  width: 100%;
+  max-width: none;
+}
+
+#MainContent .shopify-section.fc-pdp-studio-driver-section:has(.fc-pdp-studio-driver--figma-tweeter),
+#MainContent .shopify-section.fc-pdp-studio-driver-section:has(.fc-pdp-studio-driver--figma-woofer) {
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+#MainContent .shopify-section.fc-pdp-studio-specs-section {
+  width: 100%;
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+#MainContent .shopify-section.fc-pdp-studio-io-section {
+  width: 100%;
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0;
+  min-height: 80svh;
+  min-height: 80dvh;
 }
 
 /* Shop / search — natural content height, modest bottom rhythm before footer */
@@ -254,7 +402,7 @@ body.gradient {
   align-items: flex-start;
   justify-content: center;
   min-height: 0;
-  padding: clamp(48px, 10vh, 96px) 20px clamp(32px, 5vh, 56px);
+  padding: calc(var(--fc-nav-clearance) + clamp(16px, 4vh, 32px)) 20px clamp(32px, 5vh, 56px);
   box-sizing: border-box;
   background: none;
   background-attachment: unset;
@@ -267,7 +415,7 @@ body.gradient {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: clamp(48px, 10vh, 96px) var(--fc-page-gutter, 24px) clamp(32px, 5vh, 56px);
+  padding: calc(var(--fc-nav-clearance) + clamp(16px, 4vh, 32px)) var(--fc-page-gutter, 24px) clamp(32px, 5vh, 56px);
   box-sizing: border-box;
 }
 

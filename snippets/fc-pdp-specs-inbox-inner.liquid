@@ -1,20 +1,63 @@
 {%- comment -%}
   Reusable PDP specs + in-the-box block.
   Rendered from fc-pdp-unified via {% render %} (desktop column + mobile below hero).
+  Product metafields (Admin → Products) override theme template section settings.
 {%- endcomment -%}
-{%- if section.settings.specs_table_1 != blank or section.settings.specs_table_2 != blank -%}
+{%- liquid
+  assign fc_specs_title = product.metafields.custom.specs_section_title.value
+  if fc_specs_title == blank
+    assign fc_specs_title = section.settings.table_title
+  endif
+
+  assign fc_specs_table_1 = product.metafields.custom.specs_table_1.value
+  if fc_specs_table_1 == blank
+    assign fc_specs_table_1 = section.settings.specs_table_1
+  endif
+
+  assign fc_specs_table_2 = product.metafields.custom.specs_table_2.value
+  if fc_specs_table_2 == blank
+    assign fc_specs_table_2 = section.settings.specs_table_2
+  endif
+
+  assign fc_label1 = product.metafields.custom.specs_table_1_label.value
+  if fc_label1 == blank
+    assign fc_label1 = section.settings.table1_button_label
+  endif
+  assign fc_label1 = fc_label1 | strip
+
+  assign fc_label2 = product.metafields.custom.specs_table_2_label.value
+  if fc_label2 == blank
+    assign fc_label2 = section.settings.table2_button_label
+  endif
+  assign fc_label2 = fc_label2 | strip
+
+  assign fc_inbox_title = product.metafields.custom.inbox_title.value
+  if fc_inbox_title == blank
+    assign fc_inbox_title = section.settings.inbox_title
+  endif
+
+  assign fc_inbox_asset = product.metafields.custom.inbox_asset.value
+  if fc_inbox_asset == blank
+    assign fc_inbox_asset = section.settings.inbox_asset
+  endif
+
+  assign fc_inbox_items = product.metafields.custom.in_the_box_items.value
+  assign fc_inbox_from_metafield = false
+  if fc_inbox_items != blank and fc_inbox_items.size > 0
+    assign fc_inbox_from_metafield = true
+  endif
+-%}
+{%- if fc_specs_table_1 != blank or fc_specs_table_2 != blank -%}
   <details class="fc-pdp-acc fc-pdp-acc--specs" open>
     <summary class="fc-pdp-acc__summary">
-      <span class="fc-pdp-acc__summary-label">{{ section.settings.table_title | default: 'Specifications' | escape }}</span>
+      <span class="fc-pdp-acc__summary-label">{{ fc_specs_title | default: 'Specifications' | escape }}</span>
       {%- render 'fc-pdp-acc-toggle' -%}
     </summary>
     <div class="fc-pdp-acc__body">
       <div class="fc-pdp-specs-inbox__specs">
-        {%- assign fc_label1 = section.settings.table1_button_label | strip -%}
-        {%- assign fc_label2 = section.settings.table2_button_label | strip -%}
         {%- if fc_label1 != blank or fc_label2 != blank -%}
           <div class="fc-pdp-specs-inbox__toggle" role="tablist" aria-label="Specification tables">
-            {%- if section.settings.specs_table_1 != blank and fc_label1 != blank -%}
+            {%- if fc_specs_table_1 != blank and fc_label1 != blank -%}
               <button
                 type="button"
                 class="fc-pdp-specs-inbox__tab is-active"
@@ -25,12 +68,12 @@
                 {{ fc_label1 | escape }}
               </button>
             {%- endif -%}
-            {%- if section.settings.specs_table_2 != blank and fc_label2 != blank -%}
+            {%- if fc_specs_table_2 != blank and fc_label2 != blank -%}
               <button
                 type="button"
-                class="fc-pdp-specs-inbox__tab{% if section.settings.specs_table_1 == blank or fc_label1 == blank %} is-active{% endif %}"
+                class="fc-pdp-specs-inbox__tab{% if fc_specs_table_1 == blank or fc_label1 == blank %} is-active{% endif %}"
                 role="tab"
-                aria-selected="{% if section.settings.specs_table_1 == blank or fc_label1 == blank %}true{% else %}false{% endif %}"
+                aria-selected="{% if fc_specs_table_1 == blank or fc_label1 == blank %}true{% else %}false{% endif %}"
                 data-spec-tab="2"
               >
                 {{ fc_label2 | escape }}
@@ -39,11 +82,11 @@
           </div>
         {%- endif -%}
 
-        {%- if section.settings.specs_table_1 != blank -%}
+        {%- if fc_specs_table_1 != blank -%}
           <div class="fc-pdp-specs-inbox__panel is-active" role="tabpanel" data-spec-panel="1">
             <table class="fc-pdp-specs-inbox__table">
               <tbody>
-                {%- assign rows_1 = section.settings.specs_table_1 | newline_to_br | split: '<br />' -%}
+                {%- assign rows_1 = fc_specs_table_1 | newline_to_br | split: '<br />' -%}
                 {%- for row in rows_1 -%}
                   {%- assign pair = row | split: '|' -%}
                   {%- if pair.size >= 2 -%}
@@ -58,15 +101,15 @@
           </div>
         {%- endif -%}
 
-        {%- if section.settings.specs_table_2 != blank -%}
+        {%- if fc_specs_table_2 != blank -%}
           <div
-            class="fc-pdp-specs-inbox__panel{% if section.settings.specs_table_1 == blank %} is-active{% endif %}"
+            class="fc-pdp-specs-inbox__panel{% if fc_specs_table_1 == blank %} is-active{% endif %}"
             role="tabpanel"
             data-spec-panel="2"
           >
             <table class="fc-pdp-specs-inbox__table">
               <tbody>
-                {%- assign rows_2 = section.settings.specs_table_2 | newline_to_br | split: '<br />' -%}
+                {%- assign rows_2 = fc_specs_table_2 | newline_to_br | split: '<br />' -%}
                 {%- for row in rows_2 -%}
                   {%- assign pair = row | split: '|' -%}
                   {%- if pair.size >= 2 -%}
@@ -85,22 +128,19 @@
   </details>
 {%- endif -%}
 
-{%- liquid
-  assign fc_inbox_asset = section.settings.inbox_asset
-  if fc_inbox_asset == blank
-    case product.handle
-      when 'groove-ows-ft21'
-        assign fc_inbox_asset = 'GROOVE_OWS_FT21_What_In_The_Box.webp'
-      when 'resono-wfm1'
-        assign fc_inbox_asset = 'Resono_WFM1_What_In_The_Box.webp'
-      when 'sonara-ufm1'
-        assign fc_inbox_asset = 'Sonara_UFM1_What_In_The_Box.webp'
-    endcase
-  endif
--%}
+{%- if fc_inbox_asset == blank -%}
+  {%- case product.handle -%}
+    {%- when 'groove-ows-ft21' -%}
+      {%- assign fc_inbox_asset = 'GROOVE_OWS_FT21_What_In_The_Box.webp' -%}
+    {%- when 'resono-wfm1' -%}
+      {%- assign fc_inbox_asset = 'Resono_WFM1_What_In_The_Box.webp' -%}
+    {%- when 'sonara-ufm1' -%}
+      {%- assign fc_inbox_asset = 'Sonara_UFM1_What_In_The_Box.webp' -%}
+  {%- endcase -%}
+{%- endif -%}
 
-{%- if section.blocks.size > 0 or section.settings.inbox_image != blank or fc_inbox_asset != blank -%}
-  {%- assign fc_inbox_alt = section.settings.inbox_title -%}
+{%- if fc_inbox_from_metafield or section.blocks.size > 0 or section.settings.inbox_image != blank or fc_inbox_asset != blank -%}
+  {%- assign fc_inbox_alt = fc_inbox_title -%}
   {%- if fc_inbox_alt == blank -%}
     {%- assign fc_inbox_alt = 'In The Box' -%}
   {%- endif -%}
@@ -137,38 +177,60 @@
                     >
           </div>
         {%- endif -%}
-        {%- if section.blocks.size > 0 -%}
+        {%- if fc_inbox_from_metafield or section.blocks.size > 0 -%}
           <div class="fc-pdp-specs-inbox__icons">
-            {%- for block in section.blocks -%}
-              <div class="fc-pdp-specs-inbox__icon" {{ block.shopify_attributes }}>
-                <div class="fc-pdp-specs-inbox__icon-frame">
-                  {%- if block.settings.icon_asset != blank -%}
-                    <img
-                      src="{{ block.settings.icon_asset | asset_url }}"
-                      alt="{{ block.settings.icon_text | escape }}"
-                      loading="eager"
-                      decoding="async"
-                      width="120"
-                      height="120"
-                    >
-                  {%- elsif block.settings.icon_image -%}
-                    {%- assign fc_icon_alt = block.settings.icon_text | escape -%}
-                    {{
-                      block.settings.icon_image
-                      | image_url: width: 240
-                      | image_tag:
-                        loading: 'eager',
-                        decoding: 'async',
-                        widths: '120, 180, 240',
-                        alt: fc_icon_alt
-                    }}
+            {%- if fc_inbox_from_metafield -%}
+              {%- for item in fc_inbox_items -%}
+                <div class="fc-pdp-specs-inbox__icon">
+                  <div class="fc-pdp-specs-inbox__icon-frame">
+                    {%- if item.icon_asset != blank -%}
+                      <img
+                        src="{{ item.icon_asset | asset_url }}"
+                        alt="{{ item.icon_text | escape }}"
+                        loading="eager"
+                        decoding="async"
+                        width="120"
+                        height="120"
+                      >
+                    {%- endif -%}
+                  </div>
+                  {%- if item.icon_text != blank -%}
+                    <p class="fc-pdp-specs-inbox__icon-label">{{ item.icon_text | escape }}</p>
                   {%- endif -%}
                 </div>
-                {%- if block.settings.icon_text != blank -%}
-                  <p class="fc-pdp-specs-inbox__icon-label">{{ block.settings.icon_text | escape }}</p>
-                {%- endif -%}
-              </div>
-            {%- endfor -%}
+              {%- endfor -%}
+            {%- else -%}
+              {%- for block in section.blocks -%}
+                <div class="fc-pdp-specs-inbox__icon" {{ block.shopify_attributes }}>
+                  <div class="fc-pdp-specs-inbox__icon-frame">
+                    {%- if block.settings.icon_asset != blank -%}
+                      <img
+                        src="{{ block.settings.icon_asset | asset_url }}"
+                        alt="{{ block.settings.icon_text | escape }}"
+                        loading="eager"
+                        decoding="async"
+                        width="120"
+                        height="120"
+                      >
+                    {%- elsif block.settings.icon_image -%}
+                      {%- assign fc_icon_alt = block.settings.icon_text | escape -%}
+                      {{
+                        block.settings.icon_image
+                        | image_url: width: 240
+                        | image_tag:
+                          loading: 'eager',
+                          decoding: 'async',
+                          widths: '120, 180, 240',
+                          alt: fc_icon_alt
+                      }}
+                    {%- endif -%}
+                  </div>
+                  {%- if block.settings.icon_text != blank -%}
+                    <p class="fc-pdp-specs-inbox__icon-label">{{ block.settings.icon_text | escape }}</p>
+                  {%- endif -%}
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
           </div>
         {%- endif -%}
       </div>

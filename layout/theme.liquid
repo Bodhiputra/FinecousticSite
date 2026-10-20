@@ -12,14 +12,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="">
-    {%- include 'fc-launch-gates' -%}
-    <meta name="fc-launch-ts" content="{{ fc_launch_ts }}">
-    <meta name="fc-store-launched" content="{% if fc_store_launched %}true{% else %}false{% endif %}">
-    {%- comment -%}
-      Stale-cache heal (launch-locked, countdown, sold-out tags). Must load on live too —
-      return visitors can keep pre-launch HTML in browser cache after drop.
-    {%- endcomment -%}
-    <script src="{{ 'fc-launch-live.js' | asset_url }}"></script>
     <link rel="canonical" href="{{ canonical_url }}">
 
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
@@ -78,9 +70,10 @@
       {%- unless fc_page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
     </title>
 
-    {% if page_description %}
-      <meta name="description" content="{{ page_description | escape }}">
-    {% endif %}
+    {% render 'fc-meta-description' %}
+    {%- if fc_meta_description != blank -%}
+      <meta name="description" content="{{ fc_meta_description | escape }}">
+    {%- endif -%}
 
     {% render 'meta-tags' %}
 
@@ -338,19 +331,11 @@
       cart-drawer, .drawer, .skip-to-content-link {
         display: none;
       }
-      /* 3. Main content: clearance below fixed nav */
+      /* 3. Main content: no global nav pad — sections own clearance (fc-base.css) */
       #MainContent {
-        padding-top: var(--fc-nav-clearance);
-      }
-      /* 4. Full-bleed heroes: cancel clearance so hero fills from top */
-      #MainContent:has(> .shopify-section:first-child .website-hero),
-      #MainContent:has(> .shopify-section:first-child .fc-pdp-u),
-      #MainContent:has(> .shopify-section:first-child .fc-pdp-video-hero),
-      #MainContent:has(> .shopify-section:first-child .fc-preorder-offers),
-      #MainContent:has(> .shopify-section:first-child .fc-preorder-questionnaire) {
         padding-top: 0;
       }
-      /* 5. Site loader — hide homepage until loader finishes (index only) */
+      /* 4. Site loader — hide homepage until loader finishes (index only) */
       html.fc-site-loader-pending body > :not(#fc-site-loader) {
         visibility: hidden !important;
       }
@@ -400,18 +385,21 @@
       <script src="{{ 'fc-pdp-dock.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
+    {%- if template.name == 'index' -%}
+      {{- 'fc-home-reveal.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'fc-home-reveal.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+
+    {%- if template.name == 'product' -%}
+      {%- if template.suffix == 'hako-studio-301' or template.suffix == 'hako-studio-302' -%}
+        {{- 'fc-pdp-studio-reveal.css' | asset_url | stylesheet_tag }}
+        <script src="{{ 'fc-pdp-studio-reveal.js' | asset_url }}" defer="defer"></script>
+      {%- endif -%}
+    {%- endif -%}
+
     {%- if template.name == 'search' -%}
       {{- 'fc-shop.css' | asset_url | stylesheet_tag }}
       {{- 'fc-search.css' | asset_url | stylesheet_tag }}
-    {%- endif -%}
-
-    {%- if template.name == 'index' or template.suffix == 'preorder-offers' or template.suffix == 'preorder-questionnaire' -%}
-      {{- 'fc-preorder.css' | asset_url | stylesheet_tag }}
-    {%- endif -%}
-
-    {%- if template.suffix == 'preorder-offers' or template.suffix == 'preorder-questionnaire' -%}
-      <script src="{{ 'fc-preorder-questionnaire-data.js' | asset_url }}" defer="defer"></script>
-      <script src="{{ 'fc-preorder.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
     {{ 'component-cart-items.css' | asset_url | stylesheet_tag }}

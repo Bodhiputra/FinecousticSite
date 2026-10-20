@@ -319,8 +319,10 @@ div.fc-creator-feedback__divider.fc-creator-feedback__divider--vertical {
   min-height: 0;
   padding-inline: var(--fc-feedback-main-inline-pad);
   box-sizing: border-box;
-  overflow: hidden;
-  overscroll-behavior-y: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -329,12 +331,6 @@ div.fc-creator-feedback__divider.fc-creator-feedback__divider--vertical {
   display: none;
   width: 0;
   height: 0;
-}
-
-.fc-creator-feedback__card.is-interactive .fc-creator-feedback__viewport {
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
 }
 
 .fc-creator-feedback__panel {

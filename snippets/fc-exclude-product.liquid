@@ -3,8 +3,6 @@
   Usage:
     {% include 'fc-exclude-product', product: product %}
     {% if fc_exclude_product %} … skip … {% endif %}
-  Pre-release (FBS/Hako): was hidden on live until Nomad launch — now visible on all themes.
-  Nomad pre-order digital SKU stays hidden from grid/search.
 {%- endcomment -%}
 {%- liquid
   assign fc_exclude_product = false
@@ -21,9 +19,20 @@
   endif
 
   comment
-    Nomad pre-order (digital) — never list on shop grid / search; PDP stays direct-link only.
+    Hako Studio: staged on dev theme only. Same catalog is shared with live;
+    hide from shop/search overlays unless this theme is development/unpublished
+    or "Show Hako Studio on shop (public)" is enabled in theme settings.
   endcomment
-  if fc_handle contains 'nomad-preorder' or fc_handle contains 'hako-nomad-preorder'
-    assign fc_exclude_product = true
+  if fc_handle contains 'hako-studio-'
+    assign fc_show_hako_studio = false
+    if theme.role == 'development' or theme.role == 'unpublished'
+      assign fc_show_hako_studio = true
+    endif
+    if settings.fc_show_hako_studio_in_shop
+      assign fc_show_hako_studio = true
+    endif
+    unless fc_show_hako_studio
+      assign fc_exclude_product = true
+    endunless
   endif
 -%}

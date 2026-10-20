@@ -138,10 +138,14 @@ window.fcWirePriceTag = function (tag, options) {
       return Number(tag.dataset.variantId);
     };
   var onAdd = options.onAdd;
-  if (!tag || tag.classList.contains('fc-tag--oos') || tag.classList.contains('fc-tag--coming-soon') || typeof onAdd !== 'function') return;
-  var launchLive = typeof window.fcIsLaunchLive === 'function' && window.fcIsLaunchLive();
-  if (!launchLive) {
-    if (tag.classList.contains('fc-tag--launch-locked') || tag.dataset.fcLaunchLocked === 'true') return;
+  if (
+    !tag ||
+    tag.classList.contains('fc-tag--oos') ||
+    tag.classList.contains('fc-tag--coming-soon') ||
+    tag.dataset.fcPurchasable === 'false' ||
+    typeof onAdd !== 'function'
+  ) {
+    return;
   }
   if (tag.dataset.fcPriceTagBound === '1') return;
   tag.dataset.fcPriceTagBound = '1';

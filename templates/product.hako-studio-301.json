@@ -1,0 +1,211 @@
+{
+  "sections": {
+    "fc_studio_blank": {
+      "type": "fc-pdp-studio-blank",
+      "settings": {
+        "hide_section": true,
+        "background_asset": "hako-studio-301-hero-withbg.png",
+        "background_position_x": 50,
+        "background_position_y": 80,
+        "title_left": "Studio",
+        "title_right": "301",
+        "title_accessible": "Hako Studio 301",
+        "alt": "Hako Studio 301",
+        "min_height_vh": 100,
+        "background_color": "#000000"
+      }
+    },
+    "fc_pdp_studio": {
+      "type": "fc-pdp-studio",
+      "blocks": {
+        "h1": { "type": "highlight", "settings": { "text": "Silk dome tweeter" } },
+        "h2": { "type": "highlight", "settings": { "text": "Fiber glass woofer" } },
+        "h3": { "type": "highlight", "settings": { "text": "No amps needed" } },
+        "h4": { "type": "highlight", "settings": { "text": "Sub out channel" } },
+        "h5": { "type": "highlight", "settings": { "text": "4-deg base angle" } },
+        "h6": { "type": "highlight", "settings": { "text": "MDF Cabinet" } }
+      },
+      "block_order": ["h1", "h2", "h3", "h4", "h5", "h6"],
+      "settings": {
+        "purchase_cta": "coming_soon",
+        "eyebrow": "Two - Way Active Bookshelf Speaker",
+        "variant_row_label": "Variant",
+        "sibling_1_label": "301",
+        "sibling_1_url": "/products/hako-studio-301",
+        "sibling_2_label": "302",
+        "sibling_2_url": "/products/hako-studio-302",
+        "color_row_label": "Color",
+        "description_title": "Product Description",
+        "inbox_title": "In The Box",
+        "inbox_asset": "FBB301_InTheBox.jpg",
+        "quick_start_guide_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/HakoStudio301-QSG.pdf?v=1792137249",
+        "show_frequency_graph": false
+      }
+    },
+    "fc_studio_tweeter": {
+      "type": "fc-pdp-studio-driver",
+      "settings": {
+        "heading": "1.25” Silk Dome Tweeter",
+        "body": "Silk diaphragm designed for smooth high-frequency reproduction.",
+        "image_asset": "hako-studio-301-tweeter.png",
+        "figma_frame": "tweeter",
+        "layout": "image_left",
+        "gradient_style": "tweeter",
+        "gradient_color": "#FFD300"
+      }
+    },
+    "fc_studio_woofer": {
+      "type": "fc-pdp-studio-driver",
+      "settings": {
+        "heading": "3” Glass Fiber Woofer",
+        "body": "A rigid, lightweight diaphragm designed to maintain its shape, helping control unwanted resonance for more consistent sound.",
+        "image_asset": "hako-studio-301-woofer.png",
+        "figma_frame": "woofer",
+        "layout": "image_right",
+        "gradient_style": "woofer",
+        "gradient_color": "#FFD300"
+      }
+    },
+    "fc_studio_features": {
+      "type": "fc-pdp-studio-features",
+      "blocks": {
+        "f1": {
+          "type": "row",
+          "settings": {
+            "image_asset": "hako-studio-301-feature-4deg.png",
+            "image_position_x": 50,
+            "image_position_y": 100,
+            "body": "4° angled base directs the sound toward your listening position."
+          }
+        },
+        "f2": {
+          "type": "row",
+          "settings": {
+            "image_asset": "hako-studio-301-feature-mdf.png",
+            "body": "High-density MDF, designed to reduce unwanted cabinet vibration."
+          }
+        },
+        "f3": {
+          "type": "row",
+          "settings": {
+            "image_asset": "hako-studio-301-feature-rear-bass.png",
+            "body": "Rear bass-reflex port, designed to manage airflow through the enclosure, supporting low-frequency output."
+          }
+        }
+      },
+      "block_order": ["f1", "f2", "f3"],
+      "settings": {}
+    },
+    "fc_studio_specs": {
+      "type": "fc-pdp-studio-specs",
+      "blocks": {
+        "l1": {
+          "type": "row",
+          "settings": { "column": "left", "label": "Model Number", "value": "FBB301" }
+        },
+        "l2": {
+          "type": "row",
+          "settings": {
+            "column": "left",
+            "label": "Woofer",
+            "value": "3” glass-fiber\n4 Ω impedance\n15 W"
+          }
+        },
+        "l3": {
+          "type": "row",
+          "settings": {
+            "column": "left",
+            "label": "Tweeter",
+            "value": "1.25” silk dome\n4 Ω impedance\n5W\nFerrite magnet"
+          }
+        },
+        "l4": {
+          "type": "row",
+          "settings": {
+            "column": "left",
+            "label": "Crossover",
+            "value": "3 kHz passive (inside each cabinet)"
+          }
+        },
+        "l5": {
+          "type": "row",
+          "settings": { "column": "left", "label": "Rated Power", "value": "25 W × 2 (50 W system)" }
+        },
+        "l6": {
+          "type": "row",
+          "settings": { "column": "left", "label": "Peak Power", "value": "80 W (pair system)" }
+        },
+        "l7": {
+          "type": "row",
+          "settings": { "column": "left", "label": "Frequency Response", "value": "45 Hz – 20 kHz" }
+        },
+        "l8": {
+          "type": "row",
+          "settings": { "column": "left", "label": "Max SPL @ 1 m", "value": "106 dB" }
+        },
+        "l9": {
+          "type": "row",
+          "settings": { "column": "left", "label": "Distortion / SNR", "value": "THD < 1% · SNR ≥ 85 dB" }
+        },
+        "l10": {
+          "type": "row",
+          "settings": { "column": "left", "label": "Sensitivity", "value": "95 dB (1 W / 1 m)" }
+        },
+        "r1": {
+          "type": "row",
+          "settings": { "column": "right", "label": "Bluetooth", "value": "5.3" }
+        },
+        "r2": {
+          "type": "row",
+          "settings": { "column": "right", "label": "Wired input", "value": "AUX (3.5 mm → RCA cable in box)" }
+        },
+        "r3": {
+          "type": "row",
+          "settings": { "column": "right", "label": "Optical", "value": "PCM 48 kHz" }
+        },
+        "r4": {
+          "type": "row",
+          "settings": { "column": "right", "label": "Sub Out", "value": "20 Hz – 300 Hz · 650 mV" }
+        },
+        "r5": {
+          "type": "row",
+          "settings": {
+            "column": "right",
+            "label": "Control Knobs",
+            "value": "Volume\nTreble −6 dB to +3 dB\nBass −6 dB to +3 dB"
+          }
+        },
+        "r6": {
+          "type": "row",
+          "settings": {
+            "column": "right",
+            "label": "Cabinet",
+            "value": "High-density MDF\n4-degree angled base\nRear bass-reflex port"
+          }
+        },
+        "r7": {
+          "type": "row",
+          "settings": { "column": "right", "label": "Size", "value": "125 × 136 × 210 mm" }
+        },
+        "r8": {
+          "type": "row",
+          "settings": { "column": "right", "label": "Weight", "value": "≈ 2.41 kg" }
+        }
+      },
+      "block_order": ["l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8", "l9", "l10", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8"],
+      "settings": {
+        "title": "Technical Specifications."
+      }
+    },
+    "fc_studio_io": {
+      "type": "fc-pdp-studio-io",
+      "settings": {
+        "title": "Input / Output Channels.",
+        "layout_preset": "studio_301",
+        "side_image_asset": "hako-studio-301-io-side.png",
+        "back_image_asset": "hako-studio-301-io-back.png"
+      }
+    }
+  },
+  "order": ["fc_studio_blank", "fc_pdp_studio", "fc_studio_tweeter", "fc_studio_woofer", "fc_studio_features", "fc_studio_io", "fc_studio_specs"]
+}

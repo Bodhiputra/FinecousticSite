@@ -1,0 +1,83 @@
+{%- liquid
+  assign fc_card_product = product
+  assign fc_curated = curated | default: false
+  assign fc_exclude_product = false
+
+  unless fc_curated
+    if fc_card_product != blank
+      assign fc_handle = fc_card_product.handle | downcase
+    else
+      assign fc_handle = ''
+    endif
+
+    if fc_handle contains 'sonara-ufm1-test'
+      assign fc_exclude_product = true
+    endif
+
+    if fc_handle contains 'hako-studio-'
+      assign fc_show_hako_studio = false
+      if theme.role == 'development' or theme.role == 'unpublished'
+        assign fc_show_hako_studio = true
+      endif
+      if settings.fc_show_hako_studio_in_shop
+        assign fc_show_hako_studio = true
+      endif
+      unless fc_show_hako_studio
+        assign fc_exclude_product = true
+      endunless
+    endif
+  endunless
+-%}
+{%- if fc_card_product != blank and fc_exclude_product == false -%}
+  {%- liquid
+    assign fc_cat = fc_card_product.type | downcase | strip
+    unless fc_cat == 'earphones' or fc_cat == 'speakers' or fc_cat == 'microphones'
+      assign fc_cat = 'speakers'
+    endunless
+
+    assign fc_variant_id = fc_card_product.first_available_variant.id | default: fc_card_product.variants.first.id
+    assign fc_card_variant = fc_card_product.first_available_variant | default: fc_card_product.variants.first
+    assign fc_card_available = fc_card_product.available
+
+    assign fc_h = fc_card_product.handle | downcase | strip
+    assign fc_display_name = fc_card_product.title
+    if fc_h contains 'hako-studio-302'
+      assign fc_display_name = 'Hako Studio 302'
+    elsif fc_h contains 'hako-studio-301'
+      assign fc_display_name = 'Hako Studio 301'
+    elsif fc_h contains 'hako-nomad-l'
+      assign fc_display_name = 'Hako Nomad L'
+    elsif fc_h contains 'hako-nomad'
+      assign fc_display_name = 'Hako Nomad'
+    endif
+  -%}
+  <div
+    class="fc-card"
+    data-product-id="{{ fc_card_product.id }}"
+    data-category="{{ fc_cat }}"
+    data-url="{{ fc_card_product.url }}"
+  >
+    <div class="fc-card__image">
+      {%- if fc_card_product.featured_image -%}
+        {%- if eager_image -%}
+          {{ fc_card_product.featured_image | image_url: width: 600 | image_tag: loading: 'eager', class: 'fc-card__img' }}
+        {%- else -%}
+          {{ fc_card_product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img' }}
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+
+    {%- render 'fc-price-tag',
+      product: fc_card_product,
+      variant: fc_card_variant,
+      variant_id: fc_variant_id,
+      price: fc_card_product.price,
+      compare_at_price: fc_card_product.compare_at_price,
+      price_varies: fc_card_product.price_varies,
+      title: fc_display_name,
+      available: fc_card_available,
+      name_class: '',
+      tag_class: ''
+    -%}
+  </div>
+{%- endif -%}

@@ -39,6 +39,24 @@
   color: var(--fc-text-muted);
 }
 
+/* Studio catalog accordions — solid white body (see fc-pdp.css for full list) */
+#MainContent .fc-pdp-studio .fc-pdp-studio__acc-body .rte,
+#MainContent .fc-pdp-studio .fc-pdp-studio__acc-body .rte p,
+#MainContent .fc-pdp-studio .fc-pdp-studio__acc-body > p {
+  color: #ffffff;
+  opacity: 1;
+}
+
+#MainContent .fc-pdp-studio-features__body {
+  color: #ffffff;
+  opacity: 1;
+}
+
+#MainContent .fc-pdp-studio-driver__body {
+  color: #ffffff;
+  opacity: 1;
+}
+
 #MainContent .website-hero__available-copy {
   color: #ffffff;
   opacity: 1;

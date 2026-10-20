@@ -1,0 +1,134 @@
+/* Studio PDP — scroll reveal: image/visual first, then text (staggered delay). */
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js body[class*='template-product-hako-studio-'] {
+    --fc-studio-reveal-ease: cubic-bezier(0.19, 1, 0.22, 1);
+    --fc-studio-reveal-ms: 820ms;
+    --fc-studio-reveal-hero-ms: 620ms;
+    --fc-studio-reveal-img-ms: 880ms;
+    --fc-studio-reveal-text-delay: 340ms;
+    --fc-studio-reveal-y: 14px;
+  }
+
+  /* —— Hidden until section enters viewport —— */
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-blank-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-blank__bg,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-blank-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-blank__title-part,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-blank-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-blank__title:not(.fc-pdp-studio-blank__title--split),
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-section:not(.fc-studio-reveal--shown) .fc-pdp-studio__visual,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-section:not(.fc-studio-reveal--shown) .fc-pdp-studio__meta,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-driver-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-driver__media,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-driver-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-driver__copy,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-features__row:not(.fc-studio-reveal-row--shown) .fc-pdp-studio-features__media,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-features__row:not(.fc-studio-reveal-row--shown) .fc-pdp-studio-features__copy,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-io__photo,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-io__composite,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-io__composite-crop,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-io__title,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-io__labels,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-io__lines,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-specs-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-specs__title,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-specs-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-specs__columns {
+    opacity: 0;
+  }
+
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-blank-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-blank__title-part,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-blank-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-blank__title:not(.fc-pdp-studio-blank__title--split),
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-section:not(.fc-studio-reveal--shown) .fc-pdp-studio__meta,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-features__row:not(.fc-studio-reveal-row--shown) .fc-pdp-studio-features__copy,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-io__title,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-io__labels,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-specs-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-specs__title,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-specs-section:not(.fc-studio-reveal--shown) .fc-pdp-studio-specs__columns {
+    transform: translate3d(0, var(--fc-studio-reveal-y), 0);
+  }
+
+  /* —— Image / visual (lead) —— */
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-blank-section .fc-pdp-studio-blank__bg,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-section .fc-pdp-studio__visual,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-driver-section .fc-pdp-studio-driver__media,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-features-section .fc-pdp-studio-features__media,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-features-section .fc-pdp-studio-features__img,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section .fc-pdp-studio-io__photo,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section .fc-pdp-studio-io__composite,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section .fc-pdp-studio-io__composite-crop {
+    transition: opacity var(--fc-studio-reveal-img-ms) var(--fc-studio-reveal-ease);
+    transition-delay: 0ms;
+  }
+
+  /* —— Text / copy (follow) —— */
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-blank-section .fc-pdp-studio-blank__title-part,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-blank-section .fc-pdp-studio-blank__title:not(.fc-pdp-studio-blank__title--split),
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-section .fc-pdp-studio__meta,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-driver-section .fc-pdp-studio-driver__copy {
+    transition:
+      opacity var(--fc-studio-reveal-ms) var(--fc-studio-reveal-ease);
+    transition-delay: var(--fc-studio-reveal-text-delay);
+  }
+
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-driver-section .fc-pdp-studio-driver__media,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-driver-section .fc-pdp-studio-driver__img {
+    transform: none;
+  }
+
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-features-section .fc-pdp-studio-features__copy,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section .fc-pdp-studio-io__title,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section .fc-pdp-studio-io__labels,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-io-section .fc-pdp-studio-io__lines,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-specs-section .fc-pdp-studio-specs__title,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-specs-section .fc-pdp-studio-specs__columns {
+    transition:
+      opacity var(--fc-studio-reveal-ms) var(--fc-studio-reveal-ease),
+      transform var(--fc-studio-reveal-ms) var(--fc-studio-reveal-ease);
+    transition-delay: var(--fc-studio-reveal-text-delay);
+  }
+
+  /* Specs: heading leads, table follows */
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-specs-section .fc-pdp-studio-specs__title {
+    transition-delay: 0ms;
+  }
+
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-specs-section .fc-pdp-studio-specs__columns {
+    transition-delay: var(--fc-studio-reveal-text-delay);
+  }
+
+  /* —— Revealed —— */
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-blank-section .fc-pdp-studio-blank__bg,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-blank-section .fc-pdp-studio-blank__title-part,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-blank-section .fc-pdp-studio-blank__title:not(.fc-pdp-studio-blank__title--split),
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-section .fc-pdp-studio__visual,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-section .fc-pdp-studio__meta,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-driver-section .fc-pdp-studio-driver__media,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-driver-section .fc-pdp-studio-driver__copy,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-features__row.fc-studio-reveal-row--shown .fc-pdp-studio-features__media,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-features__row.fc-studio-reveal-row--shown .fc-pdp-studio-features__copy,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-io-section .fc-pdp-studio-io__photo,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-io-section .fc-pdp-studio-io__composite,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-io-section .fc-pdp-studio-io__composite-crop,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-io-section .fc-pdp-studio-io__title,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-io-section .fc-pdp-studio-io__labels,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-io-section .fc-pdp-studio-io__lines,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-specs-section .fc-pdp-studio-specs__title,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-specs-section .fc-pdp-studio-specs__columns {
+    opacity: 1;
+  }
+
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-blank-section .fc-pdp-studio-blank__title-part,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-blank-section .fc-pdp-studio-blank__title:not(.fc-pdp-studio-blank__title--split),
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-section .fc-pdp-studio__meta,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-features__row.fc-studio-reveal-row--shown .fc-pdp-studio-features__copy,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-io-section .fc-pdp-studio-io__title,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-io-section .fc-pdp-studio-io__labels,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-specs-section .fc-pdp-studio-specs__title,
+  html.js body[class*='template-product-hako-studio-'] .fc-studio-reveal--shown.fc-pdp-studio-specs-section .fc-pdp-studio-specs__columns {
+    transform: none;
+  }
+
+  /* Programmatic scroll-to-catalog — skip stagger (arrow up control) */
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-section.fc-studio-reveal--instant .fc-pdp-studio__visual,
+  html.js body[class*='template-product-hako-studio-'] .fc-pdp-studio-section.fc-studio-reveal--instant .fc-pdp-studio__meta {
+    transition: none !important;
+    transition-delay: 0ms !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

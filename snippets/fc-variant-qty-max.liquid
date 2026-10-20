@@ -5,9 +5,7 @@
 {%- liquid
   assign fc_max = null
   if variant != blank
-    if variant.product.handle == 'hako-nomad-preorder'
-      assign fc_max = 1
-    elsif variant.quantity_rule.max != null
+    if variant.quantity_rule.max != null
       assign fc_max = variant.quantity_rule.max
     endif
     assign fc_check_inventory = true

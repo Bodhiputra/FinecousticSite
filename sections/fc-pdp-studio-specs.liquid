@@ -1,0 +1,223 @@
+{%- liquid
+  assign fc_title = section.settings.title | default: 'Technical Specifications.'
+  assign fc_specs_title = product.metafields.custom.specs_section_title.value
+  if fc_specs_title != blank
+    assign fc_title = fc_specs_title
+  endif
+-%}
+
+<section
+  class="fc-pdp-studio-specs"
+  id="fc-pdp-studio-specs-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="fc-pdp-studio-specs__inner">
+    {%- if fc_title != blank -%}
+      <h2 class="fc-pdp-studio-specs__title">{{ fc_title | escape }}</h2>
+    {%- endif -%}
+
+    <div class="fc-pdp-studio-specs__columns">
+      <div class="fc-pdp-studio-specs__col">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'row' and block.settings.column == 'left' -%}
+            <div class="fc-pdp-studio-specs__item" {{ block.shopify_attributes }}>
+              <span class="fc-pdp-studio-specs__label">{{ block.settings.label | escape }}</span>
+              <div class="fc-pdp-studio-specs__value">
+                {%- assign fc_val = block.settings.value | strip -%}
+                {%- if fc_val != blank -%}
+                  {%- assign fc_lines = fc_val | newline_to_br | split: '<br />' -%}
+                  {%- for line in fc_lines -%}
+                    {%- assign fc_line = line | strip -%}
+                    {%- if fc_line != blank -%}
+                      <span class="fc-pdp-studio-specs__value-line">{{ fc_line | escape }}</span>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="fc-pdp-studio-specs__col">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'row' and block.settings.column == 'right' -%}
+            <div class="fc-pdp-studio-specs__item" {{ block.shopify_attributes }}>
+              <span class="fc-pdp-studio-specs__label">{{ block.settings.label | escape }}</span>
+              <div class="fc-pdp-studio-specs__value">
+                {%- assign fc_val = block.settings.value | strip -%}
+                {%- if fc_val != blank -%}
+                  {%- assign fc_lines = fc_val | newline_to_br | split: '<br />' -%}
+                  {%- for line in fc_lines -%}
+                    {%- assign fc_line = line | strip -%}
+                    {%- if fc_line != blank -%}
+                      <span class="fc-pdp-studio-specs__value-line">{{ fc_line | escape }}</span>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.fc-pdp-studio-specs {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100svh;
+  min-height: 100dvh;
+  height: auto;
+  background: #000;
+  color: #fff;
+  padding: calc(var(--fc-nav-clearance, 72px) + var(--fc-pdp-section-title-gap, 24px)) clamp(20px, 8.2vw, 118px)
+    clamp(40px, 6vh, 64px);
+}
+
+.fc-pdp-studio-specs__inner {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.fc-pdp-studio-specs__title {
+  margin: 0 0 clamp(36px, 6vh, 56px);
+  text-align: center;
+  font-family: var(--fc-font);
+  font-size: clamp(26px, 3.33vw, 48px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.07em;
+  color: #fff;
+}
+
+.fc-pdp-studio-specs__columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(24px, 4vw, 60px);
+  align-items: start;
+}
+
+.fc-pdp-studio-specs__col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.fc-pdp-studio-specs__item {
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
+  column-gap: clamp(12px, 2vw, 24px);
+  align-items: start;
+  padding: clamp(10px, 1.6vh, 14px) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.fc-pdp-studio-specs__item:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.fc-pdp-studio-specs__label {
+  display: block;
+  margin: 0;
+  font-family: var(--fc-font);
+  font-size: clamp(16px, 1.65vw, 24px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.08em;
+  color: #ffd300;
+  opacity: 1;
+}
+
+.fc-pdp-studio-specs__value {
+  min-width: 0;
+  color: #fff;
+  opacity: 1;
+}
+
+.fc-pdp-studio-specs__value-line {
+  display: block;
+  margin: 0;
+  font-family: var(--fc-font);
+  font-size: clamp(16px, 1.65vw, 24px);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.08em;
+  color: #fff;
+  opacity: 1;
+}
+
+.fc-pdp-studio-specs__value-line + .fc-pdp-studio-specs__value-line {
+  margin-top: 0.15em;
+}
+
+@media screen and (max-width: 989px) {
+  .fc-pdp-studio-specs__columns {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+
+  .fc-pdp-studio-specs__col + .fc-pdp-studio-specs__col {
+    margin-top: clamp(8px, 2vh, 16px);
+  }
+
+  .fc-pdp-studio-specs__item {
+    grid-template-columns: minmax(100px, 38%) minmax(0, 1fr);
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FC PDP — Studio specs",
+  "tag": "section",
+  "class": "fc-pdp-studio-specs-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Technical Specifications."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Spec row",
+      "settings": [
+        {
+          "type": "select",
+          "id": "column",
+          "label": "Column",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Spec label"
+        },
+        {
+          "type": "textarea",
+          "id": "value",
+          "label": "Value",
+          "info": "One line per row for multi-line values."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FC PDP — Studio specs"
+    }
+  ]
+}
+{% endschema %}

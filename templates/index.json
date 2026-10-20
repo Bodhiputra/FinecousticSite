@@ -9,6 +9,42 @@
  */
 {
   "sections": {
+    "fc_studio_landing_home": {
+      "type": "fc-home-studio-landing",
+      "name": "Studio landing",
+      "settings": {
+        "image_asset": "studio-landing.png",
+        "image_alt": "Hako Studio bookshelf speakers",
+        "show_title": true,
+        "title_left": "Hako Studio",
+        "title_model_a": "301",
+        "title_model_b": "302",
+        "title_accessible": "Hako Studio 301 and 302",
+        "title_padding_left": 150,
+        "title_padding_right": 180,
+        "show_cta": true,
+        "featured_product": "hako-studio-301",
+        "button_label": "Elevate Your Creative Space.",
+        "button_offset_bottom": 56,
+        "button_max_width": 704,
+        "min_height_vh": 100,
+        "image_position_x": 50,
+        "image_position_y": 80
+      }
+    },
+    "fc_hako_series_home": {
+      "type": "fc-home-hako-series",
+      "disabled": true,
+      "name": "Shop Hako Series.",
+      "settings": {
+        "heading": "Shop Hako Series.",
+        "content_anchor_y": 52,
+        "product_studio_302": "hako-studio-302",
+        "product_studio_301": "hako-studio-301",
+        "product_nomad_l": "hako-nomad-l-fbs2",
+        "product_nomad": "hako-nomad-fbs1"
+      }
+    },
     "website_hero_home": {
       "type": "website-hero",
       "name": "Website Hero",
@@ -20,12 +56,11 @@
         "hero_subheading": "",
         "button_label": "",
         "button_link": "",
-        "show_preorder_form": true,
-        "preorder_product_title": "Hako Nomad",
-        "preorder_learn_more_label": "Learn more",
-        "preorder_product_handle": "hako-nomad-fbs1",
-        "preorder_button_label": "Reveal Pre-order Offers",
-        "preorder_marketing_label": "Be the first to experience what\u2019s next in sound."
+        "show_product_cta": true,
+        "featured_product": "hako-nomad-fbs1",
+        "product_title": "Hako Nomad",
+        "availability_text": "Ready to fit in your space.",
+        "discover_more_label": "Discover More"
       }
     },
     "flexible_image_banner_aARpeR": {
@@ -194,9 +229,9 @@
         "review_yash",
         "review_wiwit",
         "review_fiandcorput",
-        "review_espindesk",
         "review_lorenz",
-        "review_denis"
+        "review_denis",
+        "review_espindesk"
       ],
       "settings": {
         "label_fbs1": "Hako Nomad",
@@ -221,6 +256,8 @@
     }
   },
   "order": [
+    "fc_studio_landing_home",
+    "fc_hako_series_home",
     "website_hero_home",
     "fc_creator_feedback_home",
     "fc_nomad_video_duo",

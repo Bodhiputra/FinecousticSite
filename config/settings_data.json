@@ -9,7 +9,6 @@
  */
 {
   "current": {
-    "fc_launch_phase_override": "launched",
     "logo": "shopify://shop_images/Finecoustic_Logo_Yellow.png",
     "logo_width": 120,
     "favicon": "shopify://shop_images/Favicon_Finecoustic_Black.png",
@@ -110,6 +109,8 @@
     "sold_out_badge_color_scheme": "scheme-3",
     "brand_headline": "Follow Us",
     "brand_description": "<p></p>",
+    "fc_seo_homepage_description": "Finecoustic designs premium wireless speakers and personal audio—built to be seen and meant to be heard. Explore Hako Nomad, Groove, and more.",
+    "fc_seo_all_products_description": "Shop the full Finecoustic catalog—speakers, earphones, and design-forward audio for home and everyday listening.",
     "brand_image_width": 100,
     "social_facebook_link": "https://www.facebook.com/profile.php?id=61581152757031",
     "social_instagram_link": "https://www.instagram.com/finecoustic_global/",

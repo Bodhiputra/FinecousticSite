@@ -1,7 +1,5 @@
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
-{%- include 'fc-launch-gates' -%}
-
 {%- if collection.handle == 'all' and request.design_mode == false -%}
   {%- comment -%}
     Use JS for sort redirect — request.query_string is often empty in theme dev / Liquid,
@@ -74,7 +72,7 @@
   transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform: scale(1);
 }
-.fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover, .fc-tag-coming-soon-wrap:hover, .fc-tag--launch-locked:hover)) .fc-card__img {
+.fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover)) .fc-card__img {
   transform: scale(1.07);
 }
 
@@ -84,7 +82,7 @@
   object-position: center center;
   transform: scale(0.9);
 }
-.fc-card[data-category="speakers"]:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover, .fc-tag-coming-soon-wrap:hover, .fc-tag--launch-locked:hover)) .fc-card__img {
+.fc-card[data-category="speakers"]:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover)) .fc-card__img {
   transform: scale(0.95);
 }
 
@@ -410,18 +408,6 @@
       assign fc_variant_id = product.first_available_variant.id | default: product.variants.first.id
       assign fc_card_variant = product.first_available_variant | default: product.variants.first
       assign fc_card_available = product.available
-      assign fc_handle_down = product.handle | downcase
-      assign fc_preorder_coming_soon = false
-      assign fc_launch_locked = false
-      if fc_launch_phase != 'launched'
-        if fc_handle_down == 'hako-nomad-fbs1' or fc_handle_down == 'hako-nomad-l-fbs2'
-          if fc_launch_phase == 'countdown'
-            assign fc_launch_locked = true
-          else
-            assign fc_preorder_coming_soon = true
-          endif
-        endif
-      endif
     -%}
     <div class="fc-card"
       data-product-id="{{ product.id }}"
@@ -441,7 +427,11 @@
       {%- liquid
         assign fc_h = product.handle | downcase | strip
         assign fc_display_name = product.title
-        if fc_h contains 'hako-nomad-l'
+        if fc_h contains 'hako-studio-302'
+          assign fc_display_name = 'Hako Studio 302'
+        elsif fc_h contains 'hako-studio-301'
+          assign fc_display_name = 'Hako Studio 301'
+        elsif fc_h contains 'hako-nomad-l'
           assign fc_display_name = 'Hako Nomad L'
         elsif fc_h contains 'hako-nomad'
           assign fc_display_name = 'Hako Nomad'
@@ -455,27 +445,8 @@
           assign fc_display_name = 'Groove ANC'
         endif
       -%}
-      {%- if fc_preorder_coming_soon -%}
       {%- render 'fc-price-tag',
-        tag_mode: 'coming_soon',
-        title: fc_display_name,
-        name_class: '',
-        tag_class: ''
-      -%}
-      {%- elsif fc_launch_locked -%}
-      {%- render 'fc-price-tag',
-        tag_mode: 'launch_locked',
-        variant: fc_card_variant,
-        variant_id: fc_variant_id,
-        price: product.price,
-        compare_at_price: product.compare_at_price,
-        price_varies: product.price_varies,
-        title: fc_display_name,
-        name_class: '',
-        tag_class: ''
-      -%}
-      {%- else -%}
-      {%- render 'fc-price-tag',
+        product: product,
         variant: fc_card_variant,
         variant_id: fc_variant_id,
         price: product.price,
@@ -486,7 +457,6 @@
         name_class: '',
         tag_class: ''
       -%}
-      {%- endif -%}
 
     </div>
     {%- endunless -%}

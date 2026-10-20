@@ -220,25 +220,6 @@
 
   fcRunWhenCartReady(fcWireShopCards);
 
-  function shopGridNeedsLaunchHeal() {
-    return !!document.querySelector(
-      '.fc-tag--launch-locked, [data-fc-launch-locked="true"], .fc-tag-oos-wrap, .fc-tag--oos'
-    );
-  }
-
-  function rewireShopCardsAfterLaunchHeal() {
-    if (!shopGridNeedsLaunchHeal()) return;
-    document.querySelectorAll('.fc-card').forEach(function (card) {
-      delete card.dataset.fcCardBound;
-      var tag = card.querySelector('.fc-card__tag');
-      if (tag) delete tag.dataset.fcPriceTagBound;
-    });
-    fcWireShopCards();
-  }
-
-  window.addEventListener('fc-launch-live', rewireShopCardsAfterLaunchHeal);
-
-
   /* ── expanded ATC (optional overlay — guard if markup missing) ── */
   if (expAtcBtn) {
     expAtcBtn.addEventListener('click', async () => {

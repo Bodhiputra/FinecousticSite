@@ -49,6 +49,10 @@ const QSG_BY_HANDLE = {
   'sonara-ufm1': 'https://cdn.shopify.com/s/files/1/0661/0229/6650/files/UFM1_QSG_20250926.pdf?v=1762999919',
   'hako-nomad-fbs1': 'https://cdn.shopify.com/s/files/1/0661/0229/6650/files/QSG-FBS1.png?v=1784096946',
   'hako-nomad-l-fbs2': 'https://cdn.shopify.com/s/files/1/0661/0229/6650/files/QSG-FBS2.png?v=1784096946',
+  'hako-studio-301':
+    'https://cdn.shopify.com/s/files/1/0661/0229/6650/files/HakoStudio301-QSG.pdf?v=1792137249',
+  'hako-studio-302':
+    'https://cdn.shopify.com/s/files/1/0661/0229/6650/files/HakoStudio302-QSG.pdf?v=1792137248',
 };
 
 async function gql(query, variables = {}) {

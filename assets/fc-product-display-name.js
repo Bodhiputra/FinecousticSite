@@ -1,12 +1,11 @@
 (function () {
   'use strict';
 
-  /** Mirrors snippets/fc-exclude-product.liquid — hide internal / pre-order SKUs from browse UI */
+  /** Mirrors snippets/fc-exclude-product.liquid — hide internal test SKUs from browse UI */
   function fcExcludeProduct(handle) {
     var h = (handle || '').toLowerCase();
     if (!h) return false;
     if (h.indexOf('sonara-ufm1-test') !== -1) return true;
-    if (h.indexOf('nomad-preorder') !== -1 || h.indexOf('hako-nomad-preorder') !== -1) return true;
     return false;
   }
 

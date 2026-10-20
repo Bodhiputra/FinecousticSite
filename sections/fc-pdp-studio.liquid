@@ -1,0 +1,1282 @@
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign media_count = product.media.size
+
+  assign has_color = false
+  assign color_option_pos = 0
+  for option in product.options
+    assign option_down = option | downcase
+    if option_down == 'color' or option_down == 'colour'
+      assign has_color = true
+      assign color_option_pos = forloop.index0
+    endif
+  endfor
+
+  capture fc_variant_sold_out_str
+    render 'fc-variant-sold-out', variant: variant
+  endcapture
+  assign fc_variant_sold_out = fc_variant_sold_out_str | strip
+  capture fc_purchase_mode_str
+    render 'fc-product-purchase-mode', product: product, section_purchase_cta: section.settings.purchase_cta
+  endcapture
+  assign fc_purchase_cta = fc_purchase_mode_str | strip
+  assign fc_coming_soon = false
+  if fc_purchase_cta == 'coming_soon'
+    assign fc_coming_soon = true
+  endif
+
+  assign fc_atc_label = 'Add to bag'
+  assign fc_atc_purchasable = true
+  if fc_coming_soon
+    assign fc_atc_label = 'Coming Soon.'
+    assign fc_atc_purchasable = false
+  elsif fc_variant_sold_out == 'true'
+    assign fc_atc_label = 'Sold Out'
+    assign fc_atc_purchasable = false
+  endif
+
+  assign fc_variant_cart_qty = 0
+  for item in cart.items
+    if item.variant_id == variant.id
+      assign fc_variant_cart_qty = fc_variant_cart_qty | plus: item.quantity
+    endif
+  endfor
+
+  capture fc_qsg_url
+    render 'fc-product-qsg-url', product: product, override: section.settings.quick_start_guide_url
+  endcapture
+  assign fc_qsg_url = fc_qsg_url | strip
+
+  assign fc_inbox_title = product.metafields.custom.inbox_title.value
+  if fc_inbox_title == blank
+    assign fc_inbox_title = section.settings.inbox_title
+  endif
+  assign fc_inbox_asset = product.metafields.custom.inbox_asset.value
+  if fc_inbox_asset == blank
+    assign fc_inbox_asset = section.settings.inbox_asset
+  endif
+  assign fc_inbox_items = product.metafields.custom.in_the_box_items.value
+  assign fc_inbox_from_metafield = false
+  if fc_inbox_items != blank and fc_inbox_items.size > 0
+    assign fc_inbox_from_metafield = true
+  endif
+
+  assign show_color_row = false
+  if has_color and product.variants.size > 1
+    assign show_color_row = true
+  endif
+
+  assign fc_inbox_block_count = 0
+  for block in section.blocks
+    if block.type == 'inbox_item'
+      assign fc_inbox_block_count = fc_inbox_block_count | plus: 1
+    endif
+  endfor
+-%}
+
+{%- render 'fc-product-data', product: product -%}
+
+<section
+  class="fc-pdp-u fc-pdp-studio fc-pdp-hero"
+  id="fc-pdp-u-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-fc-studio-pdp="true"
+  data-fc-purchase-cta="{{ fc_purchase_cta | escape }}"
+  data-product-handle="{{ product.handle }}"
+>
+  <div class="fc-pdp-studio__inner">
+    <div class="fc-pdp-studio__hero">
+      <div class="fc-pdp-studio__visual">
+        <div class="fc-pdp-studio__gallery" data-fc-studio-gallery data-fc-pdp-gallery>
+          <div class="fc-pdp-studio__stage">
+          {%- if media_count > 1 -%}
+            <button
+              type="button"
+              class="fc-pdp-studio__nav fc-pdp-studio__nav--prev fc-clickable-icon fc-clickable-icon--prev"
+              data-fc-studio-prev
+              aria-label="Previous image"
+            >
+              <span class="fc-pdp-studio__nav-glyph fc-clickable-icon__mark" aria-hidden="true">&lt;</span>
+            </button>
+          {%- endif -%}
+
+          <div class="fc-pdp-u__slides" data-fc-studio-slides>
+            <div class="fc-ig-dots fc-pdp-studio__ig-dots" aria-hidden="true" hidden></div>
+            {%- if media_count > 0 -%}
+              {%- for media in product.media -%}
+                {%- liquid
+                  if forloop.first
+                    assign fc_slide_loading = 'eager'
+                    assign fc_slide_fetchpriority = 'high'
+                  else
+                    assign fc_slide_loading = 'lazy'
+                    assign fc_slide_fetchpriority = 'low'
+                  endif
+                -%}
+                <div
+                  class="fc-pdp-u__slide{% if forloop.first %} is-active{% endif %}"
+                  data-slide-index="{{ forloop.index0 }}"
+                >
+                  {%- if media.media_type == 'video' -%}
+                    {{ media | video_tag:
+                      class: 'fc-pdp-u__slide-media',
+                      autoplay: false,
+                      loop: true,
+                      muted: true,
+                      playsinline: true,
+                      controls: false,
+                      preload: 'metadata'
+                    }}
+                  {%- else -%}
+                    {{ media | image_url: width: 1200 | image_tag:
+                      class: 'fc-pdp-u__slide-media',
+                      loading: fc_slide_loading,
+                      fetchpriority: fc_slide_fetchpriority,
+                      sizes: '(min-width: 990px) 520px, 88vw',
+                      widths: '600, 800, 1000, 1200',
+                      alt: media.alt | default: product.title | escape
+                    }}
+                  {%- endif -%}
+                </div>
+              {%- endfor -%}
+            {%- elsif product.featured_image -%}
+              <div class="fc-pdp-u__slide is-active" data-slide-index="0">
+                {{ product.featured_image | image_url: width: 1200 | image_tag:
+                  class: 'fc-pdp-u__slide-media',
+                  loading: 'eager',
+                  alt: product.title | escape
+                }}
+              </div>
+            {%- endif -%}
+          </div>
+
+          {%- if media_count > 1 -%}
+            <button
+              type="button"
+              class="fc-pdp-studio__nav fc-pdp-studio__nav--next fc-clickable-icon fc-clickable-icon--next"
+              data-fc-studio-next
+              aria-label="Next image"
+            >
+              <span class="fc-pdp-studio__nav-glyph fc-clickable-icon__mark" aria-hidden="true">&gt;</span>
+            </button>
+          {%- endif -%}
+          </div>
+
+          {%- if media_count > 1 -%}
+            <div class="fc-pdp-studio__thumbs" role="tablist" aria-label="Product images">
+              {%- for media in product.media -%}
+                {%- if media.media_type == 'image' or media.media_type == 'external_video' -%}
+                  {%- assign thumb_image = media.preview_image -%}
+                {%- else -%}
+                  {%- assign thumb_image = media.preview_image -%}
+                {%- endif -%}
+                <button
+                  type="button"
+                  class="fc-pdp-studio__thumb{% if forloop.first %} is-active{% endif %}"
+                  data-fc-studio-thumb="{{ forloop.index0 }}"
+                  aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+                  aria-label="Image {{ forloop.index }}"
+                >
+                  {%- if thumb_image -%}
+                    {{ thumb_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+                  {%- endif -%}
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="fc-pdp-studio__meta">
+        {%- if section.settings.eyebrow != blank -%}
+          <div class="fc-pdp-studio__eyebrow">{{ section.settings.eyebrow | escape }}</div>
+        {%- endif -%}
+
+        {%- assign fc_tag_product = product -%}
+        {%- include 'fc-product-display-name-assign' -%}
+        <h1 class="fc-pdp-studio__title">{{ fc_display_name | escape }}</h1>
+
+        {%- if section.blocks.size > 0 -%}
+          <ul class="fc-pdp-studio__highlights">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'highlight' and block.settings.text != blank -%}
+                <li class="fc-pdp-studio__highlight" {{ block.shopify_attributes }}>
+                  <img
+                    class="fc-pdp-studio__highlight-dot"
+                    src="{{ 'fineDot.png' | asset_url }}"
+                    alt=""
+                    width="18"
+                    height="18"
+                    loading="eager"
+                    decoding="async"
+                  >
+                  <span>{{ block.settings.text | escape }}</span>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if section.settings.sibling_1_label != blank or section.settings.sibling_2_label != blank -%}
+          <div class="fc-pdp-u__siblings fc-pdp-studio__picker">
+            <span class="fc-pdp-u__variants-label">{{ section.settings.variant_row_label | default: 'Variant' | escape }}</span>
+            <div class="fc-pdp-u__variant-list">
+              {%- if section.settings.sibling_1_label != blank -%}
+                <a
+                  href="{{ section.settings.sibling_1_url }}"
+                  class="fc-pdp-u__variant fc-pdp-u__sibling{% if section.settings.sibling_1_url contains product.handle %} is-selected{% endif %}"
+                >{{ section.settings.sibling_1_label | escape }}</a>
+              {%- endif -%}
+              {%- if section.settings.sibling_2_label != blank -%}
+                <a
+                  href="{{ section.settings.sibling_2_url }}"
+                  class="fc-pdp-u__variant fc-pdp-u__sibling{% if section.settings.sibling_2_url contains product.handle %} is-selected{% endif %}"
+                >{{ section.settings.sibling_2_label | escape }}</a>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if show_color_row -%}
+          <div class="fc-pdp-u__variants fc-pdp-studio__picker" data-fc-pdp-variants>
+            <span class="fc-pdp-u__variants-label">{{ section.settings.color_row_label | default: 'Color' | escape }}</span>
+            <div class="fc-pdp-u__variant-list fc-pdp-studio__swatches">
+              {%- for v in product.variants -%}
+                {%- liquid
+                  assign color_name = v.options[color_option_pos]
+                  assign swatch_hex = '#666666'
+                  assign color_key = color_name | downcase | strip
+                  case color_key
+                    when 'black'
+                      assign swatch_hex = '#1a1a1a'
+                    when 'white'
+                      assign swatch_hex = '#f2f2f2'
+                    when 'walnut', 'wood'
+                      assign swatch_hex = '#6b4423'
+                    when 'grey', 'gray'
+                      assign swatch_hex = '#8a8a8a'
+                    when 'red'
+                      assign swatch_hex = '#c0392b'
+                    when 'blue'
+                      assign swatch_hex = '#2c5282'
+                    when 'yellow'
+                      assign swatch_hex = '#f4d03f'
+                  endcase
+
+                  assign v_hero = null
+                  if v.featured_media
+                    assign v_hero = v.featured_media.preview_image
+                  elsif v.image
+                    assign v_hero = v.image
+                  endif
+                -%}
+                <button
+                  type="button"
+                  class="fc-pdp-studio__swatch fc-pdp-u__variant{% if v.id == variant.id %} is-selected{% endif %}{% unless v.available %} is-unavailable{% endunless %}"
+                  data-variant-id="{{ v.id }}"
+                  data-variant-available="{% if v.available %}true{% else %}false{% endif %}"
+                  {% if v_hero %}data-variant-image="{{ v_hero | image_url: width: 1200 }}"{% endif %}
+                  aria-pressed="{% if v.id == variant.id %}true{% else %}false{% endif %}"
+                  aria-label="{{ color_name | escape }}"
+                  title="{{ color_name | escape }}"
+                  style="--fc-swatch: {{ swatch_hex }};"
+                >
+                  <span class="fc-pdp-studio__swatch-fill" aria-hidden="true"></span>
+                </button>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        <div class="fc-pdp-u__buy fc-pdp-studio__buy" data-fc-pdp-purchase>
+          <button
+            type="button"
+            class="fc-pdp-u__atc{% if fc_coming_soon %} is-oos is-coming-soon{% elsif fc_variant_sold_out == 'true' %} is-oos{% endif %}{% if fc_variant_cart_qty > 0 %} fc-atc-active{% endif %}"
+            data-variant-id="{{ variant.id }}"
+            data-fc-qty="{{ fc_variant_cart_qty }}"
+            data-fc-purchasable="{% if fc_atc_purchasable %}true{% else %}false{% endif %}"
+            data-fc-atc-label-default="{{ fc_atc_label | escape }}"
+            {% unless fc_atc_purchasable %}aria-disabled="true"{% endunless %}
+          >
+            <span class="fc-pdp-u__atc-price" data-fc-pdp-price>
+              {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
+              {{ variant.price | money }}
+            </span>
+            <span class="fc-pdp-u__atc-sep fc-pdp-u__atc-sep--qty" data-fc-pdp-atc-qty-sep{% if fc_variant_cart_qty == 0 %} hidden{% endif %} aria-hidden="true">·</span>
+            <span class="fc-pdp-u__atc-qty" data-fc-pdp-atc-qty{% if fc_variant_cart_qty == 0 %} hidden{% endif %}>{{ fc_variant_cart_qty }}</span>
+            <span class="fc-pdp-studio__atc-dot" aria-hidden="true">.</span>
+            <span class="fc-pdp-u__atc-label" data-fc-pdp-atc-label>{{ fc_atc_label }}</span>
+          </button>
+        </div>
+
+        <div class="fc-pdp-studio__accordions">
+          <details class="fc-pdp-studio__acc-box" open>
+            <summary class="fc-pdp-studio__acc-summary">
+              <span class="fc-pdp-studio__acc-label">{{ section.settings.description_title | default: 'Product Description' | escape }}</span>
+              {%- render 'fc-pdp-studio-acc-glyphs' -%}
+            </summary>
+            <div class="fc-pdp-studio__acc-panel">
+            <div class="fc-pdp-studio__acc-body">
+              <div class="fc-pdp-studio__rte rte">
+                {%- if product.description != blank -%}
+                  {{ product.description }}
+                {%- else -%}
+                  <p>{{ section.settings.description_fallback | escape }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+            </div>
+          </details>
+
+          <details class="fc-pdp-studio__acc-box">
+            <summary class="fc-pdp-studio__acc-summary">
+              <span class="fc-pdp-studio__acc-label">{{ fc_inbox_title | default: 'In The Box' | escape }}</span>
+              {%- render 'fc-pdp-studio-acc-glyphs' -%}
+            </summary>
+            <div class="fc-pdp-studio__acc-panel">
+            <div class="fc-pdp-studio__acc-body">
+              {%- if fc_inbox_from_metafield or fc_inbox_block_count > 0 or section.settings.inbox_image != blank or fc_inbox_asset != blank -%}
+                <div class="fc-pdp-specs-inbox__inbox">
+                  {%- if section.settings.inbox_image != blank -%}
+                    <div class="fc-pdp-specs-inbox__inbox-hero">
+                      {{
+                        section.settings.inbox_image
+                        | image_url: width: 1600
+                        | image_tag:
+                          loading: 'lazy',
+                          sizes: '(max-width: 989px) 92vw, 480px',
+                          widths: '600, 900, 1200, 1600',
+                          alt: fc_inbox_title,
+                          class: 'fc-pdp-specs-inbox__inbox-photo'
+                      }}
+                    </div>
+                  {%- elsif fc_inbox_asset != blank -%}
+                    <div class="fc-pdp-specs-inbox__inbox-hero">
+                      <img
+                        src="{{ fc_inbox_asset | asset_url }}"
+                        alt="{{ fc_inbox_title | escape }}"
+                        loading="lazy"
+                        decoding="async"
+                        class="fc-pdp-specs-inbox__inbox-photo"
+                        width="1600"
+                        height="900"
+                      >
+                    </div>
+                  {%- endif -%}
+                  {%- if fc_inbox_from_metafield or fc_inbox_block_count > 0 -%}
+                    <div class="fc-pdp-specs-inbox__icons">
+                      {%- if fc_inbox_from_metafield -%}
+                        {%- for item in fc_inbox_items -%}
+                          <div class="fc-pdp-specs-inbox__icon">
+                            <div class="fc-pdp-specs-inbox__icon-frame">
+                              {%- if item.icon_asset != blank -%}
+                                <img
+                                  src="{{ item.icon_asset | asset_url }}"
+                                  alt="{{ item.icon_text | escape }}"
+                                  loading="lazy"
+                                  width="120"
+                                  height="120"
+                                >
+                              {%- endif -%}
+                            </div>
+                            {%- if item.icon_text != blank -%}
+                              <p class="fc-pdp-specs-inbox__icon-label">{{ item.icon_text | escape }}</p>
+                            {%- endif -%}
+                          </div>
+                        {%- endfor -%}
+                      {%- else -%}
+                        {%- for block in section.blocks -%}
+                          {%- if block.type == 'inbox_item' -%}
+                            <div class="fc-pdp-specs-inbox__icon" {{ block.shopify_attributes }}>
+                              <div class="fc-pdp-specs-inbox__icon-frame">
+                                {%- if block.settings.icon_image != blank -%}
+                                  {{
+                                    block.settings.icon_image
+                                    | image_url: width: 240
+                                    | image_tag: loading: 'lazy', alt: block.settings.icon_text
+                                  }}
+                                {%- elsif block.settings.icon_asset != blank -%}
+                                  <img
+                                    src="{{ block.settings.icon_asset | asset_url }}"
+                                    alt="{{ block.settings.icon_text | escape }}"
+                                    loading="lazy"
+                                    width="120"
+                                    height="120"
+                                  >
+                                {%- endif -%}
+                              </div>
+                              {%- if block.settings.icon_text != blank -%}
+                                <p class="fc-pdp-specs-inbox__icon-label">{{ block.settings.icon_text | escape }}</p>
+                              {%- endif -%}
+                            </div>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      {%- endif -%}
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- else -%}
+                <p class="fc-pdp-studio__acc-empty">{{ section.settings.inbox_empty_hint | default: 'Contents coming soon.' | escape }}</p>
+              {%- endif -%}
+            </div>
+            </div>
+          </details>
+
+          {%- if section.settings.show_frequency_graph -%}
+            <details class="fc-pdp-studio__acc-box">
+              <summary class="fc-pdp-studio__acc-summary">
+                <span class="fc-pdp-studio__acc-label">{{ section.settings.frequency_title | default: 'Frequency Graph' | escape }}</span>
+                {%- render 'fc-pdp-studio-acc-glyphs' -%}
+              </summary>
+              <div class="fc-pdp-studio__acc-panel">
+              <div class="fc-pdp-studio__acc-body">
+                {%- if section.settings.frequency_graph != blank -%}
+                  {{
+                    section.settings.frequency_graph
+                    | image_url: width: 1600
+                    | image_tag:
+                      loading: 'lazy',
+                      sizes: '(max-width: 989px) 92vw, 472px',
+                      widths: '600, 900, 1200, 1600',
+                      alt: section.settings.frequency_title,
+                      class: 'fc-pdp-studio__frequency-img'
+                  }}
+                {%- else -%}
+                  <p class="fc-pdp-studio__acc-empty">{{ section.settings.frequency_empty_hint | default: 'Graph coming soon.' | escape }}</p>
+                {%- endif -%}
+              </div>
+              </div>
+            </details>
+          {%- endif -%}
+
+          {%- if fc_qsg_url != blank -%}
+            <a class="fc-pdp-studio__acc-link" href="{{ fc_qsg_url | escape }}" target="_blank" rel="noopener noreferrer">
+              <span>{{ section.settings.qsg_label | default: 'Quick Start Guide' | escape }}</span>
+              <span class="fc-pdp-studio__acc-link-glyph" aria-hidden="true">&gt;</span>
+            </a>
+          {%- else -%}
+            <div class="fc-pdp-studio__acc-link fc-pdp-studio__acc-link--disabled" aria-disabled="true">
+              <span>{{ section.settings.qsg_label | default: 'Quick Start Guide' | escape }}</span>
+              <span class="fc-pdp-studio__acc-link-glyph" aria-hidden="true">&gt;</span>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- for v in product.variants -%}
+    <template class="fc-vprice-tpl" data-variant-id="{{ v.id }}">
+      {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
+      {{ v.price | money }}
+    </template>
+  {%- endfor -%}
+</section>
+
+<button
+  type="button"
+  class="fc-pdp-studio__scroll-catalog"
+  data-fc-studio-scroll-catalog
+  hidden
+  aria-hidden="true"
+  aria-label="Back to product details"
+>
+  <span class="fc-pdp-studio__scroll-catalog-chevron" aria-hidden="true"></span>
+</button>
+
+<div class="fc-pdp-u__dock" id="fc-pdp-u-dock-{{ section.id }}" hidden>
+  <button
+    type="button"
+    class="fc-pdp-u__atc fc-pdp-u__atc--dock{% if fc_coming_soon %} is-oos is-coming-soon{% elsif fc_variant_sold_out == 'true' %} is-oos{% endif %}{% if fc_variant_cart_qty > 0 %} fc-atc-active{% endif %}"
+    data-variant-id="{{ variant.id }}"
+    data-fc-qty="{{ fc_variant_cart_qty }}"
+    data-fc-purchasable="{% if fc_atc_purchasable %}true{% else %}false{% endif %}"
+    data-fc-atc-label-default="{{ fc_atc_label | escape }}"
+    {% unless fc_atc_purchasable %}aria-disabled="true"{% endunless %}
+  >
+    <span class="fc-pdp-u__atc-price" data-fc-pdp-price>{{ variant.price | money }}</span>
+    <span class="fc-pdp-u__atc-sep fc-pdp-u__atc-sep--qty" data-fc-pdp-atc-qty-sep{% if fc_variant_cart_qty == 0 %} hidden{% endif %} aria-hidden="true">·</span>
+    <span class="fc-pdp-u__atc-qty" data-fc-pdp-atc-qty{% if fc_variant_cart_qty == 0 %} hidden{% endif %}>{{ fc_variant_cart_qty }}</span>
+    <span class="fc-pdp-u__atc-sep" aria-hidden="true">·</span>
+    <span class="fc-pdp-u__atc-label" data-fc-pdp-atc-label>{{ fc_atc_label }}</span>
+  </button>
+</div>
+
+{% stylesheet %}
+/* Catalog hero — one viewport (Figma above-the-fold) */
+.fc-pdp-studio.fc-pdp-hero {
+  scroll-margin-top: calc(var(--fc-nav-clearance, 72px) + var(--fc-pdp-section-title-gap, 24px));
+  --fc-studio-border: #555555;
+  --fc-studio-radius: 5px;
+  --fc-studio-thumb-radius: 7px;
+  /* Figma −7% on titles/labels; long copy at 14px needs looser tracking */
+  --fc-studio-ui-tracking: -0.07em;
+  --fc-studio-copy-tracking: -0.01em;
+  --fc-studio-meta-max: 680px;
+  --fc-studio-meta-offset-top: 0px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100svh;
+  min-height: 100dvh;
+  padding-top: calc(var(--fc-nav-clearance, 72px) + var(--fc-pdp-section-title-gap, 24px));
+  padding-bottom: clamp(24px, 4vh, 48px);
+}
+
+.fc-pdp-studio__inner {
+  width: min(1280px, 92vw);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 3vw, 48px);
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.fc-pdp-studio__hero {
+  display: grid;
+  /* Meta needs ≥~520px track so two-column highlights stay on one line */
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(40px, 6vw, 80px);
+  align-items: start;
+  width: 100%;
+}
+
+@media screen and (max-width: 989px) {
+  .fc-pdp-studio__hero {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+}
+
+.fc-pdp-studio__gallery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  max-width: 496px;
+  margin: 0 auto;
+}
+
+.fc-pdp-studio__stage {
+  position: relative;
+  width: 100%;
+}
+
+.fc-pdp-studio__gallery .fc-pdp-u__slides {
+  position: relative;
+  width: 100%;
+  height: min(423px, 52vw);
+  min-height: 280px;
+  overflow: hidden;
+}
+
+.fc-pdp-studio__gallery .fc-pdp-u__slides .fc-ig-track {
+  height: 100%;
+  min-height: inherit;
+}
+
+.fc-pdp-studio__gallery .fc-pdp-u__slide {
+  position: relative;
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.fc-pdp-studio__gallery .fc-pdp-u__slides > .fc-pdp-studio__ig-dots {
+  display: none !important;
+}
+
+.fc-pdp-studio__gallery .fc-pdp-u__slide-media {
+  width: min(315px, 64%);
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.fc-pdp-studio__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  padding: 8px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.fc-pdp-studio__nav-glyph {
+  font-family: var(--fc-font);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.fc-pdp-studio__nav--prev {
+  left: 12px;
+}
+
+.fc-pdp-studio__nav--next {
+  right: 12px;
+}
+
+.fc-pdp-studio__nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.fc-pdp-studio__thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 11px;
+  box-sizing: border-box;
+  width: calc(100% - 180px);
+  margin-inline: 90px;
+  align-self: flex-start;
+}
+
+.fc-pdp-studio__thumb {
+  width: 71px;
+  height: 71px;
+  padding: 0;
+  border: 1px solid var(--fc-studio-border);
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: var(--fc-studio-thumb-radius);
+  box-sizing: border-box;
+}
+
+.fc-pdp-studio__thumb.is-active {
+  border: 2px solid var(--fc-yellow);
+}
+
+.fc-pdp-studio__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fc-pdp-studio__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: var(--fc-studio-meta-max);
+  margin: 0 auto;
+  margin-top: var(--fc-studio-meta-offset-top);
+  box-sizing: border-box;
+}
+
+@media screen and (min-width: 990px) {
+  .fc-pdp-studio.fc-pdp-hero {
+    --fc-studio-meta-max: none;
+    --fc-studio-meta-offset-top: 36px;
+  }
+
+  .fc-pdp-studio__meta {
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    /* Shift copy right 100px without narrowing the text block (border-box padding eats width otherwise). */
+    box-sizing: border-box;
+    width: calc(100% + 100px);
+    padding-left: 100px;
+  }
+
+  /* Sticky media column (Cadence-style): meta grows/scrolls; gallery stays under nav until row ends */
+  .fc-pdp-studio__visual {
+    display: flex;
+    justify-content: flex-start;
+    position: sticky;
+    top: calc(var(--fc-nav-clearance, 72px) + var(--fc-pdp-section-title-gap, 24px));
+    align-self: start;
+  }
+
+  .fc-pdp-studio__gallery {
+    max-width: 580px;
+    margin-left: -30px;
+    margin-right: auto;
+    align-items: flex-start;
+  }
+
+  .fc-pdp-studio__gallery .fc-pdp-u__slides {
+    height: min(480px, 52vh);
+    min-height: 360px;
+  }
+
+  .fc-pdp-studio__gallery .fc-pdp-u__slide-media {
+    width: min(400px, 78%);
+  }
+
+  .fc-pdp-studio__thumbs {
+    max-width: none;
+    align-self: flex-start;
+  }
+
+  .fc-pdp-studio__thumb {
+    width: 80px;
+    height: 80px;
+  }
+
+  .fc-pdp-studio__nav-glyph {
+    font-size: 16px;
+  }
+
+  .fc-pdp-studio__title {
+    font-size: 48px;
+  }
+
+  .fc-pdp-studio__highlight {
+    font-size: 21px;
+  }
+
+  .fc-pdp-studio__highlight-dot {
+    width: 20px;
+    height: 20px;
+  }
+
+  .fc-pdp-studio__highlights {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(12px, 1.5vw, 24px);
+  }
+
+  .fc-pdp-studio .fc-pdp-u__atc {
+    min-height: 54px;
+    height: 54px;
+    font-size: 17px;
+  }
+}
+
+.template-product .fc-pdp-studio .fc-pdp-studio__eyebrow {
+  font-family: var(--fc-font);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.07em;
+  color: #ffffff;
+  opacity: 1;
+  margin: 0 0 4px;
+}
+
+.fc-pdp-studio__title {
+  font-family: var(--fc-font);
+  font-size: clamp(36px, 4.2vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.07em;
+  color: #ffffff;
+  margin: 0 0 20px;
+  line-height: 1.05;
+}
+
+.fc-pdp-studio__highlights {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 20px;
+  row-gap: 24px;
+  width: 100%;
+}
+
+@media screen and (max-width: 549px) {
+  .fc-pdp-studio__highlights {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fc-pdp-studio__highlight {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: var(--fc-font);
+  font-size: clamp(16px, 1.55vw, 20.724px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.07em;
+  color: #ffffff;
+}
+
+.fc-pdp-studio__highlight-dot {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 0.12em;
+  object-fit: contain;
+  display: block;
+}
+
+.fc-pdp-studio .fc-pdp-u__variants-label {
+  font-family: var(--fc-font);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.07em;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.fc-pdp-studio .fc-pdp-u__variant,
+.fc-pdp-studio .fc-pdp-u__sibling {
+  font-family: var(--fc-font);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.07em;
+  color: #ffffff;
+  padding: 10px;
+  border: 1px solid var(--fc-studio-border);
+  border-radius: var(--fc-studio-radius);
+  background: transparent;
+  min-width: 44px;
+  text-align: center;
+}
+
+.fc-pdp-studio .fc-pdp-u__variant.is-selected,
+.fc-pdp-studio .fc-pdp-u__sibling.is-selected {
+  border-color: var(--fc-yellow);
+}
+
+/* Floating — back to catalog (variant-style box, bottom right) */
+.fc-pdp-studio__scroll-catalog {
+  position: fixed;
+  right: max(var(--fc-page-gutter-sm, 12px), env(safe-area-inset-right, 0px));
+  bottom: max(clamp(20px, 4vw, 32px), env(safe-area-inset-bottom, 0px));
+  z-index: 25;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--fc-studio-border, #555555);
+  border-radius: var(--fc-studio-radius, 5px);
+  background: rgba(0, 0, 0, 0.88);
+  color: #ffffff;
+  font-family: var(--fc-font);
+  letter-spacing: 0;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.fc-pdp-studio__scroll-catalog.is-visible {
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* CSS chevron — same stroke weight as gallery ‹ › (avoids font metric offset) */
+.fc-pdp-studio__scroll-catalog-chevron {
+  box-sizing: border-box;
+  display: block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin: 0;
+  border: 0 solid currentColor;
+  border-top-width: 2px;
+  border-right-width: 2px;
+  transform: rotate(-45deg) translateY(-1px);
+}
+
+@media screen and (min-width: 990px) {
+  .fc-pdp-studio__scroll-catalog-chevron {
+    width: 9px;
+    height: 9px;
+  }
+}
+
+@media (hover: hover) {
+  .fc-pdp-studio__scroll-catalog.is-visible:hover {
+    border-color: var(--fc-yellow);
+    background: #000000;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-pdp-studio__scroll-catalog {
+    transition: opacity 0.01s linear;
+    transform: none;
+  }
+
+  .fc-pdp-studio__scroll-catalog.is-visible {
+    transform: none;
+  }
+}
+
+.fc-pdp-studio__picker {
+  margin-bottom: 18px;
+}
+
+.fc-pdp-studio__swatches .fc-pdp-studio__swatch {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 50%;
+  min-width: 0;
+  border: 1px solid var(--fc-studio-border);
+  background: transparent;
+}
+
+.fc-pdp-studio__swatch-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--fc-swatch, #666);
+  box-sizing: border-box;
+}
+
+.fc-pdp-studio__swatch.is-selected {
+  border-color: var(--fc-yellow);
+  box-shadow: inset 0 0 0 1px var(--fc-yellow);
+}
+
+.fc-pdp-studio .fc-pdp-u__buy {
+  width: 100%;
+  max-width: none;
+  margin-bottom: 23px;
+}
+
+.fc-pdp-studio .fc-pdp-u__atc {
+  width: 100%;
+  max-width: none;
+  height: 50px;
+  min-height: 50px;
+  padding: 0 16px;
+  border-radius: var(--fc-studio-radius);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.07em;
+  color: #000000;
+  background: var(--fc-yellow);
+}
+
+.fc-pdp-studio__atc-dot {
+  font-family: var(--fc-font);
+  font-size: 5px;
+  line-height: 1;
+  color: #000000;
+  vertical-align: middle;
+}
+
+.fc-pdp-studio__accordions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  margin-top: 0;
+  width: 100%;
+}
+
+.fc-pdp-studio__acc-box {
+  border: 1px solid var(--fc-studio-border);
+  border-radius: var(--fc-studio-radius);
+  background: transparent;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.fc-pdp-studio__acc-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 47px;
+  padding: 14px 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fc-pdp-studio__acc-summary::-webkit-details-marker {
+  display: none;
+}
+
+.fc-pdp-studio__acc-label {
+  font-family: var(--fc-font);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.07em;
+  color: #ffffff;
+}
+
+.fc-pdp-studio__acc-glyph {
+  font-family: var(--fc-font);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #ffffff;
+  min-width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.fc-pdp-studio__acc-box:not([open]) .fc-pdp-studio__acc-glyph--open {
+  display: none;
+}
+
+.fc-pdp-studio__acc-box[open] .fc-pdp-studio__acc-glyph--closed {
+  display: none;
+}
+
+/* Panel height animated in fc-pdp-studio.js (native <details> hides content — CSS grid alone cannot ease) */
+.fc-pdp-studio__acc-panel {
+  overflow: hidden;
+  will-change: height;
+}
+
+.fc-pdp-studio__acc-body {
+  padding: 0 12px 14px;
+  box-sizing: border-box;
+}
+
+.fc-pdp-studio__rte,
+.fc-pdp-studio__rte p {
+  font-family: var(--fc-font);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: var(--fc-studio-copy-tracking, -0.01em);
+  color: #ffffff;
+}
+
+.fc-pdp-studio__acc-empty {
+  font-family: var(--fc-font);
+  font-size: 18px;
+  letter-spacing: var(--fc-studio-copy-tracking, -0.01em);
+  color: #ffffff;
+  margin: 0;
+  opacity: 1;
+}
+
+.fc-pdp-studio__frequency-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.fc-pdp-studio__acc-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 47px;
+  padding: 14px 12px;
+  border: 1px solid var(--fc-studio-border);
+  border-radius: var(--fc-studio-radius);
+  font-family: var(--fc-font);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.07em;
+  color: #ffffff;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.fc-pdp-studio__acc-link--disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.fc-pdp-studio__acc-link-glyph {
+  font-family: var(--fc-font);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+@media (hover: hover) {
+  .fc-pdp-studio__acc-link:hover {
+    border-color: var(--fc-yellow);
+  }
+
+  .fc-pdp-studio__acc-box:has(> .fc-pdp-studio__acc-summary:hover) {
+    border-color: var(--fc-yellow);
+  }
+}
+{% endstylesheet %}
+
+<script src="{{ 'fc-pdp-unified.js' | asset_url }}" defer></script>
+<script src="{{ 'fc-pdp-studio.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "FC PDP — Studio bookshelf",
+  "tag": "section",
+  "class": "fc-pdp-studio-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Two-Way Active Bookshelf Speaker"
+    },
+    {
+      "type": "select",
+      "id": "purchase_cta",
+      "label": "Purchase button",
+      "options": [
+        { "value": "add_to_bag", "label": "Add to bag" },
+        { "value": "coming_soon", "label": "Coming soon (price shown, no checkout)" }
+      ],
+      "default": "add_to_bag",
+      "info": "Fallback when product metafield custom.purchase_mode is blank. Metafield wins when set (shop + PDP)."
+    },
+    {
+      "type": "text",
+      "id": "variant_row_label",
+      "label": "Variant row label",
+      "default": "Variant"
+    },
+    {
+      "type": "text",
+      "id": "sibling_1_label",
+      "label": "Sibling 1 label"
+    },
+    {
+      "type": "url",
+      "id": "sibling_1_url",
+      "label": "Sibling 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "sibling_2_label",
+      "label": "Sibling 2 label"
+    },
+    {
+      "type": "url",
+      "id": "sibling_2_url",
+      "label": "Sibling 2 URL"
+    },
+    {
+      "type": "text",
+      "id": "color_row_label",
+      "label": "Color row label",
+      "default": "Color"
+    },
+    {
+      "type": "text",
+      "id": "description_title",
+      "label": "Description accordion title",
+      "default": "Product Description"
+    },
+    {
+      "type": "textarea",
+      "id": "description_fallback",
+      "label": "Description fallback",
+      "info": "Shown when the product has no Admin description."
+    },
+    {
+      "type": "text",
+      "id": "inbox_title",
+      "label": "In the box title",
+      "default": "In The Box"
+    },
+    {
+      "type": "image_picker",
+      "id": "inbox_image",
+      "label": "In the box image"
+    },
+    {
+      "type": "text",
+      "id": "inbox_asset",
+      "label": "In the box asset filename"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_frequency_graph",
+      "label": "Show frequency graph accordion",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "frequency_title",
+      "label": "Frequency graph title",
+      "default": "Frequency Graph"
+    },
+    {
+      "type": "image_picker",
+      "id": "frequency_graph",
+      "label": "Frequency graph image"
+    },
+    {
+      "type": "text",
+      "id": "qsg_label",
+      "label": "Quick start guide label",
+      "default": "Quick Start Guide"
+    },
+    {
+      "type": "url",
+      "id": "quick_start_guide_url",
+      "label": "QSG URL override"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "highlight",
+      "name": "Feature highlight",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Feature bullet"
+        }
+      ]
+    },
+    {
+      "type": "inbox_item",
+      "name": "In box item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon image"
+        },
+        {
+          "type": "text",
+          "id": "icon_asset",
+          "label": "Icon asset filename"
+        },
+        {
+          "type": "text",
+          "id": "icon_text",
+          "label": "Label",
+          "default": "Item"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FC PDP — Studio bookshelf"
+    }
+  ]
+}
+{% endschema %}

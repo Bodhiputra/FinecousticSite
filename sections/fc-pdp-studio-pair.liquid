@@ -1,0 +1,115 @@
+{%- liquid
+  assign fc_alt = section.settings.alt | default: 'Hako Studio 301'
+  assign fc_bg = section.settings.background_image
+  assign fc_bg_asset = section.settings.background_asset | strip
+  if fc_bg_asset == blank and fc_bg == blank
+    assign fc_bg_asset = 'hako-studio-301-pair-withbg.jpg'
+  endif
+  assign fc_bg_2x = fc_bg_asset | replace: '.png', '@2x.png' | replace: '.jpg', '@2x.jpg' | replace: '.webp', '@2x.webp'
+-%}
+
+<section
+  class="fc-pdp-studio-pair"
+  id="fc-pdp-studio-pair-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  aria-label="{{ fc_alt | escape }}"
+>
+  {%- if fc_bg != blank -%}
+    {{
+      fc_bg
+      | image_url: width: 3840
+      | image_tag:
+        loading: 'eager',
+        fetchpriority: 'high',
+        sizes: '100vw',
+        widths: '800, 1024, 1600, 2048, 2560, 3200, 3840',
+        alt: fc_alt,
+        class: 'fc-pdp-studio-pair__bg'
+    }}
+  {%- else -%}
+    <img
+      class="fc-pdp-studio-pair__bg"
+      src="{{ fc_bg_asset | asset_url }}"
+      srcset="{{ fc_bg_asset | asset_url }} 1x, {{ fc_bg_2x | asset_url }} 2x"
+      alt="{{ fc_alt | escape }}"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      width="1024"
+      height="576"
+    >
+  {%- endif -%}
+</section>
+
+{% stylesheet %}
+/* Step 1 — WithBG only, full section viewport */
+.fc-pdp-studio-pair-section {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+
+.fc-pdp-studio-pair {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  height: 100svh;
+  height: 100dvh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  padding: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.fc-pdp-studio-pair__bg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FC PDP — Studio pair",
+  "tag": "section",
+  "class": "fc-pdp-studio-pair-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Full-viewport WithBG hero (Figma 11578:8). Add headline layer in a later step."
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image (optional — upload 2048px+ for best quality)"
+    },
+    {
+      "type": "text",
+      "id": "background_asset",
+      "label": "Background theme asset",
+      "default": "hako-studio-301-pair-withbg.jpg"
+    },
+    {
+      "type": "text",
+      "id": "alt",
+      "label": "Alt text",
+      "default": "Hako Studio 301"
+    }
+  ],
+  "presets": [
+    {
+      "name": "FC PDP — Studio pair"
+    }
+  ]
+}
+{% endschema %}

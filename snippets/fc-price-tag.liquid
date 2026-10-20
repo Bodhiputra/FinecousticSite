@@ -1,29 +1,36 @@
-{%- assign fc_tag_name = title -%}
-{%- if tag_mode == 'coming_soon' -%}
-<div class="fc-card__tag fc-tag--coming-soon {{ tag_class }}">
-  <div class="fc-card__tag-body">
-    <span class="fc-tag__status">Coming soon.</span>
-    <h3 class="fc-card__name {{ name_class }}">{{ fc_tag_name }}</h3>
+{%- liquid
+  assign fc_tag_product = product | default: fc_tag_product
+  assign fc_tag_name = title
+  capture fc_purchase_mode_str
+    render 'fc-product-purchase-mode', product: fc_tag_product, section_purchase_cta: ''
+  endcapture
+  assign fc_tag_purchase_mode = fc_purchase_mode_str | strip
+  assign fc_tag_coming_soon = false
+  if fc_tag_purchase_mode == 'coming_soon'
+    assign fc_tag_coming_soon = true
+  endif
+-%}
+{%- if fc_tag_coming_soon -%}
+<div
+  class="fc-card__tag fc-tag--coming-soon {{ tag_class }}"
+  data-variant-id="{{ variant_id }}"
+  data-fc-purchase-mode="coming_soon"
+  data-fc-purchasable="false"
+>
+  <div class="fc-card__tag-body fc-tag--coming-soon__main">
+    {%- unless hide_price -%}
+      {%- render 'fc-price-scratch',
+        price: price,
+        compare_at_price: compare_at_price,
+        price_varies: price_varies,
+        scratch: 'diagonal'
+      -%}
+    {%- endunless -%}
+    {%- unless hide_name -%}
+      <h3 class="fc-card__name {{ name_class }}">{{ fc_tag_name }}</h3>
+    {%- endunless -%}
   </div>
-</div>
-{%- elsif tag_mode == 'launch_locked' -%}
-<div class="fc-card__tag fc-tag--launch-locked {{ tag_class }}" data-variant-id="{{ variant_id }}" data-fc-launch-locked="true">
-  <div class="fc-card__tag-body">
-    {%- render 'fc-price-scratch',
-      price: price,
-      compare_at_price: compare_at_price,
-      price_varies: price_varies,
-      scratch: 'diagonal'
-    -%}
-    <h3 class="fc-card__name {{ name_class }}">{{ fc_tag_name }}</h3>
-  </div>
-  <span class="fc-tag-rip"></span>
-  <span class="fc-card__atc-lock" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="5" y="11" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="2"/>
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-  </span>
+  <span class="fc-card__atc-label fc-tag--coming-soon__status">Coming Soon.</span>
 </div>
 {%- elsif available -%}
 {%- liquid
@@ -43,7 +50,7 @@
     endfor
   endif
 -%}
-<div class="fc-card__tag{% if fc_tag_cart_qty > 0 %} fc-tag-active{% endif %} {{ tag_class }}" data-variant-id="{{ variant_id }}" data-fc-qty="{{ fc_tag_cart_qty }}"{% if fc_tag_qty_max != blank %} data-qty-max="{{ fc_tag_qty_max }}"{% endif %}>
+<div class="fc-card__tag{% if fc_tag_cart_qty > 0 %} fc-tag-active{% endif %} {{ tag_class }}" data-variant-id="{{ variant_id }}" data-fc-qty="{{ fc_tag_cart_qty }}"{% if fc_tag_qty_max != blank %} data-qty-max="{{ fc_tag_qty_max }}"{% endif %} data-fc-purchasable="true">
   <div class="fc-card__tag-body">
     {%- unless hide_price -%}
     {%- render 'fc-price-scratch',

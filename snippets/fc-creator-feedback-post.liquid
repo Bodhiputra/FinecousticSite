@@ -64,6 +64,12 @@
   if instagram_thumbnail_asset == blank and block.id == 'review_espindesk'
     assign instagram_thumbnail_asset = 'espindesk-reel-thumb.jpg'
   endif
+  if instagram_thumbnail_asset == blank and block.id == 'review_lorenz'
+    assign instagram_thumbnail_asset = 'lorenz-groche-post-thumb.jpg'
+  endif
+  if instagram_thumbnail_asset == blank and block.id == 'review_denis'
+    assign instagram_thumbnail_asset = 'denis-deskculture-post-thumb.jpg'
+  endif
   if avatar_asset == blank and block.id == 'review_luis'
     assign avatar_asset = 'luis-aguilar-avatar.png'
   endif
@@ -135,7 +141,7 @@
   </header>
 
   {%- if review_text != blank -%}
-    <div class="fc-creator-feedback__post-body fc-creator-feedback__body rte">
+    <div class="fc-creator-feedback__post-body fc-creator-feedback__body rte" data-nosnippet>
       {{ review_text | newline_to_br }}
     </div>
   {%- endif -%}

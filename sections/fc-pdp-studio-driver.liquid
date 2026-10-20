@@ -1,0 +1,404 @@
+{%- liquid
+  assign fc_driver_image = section.settings.image
+  assign fc_driver_asset = section.settings.image_asset | strip
+  assign fc_layout = section.settings.layout | default: 'image_left'
+  assign fc_gradient = section.settings.gradient_style | default: 'tweeter'
+  assign fc_grad_color = section.settings.gradient_color | default: '#FFD300'
+  assign fc_figma_frame = section.settings.figma_frame | default: 'custom'
+-%}
+
+<section
+  class="fc-pdp-studio-driver fc-pdp-studio-driver--{{ fc_layout }} fc-pdp-studio-driver--grad-{{ fc_gradient }} fc-pdp-studio-driver--figma-{{ fc_figma_frame }}"
+  id="fc-pdp-studio-driver-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  style="--fc-driver-grad-accent: {{ fc_grad_color }};"
+>
+  <div class="fc-pdp-studio-driver__split">
+    <div class="fc-pdp-studio-driver__media" aria-hidden="true">
+      {%- if fc_driver_image != blank -%}
+        {{
+          fc_driver_image
+          | image_url: width: 2400
+          | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            sizes: '(min-width: 990px) 50vw, 100vw',
+            widths: '800, 1200, 1600, 2000, 2400',
+            alt: '',
+            class: 'fc-pdp-studio-driver__img'
+        }}
+      {%- elsif fc_driver_asset != blank -%}
+        <img
+          class="fc-pdp-studio-driver__img"
+          src="{{ fc_driver_asset | asset_url }}"
+          alt=""
+          loading="eager"
+          fetchpriority="high"
+          width="2400"
+          height="2400"
+        >
+      {%- endif -%}
+    </div>
+
+    <div class="fc-pdp-studio-driver__copy">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="fc-pdp-studio-driver__heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.body != blank -%}
+        <p class="fc-pdp-studio-driver__body">{{ section.settings.body | escape }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.fc-pdp-studio-driver {
+  --fc-driver-min-h: clamp(520px, 85svh, 911px);
+  --fc-driver-grad-accent: var(--fc-yellow, #ffd300);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--fc-driver-min-h);
+  overflow: hidden;
+  background: #000;
+}
+
+.fc-pdp-studio-driver__split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: var(--fc-driver-min-h);
+  width: 100%;
+}
+
+.fc-pdp-studio-driver--image_right .fc-pdp-studio-driver__media {
+  order: 2;
+}
+
+.fc-pdp-studio-driver--image_right .fc-pdp-studio-driver__copy {
+  order: 1;
+}
+
+.fc-pdp-studio-driver__media {
+  position: relative;
+  background: #000;
+  overflow: hidden;
+  min-height: clamp(280px, 42svh, 911px);
+  line-height: 0;
+}
+
+.fc-pdp-studio-driver__img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.fc-pdp-studio-driver--image_left .fc-pdp-studio-driver__img {
+  object-position: 58% 52%;
+}
+
+.fc-pdp-studio-driver--image_right .fc-pdp-studio-driver__img {
+  object-position: 42% 50%;
+}
+
+.fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__img {
+  object-position: center 100%;
+}
+
+/*
+  Figma: 1 desktop frame = 1 Shopify section. Full width 50/50.
+  min-height 100svh = at least one viewport; section grows if copy/media need more.
+*/
+.fc-pdp-studio-driver--figma-tweeter,
+.fc-pdp-studio-driver--figma-woofer {
+  width: 100%;
+  max-width: none;
+  min-height: 100svh;
+  min-height: 100dvh;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__split,
+.fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__split {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  min-height: 100svh;
+  min-height: 100dvh;
+  height: auto;
+}
+
+@media screen and (min-width: 990px) {
+  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__split,
+  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__split {
+    grid-template-rows: minmax(100svh, 100svh);
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__media,
+  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__media {
+    min-height: 100%;
+    height: 100%;
+    align-self: stretch;
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__copy,
+  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__copy {
+    min-height: 100%;
+    height: auto;
+    align-self: stretch;
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__img,
+  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__img {
+    object-fit: cover;
+  }
+
+  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__img {
+    object-position: center center;
+  }
+}
+
+@media screen and (max-width: 989px) {
+  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__media,
+  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__media {
+    aspect-ratio: 720 / 900;
+    width: 100%;
+    min-height: 0;
+    height: auto;
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__img,
+  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__img {
+    object-fit: cover;
+  }
+
+  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__img {
+    object-position: center center;
+  }
+}
+
+.fc-pdp-studio-driver__copy {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(16px, 2.5vh, 28px);
+  padding: clamp(32px, 6vw, 72px) clamp(28px, 5vw, 52px);
+  box-sizing: border-box;
+  color: #fff;
+  background: #000;
+}
+
+.fc-pdp-studio-driver__copy::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.fc-pdp-studio-driver--grad-tweeter .fc-pdp-studio-driver__copy::before {
+  background:
+    radial-gradient(
+      ellipse 95% 80% at 100% 100%,
+      color-mix(in srgb, var(--fc-driver-grad-accent) 72%, transparent) 0%,
+      transparent 58%
+    ),
+    linear-gradient(
+      63deg,
+      #000 0%,
+      #000 58%,
+      color-mix(in srgb, var(--fc-driver-grad-accent) 38%, #000) 100%
+    );
+}
+
+.fc-pdp-studio-driver--grad-woofer .fc-pdp-studio-driver__copy::before {
+  background:
+    radial-gradient(
+      ellipse 95% 85% at 0% 0%,
+      color-mix(in srgb, var(--fc-driver-grad-accent) 68%, transparent) 0%,
+      transparent 55%
+    ),
+    linear-gradient(
+      -62deg,
+      color-mix(in srgb, var(--fc-driver-grad-accent) 22%, #000) 0%,
+      #000 52%,
+      #000 100%
+    );
+}
+
+.fc-pdp-studio-driver--grad-none .fc-pdp-studio-driver__copy::before {
+  display: none;
+}
+
+.fc-pdp-studio-driver__copy > * {
+  position: relative;
+  z-index: 1;
+}
+
+.fc-pdp-studio-driver--image_left .fc-pdp-studio-driver__copy {
+  text-align: right;
+  align-items: flex-end;
+  padding-right: clamp(28px, 6vw, 80px);
+}
+
+.fc-pdp-studio-driver--image_right .fc-pdp-studio-driver__copy {
+  text-align: left;
+  align-items: flex-start;
+  padding-left: clamp(28px, 6vw, 52px);
+}
+
+.fc-pdp-studio-driver__heading {
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  font-family: var(--fc-font);
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.07em;
+  color: #fff;
+  opacity: 1;
+}
+
+.fc-pdp-studio-driver__body {
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  font-family: var(--fc-font);
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.07em;
+  color: #fff;
+  opacity: 1;
+}
+
+/* Figma frames: copy uses full half-column (grid boundary = image edge) */
+.fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__copy,
+.fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__copy {
+  align-items: stretch;
+}
+
+@media screen and (max-width: 989px) {
+  .fc-pdp-studio-driver__split {
+    grid-template-columns: 1fr;
+  }
+
+  .fc-pdp-studio-driver--image_right .fc-pdp-studio-driver__media,
+  .fc-pdp-studio-driver--image_right .fc-pdp-studio-driver__copy {
+    order: unset;
+  }
+
+  .fc-pdp-studio-driver__media {
+    min-height: clamp(240px, 48vw, 420px);
+  }
+
+  .fc-pdp-studio-driver__copy {
+    text-align: left;
+    align-items: flex-start;
+    padding: clamp(28px, 8vw, 48px) var(--fc-page-gutter, 24px) clamp(40px, 10vw, 64px);
+  }
+
+  .fc-pdp-studio-driver--image_left .fc-pdp-studio-driver__copy {
+    text-align: left;
+    align-items: flex-start;
+    padding-right: var(--fc-page-gutter, 24px);
+  }
+
+  .fc-pdp-studio-driver__heading {
+    font-size: clamp(28px, 8vw, 64px);
+  }
+
+  .fc-pdp-studio-driver__body {
+    font-size: clamp(18px, 4.5vw, 32px);
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FC PDP — Studio driver",
+  "tag": "section",
+  "class": "fc-pdp-studio-driver-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Driver headline"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Driver description."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo"
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "Photo asset filename",
+      "info": "Used when no image is picked (theme asset in /assets)."
+    },
+    {
+      "type": "select",
+      "id": "figma_frame",
+      "label": "Figma frame preset",
+      "info": "One Figma desktop frame = one section block on the product template (full browser width, not capped at 1440px).",
+      "options": [
+        { "value": "custom", "label": "Custom (responsive crop)" },
+        { "value": "tweeter", "label": "Tweeter frame (11578:10)" },
+        { "value": "woofer", "label": "Woofer frame (11578:24)" }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "image_left", "label": "Photo left, copy right" },
+        { "value": "image_right", "label": "Copy left, photo right" }
+      ],
+      "default": "image_left"
+    },
+    {
+      "type": "select",
+      "id": "gradient_style",
+      "label": "Background gradient",
+      "options": [
+        { "value": "tweeter", "label": "Tweeter (yellow lower right)" },
+        { "value": "woofer", "label": "Woofer (yellow upper left)" },
+        { "value": "none", "label": "Solid black" }
+      ],
+      "default": "tweeter"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color",
+      "label": "Gradient accent color",
+      "default": "#FFD300",
+      "info": "Finecoustic yellow (#FFD300). Used on the copy panel only."
+    }
+  ],
+  "presets": [
+    {
+      "name": "FC PDP — Studio driver"
+    }
+  ]
+}
+{% endschema %}

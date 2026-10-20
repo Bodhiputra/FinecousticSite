@@ -1,0 +1,24 @@
+{%- comment -%}
+  Sets `fc_meta_description` for meta name="description" and Open Graph.
+  Shopify Admin SEO fields (`page_description`) win when set.
+{%- endcomment -%}
+{%- liquid
+  assign fc_meta_description = page_description | strip
+
+  if fc_meta_description == blank and template.name == 'index' and settings.fc_seo_homepage_description != blank
+    assign fc_meta_description = settings.fc_seo_homepage_description | strip
+  endif
+
+  assign fc_all_collection_handles = 'all,frontpage' | split: ','
+  if fc_meta_description == blank and template.name == 'collection' and fc_all_collection_handles contains collection.handle and settings.fc_seo_all_products_description != blank
+    assign fc_meta_description = settings.fc_seo_all_products_description | strip
+  endif
+
+  if fc_meta_description == blank and template.name == 'index'
+    assign fc_meta_description = 'Finecoustic designs premium wireless speakers and personal audio—built to be seen and meant to be heard. Explore Hako Nomad, Groove, and more.'
+  endif
+
+  if fc_meta_description == blank and template.name == 'collection' and fc_all_collection_handles contains collection.handle
+    assign fc_meta_description = 'Shop the full Finecoustic catalog—speakers, earphones, and design-forward audio for home and everyday listening.'
+  endif
+-%}

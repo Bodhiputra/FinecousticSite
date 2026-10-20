@@ -54,6 +54,10 @@ const DESCRIPTION_BY_HANDLE = {
     'Small but loud retro-aesthetic designed box speaker. Its ambient lighting adds subtle atmosphere to any space, while flexible connectivity options keep it adaptable to different listening needs. Built-in EQ allows quick sound adjustment and an integrated microphone enables clear calls and voice use directly through the device. With TWS pairing, two Nomads can connect to create a wider stereo experience.',
   'hako-nomad-l-fbs2':
     'Larger retro-aesthetic designed box speaker. With increased output power and a dedicated 2-tweeter and 1-woofer setup. Everything else stays the same as the smaller Hako Nomad',
+  'hako-studio-301':
+    'Compact 2-way active bookshelf speakers designed for personal workspaces and everyday listening. Its understated form and angled base fit naturally into desktop setups, while a 3-inch glass-fiber woofer and 1.25-inch silk dome tweeter form the core of its speaker system. Versatile connectivity, adjustable sound controls, and a dedicated subwoofer output offer flexibility for different listening setups.',
+  'hako-studio-302':
+    'Compact 2-way active bookshelf speakers designed for desktop setups and home listening. Featuring a 3-inch polypropylene woofer and a 1.25-inch horn-loaded silk tweeter, Hako Studio 302 offers versatile connectivity, adjustable volume, bass, and treble controls, and three built-in EQ modes, Movie, Music, and Dialogue. A dedicated subwoofer output provides an additional connection option for expanding your setup.',
 };
 
 function toDescriptionHtml(text) {

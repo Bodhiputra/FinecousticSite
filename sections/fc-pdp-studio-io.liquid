@@ -1,0 +1,488 @@
+{%- liquid
+  assign fc_title = section.settings.title | default: 'Input / Output Channels.'
+  assign fc_side = section.settings.side_image
+  assign fc_back = section.settings.back_image
+  assign fc_side_asset = section.settings.side_image_asset | strip
+  assign fc_back_asset = section.settings.back_image_asset | strip
+  assign fc_composite = section.settings.composite_image
+  assign fc_composite_asset = section.settings.composite_image_asset | strip
+  assign fc_layout = section.settings.layout_preset | default: 'studio_301'
+  if fc_layout == 'studio_302' and fc_composite_asset == blank and section.settings.composite_image == blank
+    assign fc_composite_asset = 'hako-studio-302-io-frame.png'
+  endif
+  if fc_layout == 'studio_302'
+    assign fc_layout_class = 'fc-pdp-studio-io__frame--studio-302'
+  else
+    assign fc_layout_class = 'fc-pdp-studio-io__frame--studio-301'
+  endif
+-%}
+
+<section
+  class="fc-pdp-studio-io"
+  id="fc-pdp-studio-io-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="fc-pdp-studio-io__wrap">
+    {%- if fc_composite != blank or fc_composite_asset != blank -%}
+      <div class="fc-pdp-studio-io__frame fc-pdp-studio-io__frame--composite {{ fc_layout_class }}">
+        {%- if fc_composite != blank -%}
+          {{
+            fc_composite
+            | image_url: width: 2880
+            | image_tag:
+              loading: 'lazy',
+              sizes: '(min-width: 1440px) 1440px, 100vw',
+              widths: '800, 1200, 1440, 2160, 2880',
+              alt: fc_title,
+              class: 'fc-pdp-studio-io__composite'
+          }}
+        {%- else -%}
+          {%- if fc_layout == 'studio_302' -%}
+            {%- assign fc_io_1x = fc_composite_asset -%}
+            {%- assign fc_io_2x = fc_composite_asset | replace: '.png', '@2x.png' | replace: '.jpg', '@2x.jpg' -%}
+            <div class="fc-pdp-studio-io__composite-crop">
+              <img
+                class="fc-pdp-studio-io__composite"
+                src="{{ fc_io_1x | asset_url }}"
+                srcset="{{ fc_io_1x | asset_url }} 1x, {{ fc_io_2x | asset_url }} 2x"
+                alt="{{ fc_title | escape }}"
+                loading="lazy"
+                decoding="async"
+                width="1440"
+                height="839"
+              >
+            </div>
+          {%- else -%}
+            <img
+              class="fc-pdp-studio-io__composite"
+              src="{{ fc_composite_asset | asset_url }}"
+              alt="{{ fc_title | escape }}"
+              loading="lazy"
+              decoding="async"
+              width="1440"
+              height="900"
+            >
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    {%- else -%}
+      {%- comment -%} Figma 12122:4847 (301) or 12122:4865 (302) — 1440×900 artboard {%- endcomment -%}
+      <div class="fc-pdp-studio-io__frame {{ fc_layout_class }}">
+        <h2 class="fc-pdp-studio-io__title">{{ fc_title | escape }}</h2>
+
+        <div class="fc-pdp-studio-io__photo fc-pdp-studio-io__photo--side">
+          {%- if fc_side != blank -%}
+            {{ fc_side | image_url: width: 1200 | image_tag: class: 'fc-pdp-studio-io__img', loading: 'lazy', alt: '' }}
+          {%- elsif fc_side_asset != blank -%}
+            <img
+              class="fc-pdp-studio-io__img"
+              src="{{ fc_side_asset | asset_url }}"
+              alt=""
+              loading="lazy"
+              width="{% if fc_layout == 'studio_302' %}309{% else %}371{% endif %}"
+              height="{% if fc_layout == 'studio_302' %}455{% else %}500{% endif %}"
+            >
+          {%- endif -%}
+        </div>
+        <div class="fc-pdp-studio-io__photo fc-pdp-studio-io__photo--back">
+          {%- if fc_back != blank -%}
+            {{ fc_back | image_url: width: 1200 | image_tag: class: 'fc-pdp-studio-io__img', loading: 'lazy', alt: '' }}
+          {%- elsif fc_back_asset != blank -%}
+            <img
+              class="fc-pdp-studio-io__img"
+              src="{{ fc_back_asset | asset_url }}"
+              alt=""
+              loading="lazy"
+              width="{% if fc_layout == 'studio_302' %}285{% else %}354{% endif %}"
+              height="{% if fc_layout == 'studio_302' %}458{% else %}510{% endif %}"
+            >
+          {%- endif -%}
+        </div>
+
+        {%- if fc_layout == 'studio_302' -%}
+          <svg class="fc-pdp-studio-io__lines" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <line x1="238" y1="408" x2="413" y2="408" />
+            <line x1="440" y1="411" x2="639" y2="411" />
+            <line x1="427" y1="452" x2="626" y2="452" />
+            <line x1="779" y1="592" x2="968" y2="592" />
+            <line x1="998" y1="594" x2="1154" y2="594" />
+            <line x1="968" y1="628" x2="1161" y2="628" />
+            <line x1="1001" y1="548" x2="1157" y2="548" />
+          </svg>
+        {%- else -%}
+          <svg class="fc-pdp-studio-io__lines" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <line x1="217" y1="376" x2="392" y2="376" />
+            <line x1="421" y1="378" x2="620" y2="378" />
+            <line x1="406" y1="423" x2="605" y2="423" />
+            <line x1="793" y1="607" x2="949" y2="607" />
+            <line x1="1035" y1="606" x2="1191" y2="606" />
+            <line x1="991" y1="663" x2="991" y2="771" />
+          </svg>
+        {%- endif -%}
+
+        <div class="fc-pdp-studio-io__labels">
+          <span class="fc-pdp-studio-io__label fc-pdp-studio-io__label--headphone">3.5 mm Headphone Jack</span>
+          <span class="fc-pdp-studio-io__label fc-pdp-studio-io__label--aux">3.5 mm AUX</span>
+          <span class="fc-pdp-studio-io__label fc-pdp-studio-io__label--bt">
+            <svg class="fc-pdp-studio-io__bt-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M17.71 7.71 12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29zM13 5.83l1.88 1.88L13 9.59V5.83zm1.88 10.46L13 18.17v-3.76l1.88 1.88z"/>
+            </svg>
+            Bluetooth 5.3
+          </span>
+          <span class="fc-pdp-studio-io__label fc-pdp-studio-io__label--optical">Optical Input</span>
+          <span class="fc-pdp-studio-io__label fc-pdp-studio-io__label--usb">USB DAC &amp; Flash Drive</span>
+          {%- if fc_layout == 'studio_302' -%}
+            <span class="fc-pdp-studio-io__label fc-pdp-studio-io__label--rca">RCA Input</span>
+          {%- endif -%}
+          <span class="fc-pdp-studio-io__label fc-pdp-studio-io__label--sub">
+            <span class="fc-pdp-studio-io__label-bold">SUB OUT</span>
+            <span class="fc-pdp-studio-io__label-sub">dedicated subwoofer output</span>
+          </span>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+/* Figma frame 12122:4847 — one artboard, top-aligned in section (not vertically centered in 100svh) */
+.fc-pdp-studio-io {
+  box-sizing: border-box;
+  width: 100%;
+  background: #000;
+  padding: calc(var(--fc-nav-clearance, 72px) + var(--fc-pdp-section-title-gap, 24px)) clamp(12px, 2vw, 24px)
+    clamp(24px, 4vh, 40px);
+}
+
+.fc-pdp-studio-io__wrap {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.fc-pdp-studio-io__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1440 / 900;
+  overflow: hidden;
+}
+
+.fc-pdp-studio-io__frame--composite {
+  overflow: hidden;
+}
+
+.fc-pdp-studio-io__composite {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1440 / 900;
+  object-fit: contain;
+}
+
+/* 302 composite: Figma 12122:4865 — full 1440×900 export, nav cropped in CSS (no upscale) */
+.fc-pdp-studio-io__frame--composite.fc-pdp-studio-io__frame--studio-302 {
+  aspect-ratio: 1440 / 839;
+}
+
+.fc-pdp-studio-io__composite-crop {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1440 / 839;
+  overflow: hidden;
+}
+
+.fc-pdp-studio-io__composite-crop .fc-pdp-studio-io__composite {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: calc(100% * 900 / 839);
+  max-width: none;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: top center;
+  transform: translateY(calc(-61 / 900 * 100%));
+}
+
+.fc-pdp-studio-io:has(.fc-pdp-studio-io__frame--composite.fc-pdp-studio-io__frame--studio-302) {
+  padding-top: clamp(20px, 3vh, 36px);
+}
+
+.fc-pdp-studio-io__title {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  top: 0;
+  margin: 0;
+  padding: 0 clamp(12px, 2vw, 24px);
+  box-sizing: border-box;
+  font-family: var(--fc-font);
+  font-size: clamp(26px, 3.33vw, 48px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.07em;
+  color: #fff;
+  text-align: center;
+  pointer-events: none;
+}
+
+.fc-pdp-studio-io__photo {
+  position: absolute;
+  z-index: 1;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.fc-pdp-studio-io__frame--studio-301 .fc-pdp-studio-io__photo--side {
+  left: 16.875%;
+  top: 30.889%;
+  width: 25.764%;
+  height: 55.556%;
+}
+
+.fc-pdp-studio-io__frame--studio-301 .fc-pdp-studio-io__photo--back {
+  left: 56.25%;
+  top: 29.778%;
+  width: 24.583%;
+  height: 56.667%;
+}
+
+.fc-pdp-studio-io__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.fc-pdp-studio-io__lines {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.fc-pdp-studio-io__lines line {
+  stroke: #fff;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.fc-pdp-studio-io__labels {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+  font-family: var(--fc-font);
+}
+
+.fc-pdp-studio-io__label {
+  position: absolute;
+  font-size: clamp(11px, 1.11vw, 16px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.07em;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.fc-pdp-studio-io__frame--studio-301 .fc-pdp-studio-io__label--headphone {
+  left: 2.639%;
+  top: 40.667%;
+}
+
+.fc-pdp-studio-io__frame--studio-301 .fc-pdp-studio-io__label--aux {
+  left: 43.403%;
+  top: 40.889%;
+}
+
+.fc-pdp-studio-io__frame--studio-301 .fc-pdp-studio-io__label--bt {
+  left: 42.22%;
+  top: 45.889%;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fc-pdp-studio-io__bt-icon {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  display: block;
+}
+
+.fc-pdp-studio-io__frame--studio-301 .fc-pdp-studio-io__label--optical {
+  left: 48.611%;
+  top: 66.222%;
+}
+
+.fc-pdp-studio-io__frame--studio-301 .fc-pdp-studio-io__label--usb {
+  left: 63.542%;
+  top: 86.333%;
+}
+
+.fc-pdp-studio-io__frame--studio-301 .fc-pdp-studio-io__label--sub {
+  left: 83.958%;
+  top: 65.111%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  white-space: normal;
+  max-width: 14%;
+  line-height: 1.2;
+}
+
+.fc-pdp-studio-io__label-bold {
+  font-weight: 700;
+}
+
+.fc-pdp-studio-io__label-sub {
+  font-weight: 400;
+  font-size: clamp(10px, 0.95vw, 14px);
+}
+
+/* Figma 12122:4865 — Hako Studio 302 */
+.fc-pdp-studio-io__frame--studio-302 .fc-pdp-studio-io__title {
+  left: 0;
+  right: 0;
+  top: 10.778%;
+  text-align: center;
+}
+
+.fc-pdp-studio-io__frame--studio-302 .fc-pdp-studio-io__photo--side {
+  left: 20.069%;
+  top: 34.778%;
+  width: 21.458%;
+  height: 50.556%;
+}
+
+.fc-pdp-studio-io__frame--studio-302 .fc-pdp-studio-io__photo--back {
+  left: 57.014%;
+  top: 34.778%;
+  width: 19.792%;
+  height: 50.889%;
+}
+
+.fc-pdp-studio-io__frame--studio-302 .fc-pdp-studio-io__img {
+  object-fit: contain;
+  object-position: center center;
+}
+
+.fc-pdp-studio-io__frame--studio-302 .fc-pdp-studio-io__label--headphone {
+  left: 4.306%;
+  top: 44.111%;
+}
+
+.fc-pdp-studio-io__frame--studio-302 .fc-pdp-studio-io__label--aux {
+  left: 45%;
+  top: 44.556%;
+}
+
+.fc-pdp-studio-io__frame--studio-302 .fc-pdp-studio-io__label--bt {
+  left: 44.792%;
+  top: 49.111%;
+}
+
+.fc-pdp-studio-io__frame--studio-302 .fc-pdp-studio-io__label--optical {
+  left: 47.431%;
+  top: 64.667%;
+}
+
+.fc-pdp-studio-io__frame--studio-302 .fc-pdp-studio-io__label--usb {
+  left: 81.25%;
+  top: 59.778%;
+}
+
+.fc-pdp-studio-io__frame--studio-302 .fc-pdp-studio-io__label--rca {
+  left: 81.25%;
+  top: 68.667%;
+}
+
+.fc-pdp-studio-io__frame--studio-302 .fc-pdp-studio-io__label--sub {
+  left: 81.25%;
+  top: 63.556%;
+  max-width: 16%;
+}
+
+@media screen and (max-width: 749px) {
+  .fc-pdp-studio-io__label {
+    white-space: normal;
+    max-width: 38%;
+    font-size: 10px;
+  }
+
+  .fc-pdp-studio-io__label--sub {
+    max-width: 22%;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FC PDP — Studio I/O",
+  "tag": "section",
+  "class": "fc-pdp-studio-io-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Input / Output Channels."
+    },
+    {
+      "type": "select",
+      "id": "layout_preset",
+      "label": "Layout preset",
+      "options": [
+        { "value": "studio_301", "label": "Hako Studio 301 (Figma 12122:4847)" },
+        { "value": "studio_302", "label": "Hako Studio 302 (Figma 12122:4865)" }
+      ],
+      "default": "studio_301"
+    },
+    {
+      "type": "paragraph",
+      "content": "301: layered layout (Figma 12122:4847). 302: use composite asset hako-studio-302-io-frame.png (Figma 12122:4865, nav cropped) for a clean match."
+    },
+    {
+      "type": "image_picker",
+      "id": "composite_image",
+      "label": "Full frame image (optional)"
+    },
+    {
+      "type": "text",
+      "id": "composite_image_asset",
+      "label": "Full frame asset filename (optional)"
+    },
+    {
+      "type": "image_picker",
+      "id": "side_image",
+      "label": "Side panel render"
+    },
+    {
+      "type": "text",
+      "id": "side_image_asset",
+      "label": "Side render asset filename",
+      "default": "hako-studio-301-io-side.png"
+    },
+    {
+      "type": "image_picker",
+      "id": "back_image",
+      "label": "Rear panel render"
+    },
+    {
+      "type": "text",
+      "id": "back_image_asset",
+      "label": "Rear render asset filename",
+      "default": "hako-studio-301-io-back.png"
+    }
+  ],
+  "presets": [
+    {
+      "name": "FC PDP — Studio I/O"
+    }
+  ]
+}
+{% endschema %}

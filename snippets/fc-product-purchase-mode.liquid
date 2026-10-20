@@ -1,0 +1,30 @@
+{%- comment -%}
+  Effective purchase CTA for a product: add_to_bag | coming_soon
+  Priority: product.metafields.custom.purchase_mode → section_purchase_cta (PDP fallback) → add_to_bag
+
+  Usage:
+    {% capture fc_purchase_mode %}{% render 'fc-product-purchase-mode', product: product, section_purchase_cta: section.settings.purchase_cta %}{% endcapture %}
+    {% assign fc_purchase_mode = fc_purchase_mode | strip %}
+
+  Admin: Products → [product] → Metafields → Purchase mode
+  Values: add_to_bag | coming_soon
+{%- endcomment -%}
+{%- liquid
+  assign fc_pm = ''
+  if product != blank
+    assign fc_pm_meta = product.metafields.custom.purchase_mode.value | downcase | strip
+    if fc_pm_meta == 'coming_soon' or fc_pm_meta == 'add_to_bag'
+      assign fc_pm = fc_pm_meta
+    endif
+  endif
+  if fc_pm == blank and section_purchase_cta != blank
+    assign fc_pm_section = section_purchase_cta | downcase | strip
+    if fc_pm_section == 'coming_soon' or fc_pm_section == 'add_to_bag'
+      assign fc_pm = fc_pm_section
+    endif
+  endif
+  if fc_pm == blank
+    assign fc_pm = 'add_to_bag'
+  endif
+  echo fc_pm
+-%}

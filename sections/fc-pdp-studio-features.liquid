@@ -1,0 +1,236 @@
+{%- comment -%} Figma 13738:27 — 3× image left, copy right {%- endcomment -%}
+<section
+  class="fc-pdp-studio-features"
+  id="fc-pdp-studio-features-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="fc-pdp-studio-features__stack">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'row' -%}
+        {%- liquid
+          assign fc_img = block.settings.image
+          assign fc_asset = block.settings.image_asset | strip
+          assign fc_img_pos_x = block.settings.image_position_x | default: 50
+          assign fc_img_pos_y = block.settings.image_position_y | default: 50
+        -%}
+        <div
+          class="fc-pdp-studio-features__row"
+          style="--fc-feature-img-pos-x: {{ fc_img_pos_x }}%; --fc-feature-img-pos-y: {{ fc_img_pos_y }}%;"
+          {{ block.shopify_attributes }}
+        >
+          <div class="fc-pdp-studio-features__media" aria-hidden="true">
+            {%- if fc_img != blank -%}
+              {{
+                fc_img
+                | image_url: width: 2160
+                | image_tag:
+                  loading: 'lazy',
+                  sizes: '(min-width: 990px) 50vw, 100vw',
+                  widths: '800, 1200, 1600, 2160',
+                  alt: '',
+                  class: 'fc-pdp-studio-features__img'
+              }}
+            {%- elsif fc_asset != blank -%}
+              <img
+                class="fc-pdp-studio-features__img"
+                src="{{ fc_asset | asset_url }}"
+                alt=""
+                loading="lazy"
+                decoding="async"
+                width="2160"
+                height="912"
+              >
+            {%- endif -%}
+          </div>
+          <div class="fc-pdp-studio-features__copy">
+            {%- if block.settings.body != blank -%}
+              <p class="fc-pdp-studio-features__body">{{ block.settings.body | escape }}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% stylesheet %}
+/*
+  Figma 13738:27 — one desktop frame = one Shopify section (full width).
+  min-height 100svh: one viewport tall; three rows share height equally.
+*/
+.fc-pdp-studio-features {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  background: #000;
+  min-height: 100svh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.fc-pdp-studio-features__stack {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+.fc-pdp-studio-features__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.fc-pdp-studio-features__media {
+  position: relative;
+  overflow: hidden;
+  min-height: 100%;
+  height: 100%;
+  background: #0a0a0a;
+  line-height: 0;
+}
+
+.fc-pdp-studio-features__img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--fc-feature-img-pos-x, 50%) var(--fc-feature-img-pos-y, 50%);
+}
+
+.fc-pdp-studio-features__copy {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding: clamp(28px, 5vw, 56px) clamp(28px, 5vw, 72px);
+  background: #000;
+}
+
+.fc-pdp-studio-features__body {
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  font-family: var(--fc-font, inherit);
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.07em;
+  color: #fff;
+  opacity: 1;
+}
+
+@media screen and (max-width: 989px) {
+  .fc-pdp-studio-features,
+  .fc-pdp-studio-features__stack {
+    min-height: 100svh;
+    min-height: 100dvh;
+    height: auto;
+  }
+
+  .fc-pdp-studio-features__row {
+    grid-template-columns: 1fr;
+    flex: none;
+    min-height: auto;
+  }
+
+  .fc-pdp-studio-features__media {
+    aspect-ratio: 2160 / 912;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+  }
+
+  .fc-pdp-studio-features__body {
+    font-size: clamp(20px, 4.5vw, 36px);
+  }
+
+  .fc-pdp-studio-features__copy {
+    padding: clamp(24px, 6vw, 40px) var(--fc-page-gutter, 24px);
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FC PDP — Studio features",
+  "tag": "section",
+  "class": "fc-pdp-studio-features-section fc-section--flush-top",
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Feature row",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Photo asset filename"
+        },
+        {
+          "type": "range",
+          "id": "image_position_x",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "label": "Image focus horizontal",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "image_position_y",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "label": "Image focus vertical",
+          "default": 50
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Copy",
+          "default": "Feature description."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FC PDP — Studio features",
+      "blocks": [
+        {
+          "type": "row",
+          "settings": {
+            "body": "4° angled base directs the sound toward your listening position."
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "body": "High-density MDF, designed to reduce unwanted cabinet vibration."
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "body": "Rear bass-reflex port, designed to manage airflow through the enclosure, supporting low-frequency output."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

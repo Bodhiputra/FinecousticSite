@@ -683,10 +683,13 @@
     }
 
     var activePanel = this.section.querySelector('.fc-creator-feedback__panel[data-subsection="' + key + '"]');
+    if (activePanel && activePanel.querySelector('[data-fc-ig-crop], .instagram-media')) {
+      loadInstagramEmbed();
+    }
     processPanelEmbedsIfNeeded(activePanel);
     initEmbedCrops(activePanel);
     softCalibratePanel(activePanel);
-    schedulePanelCropCalibration(activePanel, [700]);
+    schedulePanelCropCalibration(activePanel, [200, 700, 1400]);
 
     if (restart && !this.interactive && !this.reducedMotion) {
       var self = this;

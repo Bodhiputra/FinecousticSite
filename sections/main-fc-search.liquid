@@ -62,11 +62,11 @@
                         </div>
                       </a>
                       {%- render 'fc-price-tag',
+                        product: item,
                         variant: fc_variant,
                         variant_id: fc_variant.id,
                         price: item.price,
                         price_varies: item.price_varies,
-                        fc_tag_product: item,
                         available: item.available,
                         name_class: '',
                         tag_class: ''

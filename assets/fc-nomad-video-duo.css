@@ -1,4 +1,14 @@
+.fc-nomad-video-duo-section.shopify-section {
+  width: 100%;
+  min-height: 100svh;
+  min-height: 100dvh;
+  padding: 0;
+  margin: 0;
+}
+
 .fc-nomad-video-duo {
+  min-height: 100svh;
+  min-height: 100dvh;
   background: #000;
 }
 
@@ -11,22 +21,17 @@
 @media screen and (min-width: 750px) {
   .fc-nomad-video-duo__grid {
     grid-template-columns: 1fr 1fr;
-    height: 100vh;
-    min-height: 480px;
-  }
-}
-
-@media screen and (min-width: 990px) {
-  .fc-nomad-video-duo__grid {
-    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
+    height: 100%;
   }
 }
 
 .fc-nomad-video-duo__panel {
   position: relative;
   display: block;
-  height: 100vh;
-  min-height: 480px;
+  min-height: 100svh;
+  min-height: 100dvh;
   background: #000;
   color: #fff;
   text-decoration: none;

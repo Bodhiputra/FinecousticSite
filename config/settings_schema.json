@@ -1453,23 +1453,38 @@
     ]
   },
   {
-    "name": "Finecoustic launch",
+    "name": "SEO fallbacks",
     "settings": [
       {
         "type": "paragraph",
-        "content": "Schedule uses US Central Standard Time (UTC-6). Pre-order closes 12 Aug 2026 00:00 CST; launch 14 Aug 2026 10:00 CST. Set to Launched on live store at drop time, then Save theme. Auto follows the schedule on dev themes only when preview is Auto."
+        "content": "Used when a page has no SEO description in Shopify Admin. Homepage and All Products are the most important for Google snippets."
       },
       {
-        "type": "select",
-        "id": "fc_launch_phase_override",
-        "label": "Launch phase preview",
-        "default": "auto",
-        "options": [
-          { "value": "auto", "label": "Auto (follow schedule)" },
-          { "value": "preorder", "label": "Pre-order landing" },
-          { "value": "countdown", "label": "Countdown landing" },
-          { "value": "launched", "label": "Launched (shop live)" }
-        ]
+        "type": "textarea",
+        "id": "fc_seo_homepage_description",
+        "label": "Homepage meta description",
+        "default": "Finecoustic designs premium wireless speakers and personal audio—built to be seen and meant to be heard. Explore Hako Nomad, Groove, and more."
+      },
+      {
+        "type": "textarea",
+        "id": "fc_seo_all_products_description",
+        "label": "All products collection meta description",
+        "default": "Shop the full Finecoustic catalog—speakers, earphones, and design-forward audio for home and everyday listening."
+      }
+    ]
+  },
+  {
+    "name": "Product visibility",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Hako Studio 301/302 are hidden from the shop grid and search on the live (main) theme by default. They still appear when previewing a Development or unpublished theme, or when the toggle below is on."
+      },
+      {
+        "type": "checkbox",
+        "id": "fc_show_hako_studio_in_shop",
+        "label": "Show Hako Studio on shop (public)",
+        "default": false
       }
     ]
   }

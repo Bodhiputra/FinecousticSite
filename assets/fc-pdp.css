@@ -38,6 +38,34 @@
   color: rgba(255, 255, 255, 0.65);
 }
 
+.template-product .fc-pdp-studio-specs .fc-pdp-studio-specs__value-line,
+.template-product .fc-pdp-studio-specs .fc-pdp-studio-specs__value p {
+  color: #ffffff;
+  opacity: 1;
+}
+
+.template-product .fc-pdp-studio-io .fc-pdp-studio-io__title,
+.template-product .fc-pdp-studio-io .fc-pdp-studio-io__label,
+.template-product .fc-pdp-studio-io .fc-pdp-studio-io__label-sub {
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* Beat #MainContent .rte p { color: var(--fc-text-muted) } in fc-typography.css (ID wins over classes alone) */
+#MainContent .fc-pdp-studio .fc-pdp-studio__acc-body,
+#MainContent .fc-pdp-studio .fc-pdp-studio__acc-body .rte,
+#MainContent .fc-pdp-studio .fc-pdp-studio__acc-body .rte p,
+#MainContent .fc-pdp-studio .fc-pdp-studio__acc-body p,
+#MainContent .fc-pdp-studio .fc-pdp-studio__acc-body li,
+#MainContent .fc-pdp-studio .fc-pdp-studio__acc-body a,
+#MainContent .fc-pdp-studio .fc-pdp-studio__acc-empty,
+#MainContent .fc-pdp-studio .fc-pdp-specs-inbox__icon-label,
+#MainContent .fc-pdp-studio .fc-pdp-specs-inbox__table th,
+#MainContent .fc-pdp-studio .fc-pdp-specs-inbox__table td {
+  color: #ffffff;
+  opacity: 1;
+}
+
 
 /* Legacy Dawn main-product (fallback / theme editor) */
 .template-product product-info.gradient {

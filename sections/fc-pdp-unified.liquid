@@ -1,4 +1,3 @@
-{%- include 'fc-launch-gates' -%}
 {%- liquid
   assign variant = product.selected_or_first_available_variant
   assign media_count = product.media.size
@@ -52,29 +51,6 @@
     assign fc_atc_label = 'Sold Out'
   endif
 
-  assign fc_preorder_gate = false
-  if fc_launch_phase == 'preorder'
-    assign fc_preorder_gate = section.settings.enable_preorder_gate
-    if fc_preorder_gate == false
-      assign fc_handle_down = product.handle | downcase
-      if fc_handle_down == 'hako-nomad-fbs1' or fc_handle_down == 'hako-nomad-l-fbs2'
-        assign fc_preorder_gate = true
-      endif
-    endif
-  endif
-
-  assign fc_show_drop_countdown = false
-  assign fc_handle_down = product.handle | downcase
-  if fc_launch_phase == 'countdown'
-    if fc_handle_down == 'hako-nomad-fbs1' or fc_handle_down == 'hako-nomad-l-fbs2'
-      assign fc_show_drop_countdown = true
-    endif
-  endif
-
-  if fc_show_drop_countdown
-    assign fc_atc_label = 'Add to bag'
-  endif
-
   assign fc_variant_cart_qty = 0
   for item in cart.items
     if item.variant_id == variant.id
@@ -83,10 +59,6 @@
   endfor
 -%}
 
-{%- if fc_preorder_gate -%}
-  {{ 'fc-preorder.css' | asset_url | stylesheet_tag }}
-{%- endif -%}
-
 {%- render 'fc-product-data', product: product -%}
 
 <section
@@ -94,12 +66,8 @@
   id="fc-pdp-u-{{ section.id }}"
   data-section-id="{{ section.id }}"
   data-product-handle="{{ product.handle }}"
-  data-fc-launch-ts="{{ fc_launch_ts }}"
   {% if fc_desktop_stack %}data-fc-desktop-stack="true"{% endif %}
 >
-  {%- if fc_show_drop_countdown -%}
-    {%- render 'fc-countdown', variant: 'pdp', launch_ts: fc_launch_ts -%}
-  {%- endif -%}
   <div class="fc-pdp-u__inner">
     <div class="fc-pdp-u__hero">
       <div class="fc-pdp-u__visual">
@@ -232,37 +200,6 @@
         {%- endif -%}
 
         <div class="fc-pdp-u__buy" data-fc-pdp-purchase>
-          {%- if fc_preorder_gate -%}
-            <div class="fc-pdp-u__preorder">
-              {%- render 'fc-preorder-hero-form',
-                section: section,
-                preorder_button_label: section.settings.preorder_button_label,
-                preorder_marketing_label: section.settings.preorder_marketing_label,
-                preorder_offers_url: section.settings.preorder_offers_url,
-                form_id_suffix: section.id
-              -%}
-            </div>
-          {%- elsif fc_show_drop_countdown -%}
-          <button
-            type="button"
-            class="fc-pdp-u__atc is-launch-locked"
-            data-variant-id="{{ variant.id }}"
-            data-fc-purchasable="false"
-            data-fc-launch-locked="true"
-            data-fc-atc-label-default="{{ fc_atc_label | escape }}"
-            disabled
-            aria-disabled="true"
-          >
-            <span class="fc-pdp-u__atc-price" data-fc-pdp-price>
-              {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
-              {{ variant.price | money }}
-            </span>
-            <span class="fc-pdp-u__atc-sep fc-pdp-u__atc-sep--qty" data-fc-pdp-atc-qty-sep hidden aria-hidden="true">·</span>
-            <span class="fc-pdp-u__atc-qty" data-fc-pdp-atc-qty hidden></span>
-            <span class="fc-pdp-u__atc-sep" aria-hidden="true">·</span>
-            <span class="fc-pdp-u__atc-label" data-fc-pdp-atc-label>{{ fc_atc_label }}</span>
-          </button>
-          {%- else -%}
           <button
             type="button"
             class="fc-pdp-u__atc{% if fc_variant_sold_out == 'true' %} is-oos{% endif %}{% if fc_variant_cart_qty > 0 %} fc-atc-active{% endif %}"
@@ -281,7 +218,6 @@
             <span class="fc-pdp-u__atc-sep" aria-hidden="true">·</span>
             <span class="fc-pdp-u__atc-label" data-fc-pdp-atc-label>{{ fc_atc_label }}</span>
           </button>
-          {%- endif -%}
         </div>
 
         {%- if fc_desktop_stack -%}
@@ -387,16 +323,15 @@
     {%- endif -%}
 </section>
 
-{%- unless fc_preorder_gate -%}
 <div class="fc-pdp-u__dock" id="fc-pdp-u-dock-{{ section.id }}" hidden>
   <button
     type="button"
-    class="fc-pdp-u__atc fc-pdp-u__atc--dock{% if fc_variant_sold_out == 'true' %} is-oos{% endif %}{% if fc_show_drop_countdown %} is-launch-locked{% endif %}{% if fc_variant_cart_qty > 0 %} fc-atc-active{% endif %}"
+    class="fc-pdp-u__atc fc-pdp-u__atc--dock{% if fc_variant_sold_out == 'true' %} is-oos{% endif %}{% if fc_variant_cart_qty > 0 %} fc-atc-active{% endif %}"
     data-variant-id="{{ variant.id }}"
     data-fc-qty="{{ fc_variant_cart_qty }}"
-    data-fc-purchasable="{% if fc_show_drop_countdown or fc_variant_sold_out == 'true' %}false{% else %}true{% endif %}"
+    data-fc-purchasable="{% if fc_variant_sold_out == 'true' %}false{% else %}true{% endif %}"
     data-fc-atc-label-default="{{ fc_atc_label | escape }}"
-    {% if fc_show_drop_countdown %}data-fc-launch-locked="true" disabled aria-disabled="true"{% elsif fc_variant_sold_out == 'true' %}aria-disabled="true"{% endif %}
+    {% if fc_variant_sold_out == 'true' %}aria-disabled="true"{% endif %}
   >
     <span class="fc-pdp-u__atc-price" data-fc-pdp-price>
       {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
@@ -408,7 +343,6 @@
     <span class="fc-pdp-u__atc-label" data-fc-pdp-atc-label>{{ fc_atc_label }}</span>
   </button>
 </div>
-{%- endunless -%}
 
 {% stylesheet %}
 .fc-pdp-u {
@@ -691,24 +625,6 @@
   max-width: min(560px, 100%);
 }
 
-.fc-pdp-u__preorder {
-  width: 100%;
-}
-
-.fc-pdp-u__preorder .fc-preorder-hero-form {
-  width: 100%;
-}
-
-.fc-pdp-u__preorder .fc-preorder-hero-form__submit {
-  border-radius: 3px;
-  font-size: clamp(14px, 1.2vw, 16px);
-  min-height: 48px;
-}
-
-.fc-pdp-u__preorder .fc-marketing-checkbox__label {
-  color: rgba(255, 255, 255, 0.82);
-}
-
 .fc-pdp-u__atc {
   display: inline-flex;
   align-items: center;
@@ -737,26 +653,10 @@
 }
 
 .fc-pdp-u__atc.is-oos,
+.fc-pdp-u__atc.is-coming-soon,
 .fc-pdp-u__atc:disabled {
   opacity: 0.72;
   cursor: not-allowed;
-}
-
-.fc-pdp-u__atc.is-launch-locked {
-  background: rgba(255, 211, 0, 0.38);
-  color: rgba(18, 18, 18, 0.52);
-  opacity: 1;
-  cursor: not-allowed;
-}
-
-.fc-pdp-u__atc.is-launch-locked .fc-pdp-u__atc-sep {
-  opacity: 0.45;
-}
-
-@media (hover: hover) {
-  .fc-pdp-u__atc.is-launch-locked:hover {
-    opacity: 1;
-  }
 }
 
 .fc-pdp-u__atc-sep {
@@ -973,19 +873,6 @@
     min-height: 0;
     margin: 0 auto;
     padding-top: clamp(8px, 2vw, 16px);
-  }
-
-  .fc-pdp-u__preorder .fc-preorder-hero-form__email,
-  .fc-pdp-u__preorder .fc-preorder-hero-form__submit {
-    font-size: clamp(11px, 2.8vw, 12px);
-    padding: clamp(6px, 1.6vw, 8px) clamp(8px, 2.2vw, 10px);
-    min-height: 0;
-    height: auto;
-    border-radius: 4px;
-  }
-
-  .fc-pdp-u__preorder .fc-preorder-hero-form__inner {
-    gap: clamp(6px, 1.6vw, 8px);
   }
 
   .fc-pdp-u__gallery {
@@ -1306,35 +1193,6 @@
       "id": "quick_start_guide_url",
       "label": "QSG URL override",
       "info": "Optional. Product metafield is preferred."
-    },
-    {
-      "type": "header",
-      "content": "Pre-order gate (temporary)"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_preorder_gate",
-      "label": "Replace Add to bag with pre-order email form",
-      "default": false,
-      "info": "Auto-enabled for Hako Nomad FBS1/FBS2 handles. Turn off after launch."
-    },
-    {
-      "type": "text",
-      "id": "preorder_button_label",
-      "label": "Pre-order submit button",
-      "default": "Reveal Pre-order Offers"
-    },
-    {
-      "type": "text",
-      "id": "preorder_marketing_label",
-      "label": "Marketing consent label",
-      "default": "Be the first to experience what's next in sound."
-    },
-    {
-      "type": "url",
-      "id": "preorder_offers_url",
-      "label": "Pre-order offers page",
-      "info": "Defaults to /pages/preorder-offers"
     }
   ],
   "blocks": [

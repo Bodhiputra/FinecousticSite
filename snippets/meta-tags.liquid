@@ -1,3 +1,6 @@
+{%- unless fc_meta_description -%}
+  {%- render 'fc-meta-description' -%}
+{%- endunless -%}
 {%- liquid
   assign og_title = page_title | default: shop.name
   if request.page_type == 'product' and product != blank
@@ -8,7 +11,8 @@
   endif
   assign og_url = canonical_url | default: request.origin
   assign og_type = 'website'
-  assign og_description = page_description | default: shop.description | default: shop.name
+  assign og_description = fc_meta_description | default: page_description | default: shop.description | default: shop.name
+  assign og_description = og_description | strip_html | strip
 
   if request.page_type == 'product'
     assign og_type = 'product'

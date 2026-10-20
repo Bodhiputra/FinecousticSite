@@ -135,30 +135,6 @@
             "phone": ""
           }
         },
-        "store_13": {
-          "type": "store",
-          "settings": {
-            "country_filter": "syria",
-            "country": "Syria",
-            "name": "Midas Computer Center",
-            "website_url": "https://midassy.com/en",
-            "website_label": "midassy.com",
-            "address": "",
-            "phone": ""
-          }
-        },
-        "store_14": {
-          "type": "store",
-          "settings": {
-            "country_filter": "australia",
-            "country": "Australia",
-            "name": "Mastex",
-            "website_url": "https://mastex.com.au/",
-            "website_label": "mastex.com.au",
-            "address": "Mastex Corporation Pty Ltd, 12/163-179 Forster Road, Mount Waverley, VIC, 3149, Australia",
-            "phone": "(03) 9548 0524"
-          }
-        },
         "store_15": {
           "type": "store",
           "settings": {
@@ -174,7 +150,6 @@
       },
       "block_order": [
         "store_15",
-        "store_14",
         "store_4",
         "store_8",
         "store_5",
@@ -185,7 +160,6 @@
         "store_9",
         "store_2",
         "store_7",
-        "store_13",
         "store_3"
       ],
       "settings": {
