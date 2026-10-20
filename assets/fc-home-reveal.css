@@ -32,7 +32,6 @@
   html.js body.template-index .fc-home-studio-landing-section:not(.fc-home-reveal--shown) .fc-home-studio-landing__title-part,
   html.js body.template-index .fc-home-hako-series-section:not(.fc-home-reveal--shown) .fc-home-hako-series__title,
   html.js body.template-index .fc-home-hako-series-section:not(.fc-home-reveal--shown) .fc-home-hako-series__grid .fc-card,
-  html.js body.template-index .section-website-hero:not(.fc-home-reveal--shown) .website-hero__product-stack,
   html.js body.template-index .section-website-hero:not(.fc-home-reveal--shown) .website-hero__product-title--desktop,
   html.js body.template-index .section-website-hero:not(.fc-home-reveal--shown) .website-hero__content,
   html.js body.template-index .fc-creator-feedback-section:not(.fc-home-reveal--shown) .fc-creator-feedback__title,
@@ -105,7 +104,12 @@
     transition: opacity var(--fc-home-reveal-img-ms) var(--fc-home-reveal-ease);
   }
 
-  html.js body.template-index .section-website-hero .website-hero__product-stack,
+  /* Nomad CTA stack uses transform: translateX(-50%) for layout — fade opacity only. */
+  html.js body.template-index .section-website-hero .website-hero__product-stack {
+    transition: opacity var(--fc-home-reveal-ms) var(--fc-home-reveal-ease);
+    transition-delay: var(--fc-home-reveal-text-delay);
+  }
+
   html.js body.template-index .section-website-hero .website-hero__product-title--desktop,
   html.js body.template-index .section-website-hero .website-hero__content {
     transition:
@@ -140,7 +144,6 @@
   html.js body.template-index .fc-home-hako-series-section.fc-home-reveal--shown .fc-home-hako-series__title,
   html.js body.template-index .fc-home-hako-series-section.fc-home-reveal--shown .fc-home-hako-series__grid .fc-card,
   html.js body.template-index .section-website-hero.fc-home-reveal--shown .website-hero__picture,
-  html.js body.template-index .section-website-hero.fc-home-reveal--shown .website-hero__product-stack,
   html.js body.template-index .section-website-hero.fc-home-reveal--shown .website-hero__product-title--desktop,
   html.js body.template-index .section-website-hero.fc-home-reveal--shown .website-hero__content,
   html.js body.template-index .fc-creator-feedback-section.fc-home-reveal--shown .fc-creator-feedback__title,
@@ -151,6 +154,10 @@
   }
 
   html.js body.template-index .fc-home-studio-landing-section.fc-home-reveal--shown .fc-home-studio-landing__cta-wrap {
+    opacity: 1;
+  }
+
+  html.js body.template-index .section-website-hero.fc-home-reveal--shown .website-hero__product-stack {
     opacity: 1;
   }
 }
