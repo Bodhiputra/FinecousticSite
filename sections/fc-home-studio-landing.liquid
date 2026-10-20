@@ -221,6 +221,7 @@
   left: 50%;
   bottom: var(--fc-home-studio-landing-cta-bottom, clamp(40px, 7.5svh, 88px));
   transform: translateX(-50%);
+  align-items: center;
   width: auto;
   max-width: calc(100% - clamp(32px, 6vw, 64px));
   box-sizing: border-box;
@@ -237,9 +238,9 @@
   box-sizing: border-box;
   width: auto;
   max-width: min(var(--fc-home-studio-landing-cta-max-w, 704px), 100%);
-  min-height: 0;
+  min-height: 44px;
   height: auto;
-  padding: 11px 28px;
+  padding: 0 28px;
   border: 1px solid var(--fc-yellow, #ffd300);
   border-radius: 5px;
   background: transparent;
@@ -248,7 +249,7 @@
   font-size: clamp(13px, 1.25vw, 16px);
   font-weight: 400;
   letter-spacing: 0.02em;
-  line-height: 1.25;
+  line-height: 1;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
@@ -316,7 +317,8 @@
   }
 
   .fc-home-studio-landing__cta {
-    padding: 10px 22px;
+    min-height: 42px;
+    padding: 0 22px;
     font-size: clamp(12px, 3.2vw, 14px);
     white-space: normal;
     text-align: center;

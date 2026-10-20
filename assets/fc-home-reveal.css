@@ -3,14 +3,14 @@
 @media (prefers-reduced-motion: no-preference) {
   html.js body.template-index {
     --fc-home-reveal-ease: cubic-bezier(0.19, 1, 0.22, 1);
-    --fc-home-reveal-ms: 820ms;
-    --fc-home-reveal-img-ms: 880ms;
-    --fc-home-reveal-hero-ms: 620ms;
-    --fc-home-reveal-text-delay: 340ms;
-    --fc-home-reveal-cta-delay: 480ms;
+    --fc-home-reveal-ms: 1050ms;
+    --fc-home-reveal-img-ms: 1150ms;
+    --fc-home-reveal-hero-ms: 780ms;
+    --fc-home-reveal-text-delay: 480ms;
+    --fc-home-reveal-cta-delay: 720ms;
     --fc-home-reveal-y: 14px;
-    --fc-home-reveal-card-stagger: 70ms;
-    --fc-home-reveal-title-end-delay: 80ms;
+    --fc-home-reveal-card-stagger: 85ms;
+    --fc-home-reveal-title-end-delay: 120ms;
   }
 
   /* —— Hidden until section enters viewport (or hero after site loader) —— */
@@ -30,7 +30,6 @@
   }
 
   html.js body.template-index .fc-home-studio-landing-section:not(.fc-home-reveal--shown) .fc-home-studio-landing__title-part,
-  html.js body.template-index .fc-home-studio-landing-section:not(.fc-home-reveal--shown) .fc-home-studio-landing__cta-wrap,
   html.js body.template-index .fc-home-hako-series-section:not(.fc-home-reveal--shown) .fc-home-hako-series__title,
   html.js body.template-index .fc-home-hako-series-section:not(.fc-home-reveal--shown) .fc-home-hako-series__grid .fc-card,
   html.js body.template-index .section-website-hero:not(.fc-home-reveal--shown) .website-hero__product-stack,
@@ -66,6 +65,14 @@
       opacity var(--fc-home-reveal-ms) var(--fc-home-reveal-ease),
       transform var(--fc-home-reveal-ms) var(--fc-home-reveal-ease);
     transition-delay: var(--fc-home-reveal-cta-delay);
+  }
+
+  html.js body.template-index .fc-home-studio-landing-section:not(.fc-home-reveal--shown) .fc-home-studio-landing__cta-wrap {
+    transform: translate(-50%, var(--fc-home-reveal-y));
+  }
+
+  html.js body.template-index .fc-home-studio-landing-section.fc-home-reveal--shown .fc-home-studio-landing__cta-wrap {
+    transform: translateX(-50%);
   }
 
   html.js body.template-index .fc-home-hako-series-section .fc-home-hako-series__title {
@@ -130,7 +137,6 @@
   /* —— Revealed —— */
   html.js body.template-index .fc-home-studio-landing-section.fc-home-reveal--shown .fc-home-studio-landing__img,
   html.js body.template-index .fc-home-studio-landing-section.fc-home-reveal--shown .fc-home-studio-landing__title-part,
-  html.js body.template-index .fc-home-studio-landing-section.fc-home-reveal--shown .fc-home-studio-landing__cta-wrap,
   html.js body.template-index .fc-home-hako-series-section.fc-home-reveal--shown .fc-home-hako-series__title,
   html.js body.template-index .fc-home-hako-series-section.fc-home-reveal--shown .fc-home-hako-series__grid .fc-card,
   html.js body.template-index .section-website-hero.fc-home-reveal--shown .website-hero__picture,
@@ -142,5 +148,9 @@
   html.js body.template-index .fc-nomad-video-duo-section.fc-home-reveal--shown .fc-nomad-video-duo__panel {
     opacity: 1;
     transform: none;
+  }
+
+  html.js body.template-index .fc-home-studio-landing-section.fc-home-reveal--shown .fc-home-studio-landing__cta-wrap {
+    opacity: 1;
   }
 }
