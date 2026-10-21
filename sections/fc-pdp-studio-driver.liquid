@@ -5,10 +5,11 @@
   assign fc_gradient = section.settings.gradient_style | default: 'tweeter'
   assign fc_grad_color = section.settings.gradient_color | default: '#FFD300'
   assign fc_figma_frame = section.settings.figma_frame | default: 'custom'
+  assign fc_tweeter_crop = section.settings.tweeter_crop | default: '301'
 -%}
 
 <section
-  class="fc-pdp-studio-driver fc-pdp-studio-driver--{{ fc_layout }} fc-pdp-studio-driver--grad-{{ fc_gradient }} fc-pdp-studio-driver--figma-{{ fc_figma_frame }}"
+  class="fc-pdp-studio-driver fc-pdp-studio-driver--{{ fc_layout }} fc-pdp-studio-driver--grad-{{ fc_gradient }} fc-pdp-studio-driver--figma-{{ fc_figma_frame }}{% if fc_figma_frame == 'tweeter' %} fc-pdp-studio-driver--tweeter-crop-{{ fc_tweeter_crop }}{% endif %}"
   id="fc-pdp-studio-driver-{{ section.id }}"
   data-section-id="{{ section.id }}"
   style="--fc-driver-grad-accent: {{ fc_grad_color }};"
@@ -105,15 +106,21 @@
   object-position: 42% 50%;
 }
 
-.fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__img {
-  object-position: center 100%;
+/* Tweeter: Figma 13126:74 (1440×456 crop). Woofer: full viewport. */
+.fc-pdp-studio-driver--figma-tweeter {
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  overflow: hidden;
 }
 
-/*
-  Figma: 1 desktop frame = 1 Shopify section. Full width 50/50.
-  min-height 100svh = at least one viewport; section grows if copy/media need more.
-*/
-.fc-pdp-studio-driver--figma-tweeter,
+.fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__split {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  min-height: 0;
+}
+
 .fc-pdp-studio-driver--figma-woofer {
   width: 100%;
   max-width: none;
@@ -124,7 +131,6 @@
   overflow-y: visible;
 }
 
-.fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__split,
 .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__split {
   width: 100%;
   max-width: none;
@@ -134,38 +140,161 @@
   height: auto;
 }
 
+/*
+  Theme asset is 723×911 (full Figma artboard). Short section + cover + bottom anchor
+  crops the top empty band — not the zoomed live-photo layer from Figma MCP.
+*/
+.fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__media {
+  min-height: 0;
+}
+
+.fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+
+.fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__img {
+  object-position: center 93%;
+}
+
+.fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 {
+  min-height: 100svh;
+  min-height: 100dvh;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: visible;
+  background: #000;
+}
+
+.fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 .fc-pdp-studio-driver__split {
+  min-height: 100svh;
+  min-height: 100dvh;
+  height: auto;
+}
+
+.fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 .fc-pdp-studio-driver__img {
+  object-position: center 100%;
+}
+
 @media screen and (min-width: 990px) {
-  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__split,
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 {
+    min-height: calc(100vw * 392 / 1440);
+    height: calc(100vw * 392 / 1440);
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__split {
+    min-height: calc(100vw * 392 / 1440);
+    height: calc(100vw * 392 / 1440);
+    grid-template-rows: 1fr;
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 .fc-pdp-studio-driver__split {
+    grid-template-rows: minmax(100svh, 100svh);
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__media {
+    height: 100%;
+    align-self: stretch;
+    min-height: 0;
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__copy {
+    min-height: 100%;
+    height: 100%;
+    align-self: stretch;
+    justify-content: center;
+    align-items: flex-end;
+    gap: clamp(12px, calc(100vw * 14 / 1440), 20px);
+    padding-block: clamp(16px, 2vw, 28px);
+    background: transparent;
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 {
+    background: linear-gradient(
+      44.92deg,
+      #000 78.864%,
+      color-mix(in srgb, var(--fc-driver-grad-accent) 100%, #000) 148.43%
+    );
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301.fc-pdp-studio-driver--grad-tweeter .fc-pdp-studio-driver__copy::before,
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__copy::before {
+    display: none;
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 .fc-pdp-studio-driver__copy {
+    background: #000;
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__heading {
+    font-size: clamp(32px, 3.33vw, 48px);
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__body {
+    font-size: clamp(16px, 1.67vw, 24px);
+  }
+
   .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__split {
     grid-template-rows: minmax(100svh, 100svh);
   }
 
-  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__media,
   .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__media {
     min-height: 100%;
     height: 100%;
     align-self: stretch;
   }
 
-  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__copy,
   .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__copy {
     min-height: 100%;
     height: auto;
     align-self: stretch;
   }
 
-  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__img,
   .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__img {
     object-fit: cover;
-  }
-
-  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__img {
     object-position: center center;
   }
 }
 
 @media screen and (max-width: 989px) {
-  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__media,
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 {
+    background: linear-gradient(
+      44.92deg,
+      #000 78.864%,
+      color-mix(in srgb, var(--fc-driver-grad-accent) 100%, #000) 148.43%
+    );
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 {
+    background: #000;
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__media {
+    aspect-ratio: 1440 / 392;
+    width: 100%;
+    min-height: 0;
+    height: auto;
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 .fc-pdp-studio-driver__media {
+    aspect-ratio: 720 / 900;
+    width: 100%;
+    min-height: 0;
+    height: auto;
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__copy {
+    background: transparent;
+  }
+
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301.fc-pdp-studio-driver--grad-tweeter .fc-pdp-studio-driver__copy::before,
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__copy::before {
+    display: none;
+  }
+
   .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__media {
     aspect-ratio: 720 / 900;
     width: 100%;
@@ -173,12 +302,8 @@
     height: auto;
   }
 
-  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__img,
   .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__img {
     object-fit: cover;
-  }
-
-  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__img {
     object-position: center center;
   }
 }
@@ -361,10 +486,21 @@
       "info": "One Figma desktop frame = one section block on the product template (full browser width, not capped at 1440px).",
       "options": [
         { "value": "custom", "label": "Custom (responsive crop)" },
-        { "value": "tweeter", "label": "Tweeter frame (11578:10)" },
+        { "value": "tweeter", "label": "Tweeter frame (13126:74 — 1440×456)" },
         { "value": "woofer", "label": "Woofer frame (11578:24)" }
       ],
       "default": "custom"
+    },
+    {
+      "type": "select",
+      "id": "tweeter_crop",
+      "label": "Tweeter crop variant",
+      "info": "301 uses a shorter frame (tighter top crop). 302 shows more of the art — larger tweeter in frame.",
+      "options": [
+        { "value": "301", "label": "301 — 1440×392 crop" },
+        { "value": "302", "label": "302 — full viewport (100svh, original)" }
+      ],
+      "default": "301"
     },
     {
       "type": "select",

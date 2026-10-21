@@ -3,7 +3,7 @@
     "fc_studio_blank": {
       "type": "fc-pdp-studio-blank",
       "settings": {
-        "hide_section": true,
+        "hide_section": false,
         "background_asset": "hako-studio-301-hero-withbg.png",
         "background_position_x": 50,
         "background_position_y": 80,
@@ -49,6 +49,7 @@
         "body": "Silk diaphragm designed for smooth high-frequency reproduction.",
         "image_asset": "hako-studio-301-tweeter.png",
         "figma_frame": "tweeter",
+        "tweeter_crop": "301",
         "layout": "image_left",
         "gradient_style": "tweeter",
         "gradient_color": "#FFD300"
@@ -207,5 +208,5 @@
       }
     }
   },
-  "order": ["fc_studio_blank", "fc_pdp_studio", "fc_studio_tweeter", "fc_studio_woofer", "fc_studio_features", "fc_studio_io", "fc_studio_specs"]
+  "order": ["fc_pdp_studio", "fc_studio_blank", "fc_studio_tweeter", "fc_studio_woofer", "fc_studio_features", "fc_studio_io", "fc_studio_specs"]
 }
