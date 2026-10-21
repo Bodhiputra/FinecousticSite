@@ -107,11 +107,15 @@
 
 .fc-pdp-studio-features__copy {
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  align-self: stretch;
+  min-height: 100%;
   box-sizing: border-box;
   padding: clamp(28px, 5vw, 56px) clamp(28px, 5vw, 72px);
   background: #000;
+  text-align: left;
 }
 
 .fc-pdp-studio-features__body {
@@ -125,6 +129,17 @@
   letter-spacing: -0.07em;
   color: #fff;
   opacity: 1;
+}
+
+@media screen and (min-width: 990px) {
+  .fc-pdp-studio-features__copy {
+    align-items: center;
+    padding-inline: clamp(40px, 6vw, 80px);
+  }
+
+  .fc-pdp-studio-features__body {
+    max-width: min(680px, 100%);
+  }
 }
 
 @media screen and (max-width: 989px) {

@@ -157,26 +157,21 @@
 }
 
 .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__img {
-  object-position: center 93%;
+  object-position: center 92%;
 }
 
 .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 {
-  min-height: 100svh;
-  min-height: 100dvh;
-  height: auto;
-  overflow-x: hidden;
-  overflow-y: visible;
+  min-height: 0;
+  overflow: hidden;
   background: #000;
 }
 
 .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 .fc-pdp-studio-driver__split {
-  min-height: 100svh;
-  min-height: 100dvh;
-  height: auto;
+  min-height: 0;
 }
 
 .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 .fc-pdp-studio-driver__img {
-  object-position: center 100%;
+  object-position: center 92%;
 }
 
 @media screen and (min-width: 990px) {
@@ -191,8 +186,15 @@
     grid-template-rows: 1fr;
   }
 
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 {
+    min-height: calc(100vw * 640 / 1440);
+    height: calc(100vw * 640 / 1440);
+  }
+
   .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 .fc-pdp-studio-driver__split {
-    grid-template-rows: minmax(100svh, 100svh);
+    min-height: calc(100vw * 640 / 1440);
+    height: calc(100vw * 640 / 1440);
+    grid-template-rows: 1fr;
   }
 
   .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__media {
@@ -201,40 +203,26 @@
     min-height: 0;
   }
 
-  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__copy {
+  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__copy,
+  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__copy {
     min-height: 100%;
     height: 100%;
     align-self: stretch;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
     gap: clamp(12px, calc(100vw * 14 / 1440), 20px);
     padding-block: clamp(16px, 2vw, 28px);
-    background: transparent;
-  }
-
-  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 {
-    background: linear-gradient(
-      44.92deg,
-      #000 78.864%,
-      color-mix(in srgb, var(--fc-driver-grad-accent) 100%, #000) 148.43%
-    );
-  }
-
-  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301.fc-pdp-studio-driver--grad-tweeter .fc-pdp-studio-driver__copy::before,
-  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__copy::before {
-    display: none;
-  }
-
-  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 .fc-pdp-studio-driver__copy {
+    padding-inline: clamp(28px, 5vw, 56px);
     background: #000;
   }
 
-  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__heading {
-    font-size: clamp(32px, 3.33vw, 48px);
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301,
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 {
+    background: #000;
   }
 
-  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__body {
-    font-size: clamp(16px, 1.67vw, 24px);
+  .fc-pdp-studio-driver--figma-woofer {
+    background: #000;
   }
 
   .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__split {
@@ -247,28 +235,23 @@
     align-self: stretch;
   }
 
-  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__copy {
-    min-height: 100%;
-    height: auto;
-    align-self: stretch;
-  }
-
   .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__img {
     object-fit: cover;
     object-position: center center;
   }
+
+  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__heading,
+  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__heading,
+  .fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__body,
+  .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__body {
+    width: 100%;
+    max-width: min(680px, 100%);
+  }
 }
 
 @media screen and (max-width: 989px) {
-  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 {
-    background: linear-gradient(
-      44.92deg,
-      #000 78.864%,
-      color-mix(in srgb, var(--fc-driver-grad-accent) 100%, #000) 148.43%
-    );
-  }
-
-  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 {
+  .fc-pdp-studio-driver--figma-tweeter,
+  .fc-pdp-studio-driver--figma-woofer {
     background: #000;
   }
 
@@ -280,20 +263,12 @@
   }
 
   .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-302 .fc-pdp-studio-driver__media {
-    aspect-ratio: 720 / 900;
+    aspect-ratio: 1440 / 640;
     width: 100%;
     min-height: 0;
     height: auto;
   }
 
-  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__copy {
-    background: transparent;
-  }
-
-  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301.fc-pdp-studio-driver--grad-tweeter .fc-pdp-studio-driver__copy::before,
-  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--tweeter-crop-301 .fc-pdp-studio-driver__copy::before {
-    display: none;
-  }
 
   .fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__media {
     aspect-ratio: 720 / 900;
@@ -363,6 +338,12 @@
   display: none;
 }
 
+/* Studio tweeter / woofer Figma frames — solid black, no yellow gradient */
+.fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__copy::before,
+.fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__copy::before {
+  display: none;
+}
+
 .fc-pdp-studio-driver__copy > * {
   position: relative;
   z-index: 1;
@@ -378,6 +359,16 @@
   text-align: left;
   align-items: flex-start;
   padding-left: clamp(28px, 6vw, 52px);
+}
+
+@media screen and (min-width: 990px) {
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--image_left .fc-pdp-studio-driver__copy,
+  .fc-pdp-studio-driver--figma-tweeter.fc-pdp-studio-driver--image_right .fc-pdp-studio-driver__copy,
+  .fc-pdp-studio-driver--figma-woofer.fc-pdp-studio-driver--image_left .fc-pdp-studio-driver__copy,
+  .fc-pdp-studio-driver--figma-woofer.fc-pdp-studio-driver--image_right .fc-pdp-studio-driver__copy {
+    align-items: center;
+    padding-inline: clamp(28px, 5vw, 56px);
+  }
 }
 
 .fc-pdp-studio-driver__heading {
@@ -406,12 +397,6 @@
   letter-spacing: -0.07em;
   color: #fff;
   opacity: 1;
-}
-
-/* Figma frames: copy uses full half-column (grid boundary = image edge) */
-.fc-pdp-studio-driver--figma-tweeter .fc-pdp-studio-driver__copy,
-.fc-pdp-studio-driver--figma-woofer .fc-pdp-studio-driver__copy {
-  align-items: stretch;
 }
 
 @media screen and (max-width: 989px) {
@@ -446,6 +431,7 @@
 
   .fc-pdp-studio-driver__body {
     font-size: clamp(18px, 4.5vw, 32px);
+    max-width: 36em;
   }
 }
 {% endstylesheet %}
@@ -498,7 +484,7 @@
       "info": "301 uses a shorter frame (tighter top crop). 302 shows more of the art — larger tweeter in frame.",
       "options": [
         { "value": "301", "label": "301 — 1440×392 crop" },
-        { "value": "302", "label": "302 — full viewport (100svh, original)" }
+        { "value": "302", "label": "302 — 1440×640 crop (taller than 301)" }
       ],
       "default": "301"
     },

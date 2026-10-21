@@ -301,8 +301,7 @@ body.gradient {
   max-width: none;
 }
 
-#MainContent .shopify-section.fc-pdp-studio-driver-section:has(.fc-pdp-studio-driver--figma-woofer),
-#MainContent .shopify-section.fc-pdp-studio-driver-section:has(.fc-pdp-studio-driver--tweeter-crop-302) {
+#MainContent .shopify-section.fc-pdp-studio-driver-section:has(.fc-pdp-studio-driver--figma-woofer) {
   min-height: 100svh;
   min-height: 100dvh;
 }

@@ -72,6 +72,17 @@
       assign fc_inbox_block_count = fc_inbox_block_count | plus: 1
     endif
   endfor
+
+  assign fc_frequency_title = section.settings.frequency_title | default: 'Sound Profile'
+  assign fc_frequency_asset = section.settings.frequency_graph_asset | strip
+  if fc_frequency_asset == blank
+    case product.handle
+      when 'hako-studio-301'
+        assign fc_frequency_asset = 'hako-studio-301-frequency-graph.png'
+      when 'hako-studio-302'
+        assign fc_frequency_asset = 'hako-studio-302-frequency-graph.png'
+    endcase
+  endif
 -%}
 
 {%- render 'fc-product-data', product: product -%}
@@ -425,7 +436,7 @@
           {%- if section.settings.show_frequency_graph -%}
             <details class="fc-pdp-studio__acc-box">
               <summary class="fc-pdp-studio__acc-summary">
-                <span class="fc-pdp-studio__acc-label">{{ section.settings.frequency_title | default: 'Frequency Graph' | escape }}</span>
+                <span class="fc-pdp-studio__acc-label">{{ fc_frequency_title | escape }}</span>
                 {%- render 'fc-pdp-studio-acc-glyphs' -%}
               </summary>
               <div class="fc-pdp-studio__acc-panel">
@@ -438,9 +449,19 @@
                       loading: 'lazy',
                       sizes: '(max-width: 989px) 92vw, 472px',
                       widths: '600, 900, 1200, 1600',
-                      alt: section.settings.frequency_title,
+                      alt: fc_frequency_title,
                       class: 'fc-pdp-studio__frequency-img'
                   }}
+                {%- elsif fc_frequency_asset != blank -%}
+                  <img
+                    src="{{ fc_frequency_asset | asset_url }}"
+                    alt="{{ fc_frequency_title | escape }}"
+                    loading="lazy"
+                    decoding="async"
+                    class="fc-pdp-studio__frequency-img"
+                    width="1600"
+                    height="900"
+                  >
                 {%- else -%}
                   <p class="fc-pdp-studio__acc-empty">{{ section.settings.frequency_empty_hint | default: 'Graph coming soon.' | escape }}</p>
                 {%- endif -%}
@@ -1225,19 +1246,25 @@
     {
       "type": "checkbox",
       "id": "show_frequency_graph",
-      "label": "Show frequency graph accordion",
+      "label": "Show Sound Profile accordion",
       "default": false
     },
     {
       "type": "text",
       "id": "frequency_title",
-      "label": "Frequency graph title",
-      "default": "Frequency Graph"
+      "label": "Sound Profile accordion title",
+      "default": "Sound Profile"
     },
     {
       "type": "image_picker",
       "id": "frequency_graph",
-      "label": "Frequency graph image"
+      "label": "Sound Profile image"
+    },
+    {
+      "type": "text",
+      "id": "frequency_graph_asset",
+      "label": "Sound Profile asset filename",
+      "info": "Used when no image is picked (theme asset in /assets)."
     },
     {
       "type": "text",

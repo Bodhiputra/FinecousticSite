@@ -39,7 +39,9 @@
         "inbox_title": "In The Box",
         "inbox_asset": "FBB301_InTheBox.jpg",
         "quick_start_guide_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/HakoStudio301-QSG.pdf?v=1792137249",
-        "show_frequency_graph": false
+        "show_frequency_graph": true,
+        "frequency_title": "Sound Profile",
+        "frequency_graph_asset": "hako-studio-301-frequency-graph.png"
       }
     },
     "fc_studio_tweeter": {
@@ -51,7 +53,7 @@
         "figma_frame": "tweeter",
         "tweeter_crop": "301",
         "layout": "image_left",
-        "gradient_style": "tweeter",
+        "gradient_style": "none",
         "gradient_color": "#FFD300"
       }
     },
@@ -63,7 +65,7 @@
         "image_asset": "hako-studio-301-woofer.png",
         "figma_frame": "woofer",
         "layout": "image_right",
-        "gradient_style": "woofer",
+        "gradient_style": "none",
         "gradient_color": "#FFD300"
       }
     },
