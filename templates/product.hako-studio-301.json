@@ -23,9 +23,25 @@
         "h3": { "type": "highlight", "settings": { "text": "No amps needed" } },
         "h4": { "type": "highlight", "settings": { "text": "Sub out channel" } },
         "h5": { "type": "highlight", "settings": { "text": "4-deg base angle" } },
-        "h6": { "type": "highlight", "settings": { "text": "MDF Cabinet" } }
+        "h6": { "type": "highlight", "settings": { "text": "MDF Cabinet" } },
+        "ret_au": {
+          "type": "retailer",
+          "settings": {
+            "country": "Australia",
+            "name": "Fantech Australia",
+            "url": "https://fantechworld.com.au/"
+          }
+        },
+        "ret_my": {
+          "type": "retailer",
+          "settings": {
+            "country": "Malaysia",
+            "name": "Fantech Malaysia",
+            "url": "https://fantechmalaysia.com.my/"
+          }
+        }
       },
-      "block_order": ["h1", "h2", "h3", "h4", "h5", "h6"],
+      "block_order": ["h1", "h2", "h3", "h4", "h5", "h6", "ret_au", "ret_my"],
       "settings": {
         "purchase_cta": "coming_soon",
         "eyebrow": "Two - Way Active Bookshelf Speaker",
@@ -41,7 +57,9 @@
         "quick_start_guide_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/HakoStudio301-QSG.pdf?v=1792137249",
         "show_frequency_graph": true,
         "frequency_title": "Sound Profile",
-        "frequency_graph_asset": "hako-studio-301-frequency-graph.png"
+        "frequency_graph_asset": "hako-studio-301-frequency-graph.png",
+        "show_local_retailers": true,
+        "local_retailers_title": "Local Retailers"
       }
     },
     "fc_studio_tweeter": {

@@ -8,9 +8,17 @@
         "h3": { "type": "highlight", "settings": { "text": "No amps needed" } },
         "h4": { "type": "highlight", "settings": { "text": "Sub out channel" } },
         "h5": { "type": "highlight", "settings": { "text": "4-deg base angle" } },
-        "h6": { "type": "highlight", "settings": { "text": "High density MDF cabinet" } }
+        "h6": { "type": "highlight", "settings": { "text": "High density MDF cabinet" } },
+        "ret_my": {
+          "type": "retailer",
+          "settings": {
+            "country": "Malaysia",
+            "name": "Fantech Malaysia",
+            "url": "https://fantechmalaysia.com.my/"
+          }
+        }
       },
-      "block_order": ["h1", "h2", "h3", "h4", "h5", "h6"],
+      "block_order": ["h1", "h2", "h3", "h4", "h5", "h6", "ret_my"],
       "settings": {
         "purchase_cta": "coming_soon",
         "eyebrow": "Two - Way Active Bookshelf Speaker",
@@ -26,7 +34,9 @@
         "quick_start_guide_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/HakoStudio302-QSG.pdf?v=1792137248",
         "show_frequency_graph": true,
         "frequency_title": "Sound Profile",
-        "frequency_graph_asset": "hako-studio-302-frequency-graph.png"
+        "frequency_graph_asset": "hako-studio-302-frequency-graph.png",
+        "show_local_retailers": true,
+        "local_retailers_title": "Local Retailers"
       }
     },
     "fc_studio_blank": {

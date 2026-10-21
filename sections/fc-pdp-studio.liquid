@@ -67,11 +67,21 @@
   endif
 
   assign fc_inbox_block_count = 0
+  assign fc_retailer_block_count = 0
   for block in section.blocks
     if block.type == 'inbox_item'
       assign fc_inbox_block_count = fc_inbox_block_count | plus: 1
     endif
+    if block.type == 'retailer'
+      assign fc_retailer_block_count = fc_retailer_block_count | plus: 1
+    endif
   endfor
+
+  assign fc_local_retailers_title = section.settings.local_retailers_title | default: 'Local Retailers'
+  assign fc_show_local_retailers = section.settings.show_local_retailers
+  if fc_show_local_retailers and fc_retailer_block_count == 0
+    assign fc_show_local_retailers = false
+  endif
 
   assign fc_frequency_title = section.settings.frequency_title | default: 'Sound Profile'
   assign fc_frequency_asset = section.settings.frequency_graph_asset | strip
@@ -466,6 +476,72 @@
                   <p class="fc-pdp-studio__acc-empty">{{ section.settings.frequency_empty_hint | default: 'Graph coming soon.' | escape }}</p>
                 {%- endif -%}
               </div>
+              </div>
+            </details>
+          {%- endif -%}
+
+          {%- if fc_show_local_retailers -%}
+            <details class="fc-pdp-studio__acc-box">
+              <summary class="fc-pdp-studio__acc-summary">
+                <span class="fc-pdp-studio__acc-label">{{ fc_local_retailers_title | escape }}</span>
+                {%- render 'fc-pdp-studio-acc-glyphs' -%}
+              </summary>
+              <div class="fc-pdp-studio__acc-panel">
+                <div class="fc-pdp-studio__acc-body fc-pdp-studio__acc-body--retailers">
+                  <ul class="fc-pdp-studio__retailer-list" role="list">
+                    {%- for block in section.blocks -%}
+                      {%- if block.type == 'retailer' -%}
+                        {%- liquid
+                          assign fc_retailer_url = block.settings.url
+                          assign fc_retailer_name = block.settings.name
+                          assign fc_retailer_country = block.settings.country
+                        -%}
+                        {%- if fc_retailer_url != blank and fc_retailer_name != blank -%}
+                          <li class="fc-pdp-studio__retailer-item" {{ block.shopify_attributes }}>
+                            <a
+                              class="fc-pdp-studio__retailer-row"
+                              href="{{ fc_retailer_url | escape }}"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <span class="fc-pdp-studio__retailer-row-hover" aria-hidden="true"></span>
+                              <span class="fc-pdp-studio__retailer-main">
+                                {%- if fc_retailer_country != blank -%}
+                                  <span class="fc-pdp-studio__retailer-country">{{ fc_retailer_country | escape }}</span>
+                                {%- endif -%}
+                                <span class="fc-pdp-studio__retailer-name">{{ fc_retailer_name | escape }}</span>
+                              </span>
+                              <span class="fc-pdp-studio__retailer-go" aria-hidden="true">
+                                <svg
+                                  class="fc-pdp-studio__retailer-go-icon"
+                                  viewBox="0 0 24 24"
+                                  focusable="false"
+                                  aria-hidden="true"
+                                >
+                                  <path
+                                    d="M7 17L17 7M17 7H10M17 7V14"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  />
+                                </svg>
+                              </span>
+                              <span class="visually-hidden">
+                                {{- fc_retailer_name | escape -}}
+                                {%- if fc_retailer_country != blank -%}
+                                  , {{ fc_retailer_country | escape }}
+                                {%- endif -%}
+                                (opens in a new tab)
+                              </span>
+                            </a>
+                          </li>
+                        {%- endif -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </ul>
+                </div>
               </div>
             </details>
           {%- endif -%}
@@ -1114,6 +1190,118 @@
   height: auto;
 }
 
+.fc-pdp-studio__acc-body--retailers {
+  padding: 0;
+}
+
+.fc-pdp-studio__retailer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fc-pdp-studio__retailer-item {
+  margin: 0;
+  position: relative;
+}
+
+/* No rule under the accordion summary; dividers inset to match summary padding (title → glyph) */
+.fc-pdp-studio__retailer-item:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  border-top: 1px solid var(--fc-studio-border);
+  pointer-events: none;
+}
+
+.fc-pdp-studio__retailer-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 72px;
+  padding: 14px 12px;
+  color: #ffffff;
+  text-decoration: none;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.fc-pdp-studio__retailer-row-hover {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.fc-pdp-studio__retailer-row:hover .fc-pdp-studio__retailer-row-hover,
+.fc-pdp-studio__retailer-row:focus-visible .fc-pdp-studio__retailer-row-hover {
+  opacity: 1;
+}
+
+.fc-pdp-studio__retailer-row:focus-visible {
+  outline: 2px solid var(--fc-yellow);
+  outline-offset: -2px;
+}
+
+.fc-pdp-studio__retailer-main {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.fc-pdp-studio__retailer-country {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border: 1px solid var(--fc-yellow);
+  border-radius: 999px;
+  font-family: var(--fc-font);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: var(--fc-studio-copy-tracking, -0.01em);
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.fc-pdp-studio__retailer-name {
+  font-family: var(--fc-font);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: var(--fc-studio-ui-tracking, -0.07em);
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.fc-pdp-studio__retailer-go {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--fc-studio-radius);
+  background: var(--fc-yellow);
+  color: #000000;
+}
+
+.fc-pdp-studio__retailer-go-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
 .fc-pdp-studio__acc-link {
   display: flex;
   align-items: center;
@@ -1267,6 +1455,18 @@
       "info": "Used when no image is picked (theme asset in /assets)."
     },
     {
+      "type": "checkbox",
+      "id": "show_local_retailers",
+      "label": "Show Local Retailers accordion",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "local_retailers_title",
+      "label": "Local Retailers accordion title",
+      "default": "Local Retailers"
+    },
+    {
       "type": "text",
       "id": "qsg_label",
       "label": "Quick start guide label",
@@ -1310,6 +1510,29 @@
           "id": "icon_text",
           "label": "Label",
           "default": "Item"
+        }
+      ]
+    },
+    {
+      "type": "retailer",
+      "name": "Local retailer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "country",
+          "label": "Country",
+          "default": "Country"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Retailer name",
+          "default": "Retailer"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Website URL"
         }
       ]
     }
