@@ -1,0 +1,47 @@
+{%- liquid
+  assign fc_row_country = country
+  assign fc_row_name = name
+  assign fc_row_url = url
+-%}
+{%- if fc_row_url != blank and fc_row_name != blank -%}
+  <li class="fc-pdp-studio__retailer-item"{% if shopify_attributes != blank %} {{ shopify_attributes }}{% endif %}>
+    <a
+      class="fc-pdp-studio__retailer-row"
+      href="{{ fc_row_url | escape }}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span class="fc-pdp-studio__retailer-row-hover" aria-hidden="true"></span>
+      <span class="fc-pdp-studio__retailer-main">
+        {%- if fc_row_country != blank -%}
+          <span class="fc-pdp-studio__retailer-country">{{ fc_row_country | escape }}</span>
+        {%- endif -%}
+        <span class="fc-pdp-studio__retailer-name">{{ fc_row_name | escape }}</span>
+      </span>
+      <span class="fc-pdp-studio__retailer-go" aria-hidden="true">
+        <svg
+          class="fc-pdp-studio__retailer-go-icon"
+          viewBox="0 0 24 24"
+          focusable="false"
+          aria-hidden="true"
+        >
+          <path
+            d="M7 17L17 7M17 7H10M17 7V14"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+      <span class="visually-hidden">
+        {{- fc_row_name | escape -}}
+        {%- if fc_row_country != blank -%}
+          , {{ fc_row_country | escape }}
+        {%- endif -%}
+        (opens in a new tab)
+      </span>
+    </a>
+  </li>
+{%- endif -%}

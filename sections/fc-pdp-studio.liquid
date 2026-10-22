@@ -78,8 +78,19 @@
   endfor
 
   assign fc_local_retailers_title = section.settings.local_retailers_title | default: 'Local Retailers'
+
+  assign fc_retailer_use_defaults = false
+  if fc_retailer_block_count == 0
+    case product.handle
+      when 'hako-studio-301', 'hako-studio-302'
+        assign fc_retailer_use_defaults = true
+    endcase
+  endif
+
   assign fc_show_local_retailers = section.settings.show_local_retailers
-  if fc_show_local_retailers and fc_retailer_block_count == 0
+  if fc_retailer_use_defaults
+    assign fc_show_local_retailers = true
+  elsif fc_show_local_retailers and fc_retailer_block_count == 0
     assign fc_show_local_retailers = false
   endif
 
@@ -489,57 +500,35 @@
               <div class="fc-pdp-studio__acc-panel">
                 <div class="fc-pdp-studio__acc-body fc-pdp-studio__acc-body--retailers">
                   <ul class="fc-pdp-studio__retailer-list" role="list">
-                    {%- for block in section.blocks -%}
-                      {%- if block.type == 'retailer' -%}
-                        {%- liquid
-                          assign fc_retailer_url = block.settings.url
-                          assign fc_retailer_name = block.settings.name
-                          assign fc_retailer_country = block.settings.country
-                        -%}
-                        {%- if fc_retailer_url != blank and fc_retailer_name != blank -%}
-                          <li class="fc-pdp-studio__retailer-item" {{ block.shopify_attributes }}>
-                            <a
-                              class="fc-pdp-studio__retailer-row"
-                              href="{{ fc_retailer_url | escape }}"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <span class="fc-pdp-studio__retailer-row-hover" aria-hidden="true"></span>
-                              <span class="fc-pdp-studio__retailer-main">
-                                {%- if fc_retailer_country != blank -%}
-                                  <span class="fc-pdp-studio__retailer-country">{{ fc_retailer_country | escape }}</span>
-                                {%- endif -%}
-                                <span class="fc-pdp-studio__retailer-name">{{ fc_retailer_name | escape }}</span>
-                              </span>
-                              <span class="fc-pdp-studio__retailer-go" aria-hidden="true">
-                                <svg
-                                  class="fc-pdp-studio__retailer-go-icon"
-                                  viewBox="0 0 24 24"
-                                  focusable="false"
-                                  aria-hidden="true"
-                                >
-                                  <path
-                                    d="M7 17L17 7M17 7H10M17 7V14"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                  />
-                                </svg>
-                              </span>
-                              <span class="visually-hidden">
-                                {{- fc_retailer_name | escape -}}
-                                {%- if fc_retailer_country != blank -%}
-                                  , {{ fc_retailer_country | escape }}
-                                {%- endif -%}
-                                (opens in a new tab)
-                              </span>
-                            </a>
-                          </li>
+                    {%- if fc_retailer_block_count > 0 -%}
+                      {%- for block in section.blocks -%}
+                        {%- if block.type == 'retailer' -%}
+                          {%- render 'fc-pdp-studio-retailer-row',
+                            country: block.settings.country,
+                            name: block.settings.name,
+                            url: block.settings.url,
+                            shopify_attributes: block.shopify_attributes
+                          -%}
                         {%- endif -%}
-                      {%- endif -%}
-                    {%- endfor -%}
+                      {%- endfor -%}
+                    {%- elsif product.handle == 'hako-studio-301' -%}
+                      {%- render 'fc-pdp-studio-retailer-row',
+                        country: 'Australia',
+                        name: 'Fantech Australia',
+                        url: 'https://fantechworld.com.au/'
+                      -%}
+                      {%- render 'fc-pdp-studio-retailer-row',
+                        country: 'Malaysia',
+                        name: 'Fantech Malaysia',
+                        url: 'https://fantechmalaysia.com.my/'
+                      -%}
+                    {%- elsif product.handle == 'hako-studio-302' -%}
+                      {%- render 'fc-pdp-studio-retailer-row',
+                        country: 'Malaysia',
+                        name: 'Fantech Malaysia',
+                        url: 'https://fantechmalaysia.com.my/'
+                      -%}
+                    {%- endif -%}
                   </ul>
                 </div>
               </div>
