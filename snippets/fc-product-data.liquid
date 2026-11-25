@@ -1,4 +1,9 @@
 {%- liquid
+  capture fc_data_purchase_mode_str
+    render 'fc-product-purchase-mode', product: product, section_purchase_cta: ''
+  endcapture
+  assign fc_data_purchase_mode = fc_data_purchase_mode_str | strip
+
   assign has_color = false
   assign color_option_pos = 0
   for option in product.options

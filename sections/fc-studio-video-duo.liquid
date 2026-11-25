@@ -1,0 +1,186 @@
+{{ 'fc-nomad-video-duo.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign product_a = all_products[section.settings.product_handle_a]
+  assign product_b = all_products[section.settings.product_handle_b]
+  assign url_a = product_a.url | default: '/products/hako-studio-301'
+  assign url_b = product_b.url | default: '/products/hako-studio-302'
+  if section.settings.link_a != blank
+    assign url_a = section.settings.link_a
+  endif
+  if section.settings.link_b != blank
+    assign url_b = section.settings.link_b
+  endif
+  assign label_a = section.settings.label_a | default: 'Hako Studio 301'
+  assign label_b = section.settings.label_b | default: 'Hako Studio 302'
+-%}
+
+<section
+  class="fc-nomad-video-duo fc-studio-video-duo"
+  id="fc-studio-video-duo-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="fc-nomad-video-duo__grid">
+    <a class="fc-nomad-video-duo__panel fc-studio-video-duo__panel--301" href="{{ url_a }}" aria-label="{{ label_a | escape }}">
+      <div class="fc-nomad-video-duo__media">
+        {%- if section.settings.video_a != blank -%}
+          {{ section.settings.video_a | video_tag:
+            class: 'fc-nomad-video-duo__video',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            playsinline: true,
+            controls: false,
+            preload: 'metadata'
+          }}
+        {%- elsif section.settings.video_a_url != blank -%}
+          <video
+            class="fc-nomad-video-duo__video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src="{{ section.settings.video_a_url | escape }}" type="video/mp4">
+          </video>
+        {%- else -%}
+          <div class="fc-nomad-video-duo__placeholder" aria-hidden="true"></div>
+        {%- endif -%}
+      </div>
+      <span class="fc-nomad-video-duo__label">{{ label_a | escape }}</span>
+    </a>
+
+    <a class="fc-nomad-video-duo__panel fc-studio-video-duo__panel--302" href="{{ url_b }}" aria-label="{{ label_b | escape }}">
+      <div class="fc-nomad-video-duo__media">
+        {%- if section.settings.video_b != blank -%}
+          {{ section.settings.video_b | video_tag:
+            class: 'fc-nomad-video-duo__video',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            playsinline: true,
+            controls: false,
+            preload: 'metadata'
+          }}
+        {%- elsif section.settings.video_b_url != blank -%}
+          <video
+            class="fc-nomad-video-duo__video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src="{{ section.settings.video_b_url | escape }}" type="video/mp4">
+          </video>
+        {%- else -%}
+          <div class="fc-nomad-video-duo__placeholder" aria-hidden="true"></div>
+        {%- endif -%}
+      </div>
+      <span class="fc-nomad-video-duo__label">{{ label_b | escape }}</span>
+    </a>
+  </div>
+</section>
+
+{% stylesheet %}
+  .fc-studio-video-duo .fc-nomad-video-duo__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 70%;
+  }
+
+  .fc-studio-video-duo__panel--302 .fc-nomad-video-duo__video {
+    object-position: center 60%;
+  }
+
+  @media screen and (max-width: 749px) {
+    .fc-nomad-video-duo-section.shopify-section:has(.fc-studio-video-duo) {
+      min-height: 0;
+    }
+
+    .fc-studio-video-duo.fc-nomad-video-duo {
+      min-height: 0;
+    }
+
+    .fc-studio-video-duo .fc-nomad-video-duo__panel {
+      min-height: min(72svh, 560px);
+      min-height: min(72dvh, 560px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Studio video duo",
+  "tag": "section",
+  "class": "fc-nomad-video-duo-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Side-by-side Hako Studio 301 / 302 autoplay videos. Add MP4 URLs from Shopify Files or pick uploaded videos."
+    },
+    {
+      "type": "video",
+      "id": "video_a",
+      "label": "301 video (Shopify Files)"
+    },
+    {
+      "type": "text",
+      "id": "video_a_url",
+      "label": "301 video URL override",
+      "info": "CDN URL if not using the picker above."
+    },
+    {
+      "type": "text",
+      "id": "product_handle_a",
+      "label": "301 product handle",
+      "default": "hako-studio-301"
+    },
+    {
+      "type": "url",
+      "id": "link_a",
+      "label": "301 link override"
+    },
+    {
+      "type": "text",
+      "id": "label_a",
+      "label": "301 label",
+      "default": "Hako Studio 301"
+    },
+    {
+      "type": "video",
+      "id": "video_b",
+      "label": "302 video (Shopify Files)"
+    },
+    {
+      "type": "text",
+      "id": "video_b_url",
+      "label": "302 video URL override"
+    },
+    {
+      "type": "text",
+      "id": "product_handle_b",
+      "label": "302 product handle",
+      "default": "hako-studio-302"
+    },
+    {
+      "type": "url",
+      "id": "link_b",
+      "label": "302 link override"
+    },
+    {
+      "type": "text",
+      "id": "label_b",
+      "label": "302 label",
+      "default": "Hako Studio 302"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Studio video duo"
+    }
+  ]
+}
+{% endschema %}

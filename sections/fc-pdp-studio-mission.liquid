@@ -1,0 +1,139 @@
+{%- if section.settings.hide_section -%}
+  <style>
+    #shopify-section-{{ section.id }} {
+      display: none !important;
+    }
+  </style>
+{%- else -%}
+
+{%- liquid
+  assign fc_body = section.settings.body
+  if fc_body == blank
+    assign fc_body = '<p>Hako Studio is designed to elevate your creative space, making music and everyday listening a more engaging part of your setup. Whether you’re working or taking a break in between, the right sound can make your time feel different.</p>'
+  endif
+-%}
+
+<section
+  class="fc-pdp-studio-mission"
+  id="fc-pdp-studio-mission-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  aria-label="{{ section.settings.accessible_label | default: 'About Hako Studio' | escape }}"
+>
+  <div class="fc-pdp-studio-mission__inner rte">
+    {{ fc_body }}
+  </div>
+</section>
+
+{%- endif -%}
+
+{% stylesheet %}
+.fc-pdp-studio-mission-section.shopify-section {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Mission copy band — ½ viewport height */
+.fc-pdp-studio-mission {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 50svh;
+  min-height: 50dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 3vh, 32px) var(--fc-page-gutter, clamp(16px, 4vw, 64px));
+  background: #000000;
+}
+
+.fc-pdp-studio-mission__inner {
+  width: 100%;
+  max-width: 603px;
+  margin: 0 auto;
+  font-family: var(--fc-font, 'Alte Haas Grotesk', sans-serif);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 36px;
+  line-height: normal;
+  letter-spacing: -2.52px;
+  text-align: center;
+  color: #fff;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  text-wrap: pretty;
+}
+
+#MainContent .fc-pdp-studio-mission__inner.rte,
+#MainContent .fc-pdp-studio-mission__inner.rte p {
+  margin: 0;
+  text-align: center;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: normal;
+  letter-spacing: -2.52px;
+  color: #ffffff;
+}
+
+@media screen and (max-width: 989px) {
+  .fc-pdp-studio-mission__inner,
+  #MainContent .fc-pdp-studio-mission__inner.rte p {
+    font-size: clamp(24px, 4.2vw, 32px);
+    letter-spacing: -0.07em;
+    max-width: min(603px, 88vw);
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .fc-pdp-studio-mission {
+    padding: clamp(16px, 4vw, 28px) var(--fc-page-gutter-sm, clamp(12px, 3vw, 40px));
+  }
+
+  .fc-pdp-studio-mission__inner,
+  #MainContent .fc-pdp-studio-mission__inner.rte p {
+    font-size: clamp(20px, 5vw, 28px);
+    letter-spacing: -0.06em;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FC PDP Studio mission",
+  "tag": "section",
+  "class": "fc-pdp-studio-mission-section fc-section--flush",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Short centered copy band — place after the main Studio preview video."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_section",
+      "label": "Hide section",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Text",
+      "default": "<p>Hako Studio is designed to elevate your creative space, making music and everyday listening a more engaging part of your setup. Whether you’re working or taking a break in between, the right sound can make your time feel different.</p>"
+    },
+    {
+      "type": "paragraph",
+      "content": "Section height is 50% of the viewport (50vh). Text is full white (#fff)."
+    },
+    {
+      "type": "text",
+      "id": "accessible_label",
+      "label": "Accessible label",
+      "default": "About Hako Studio"
+    }
+  ],
+  "presets": [
+    {
+      "name": "FC PDP Studio mission"
+    }
+  ]
+}
+{% endschema %}

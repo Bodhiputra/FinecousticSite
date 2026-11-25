@@ -10,6 +10,9 @@
   if fc_layout == 'studio_302' and fc_composite_asset == blank and section.settings.composite_image == blank
     assign fc_composite_asset = 'hako-studio-302-io-frame.png'
   endif
+  if fc_layout == 'studio_301' and fc_composite_asset == blank and section.settings.composite_image == blank
+    assign fc_composite_asset = 'hako-studio-301-io-frame.png'
+  endif
   if fc_layout == 'studio_302'
     assign fc_layout_class = 'fc-pdp-studio-io__frame--studio-302'
   else
@@ -25,44 +28,35 @@
   <div class="fc-pdp-studio-io__wrap">
     {%- if fc_composite != blank or fc_composite_asset != blank -%}
       <div class="fc-pdp-studio-io__frame fc-pdp-studio-io__frame--composite {{ fc_layout_class }}">
+        <h2 class="fc-pdp-studio-io__title fc-pdp-studio-io__title--composite">{{ fc_title | escape }}</h2>
         {%- if fc_composite != blank -%}
-          {{
-            fc_composite
-            | image_url: width: 2880
-            | image_tag:
-              loading: 'lazy',
-              sizes: '(min-width: 1440px) 1440px, 100vw',
-              widths: '800, 1200, 1440, 2160, 2880',
-              alt: fc_title,
-              class: 'fc-pdp-studio-io__composite'
-          }}
+          <div class="fc-pdp-studio-io__composite-crop fc-pdp-studio-io__composite-crop--picker">
+            {{
+              fc_composite
+              | image_url: width: 2880
+              | image_tag:
+                loading: 'lazy',
+                sizes: '(min-width: 1440px) 1440px, 100vw',
+                widths: '800, 1200, 1440, 2160, 2880',
+                alt: '',
+                class: 'fc-pdp-studio-io__composite'
+            }}
+          </div>
         {%- else -%}
-          {%- if fc_layout == 'studio_302' -%}
-            {%- assign fc_io_1x = fc_composite_asset -%}
-            {%- assign fc_io_2x = fc_composite_asset | replace: '.png', '@2x.png' | replace: '.jpg', '@2x.jpg' -%}
-            <div class="fc-pdp-studio-io__composite-crop">
-              <img
-                class="fc-pdp-studio-io__composite"
-                src="{{ fc_io_1x | asset_url }}"
-                srcset="{{ fc_io_1x | asset_url }} 1x, {{ fc_io_2x | asset_url }} 2x"
-                alt="{{ fc_title | escape }}"
-                loading="lazy"
-                decoding="async"
-                width="1440"
-                height="839"
-              >
-            </div>
-          {%- else -%}
+          {%- assign fc_io_1x = fc_composite_asset -%}
+          {%- assign fc_io_2x = fc_composite_asset | replace: '.png', '@2x.png' | replace: '.jpg', '@2x.jpg' -%}
+          <div class="fc-pdp-studio-io__composite-crop">
             <img
               class="fc-pdp-studio-io__composite"
-              src="{{ fc_composite_asset | asset_url }}"
-              alt="{{ fc_title | escape }}"
+              src="{{ fc_io_1x | asset_url }}"
+              srcset="{{ fc_io_1x | asset_url }} 1x, {{ fc_io_2x | asset_url }} 2x"
+              alt=""
               loading="lazy"
               decoding="async"
               width="1440"
               height="900"
             >
-          {%- endif -%}
+          </div>
         {%- endif -%}
       </div>
     {%- else -%}
@@ -145,13 +139,28 @@
 </section>
 
 {% stylesheet %}
+/* Match fc-pdp-studio-specs__title — HTML heading replaces Figma title baked into composite PNG */
+.fc-pdp-studio-io__title--composite {
+  display: block;
+  position: static;
+  pointer-events: auto;
+  margin: -10px 0 clamp(36px, 6vh, 56px);
+  padding: 0;
+  text-align: center;
+  font-family: var(--fc-font);
+  font-size: clamp(26px, 3.33vw, 48px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.07em;
+  color: #fff;
+}
+
 /* Figma frame 12122:4847 — one artboard, top-aligned in section (not vertically centered in 100svh) */
 .fc-pdp-studio-io {
   box-sizing: border-box;
   width: 100%;
   background: #000;
-  padding: calc(var(--fc-nav-clearance, 72px) + var(--fc-pdp-section-title-gap, 24px)) clamp(12px, 2vw, 24px)
-    clamp(24px, 4vh, 40px);
+  padding: 48px clamp(12px, 2vw, 24px) clamp(24px, 4vh, 40px);
 }
 
 .fc-pdp-studio-io__wrap {
@@ -168,7 +177,11 @@
 }
 
 .fc-pdp-studio-io__frame--composite {
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  aspect-ratio: auto;
+  height: auto;
 }
 
 .fc-pdp-studio-io__composite {
@@ -179,15 +192,26 @@
   object-fit: contain;
 }
 
-/* 302 composite: Figma 12122:4865 — full 1440×900 export, nav cropped in CSS (no upscale) */
+/*
+  301/302 composite (Figma 1440×900): crop mock nav + baked title; diagram only in PNG.
+  --fc-io-composite-crop-top: px from artboard top (nav ~61 + title ~83).
+*/
+.fc-pdp-studio-io__frame--composite {
+  --fc-io-composite-art-h: 900;
+  --fc-io-composite-crop-top: 144;
+  --fc-io-composite-visible-h: 756;
+}
+
+/* 302: baked title sits slightly lower (Figma y≈97 + h≈59 → crop below 156) */
 .fc-pdp-studio-io__frame--composite.fc-pdp-studio-io__frame--studio-302 {
-  aspect-ratio: 1440 / 839;
+  --fc-io-composite-crop-top: 156;
+  --fc-io-composite-visible-h: 744;
 }
 
 .fc-pdp-studio-io__composite-crop {
   position: relative;
   width: 100%;
-  aspect-ratio: 1440 / 839;
+  aspect-ratio: 1440 / var(--fc-io-composite-visible-h);
   overflow: hidden;
 }
 
@@ -196,14 +220,15 @@
   left: 0;
   top: 0;
   width: 100%;
-  height: calc(100% * 900 / 839);
+  height: calc(100% * var(--fc-io-composite-art-h) / var(--fc-io-composite-visible-h));
   max-width: none;
   aspect-ratio: auto;
   object-fit: cover;
   object-position: top center;
-  transform: translateY(calc(-61 / 900 * 100%));
+  transform: translateY(calc(-1 * var(--fc-io-composite-crop-top) / var(--fc-io-composite-art-h) * 100%));
 }
 
+.fc-pdp-studio-io:has(.fc-pdp-studio-io__frame--composite.fc-pdp-studio-io__frame--studio-301),
 .fc-pdp-studio-io:has(.fc-pdp-studio-io__frame--composite.fc-pdp-studio-io__frame--studio-302) {
   padding-top: clamp(20px, 3vh, 36px);
 }
@@ -407,15 +432,71 @@
   max-width: 16%;
 }
 
-@media screen and (max-width: 749px) {
-  .fc-pdp-studio-io__label {
-    white-space: normal;
-    max-width: 38%;
-    font-size: 10px;
+@media screen and (max-width: 989px) {
+  .fc-pdp-studio-io:has(.fc-pdp-studio-io__frame--composite) {
+    padding-bottom: clamp(4px, 1.2vw, 10px);
   }
 
-  .fc-pdp-studio-io__label--sub {
-    max-width: 22%;
+  .fc-pdp-studio-io__title--composite {
+    font-size: clamp(22px, 6.5vw, 32px);
+    margin-top: -10px;
+    margin-bottom: clamp(16px, 4vw, 24px);
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .fc-pdp-studio-io {
+    padding-top: 48px;
+    padding-bottom: clamp(4px, 1.2vw, 10px);
+    padding-inline: clamp(12px, 4vw, 20px);
+  }
+
+  .fc-pdp-studio-io__frame:not(.fc-pdp-studio-io__frame--composite) {
+    position: static;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(6px, 2vw, 10px);
+    row-gap: clamp(12px, 3vw, 18px);
+    aspect-ratio: auto;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .fc-pdp-studio-io__frame:not(.fc-pdp-studio-io__frame--composite) .fc-pdp-studio-io__title {
+    position: static;
+    grid-column: 1 / -1;
+    padding: 0;
+    font-size: clamp(22px, 6.5vw, 32px);
+    text-align: center;
+  }
+
+  .fc-pdp-studio-io__frame:not(.fc-pdp-studio-io__frame--composite) .fc-pdp-studio-io__lines,
+  .fc-pdp-studio-io__frame:not(.fc-pdp-studio-io__frame--composite) .fc-pdp-studio-io__labels {
+    display: none;
+  }
+
+  .fc-pdp-studio-io__frame:not(.fc-pdp-studio-io__frame--composite) .fc-pdp-studio-io__photo {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+    max-width: none;
+    margin: 0;
+    aspect-ratio: auto;
+  }
+
+  .fc-pdp-studio-io__frame:not(.fc-pdp-studio-io__frame--composite) .fc-pdp-studio-io__img {
+    position: static;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .fc-pdp-studio-io__frame--composite .fc-pdp-studio-io__composite,
+  .fc-pdp-studio-io__frame--composite .fc-pdp-studio-io__composite-crop {
+    width: 100%;
   }
 }
 {% endstylesheet %}
@@ -444,7 +525,7 @@
     },
     {
       "type": "paragraph",
-      "content": "301: layered layout (Figma 12122:4847). 302: use composite asset hako-studio-302-io-frame.png (Figma 12122:4865, nav cropped) for a clean match."
+      "content": "301 & 302: single composite PNG from Figma (12122:4847 / 12122:4865). Defaults: hako-studio-301-io-frame.png, hako-studio-302-io-frame.png. Mock nav is cropped in CSS. Leave side/back assets empty when using composite."
     },
     {
       "type": "image_picker",

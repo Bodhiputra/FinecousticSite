@@ -1,0 +1,261 @@
+{%- liquid
+  assign fc_alt = section.settings.image_alt | default: 'Hako Studio black speakers'
+  assign fc_image = section.settings.image
+  assign fc_asset = section.settings.image_asset | strip
+  if fc_asset == blank and fc_image == blank
+    assign fc_asset = 'landing-page-black-2.png'
+  endif
+
+  assign fc_line_1 = section.settings.line_1 | default: 'Not all setups'
+  assign fc_line_2 = section.settings.line_2 | default: 'use the same'
+  assign fc_line_2_bold = section.settings.line_2_bold | default: 'shade.'
+  assign fc_btn_label = section.settings.button_label | default: 'Hako Studio in Black'
+  assign fc_handle = section.settings.product_handle | default: 'hako-studio-302'
+  assign fc_product = all_products[fc_handle]
+  assign fc_black_id = blank
+
+  if fc_product != blank
+    assign fc_color_pos = -1
+    for option in fc_product.options
+      assign fc_option_down = option | downcase
+      if fc_option_down == 'color' or fc_option_down == 'colour'
+        assign fc_color_pos = forloop.index0
+      endif
+    endfor
+    if fc_color_pos >= 0
+      for variant in fc_product.variants
+        if fc_black_id == blank
+          assign fc_color_key = variant.options[fc_color_pos] | downcase | strip
+          if fc_color_key == 'black'
+            assign fc_black_id = variant.id
+          endif
+        endif
+      endfor
+    endif
+  endif
+
+  assign fc_btn_url = 'https://www.finecoustic.com/products/' | append: fc_handle
+  if fc_black_id != blank
+    assign fc_btn_url = fc_btn_url | append: '?variant=' | append: fc_black_id
+  endif
+-%}
+
+<section
+  class="fc-home-black-frame"
+  id="fc-home-black-frame-{{ section.id }}"
+  aria-label="{{ fc_alt | escape }}"
+>
+  {%- if fc_image != blank -%}
+    {{
+      fc_image
+      | image_url: width: 2880
+      | image_tag:
+        class: 'fc-home-black-frame__img',
+        loading: 'lazy',
+        widths: '800, 1200, 1600, 2048, 2880',
+        sizes: '100vw',
+        alt: fc_alt,
+        width: 2880,
+        height: 1800
+    }}
+  {%- elsif fc_asset != blank -%}
+    <img
+      class="fc-home-black-frame__img"
+      src="{{ fc_asset | asset_url }}"
+      alt="{{ fc_alt | escape }}"
+      loading="lazy"
+      decoding="async"
+      width="2880"
+      height="1800"
+    >
+  {%- endif -%}
+
+  <div class="fc-home-black-frame__copy">
+    <h2 class="fc-home-black-frame__title">
+      <span class="fc-home-black-frame__line">{{ fc_line_1 | escape }}</span>
+      <span class="fc-home-black-frame__line">
+        {{ fc_line_2 | escape }} <strong>{{ fc_line_2_bold | escape }}</strong>
+      </span>
+    </h2>
+    <a class="fc-home-black-frame__cta" href="{{ fc_btn_url }}">{{ fc_btn_label | escape }}</a>
+  </div>
+</section>
+
+{% stylesheet %}
+.fc-home-black-frame {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  width: 100vw;
+  max-width: 100vw;
+  height: 100svh;
+  height: 100dvh;
+  max-height: 100svh;
+  max-height: 100dvh;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  overflow: hidden;
+  background: #000000;
+}
+
+.fc-home-black-frame__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 70%;
+}
+
+.fc-home-black-frame__copy {
+  position: absolute;
+  z-index: 1;
+  left: calc(8.33% + 11px);
+  top: calc(33.33% + 57px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 34px;
+  max-width: min(520px, calc(50% - 24px));
+}
+
+.fc-home-black-frame__title {
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--fc-font, 'Alte Haas Grotesk', sans-serif);
+  font-weight: 400;
+  font-size: 48px;
+  line-height: normal;
+  letter-spacing: -12px;
+}
+
+.fc-home-black-frame__line {
+  display: block;
+}
+
+.fc-home-black-frame__title strong {
+  font-weight: 700;
+}
+
+.fc-home-black-frame__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 72px;
+  padding: 15px 32px;
+  border: 1px solid #ffd300;
+  border-radius: 4px;
+  background: transparent;
+  color: #ffffff;
+  font-family: var(--fc-font, 'Alte Haas Grotesk', sans-serif);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -1.4px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.fc-home-black-frame__cta:hover {
+  background: #ffd300;
+  color: #000000;
+}
+
+.fc-home-black-frame__cta:focus-visible {
+  outline: 2px solid #ffd300;
+  outline-offset: 3px;
+}
+
+@media screen and (max-width: 749px) {
+  .fc-home-black-frame__copy {
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    gap: 20px;
+    max-width: calc(100% - 32px);
+  }
+
+  .fc-home-black-frame__title {
+    font-size: 28px;
+    letter-spacing: -1.6px;
+  }
+
+  .fc-home-black-frame__cta {
+    height: 52px;
+    padding: 10px 20px;
+    font-size: 16px;
+    letter-spacing: -0.8px;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Studio black frame",
+  "tag": "section",
+  "class": "fc-home-black-frame-section fc-section--flush-top",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Full-width photo under the first homepage hero. The button opens Hako Studio 302 with Black selected."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "Theme image file",
+      "default": "landing-page-black-2.png",
+      "info": "Used only when Image is empty. File must be in the theme assets folder."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image description",
+      "default": "Hako Studio black speakers"
+    },
+    {
+      "type": "text",
+      "id": "line_1",
+      "label": "Heading line 1",
+      "default": "Not all setups"
+    },
+    {
+      "type": "text",
+      "id": "line_2",
+      "label": "Heading line 2",
+      "default": "use the same"
+    },
+    {
+      "type": "text",
+      "id": "line_2_bold",
+      "label": "Heading line 2 — bold",
+      "default": "shade."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Hako Studio in Black"
+    },
+    {
+      "type": "text",
+      "id": "product_handle",
+      "label": "Product handle",
+      "default": "hako-studio-302",
+      "info": "The button adds ?variant= for this product's Black color."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Studio black frame"
+    }
+  ]
+}
+{% endschema %}

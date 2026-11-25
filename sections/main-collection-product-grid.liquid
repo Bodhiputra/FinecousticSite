@@ -408,6 +408,12 @@
       assign fc_variant_id = product.first_available_variant.id | default: product.variants.first.id
       assign fc_card_variant = product.first_available_variant | default: product.variants.first
       assign fc_card_available = product.available
+      assign fc_card_image = product.featured_image
+      if fc_card_variant.featured_media
+        assign fc_card_image = fc_card_variant.featured_media.preview_image
+      elsif fc_card_variant.image
+        assign fc_card_image = fc_card_variant.image
+      endif
     -%}
     <div class="fc-card"
       data-product-id="{{ product.id }}"
@@ -415,12 +421,99 @@
       data-url="{{ product.url }}">
 
       <div class="fc-card__image">
-        {%- if product.featured_image -%}
+        {%- if fc_card_image -%}
           {%- if forloop.index <= 4 -%}
-            {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'eager', class: 'fc-card__img' }}
+            {{ fc_card_image | image_url: width: 600 | image_tag: loading: 'eager', class: 'fc-card__img' }}
           {%- else -%}
-            {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img' }}
+            {{ fc_card_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'fc-card__img' }}
           {%- endif -%}
+        {%- endif -%}
+
+        {%- liquid
+          assign fc_color_pos = -1
+          for option in product.options
+            assign fc_option_down = option | downcase
+            if fc_option_down == 'color' or fc_option_down == 'colour'
+              assign fc_color_pos = forloop.index0
+            endif
+          endfor
+
+          assign fc_color_count = 0
+          assign fc_seen_colors = '|'
+          if fc_color_pos >= 0
+            for v in product.variants
+              assign fc_color_key = v.options[fc_color_pos] | downcase | strip
+              assign fc_color_token = '|' | append: fc_color_key | append: '|'
+              unless fc_seen_colors contains fc_color_token
+                assign fc_seen_colors = fc_seen_colors | append: fc_color_key | append: '|'
+                assign fc_color_count = fc_color_count | plus: 1
+              endunless
+            endfor
+          endif
+
+          assign fc_selected_color = ''
+          if fc_color_pos >= 0 and fc_card_variant
+            assign fc_selected_color = fc_card_variant.options[fc_color_pos] | downcase | strip
+          endif
+        -%}
+        {%- if fc_color_count > 1 -%}
+          <div class="fc-card__colors" role="group" aria-label="Color">
+            {%- assign fc_seen_colors = '|' -%}
+            {%- for v in product.variants -%}
+              {%- liquid
+                assign fc_color_name = v.options[fc_color_pos]
+                assign fc_color_key = fc_color_name | downcase | strip
+                assign fc_color_token = '|' | append: fc_color_key | append: '|'
+              -%}
+              {%- unless fc_seen_colors contains fc_color_token -%}
+                {%- liquid
+                  assign fc_seen_colors = fc_seen_colors | append: fc_color_key | append: '|'
+                  assign fc_swatch_hex = '#666666'
+                  case fc_color_key
+                    when 'black'
+                      assign fc_swatch_hex = '#1a1a1a'
+                    when 'white'
+                      assign fc_swatch_hex = '#f2f2f2'
+                    when 'walnut', 'wood'
+                      assign fc_swatch_hex = '#6b4423'
+                    when 'grey', 'gray'
+                      assign fc_swatch_hex = '#8a8a8a'
+                  endcase
+                  assign fc_swatch_image = blank
+                  if v.featured_media
+                    assign fc_swatch_image = v.featured_media.preview_image
+                  elsif v.image
+                    assign fc_swatch_image = v.image
+                  endif
+                  assign fc_swatch_cart_qty = 0
+                  for item in cart.items
+                    if item.variant_id == v.id
+                      assign fc_swatch_cart_qty = fc_swatch_cart_qty | plus: item.quantity
+                    endif
+                  endfor
+                  assign fc_swatch_selected = false
+                  if fc_color_key == fc_selected_color
+                    assign fc_swatch_selected = true
+                  endif
+                -%}
+                <button
+                  type="button"
+                  class="fc-card__color{% if fc_swatch_selected %} is-selected{% endif %}{% unless v.available %} is-unavailable{% endunless %}"
+                  data-fc-color-variant="{{ v.id }}"
+                  data-price="{{ v.price | money | escape }}"
+                  data-cart-qty="{{ fc_swatch_cart_qty }}"
+                  data-url="{{ product.url }}?variant={{ v.id }}"
+                  {% if fc_swatch_image %}data-image="{{ fc_swatch_image | image_url: width: 600 }}"{% endif %}
+                  aria-pressed="{% if fc_swatch_selected %}true{% else %}false{% endif %}"
+                  aria-label="{{ fc_color_name | escape }}"
+                  title="{{ fc_color_name | escape }}"
+                  style="--fc-swatch: {{ fc_swatch_hex }};"
+                >
+                  <span class="fc-card__color-fill" aria-hidden="true"></span>
+                </button>
+              {%- endunless -%}
+            {%- endfor -%}
+          </div>
         {%- endif -%}
       </div>
 

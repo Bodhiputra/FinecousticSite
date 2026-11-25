@@ -1,0 +1,49 @@
+{%- comment -%}
+  Fresh purchase_mode for Section Rendering API (?sections=fc_purchase_mode_bridge).
+  Not in template order — no visible output on full page load.
+{%- endcomment -%}
+{%- capture fc_pm -%}
+  {%- render 'fc-product-purchase-mode', product: product, section_purchase_cta: section.settings.section_purchase_cta -%}
+{%- endcapture -%}
+<div
+  class="fc-purchase-mode-bridge"
+  data-fc-purchase-mode="{{ fc_pm | strip | escape }}"
+  hidden
+></div>
+
+{% stylesheet %}
+.fc-purchase-mode-bridge-section.shopify-section {
+  display: none !important;
+  margin: 0;
+  padding: 0;
+  min-height: 0;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FC purchase mode bridge",
+  "tag": "section",
+  "class": "fc-purchase-mode-bridge-section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "section_purchase_cta",
+      "label": "PDP fallback (if metafield empty)",
+      "default": "coming_soon",
+      "options": [
+        { "value": "add_to_bag", "label": "Add to bag" },
+        { "value": "coming_soon", "label": "Coming soon" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FC purchase mode bridge"
+    }
+  ]
+}
+{% endschema %}

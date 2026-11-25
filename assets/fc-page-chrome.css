@@ -1,3 +1,8 @@
+/* Prevent 100vw full-bleed sections from causing horizontal scroll / header clip on mobile */
+html {
+  overflow-x: clip;
+}
+
 /* ── Announcement bar — full width, no padding ── */
 .announcement-bar-section .page-width {
   max-width: 100%;
@@ -91,21 +96,37 @@
   .header__icons .header__icon--cart {
     display: inline-flex;
     align-items: baseline;
+    flex-wrap: nowrap;
     gap: 0;
   }
 
+  .header__icons .header__icon--cart .fc-header-nav-text {
+    flex-shrink: 0;
+  }
+
+  /* Dawn base.css fixes bubble at 1.7rem — must reset or count overlaps "Bag" */
   .header__icons .header__icon--cart .cart-count-bubble {
     position: static;
     display: inline-flex !important;
+    align-items: baseline;
+    flex-shrink: 0;
     transform: none;
+    inset: auto;
     top: auto;
     right: auto;
+    left: auto;
+    bottom: auto;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    border-radius: 0;
     font-size: inherit;
     font-weight: inherit;
     color: inherit;
     line-height: inherit;
     vertical-align: baseline;
-    margin-top: 0;
+    margin: 0;
+    padding: 0;
   }
 
   .header__icons .header__icon--cart .cart-count-bubble::before {
@@ -344,8 +365,9 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: -0.02em;
+  width: auto;
   height: auto;
-  min-width: unset;
+  min-width: 0;
   padding: 0;
   border-radius: 0;
   display: flex;
@@ -366,6 +388,27 @@
 @media screen and (max-width: 989px) {
   header-drawer {
     display: none !important;
+  }
+
+  /* Bag-only on load — close (X) only when cart drawer is open (avoids refresh flash) */
+  #cart-icon-bubble .fc-nav-icon-toggle--cart .fc-nav-icon--close {
+    opacity: 0 !important;
+    visibility: hidden;
+  }
+
+  body.fc-cart-open #cart-icon-bubble .fc-nav-icon-toggle--cart .fc-nav-icon--close {
+    opacity: 1 !important;
+    visibility: visible;
+  }
+
+  body:not(.fc-cart-open) #cart-icon-bubble .fc-nav-icon-toggle--cart .fc-nav-icon--open {
+    opacity: 1 !important;
+    visibility: visible;
+  }
+
+  .header__icons {
+    flex-shrink: 0;
+    gap: 4px;
   }
 
   .fc-header-mobile-nav {

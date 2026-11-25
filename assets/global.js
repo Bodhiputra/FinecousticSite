@@ -244,6 +244,14 @@ class QuantityInput extends HTMLElement {
 
   onButtonClick(event) {
     event.preventDefault();
+    const drawerItems = this.closest('cart-drawer-items');
+    if (
+      drawerItems &&
+      (drawerItems.dataset.fcCartBusy === '1' ||
+        (typeof window.fcCartDrawerInteractionLocked === 'function' && window.fcCartDrawerInteractionLocked()))
+    ) {
+      return;
+    }
     const previousValue = this.input.value;
     const currentValue = parseInt(this.input.value, 10);
     const min = this.input.min ? parseInt(this.input.min, 10) : null;
@@ -257,7 +265,6 @@ class QuantityInput extends HTMLElement {
         this.input.stepUp();
       }
     } else {
-      const drawerItems = this.closest('cart-drawer-items');
       const willRemove =
         drawerItems &&
         !Number.isNaN(currentValue) &&

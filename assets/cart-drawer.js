@@ -151,6 +151,9 @@ class CartDrawer extends HTMLElement {
       overlay.addEventListener('click', this.close.bind(this));
     }
     this.setHeaderCartIconAccessibility();
+    if (typeof window.fcClearCartDrawerErrors === 'function') {
+      window.fcClearCartDrawerErrors();
+    }
     if (!wasOpen) this.open();
   }
 

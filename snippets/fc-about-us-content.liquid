@@ -1,0 +1,22 @@
+{%- comment -%}
+  About Us mission + tagline. Used by section about-us and main-page (handle about-us).
+  Optional: statement (richtext HTML), tagline (plain text).
+{%- endcomment -%}
+{%- liquid
+  assign fc_about_statement = statement
+  assign fc_about_tagline = tagline
+  if fc_about_statement == blank
+    assign fc_about_statement = '<p>At Finecoustic, we believe audio products are more than devices that produce sound. They are part of the spaces we live in and the routines we experience every day. Our mission is to create products that balance listening experience, visual appeal, and everyday usability, designed for those who appreciate both sound quality and aesthetics.</p>'
+  endif
+  if fc_about_tagline == blank
+    assign fc_about_tagline = 'Build to be Seen. Meant to be Heard.'
+  endif
+-%}
+<div class="fc-about">
+  {%- if fc_about_statement != blank -%}
+    <div class="fc-about-statement rte" lang="en">{{ fc_about_statement }}</div>
+  {%- endif -%}
+  {%- if fc_about_tagline != blank -%}
+    <p class="fc-about-tagline" lang="en">{{ fc_about_tagline | escape }}</p>
+  {%- endif -%}
+</div>

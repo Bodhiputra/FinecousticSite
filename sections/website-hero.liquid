@@ -119,10 +119,9 @@
         </div>
       </div>
       <div class="website-hero__product-cta">
-        <p class="website-hero__available-copy">{{ availability_copy | escape }}</p>
         {%- if discover_url != blank -%}
           <a class="website-hero__discover-more" href="{{ discover_url }}">
-            {{ discover_label | escape }}
+            {{ availability_copy | escape }}
           </a>
         {%- endif -%}
       </div>
@@ -198,7 +197,7 @@
 .website-hero__product-cta {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
   width: fit-content;
   max-width: 100%;
   margin: 0 auto;
@@ -206,54 +205,48 @@
   pointer-events: auto;
 }
 
-.website-hero__available-copy,
-#MainContent .website-hero .website-hero__available-copy {
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  font-family: var(--fc-font, sans-serif);
-  font-size: clamp(14px, 2.4vw, 24px);
-  font-weight: 700;
-  letter-spacing: -0.06em;
-  line-height: 1.2;
-  color: #fff;
-  white-space: nowrap;
-}
-
 .website-hero__discover-more {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  align-self: stretch;
-  width: 100%;
-  min-height: 48px;
-  padding: 14px 20px;
-  border: 0;
-  border-radius: 5px;
-  background: var(--fc-yellow, #ffd300);
-  color: #000;
-  font-family: var(--fc-font, sans-serif);
-  font-size: clamp(15px, 1.8vw, 18px);
-  font-weight: 700;
-  letter-spacing: -0.06em;
-  line-height: 1.2;
+  box-sizing: border-box;
+  width: auto;
+  max-width: 100%;
+  height: 72px;
+  padding: 15px 32px;
+  border: 1px solid var(--fc-yellow, #ffd300);
+  border-radius: 4px;
+  background: transparent;
+  color: #fff;
+  font-family: var(--fc-font, 'Alte Haas Grotesk', sans-serif);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -1.4px;
+  line-height: normal;
+  text-align: center;
   text-decoration: none;
   cursor: pointer;
   pointer-events: auto;
-  transition: background-color 0.18s ease, transform 0.18s ease;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.18s ease;
 }
 
 .website-hero__discover-more:hover {
-  background: #ffe033;
+  background: #ffd300;
+  border-color: #ffd300;
   color: #000;
 }
 
 .website-hero__discover-more:active {
-  transform: scale(0.98);
+  transform: scale(0.99);
 }
 
 .website-hero__discover-more:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--fc-yellow, #ffd300);
   outline-offset: 3px;
 }
 
@@ -271,14 +264,12 @@
     font-size: clamp(30px, 8.2vw, 40px);
   }
 
-  .website-hero__available-copy {
-    font-size: clamp(14px, 4vw, 22px);
-    white-space: normal;
-  }
-
   .website-hero__discover-more {
-    min-height: 44px;
-    padding: 12px 18px;
+    height: 52px;
+    padding: 10px 20px;
+    font-size: 16px;
+    letter-spacing: -0.8px;
+    white-space: normal;
   }
 }
 
@@ -313,16 +304,6 @@
 
   .website-hero__product-title--desktop .website-hero__product-title-part {
     font-size: clamp(32px, 5vw, 56px);
-  }
-
-  .website-hero__available-copy {
-    font-size: clamp(16px, 2vw, 24px);
-  }
-
-  .website-hero__discover-more {
-    min-height: 52px;
-    padding: 15px 22px;
-    font-size: 18px;
   }
 }
 
@@ -526,7 +507,7 @@
     {
       "type": "text",
       "id": "availability_text",
-      "label": "Availability line",
+      "label": "Button label",
       "default": "Ready to fit in your space."
     },
     {

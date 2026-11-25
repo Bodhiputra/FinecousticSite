@@ -169,17 +169,15 @@ window.fcWirePriceTag = function (tag, options) {
       return;
     }
 
-    var nextQty = prevQty + 1;
-
     tag.dataset.fcAtcPending = '1';
     try {
-      window.fcApplyPriceTagQty(tag, nextQty);
-      fcPulsePriceTag(tag);
-
       var ok = await onAdd(variantId, 1);
       if (!ok) {
         if (window.fcReconcileCartUi) await window.fcReconcileCartUi();
         else window.fcApplyPriceTagQty(tag, prevQty);
+      } else {
+        window.fcApplyPriceTagQty(tag, prevQty + 1);
+        fcPulsePriceTag(tag);
       }
     } finally {
       tag.dataset.fcAtcPending = '0';

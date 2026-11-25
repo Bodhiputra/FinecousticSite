@@ -1,0 +1,402 @@
+{%- if section.settings.hide_section -%}
+  <style>
+    #shopify-section-{{ section.id }} {
+      display: none !important;
+    }
+  </style>
+{%- else -%}
+
+{%- liquid
+  assign fc_label = section.settings.accessible_label | default: 'Product preview video' | escape
+  assign fc_url = section.settings.video_url | strip
+  assign fc_asset = section.settings.video_asset | strip
+  assign fc_pos_x = section.settings.video_position_x | default: 50
+  assign fc_pos_y = section.settings.video_position_y | default: 50
+  assign fc_shift_x = section.settings.video_shift_x | default: 0
+  assign fc_side_copy = section.settings.layout_side_copy
+  if fc_side_copy == false and section.blocks.size > 0
+    assign fc_side_copy = true
+  endif
+-%}
+
+<section
+  class="fc-pdp-studio-preview-video{% if fc_side_copy %} fc-pdp-studio-preview-video--with-copy{% endif %}"
+  id="fc-pdp-studio-preview-video-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  aria-label="{{ fc_label }}"
+  style="--fc-pdp-studio-preview-video-pos-x: {{ fc_pos_x }}%; --fc-pdp-studio-preview-video-pos-y: {{ fc_pos_y }}%; --fc-pdp-studio-preview-video-shift-x: {{ fc_shift_x }}%;"
+>
+  <div class="fc-pdp-studio-preview-video__media">
+    {%- if section.settings.video != blank -%}
+      {{
+        section.settings.video
+        | video_tag:
+          class: 'fc-pdp-studio-preview-video__video',
+          autoplay: true,
+          loop: true,
+          muted: true,
+          playsinline: true,
+          controls: false,
+          preload: 'metadata'
+      }}
+    {%- elsif fc_url != blank -%}
+      <video
+        class="fc-pdp-studio-preview-video__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        aria-label="{{ fc_label }}"
+      >
+        <source src="{{ fc_url | escape }}" type="video/mp4">
+      </video>
+    {%- elsif fc_asset != blank -%}
+      <video
+        class="fc-pdp-studio-preview-video__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        aria-label="{{ fc_label }}"
+      >
+        <source src="{{ fc_asset | asset_url }}" type="video/mp4">
+      </video>
+    {%- else -%}
+      <div class="fc-pdp-studio-preview-video__placeholder" aria-hidden="true"></div>
+    {%- endif -%}
+  </div>
+
+  {%- if fc_side_copy -%}
+    <div class="fc-pdp-studio-preview-video__copy">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'feature_group' -%}
+          {%- assign fc_bullets = block.settings.bullets | newline_to_br | split: '<br />' -%}
+          <div class="fc-pdp-studio-preview-video__group" {{ block.shopify_attributes }}>
+            {%- if block.settings.heading != blank -%}
+              <h2 class="fc-pdp-studio-preview-video__heading">{{ block.settings.heading | escape }}</h2>
+            {%- endif -%}
+            {%- if block.settings.note != blank -%}
+              <p class="fc-pdp-studio-preview-video__note">{{ block.settings.note | escape }}</p>
+            {%- endif -%}
+            {%- if fc_bullets.size > 0 -%}
+              <ul class="fc-pdp-studio-preview-video__list">
+                {%- for line in fc_bullets -%}
+                  {%- assign fc_line = line | strip -%}
+                  {%- if fc_line != blank -%}
+                    <li class="fc-pdp-studio-preview-video__item">
+                      <img
+                        class="fc-pdp-studio-preview-video__dot"
+                        src="{{ 'fineDot.png' | asset_url }}"
+                        alt=""
+                        width="18"
+                        height="18"
+                        loading="lazy"
+                        decoding="async"
+                      >
+                      <span>{{ fc_line | escape }}</span>
+                    </li>
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</section>
+
+{%- endif -%}
+
+{% stylesheet %}
+.fc-pdp-studio-preview-video-section.shopify-section {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+  max-height: 100svh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+.fc-pdp-studio-preview-video {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  height: 100svh;
+  height: 100dvh;
+  max-height: 100svh;
+  max-height: 100dvh;
+  min-height: 0;
+  background: #000;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* Full-viewport video; copy sits on top (right), not a split column */
+.fc-pdp-studio-preview-video--with-copy {
+  position: relative;
+  display: block;
+}
+
+.fc-pdp-studio-preview-video__media {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: inherit;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.fc-pdp-studio-preview-video--with-copy .fc-pdp-studio-preview-video__media {
+  position: absolute;
+  inset: 0;
+  flex: none;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+}
+
+.fc-pdp-studio-preview-video__video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: var(--fc-pdp-studio-preview-video-pos-x, 50%) var(--fc-pdp-studio-preview-video-pos-y, 50%);
+  transform: translateX(var(--fc-pdp-studio-preview-video-shift-x, 0%));
+  pointer-events: none;
+}
+
+.fc-pdp-studio-preview-video__placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.fc-pdp-studio-preview-video__copy {
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(50%, 640px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(28px, 4vh, 48px);
+  padding: clamp(32px, 5vw, 56px) clamp(28px, 6vw, 88px) clamp(32px, 5vw, 56px) clamp(20px, 3vw, 40px);
+  min-height: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.fc-pdp-studio-preview-video__copy a,
+.fc-pdp-studio-preview-video__copy button {
+  pointer-events: auto;
+}
+
+.fc-pdp-studio-preview-video__heading {
+  margin: 0 0 20px;
+  color: #fff;
+  font-family: var(--fc-font);
+  font-size: clamp(28px, 2.8vw, 36px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.07em;
+}
+
+.fc-pdp-studio-preview-video__note {
+  margin: -8px 0 16px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.fc-pdp-studio-preview-video__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vh, 22px);
+}
+
+.fc-pdp-studio-preview-video__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(16px, 1.35vw, 20px);
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+.fc-pdp-studio-preview-video__dot {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  margin-top: 0.2em;
+}
+
+/* 301 PDP — larger knobs overlay copy (one group vs 302’s two) */
+html.js body.template-product-hako-studio-301 .fc-pdp-studio-preview-video--with-copy .fc-pdp-studio-preview-video__heading {
+  font-size: clamp(34px, 3.5vw, 44px);
+}
+
+html.js body.template-product-hako-studio-301 .fc-pdp-studio-preview-video--with-copy .fc-pdp-studio-preview-video__item {
+  font-size: clamp(19px, 1.75vw, 24px);
+}
+
+html.js body.template-product-hako-studio-301 .fc-pdp-studio-preview-video--with-copy .fc-pdp-studio-preview-video__dot {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+}
+
+@media screen and (max-width: 989px) {
+  .fc-pdp-studio-preview-video__copy {
+    width: min(52%, 520px);
+    padding-right: clamp(20px, 4vw, 48px);
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .fc-pdp-studio-preview-video-section.shopify-section:not(:has(.fc-pdp-studio-preview-video--with-copy)) {
+    max-height: clamp(320px, 72svh, 640px);
+  }
+
+  .fc-pdp-studio-preview-video:not(.fc-pdp-studio-preview-video--with-copy) {
+    height: clamp(320px, 72svh, 640px);
+    max-height: clamp(320px, 72svh, 640px);
+  }
+
+  .fc-pdp-studio-preview-video__copy {
+    width: 100%;
+    max-width: none;
+    justify-content: flex-end;
+    padding: 0 20px clamp(28px, 8svh, 48px);
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FC PDP Studio preview",
+  "tag": "section",
+  "class": "fc-pdp-studio-preview-video-section fc-section--flush",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Full-width looping preview (autoplay, muted). Optional side copy for knobs / controls layout."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_section",
+      "label": "Hide preview video",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "layout_side_copy",
+      "label": "Overlay copy on video (text in front, right)",
+      "default": false
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video (theme / Shopify)"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL (CDN)",
+      "info": "Used when no theme video is selected. Shopify Files MP4 URL."
+    },
+    {
+      "type": "text",
+      "id": "video_asset",
+      "label": "Theme asset filename (fallback)",
+      "info": "Optional. Max ~20 MB in theme assets."
+    },
+    {
+      "type": "text",
+      "id": "accessible_label",
+      "label": "Accessible label",
+      "default": "Hako Studio product preview"
+    },
+    {
+      "type": "range",
+      "id": "video_position_x",
+      "label": "Video focus — horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "video_position_y",
+      "label": "Video focus — vertical",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "video_shift_x",
+      "label": "Video shift — horizontal",
+      "min": -40,
+      "max": 40,
+      "step": 1,
+      "unit": "%",
+      "default": 0,
+      "info": "Slides the clip left (negative) or right (positive). Object focus stays at center when focus sliders are 50%."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature_group",
+      "name": "Feature group",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note (optional)"
+        },
+        {
+          "type": "textarea",
+          "id": "bullets",
+          "label": "Bullets",
+          "info": "One bullet per line."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "FC PDP Studio preview"
+    }
+  ]
+}
+{% endschema %}

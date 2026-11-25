@@ -145,8 +145,7 @@
 @media screen and (max-width: 989px) {
   .fc-pdp-studio-features,
   .fc-pdp-studio-features__stack {
-    min-height: 100svh;
-    min-height: 100dvh;
+    min-height: 0;
     height: auto;
   }
 
@@ -169,6 +168,10 @@
 
   .fc-pdp-studio-features__copy {
     padding: clamp(24px, 6vw, 40px) var(--fc-page-gutter, 24px);
+  }
+
+  .fc-pdp-studio-driver-section + .fc-pdp-studio-features-section .fc-pdp-studio-features__row:first-child .fc-pdp-studio-features__copy {
+    padding-top: clamp(16px, 4vw, 24px);
   }
 }
 {% endstylesheet %}

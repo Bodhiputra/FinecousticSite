@@ -32,6 +32,34 @@
   </div>
   <span class="fc-card__atc-label fc-tag--coming-soon__status">Coming Soon.</span>
 </div>
+{%- elsif fc_tag_purchase_mode == 'add_to_bag' and available == false -%}
+<div
+  class="fc-tag-oos-wrap fc-tag--region-unavailable {{ tag_class }}"
+  data-variant-id="{{ variant_id }}"
+  data-fc-purchase-mode="add_to_bag"
+  data-fc-purchasable="false"
+  role="status"
+  aria-label="Not available in your region"
+>
+  <div class="fc-card__tag fc-tag--oos fc-tag--region-unavailable__tag">
+    <div class="fc-card__tag-body">
+      {%- unless hide_price -%}
+        {%- render 'fc-price-scratch',
+          price: price,
+          compare_at_price: compare_at_price,
+          price_varies: price_varies,
+          scratch: 'diagonal'
+        -%}
+      {%- endunless -%}
+      {%- unless hide_name -%}
+        <h3 class="fc-card__name {{ name_class }}">{{ fc_tag_name }}</h3>
+      {%- endunless -%}
+    </div>
+  </div>
+  <div class="fc-tag-fragment" aria-hidden="true">
+    <span class="fc-tag-fragment__label">Not<br>Available</span>
+  </div>
+</div>
 {%- elsif available -%}
 {%- liquid
   assign fc_tag_qty_max = qty_max

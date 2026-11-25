@@ -133,6 +133,24 @@
             "image": "",
             "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/QSG-FBS2.png?v=1784096946"
           }
+        },
+        "guide_hako_studio_301": {
+          "type": "product_guide",
+          "settings": {
+            "product_handle": "hako-studio-301",
+            "title": "",
+            "image": "",
+            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/HakoStudio301-QSG.pdf?v=1792137249"
+          }
+        },
+        "guide_hako_studio_302": {
+          "type": "product_guide",
+          "settings": {
+            "product_handle": "hako-studio-302",
+            "title": "",
+            "image": "",
+            "download_url": "https://cdn.shopify.com/s/files/1/0661/0229/6650/files/HakoStudio302-QSG.pdf?v=1792137248"
+          }
         }
       },
       "block_order": [
@@ -150,7 +168,9 @@
         "guide_resono",
         "guide_sonara",
         "guide_hako_s",
-        "guide_hako_l"
+        "guide_hako_l",
+        "guide_hako_studio_301",
+        "guide_hako_studio_302"
       ],
       "settings": {
         "padding_top": 0,

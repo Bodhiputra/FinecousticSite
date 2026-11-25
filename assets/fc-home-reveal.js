@@ -6,6 +6,7 @@
 
   var HOME_SECTION_SELECTOR =
     '.fc-home-studio-landing-section,' +
+    '.fc-home-black-frame-section,' +
     '.fc-home-hako-series-section,' +
     '.section-website-hero,' +
     '.fc-creator-feedback-section,' +

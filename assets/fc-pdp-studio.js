@@ -13,7 +13,24 @@
       var nextBtn = gallery.querySelector('[data-fc-studio-next]');
       var thumbs = gallery.querySelectorAll('[data-fc-studio-thumb]');
 
+      function syncThumbsByMediaId(mediaId) {
+        if (!mediaId) return;
+        thumbs.forEach(function (thumb) {
+          var active = thumb.getAttribute('data-fc-media-id') === String(mediaId);
+          thumb.classList.toggle('is-active', active);
+          thumb.setAttribute('aria-current', active ? 'true' : 'false');
+        });
+        if (typeof window.fcStudioRevealActiveThumb === 'function') {
+          window.fcStudioRevealActiveThumb();
+        }
+      }
+
       function syncThumbs(activeIndex) {
+        var slide = slides[activeIndex];
+        if (slide && slide.getAttribute('data-fc-media-id')) {
+          syncThumbsByMediaId(slide.getAttribute('data-fc-media-id'));
+          return;
+        }
         thumbs.forEach(function (thumb) {
           var ti = parseInt(thumb.getAttribute('data-fc-studio-thumb'), 10);
           var active = ti === activeIndex;
@@ -22,28 +39,47 @@
         });
       }
 
+      function goToMediaId(mediaId) {
+        if (!mediaId) return;
+        var targetIdx = -1;
+        slides.forEach(function (slide, i) {
+          if (slide.getAttribute('data-fc-media-id') === String(mediaId)) targetIdx = i;
+        });
+        if (targetIdx >= 0 && igGallery) igGallery.goTo(targetIdx, true);
+        else syncThumbsByMediaId(mediaId);
+      }
+
+      var igGallery = null;
+
       if (total > 1 && typeof window.FcIgGallery === 'function') {
-        var igGallery = window.FcIgGallery({
+        var startIndex = 0;
+        slides.forEach(function (slide, i) {
+          if (slide.classList.contains('is-active')) startIndex = i;
+        });
+        igGallery = window.FcIgGallery({
           viewport: viewport,
           slideSelector: '.fc-pdp-u__slide',
           prevBtn: prevBtn,
           nextBtn: nextBtn,
+          initialIndex: startIndex,
           loop: true,
           mouse: true,
           swipeThreshold: 36,
           onChange: function (i) {
-            syncThumbs(i);
+            var slide = slides[i];
+            if (!slide) return;
+            var mediaId = slide.getAttribute('data-fc-media-id') || '';
+            if (mediaId) syncThumbsByMediaId(mediaId);
+            else syncThumbs(i);
+            if (mediaId && typeof window.fcStudioSyncVariantFromMedia === 'function') {
+              window.fcStudioSyncVariantFromMedia(mediaId);
+            }
           },
         });
         igGallery.init();
         syncThumbs(igGallery.getIndex());
 
-        thumbs.forEach(function (thumb) {
-          thumb.addEventListener('click', function () {
-            var ti = parseInt(thumb.getAttribute('data-fc-studio-thumb'), 10);
-            if (!Number.isNaN(ti)) igGallery.goTo(ti, true);
-          });
-        });
+        window.fcStudioGoToMedia = goToMediaId;
       } else if (total > 1) {
         var index = 0;
         slides.forEach(function (slide, i) {
@@ -55,19 +91,25 @@
           slides.forEach(function (slide, i) {
             var active = i === index;
             slide.classList.toggle('is-active', active);
-            slide.hidden = !active;
+            slide.removeAttribute('hidden');
+            slide.setAttribute('data-fc-variant-hidden', 'false');
           });
           syncThumbs(index);
+          var slide = slides[index];
+          var mediaId = slide ? slide.getAttribute('data-fc-media-id') : '';
+          if (mediaId && typeof window.fcStudioSyncColorFromActiveMedia === 'function') {
+            window.fcStudioSyncColorFromActiveMedia(mediaId);
+          }
         }
 
         if (prevBtn) prevBtn.addEventListener('click', function () { setIndex(index - 1); });
         if (nextBtn) nextBtn.addEventListener('click', function () { setIndex(index + 1); });
-        thumbs.forEach(function (thumb) {
-          thumb.addEventListener('click', function () {
-            var ti = parseInt(thumb.getAttribute('data-fc-studio-thumb'), 10);
-            if (!Number.isNaN(ti)) setIndex(ti);
+        window.fcStudioGoToMedia = function (mediaId) {
+          slides.forEach(function (slide, i) {
+            if (slide.getAttribute('data-fc-media-id') === String(mediaId)) setIndex(i);
           });
-        });
+          syncThumbsByMediaId(mediaId);
+        };
         setIndex(index);
       }
     }

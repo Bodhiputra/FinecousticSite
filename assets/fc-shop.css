@@ -171,6 +171,21 @@ h3.fc-card__name {
   text-align: right;
   white-space: normal;
 }
+
+/* Region-blocked launch SKU — same split tag as Sold Out, status in fragment */
+.fc-tag--region-unavailable {
+  opacity: 0.72;
+  pointer-events: none;
+  cursor: default;
+}
+.fc-tag--region-unavailable .fc-tag-fragment__label {
+  font-size: clamp(8px, 2vw, 10px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.fc-grid .fc-tag--region-unavailable .fc-tag-fragment {
+  width: clamp(48px, 5vw, 62px);
+}
 .fc-card__atc-plus {
   position: absolute;
   right: 10px;
@@ -519,7 +534,47 @@ a.fc-dl-card {
   display: none;
 }
 
-.fc-shop-page .fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover)) .fc-card__img {
+.fc-shop-page .fc-card:hover:not(:has(.fc-card__tag:hover, .fc-tag-oos-wrap:hover, .fc-card__colors:hover)) .fc-card__img {
   transform: scale(1.07);
+}
+
+.fc-card__colors {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.fc-card__color {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid #808080;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  box-sizing: border-box;
+}
+
+.fc-card__color-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--fc-swatch, #666666);
+}
+
+.fc-card__color.is-selected {
+  border: 2px solid #ffd300;
+}
+
+.fc-card__color.is-unavailable {
+  opacity: 0.45;
 }
 

@@ -52,6 +52,48 @@
   opacity: 1;
 }
 
+#MainContent .fc-pdp-studio-preview-video__copy,
+#MainContent .fc-pdp-studio-preview-video__copy p,
+#MainContent .fc-pdp-studio-preview-video__item span {
+  color: #ffffff;
+  opacity: 1;
+}
+
+#MainContent .fc-pdp-studio-preview-video__heading {
+  font-family: var(--fc-font);
+  font-weight: 700;
+  color: #ffffff;
+  opacity: 1;
+}
+
+#MainContent .fc-pdp-studio-mission__inner,
+#MainContent .fc-pdp-studio-mission__inner.rte,
+#MainContent .fc-pdp-studio-mission__inner.rte p {
+  color: #ffffff;
+  font-size: 36px;
+  line-height: normal;
+  letter-spacing: -2.52px;
+  font-weight: 400;
+}
+
+@media screen and (max-width: 989px) {
+  #MainContent .fc-pdp-studio-mission__inner,
+  #MainContent .fc-pdp-studio-mission__inner.rte,
+  #MainContent .fc-pdp-studio-mission__inner.rte p {
+    font-size: clamp(24px, 4.2vw, 32px);
+    letter-spacing: -0.07em;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  #MainContent .fc-pdp-studio-mission__inner,
+  #MainContent .fc-pdp-studio-mission__inner.rte,
+  #MainContent .fc-pdp-studio-mission__inner.rte p {
+    font-size: clamp(20px, 5vw, 28px);
+    letter-spacing: -0.06em;
+  }
+}
+
 #MainContent .fc-pdp-studio-driver__body {
   color: #ffffff;
   opacity: 1;

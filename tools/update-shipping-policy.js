@@ -60,7 +60,7 @@ const SHIPPING_POLICY_BODY = `<h2>1. Where We Ship</h2>
 <ul><li><strong>15&ndash;32 business days:</strong> South Africa</li></ul>
 <p><strong>Please note:</strong> Shipping times are estimates only. Delays may occur due to customs inspections, public holidays, weather conditions, or local courier operations.</p>
 <h2>4. Order Processing</h2>
-<p>Orders are processed within <strong>2&ndash;4 business days</strong> after payment has been confirmed.</p>
+<p>Orders are processed within <strong>2&ndash;6 business days</strong> after payment has been confirmed.</p>
 <p>For updates on fulfillment or delivery delays, refer to our official announcements on our website and social media channels.</p>
 <h2>5. Order Cancellation</h2>
 <p>Cancellations must be requested <strong>within 12 hours of purchase</strong> and are only possible before the order has been shipped.</p>

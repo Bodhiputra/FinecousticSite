@@ -1,0 +1,14 @@
+{%- liquid
+  assign fc_io_layout = layout | default: 'studio_301'
+-%}
+<ul class="fc-pdp-studio-highlights fc-pdp-studio-io__feature-list" role="list">
+  {%- render 'fc-pdp-studio-highlight-item', text: '3.5mm Headphone Jack' -%}
+  {%- render 'fc-pdp-studio-highlight-item', text: '3.5mm AUX' -%}
+  {%- render 'fc-pdp-studio-highlight-item', text: 'Bluetooth 5.3' -%}
+  {%- render 'fc-pdp-studio-highlight-item', text: 'Optical Input' -%}
+  {%- render 'fc-pdp-studio-highlight-item', text: 'USB DAC & Flash Drive' -%}
+  {%- if fc_io_layout == 'studio_302' -%}
+    {%- render 'fc-pdp-studio-highlight-item', text: 'RCA Input' -%}
+  {%- endif -%}
+  {%- render 'fc-pdp-studio-highlight-item', text: 'SUB OUT' -%}
+</ul>

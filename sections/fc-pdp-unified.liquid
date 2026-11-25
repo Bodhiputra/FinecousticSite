@@ -46,9 +46,25 @@
     render 'fc-variant-sold-out', variant: variant
   endcapture
   assign fc_variant_sold_out = fc_variant_sold_out_str | strip
+  capture fc_purchase_mode_str
+    render 'fc-product-purchase-mode', product: product, section_purchase_cta: section.settings.purchase_cta
+  endcapture
+  assign fc_purchase_cta = fc_purchase_mode_str | strip
   assign fc_atc_label = 'Add to bag'
-  if fc_variant_sold_out == 'true'
-    assign fc_atc_label = 'Sold Out'
+  assign fc_atc_purchasable = true
+  assign fc_atc_locked = false
+  if fc_purchase_cta == 'coming_soon'
+    assign fc_atc_label = 'Coming Soon.'
+    assign fc_atc_purchasable = false
+    assign fc_atc_locked = true
+  elsif fc_variant_sold_out == 'true'
+    assign fc_atc_purchasable = false
+    assign fc_atc_locked = true
+    if fc_purchase_cta == 'add_to_bag'
+      assign fc_atc_label = 'Not Available In Your Region'
+    else
+      assign fc_atc_label = 'Sold Out'
+    endif
   endif
 
   assign fc_variant_cart_qty = 0
@@ -202,12 +218,12 @@
         <div class="fc-pdp-u__buy" data-fc-pdp-purchase>
           <button
             type="button"
-            class="fc-pdp-u__atc{% if fc_variant_sold_out == 'true' %} is-oos{% endif %}{% if fc_variant_cart_qty > 0 %} fc-atc-active{% endif %}"
+            class="fc-pdp-u__atc{% if fc_atc_locked %} is-oos is-coming-soon{% endif %}{% if fc_variant_cart_qty > 0 %} fc-atc-active{% endif %}"
             data-variant-id="{{ variant.id }}"
             data-fc-qty="{{ fc_variant_cart_qty }}"
-            data-fc-purchasable="{% if fc_variant_sold_out == 'true' %}false{% else %}true{% endif %}"
+            data-fc-purchasable="{% if fc_atc_purchasable %}true{% else %}false{% endif %}"
             data-fc-atc-label-default="{{ fc_atc_label | escape }}"
-            {% if fc_variant_sold_out == 'true' %}aria-disabled="true"{% endif %}
+            {% unless fc_atc_purchasable %}aria-disabled="true"{% endunless %}
           >
             <span class="fc-pdp-u__atc-price" data-fc-pdp-price>
               {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}
@@ -326,12 +342,12 @@
 <div class="fc-pdp-u__dock" id="fc-pdp-u-dock-{{ section.id }}" hidden>
   <button
     type="button"
-    class="fc-pdp-u__atc fc-pdp-u__atc--dock{% if fc_variant_sold_out == 'true' %} is-oos{% endif %}{% if fc_variant_cart_qty > 0 %} fc-atc-active{% endif %}"
+    class="fc-pdp-u__atc fc-pdp-u__atc--dock{% if fc_atc_locked %} is-oos is-coming-soon{% endif %}{% if fc_variant_cart_qty > 0 %} fc-atc-active{% endif %}"
     data-variant-id="{{ variant.id }}"
     data-fc-qty="{{ fc_variant_cart_qty }}"
-    data-fc-purchasable="{% if fc_variant_sold_out == 'true' %}false{% else %}true{% endif %}"
+    data-fc-purchasable="{% if fc_atc_purchasable %}true{% else %}false{% endif %}"
     data-fc-atc-label-default="{{ fc_atc_label | escape }}"
-    {% if fc_variant_sold_out == 'true' %}aria-disabled="true"{% endif %}
+    {% unless fc_atc_purchasable %}aria-disabled="true"{% endunless %}
   >
     <span class="fc-pdp-u__atc-price" data-fc-pdp-price>
       {%- if product.price_varies -%}<span class="fc-pdp-u__price-from">From</span> {%- endif -%}

@@ -14,8 +14,14 @@
     {%- endif -%}
     <a href="{{ settings.social_youtube_link }}" class="fc-footer__bottom-link">YouTube</a>
   {%- endif -%}
-  {%- if settings.social_twitter_link != blank -%}
+  {%- if settings.social_tiktok_link != blank -%}
     {%- if settings.social_instagram_link != blank or settings.social_youtube_link != blank -%}
+      <span class="fc-footer__bottom-sep" aria-hidden="true">|</span>
+    {%- endif -%}
+    <a href="{{ settings.social_tiktok_link }}" class="fc-footer__bottom-link">TikTok</a>
+  {%- endif -%}
+  {%- if settings.social_twitter_link != blank -%}
+    {%- if settings.social_instagram_link != blank or settings.social_youtube_link != blank or settings.social_tiktok_link != blank -%}
       <span class="fc-footer__bottom-sep" aria-hidden="true">|</span>
     {%- endif -%}
     <a href="{{ settings.social_twitter_link }}" class="fc-footer__bottom-link">X</a>

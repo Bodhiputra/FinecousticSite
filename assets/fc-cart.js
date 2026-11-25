@@ -653,13 +653,12 @@
     return true;
   }
 
+  /** Open drawer only — line qty and counts update after /cart/add.js succeeds (Option A). */
   function fcAddToCartPrelude(variantId, qty, meta) {
     if (typeof window.fcLoadCartDrawerScripts === 'function') {
       window.fcLoadCartDrawerScripts();
     }
     fcOpenCartDrawerImmediate();
-    fcShowOptimisticCartLine(variantId, qty, meta);
-    fcBumpCartCountBubble(qty);
   }
 
   window.fcAddToCartPrelude = fcAddToCartPrelude;
@@ -803,7 +802,13 @@
 
   function fcApplyCartDrawerSections(cartDrawer, state, variantId) {
     if (!cartDrawer || !state || !state.sections) return false;
-    if (fcPatchCartDrawerFromSections(cartDrawer, state, variantId)) return true;
+
+    /* Patch only promotes an optimistic row — without it, patch updates footer/qty but never inserts lines. */
+    var optRow = variantId && document.getElementById('CartDrawer-Item-opt-' + variantId);
+    if (optRow && fcPatchCartDrawerFromSections(cartDrawer, state, variantId)) {
+      return true;
+    }
+
     if (typeof cartDrawer.renderContents === 'function') {
       cartDrawer.renderContents(state);
       return true;
@@ -844,7 +849,11 @@
   async function fcPublishCartState(cart) {
     if (window.fcSyncPriceTagsFromCart) window.fcSyncPriceTagsFromCart(cart);
     if (typeof publish === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
-      await publish(PUB_SUB_EVENTS.cartUpdate, { source: 'fc-cart', cartData: cart });
+      try {
+        await publish(PUB_SUB_EVENTS.cartUpdate, { source: 'fc-cart', cartData: cart });
+      } catch (pubErr) {
+        console.error('cartUpdate subscriber error:', pubErr);
+      }
     }
   }
 
@@ -873,8 +882,45 @@
 
   var fcCartOpChain = Promise.resolve();
   var fcCartRateLimitedUntil = 0;
+  var fcCartDrawerBusy = false;
 
-  /** Serializes cart API calls; UI prelude in fcAddToCart runs before this queue. */
+  function fcSetCartDrawerControlsLocked(locked) {
+    document.querySelectorAll('cart-drawer-items').forEach(function (el) {
+      if (locked) el.dataset.fcCartBusy = '1';
+      else delete el.dataset.fcCartBusy;
+    });
+    document.querySelectorAll('cart-drawer quantity-input .quantity__button').forEach(function (btn) {
+      btn.classList.toggle('disabled', locked);
+      btn.toggleAttribute('disabled', locked);
+    });
+    document.querySelectorAll('cart-drawer cart-remove-button').forEach(function (el) {
+      el.toggleAttribute('aria-disabled', locked);
+      var btn = el.querySelector('button');
+      if (btn) btn.toggleAttribute('disabled', locked);
+    });
+  }
+
+  /** One in-flight drawer cart mutation at a time — blocks rapid +/- before the server responds. */
+  function fcTryBeginCartDrawerOp() {
+    if (fcCartDrawerBusy) return false;
+    fcCartDrawerBusy = true;
+    fcSetCartDrawerControlsLocked(true);
+    return true;
+  }
+
+  function fcEndCartDrawerOp() {
+    if (!fcCartDrawerBusy) return;
+    fcCartDrawerBusy = false;
+    fcSetCartDrawerControlsLocked(false);
+  }
+
+  window.fcTryBeginCartDrawerOp = fcTryBeginCartDrawerOp;
+  window.fcEndCartDrawerOp = fcEndCartDrawerOp;
+  window.fcCartDrawerInteractionLocked = function () {
+    return fcCartDrawerBusy;
+  };
+
+  /** Serializes cart API calls. */
   function fcEnqueueCartOp(fn) {
     var op = fcCartOpChain.then(fn);
     fcCartOpChain = op.catch(function () {});
@@ -1003,6 +1049,7 @@
     fcAddToCartPrelude(variantId, qty, meta);
 
     return fcEnqueueCartOp(async function () {
+      if (!fcTryBeginCartDrawerOp()) return false;
       try {
         var cartDrawer = document.querySelector('cart-drawer');
         var sections =
@@ -1033,7 +1080,8 @@
           await fcRefreshCartDrawerFromServer();
         }
 
-        await fcPublishCartState(fcReadCartSnapshotFromDom());
+        var cart = await fcFetchCart();
+        await fcPublishCartState(cart);
 
         fcCartFeedbackPulse();
         return true;
@@ -1041,6 +1089,8 @@
         console.error('Add to cart error:', e);
         await fcReconcileCartUi();
         return false;
+      } finally {
+        fcEndCartDrawerOp();
       }
     });
   }

@@ -238,18 +238,17 @@
   box-sizing: border-box;
   width: auto;
   max-width: min(var(--fc-home-studio-landing-cta-max-w, 704px), 100%);
-  min-height: 44px;
-  height: auto;
-  padding: 0 28px;
+  height: 72px;
+  padding: 15px 32px;
   border: 1px solid var(--fc-yellow, #ffd300);
-  border-radius: 5px;
+  border-radius: 4px;
   background: transparent;
   color: #fff;
-  font-family: var(--fc-font, sans-serif);
-  font-size: clamp(13px, 1.25vw, 16px);
+  font-family: var(--fc-font, 'Alte Haas Grotesk', sans-serif);
+  font-size: 20px;
   font-weight: 400;
-  letter-spacing: 0.02em;
-  line-height: 1;
+  letter-spacing: -1.4px;
+  line-height: normal;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
@@ -290,13 +289,47 @@
   }
 }
 
+@media screen and (min-width: 750px) and (max-width: 1799px) {
+  .fc-home-studio-landing__title-wrap {
+    align-items: flex-start;
+    padding-top: max(calc(var(--fc-nav-clearance, 84px) + 24px), clamp(112px, 14vh, 170px));
+  }
+
+  .fc-home-studio-landing__title {
+    font-size: clamp(40px, 4.2vw, 64px);
+  }
+}
+
 @media screen and (max-width: 749px) {
+  .fc-home-studio-landing {
+    --fc-home-studio-landing-title-pl: clamp(16px, 5vw, 28px) !important;
+    --fc-home-studio-landing-title-pr: clamp(16px, 5vw, 28px) !important;
+    --fc-home-studio-landing-cta-bottom: clamp(20px, 4.5svh, 40px) !important;
+    --fc-home-studio-landing-title-gap: 14px;
+  }
+
   .fc-home-studio-landing__img {
     object-position: var(--fc-home-studio-landing-bg-pos, 50% 78%);
   }
 
+  .fc-home-studio-landing__title-wrap {
+    inset: auto 0
+      calc(
+        var(--fc-home-studio-landing-cta-bottom, clamp(20px, 4.5svh, 40px)) + 52px +
+          var(--fc-home-studio-landing-title-gap, 14px)
+      );
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-left: clamp(16px, 5vw, 28px);
+    padding-right: clamp(16px, 5vw, 28px);
+  }
+
   .fc-home-studio-landing__title {
-    font-size: clamp(28px, 8vw, 40px);
+    width: auto;
+    max-width: 100%;
+    font-size: clamp(22px, 6.2vw, 34px);
+    white-space: nowrap;
   }
 
   .fc-home-studio-landing__title-part--start {
@@ -304,22 +337,32 @@
   }
 
   .fc-home-studio-landing__title--split {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: nowrap;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: clamp(8px, 2.2vw, 14px);
+    width: auto;
+    max-width: 100%;
   }
 
   .fc-home-studio-landing__title-part--start,
   .fc-home-studio-landing__title-part--end {
     margin: 0;
+    flex: 0 0 auto;
     text-align: center;
     justify-content: center;
   }
 
+  .fc-home-studio-landing__title-part--end {
+    gap: clamp(6px, 1.6vw, 10px);
+  }
+
   .fc-home-studio-landing__cta {
-    min-height: 42px;
-    padding: 0 22px;
-    font-size: clamp(12px, 3.2vw, 14px);
+    height: 52px;
+    padding: 10px 20px;
+    font-size: 16px;
+    letter-spacing: -0.8px;
     white-space: normal;
     text-align: center;
   }

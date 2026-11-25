@@ -1,0 +1,14 @@
+{%- if text != blank -%}
+  <li class="fc-pdp-studio-highlights__item">
+    <img
+      class="fc-pdp-studio-highlights__dot"
+      src="{{ 'fineDot.png' | asset_url }}"
+      alt=""
+      width="18"
+      height="18"
+      loading="lazy"
+      decoding="async"
+    >
+    <span>{{ text | escape }}</span>
+  </li>
+{%- endif -%}

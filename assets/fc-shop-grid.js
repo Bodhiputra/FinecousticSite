@@ -189,11 +189,55 @@
       if (card.dataset.fcCardBound === '1') return;
       card.dataset.fcCardBound = '1';
 
-      const url = card.dataset.url;
       const image = card.querySelector('.fc-card__image');
-      if (image && url) {
-        image.addEventListener('click', () => {
-          window.location.href = url;
+      if (image && card.dataset.url) {
+        image.addEventListener('click', (event) => {
+          if (event.target.closest('.fc-card__colors')) return;
+          window.location.href = card.dataset.url;
+        });
+      }
+
+      const colors = card.querySelector('.fc-card__colors');
+      if (colors) {
+        colors.addEventListener('click', (event) => {
+          const btn = event.target.closest('.fc-card__color');
+          if (!btn) return;
+          event.preventDefault();
+          event.stopPropagation();
+
+          const tag = card.querySelector('.fc-card__tag');
+          const prev = colors.querySelector('.fc-card__color.is-selected');
+          if (prev && tag && prev !== btn) prev.dataset.cartQty = tag.dataset.fcQty || '0';
+
+          colors.querySelectorAll('.fc-card__color').forEach((el) => {
+            const on = el === btn;
+            el.classList.toggle('is-selected', on);
+            el.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+
+          const img = card.querySelector('.fc-card__img');
+          if (img && btn.dataset.image) {
+            img.src = btn.dataset.image;
+            img.removeAttribute('srcset');
+            img.removeAttribute('sizes');
+          }
+
+          const variantId = btn.dataset.fcColorVariant;
+          if (variantId) {
+            if (tag) tag.dataset.variantId = variantId;
+            const plus = card.querySelector('.fc-card__atc-plus');
+            if (plus) plus.dataset.variantId = variantId;
+          }
+          if (btn.dataset.url) card.dataset.url = btn.dataset.url;
+
+          const priceEl = card.querySelector('.fc-price-scratch__now');
+          if (priceEl && btn.dataset.price) priceEl.textContent = btn.dataset.price;
+          const fromEl = card.querySelector('.fc-price-scratch__from');
+          if (fromEl) fromEl.hidden = true;
+
+          if (tag && window.fcApplyPriceTagQty) {
+            window.fcApplyPriceTagQty(tag, Number(btn.dataset.cartQty || 0));
+          }
         });
       }
 

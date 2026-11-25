@@ -1,5 +1,11 @@
 {
   "sections": {
+    "fc_purchase_mode_bridge": {
+      "type": "fc-pdp-purchase-mode-bridge",
+      "settings": {
+        "section_purchase_cta": "coming_soon"
+      }
+    },
     "fc_pdp_studio": {
       "type": "fc-pdp-studio",
       "blocks": {
@@ -50,6 +56,9 @@
         "title_right": "302",
         "title_accessible": "Hako Studio 302",
         "alt": "Hako Studio 302",
+        "title_padding_top": 128,
+        "title_padding_left": 145,
+        "title_padding_right": 200,
         "min_height_vh": 100,
         "background_color": "#000000"
       }
@@ -108,6 +117,56 @@
       },
       "block_order": ["f1", "f2", "f3"],
       "settings": {}
+    },
+    "fc_studio_preview_video": {
+      "type": "fc-pdp-studio-preview-video",
+      "settings": {
+        "hide_section": false,
+        "video_url": "https://cdn.shopify.com/videos/c/vp/a9cfb6f1de8d47dd8b5907d6de0f7602/a9cfb6f1de8d47dd8b5907d6de0f7602.HD-1080p-7.2Mbps-99151481.mp4",
+        "accessible_label": "Hako Studio product preview",
+        "video_position_x": 50,
+        "video_position_y": 50
+      }
+    },
+    "fc_studio_mission": {
+      "type": "fc-pdp-studio-mission",
+      "settings": {
+        "hide_section": false,
+        "body": "<p>Hako Studio is designed to elevate your creative space, making music and everyday listening a more engaging part of your setup. Whether you’re working or taking a break in between, the right sound can make your time feel different.</p>",
+        "min_height": 360,
+        "accessible_label": "About Hako Studio"
+      }
+    },
+    "fc_studio_knobs_video": {
+      "type": "fc-pdp-studio-preview-video",
+      "blocks": {
+        "knobs_g1": {
+          "type": "feature_group",
+          "settings": {
+            "heading": "Dedicated Control Knobs",
+            "note": "",
+            "bullets": "Infinite rotation volume knob\n-5 dB to +5 dB treble knob\n-5 dB to +5 dB bass knob"
+          }
+        },
+        "knobs_g2": {
+          "type": "feature_group",
+          "settings": {
+            "heading": "Built-in EQ (3 modes)",
+            "note": "*Only for 302",
+            "bullets": "Music: Yellow light flashes once.\nDialogue: The yellow light flashes twice.\nMovie: Yellow light flashes, stays on for 3 seconds."
+          }
+        }
+      },
+      "block_order": ["knobs_g1", "knobs_g2"],
+      "settings": {
+        "hide_section": false,
+        "layout_side_copy": true,
+        "video_url": "https://cdn.shopify.com/videos/c/vp/fe02c3edfa534e17837727dbdd2d9231/fe02c3edfa534e17837727dbdd2d9231.HD-1080p-7.2Mbps-99404187.mp4",
+        "accessible_label": "Hako Studio controls and knobs",
+        "video_position_x": 50,
+        "video_position_y": 50,
+        "video_shift_x": -14
+      }
     },
     "fc_studio_io": {
       "type": "fc-pdp-studio-io",
@@ -229,5 +288,5 @@
       }
     }
   },
-  "order": ["fc_pdp_studio", "fc_studio_blank", "fc_studio_tweeter", "fc_studio_woofer", "fc_studio_features", "fc_studio_io", "fc_studio_specs"]
+  "order": ["fc_pdp_studio", "fc_studio_preview_video", "fc_studio_mission", "fc_studio_blank", "fc_studio_tweeter", "fc_studio_woofer", "fc_studio_features", "fc_studio_knobs_video", "fc_studio_io", "fc_studio_specs", "fc_purchase_mode_bridge"]
 }

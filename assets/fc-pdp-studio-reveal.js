@@ -21,7 +21,10 @@
         el.classList.contains('fc-pdp-studio-section') ||
         el.classList.contains('fc-pdp-studio-driver-section') ||
         el.classList.contains('fc-pdp-studio-io-section') ||
-        el.classList.contains('fc-pdp-studio-specs-section')
+        el.classList.contains('fc-pdp-studio-specs-section') ||
+        el.classList.contains('fc-pdp-studio-mission-section') ||
+        (el.classList.contains('fc-pdp-studio-preview-video-section') &&
+          el.querySelector('.fc-pdp-studio-preview-video--with-copy'))
       );
     });
   }
@@ -121,7 +124,12 @@
       !wrap.classList.contains('fc-pdp-studio-section') &&
       !wrap.classList.contains('fc-pdp-studio-driver-section') &&
       !wrap.classList.contains('fc-pdp-studio-io-section') &&
-      !wrap.classList.contains('fc-pdp-studio-specs-section')
+      !wrap.classList.contains('fc-pdp-studio-specs-section') &&
+      !wrap.classList.contains('fc-pdp-studio-mission-section') &&
+      !(
+        wrap.classList.contains('fc-pdp-studio-preview-video-section') &&
+        wrap.querySelector('.fc-pdp-studio-preview-video--with-copy')
+      )
     ) {
       return;
     }

@@ -76,6 +76,21 @@
   object-fit: cover;
   object-position: center center;
 }
+
+@media screen and (max-width: 749px) {
+  .fc-pdp-studio-pair {
+    height: auto;
+    min-height: min(72svh, 520px);
+    min-height: min(72dvh, 520px);
+    max-height: 85svh;
+    max-height: 85dvh;
+    aspect-ratio: 16 / 10;
+  }
+
+  .fc-pdp-studio-pair__bg {
+    object-position: center 45%;
+  }
+}
 {% endstylesheet %}
 
 {% schema %}

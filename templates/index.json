@@ -9,6 +9,19 @@
  */
 {
   "sections": {
+    "fc_home_black_frame": {
+      "type": "fc-home-black-frame",
+      "name": "Studio black frame",
+      "settings": {
+        "image_asset": "landing-page-black-2.png",
+        "image_alt": "Hako Studio black speakers",
+        "line_1": "Not all setups",
+        "line_2": "use the same",
+        "line_2_bold": "shade.",
+        "button_label": "Hako Studio in Black",
+        "product_handle": "hako-studio-302"
+      }
+    },
     "fc_studio_landing_home": {
       "type": "fc-home-studio-landing",
       "name": "Studio landing",
@@ -28,8 +41,20 @@
         "button_offset_bottom": 56,
         "button_max_width": 704,
         "min_height_vh": 100,
-        "image_position_x": 50,
+        "image_position_x": 45,
         "image_position_y": 80
+      }
+    },
+    "fc_studio_video_duo_home": {
+      "type": "fc-studio-video-duo",
+      "name": "Studio video duo",
+      "settings": {
+        "video_a_url": "https://cdn.shopify.com/videos/c/vp/9a44b103c3af4573aaa4a59b18fef947/9a44b103c3af4573aaa4a59b18fef947.HD-1080p-7.2Mbps-98607331.mp4",
+        "product_handle_a": "hako-studio-301",
+        "label_a": "Hako Studio 301",
+        "video_b_url": "https://cdn.shopify.com/videos/c/vp/c643c43d74a647979cebb62181eb3733/c643c43d74a647979cebb62181eb3733.HD-1080p-7.2Mbps-98607413.mp4",
+        "product_handle_b": "hako-studio-302",
+        "label_b": "Hako Studio 302"
       }
     },
     "fc_hako_series_home": {
@@ -257,6 +282,8 @@
   },
   "order": [
     "fc_studio_landing_home",
+    "fc_home_black_frame",
+    "fc_studio_video_duo_home",
     "fc_hako_series_home",
     "website_hero_home",
     "fc_creator_feedback_home",

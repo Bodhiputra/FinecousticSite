@@ -235,7 +235,10 @@ body.gradient {
 }
 
 /* Section-owned clearance opt-out: full-bleed heroes or inner content already pads (nav + title gap). */
+#MainContent > .shopify-section.fc-section--flush,
 #MainContent > .shopify-section.fc-section--flush-top,
+#MainContent > .shopify-section.fc-pdp-studio-mission-section,
+#MainContent > .shopify-section.fc-pdp-studio-preview-video-section,
 #MainContent > .shopify-section.fc-pdp-studio-section,
 #MainContent > .shopify-section.fc-pdp-studio-io-section,
 #MainContent > .shopify-section.fc-pdp-studio-specs-section,
@@ -322,8 +325,19 @@ body.gradient {
   padding-left: 0;
   padding-right: 0;
   margin: 0;
-  min-height: 80svh;
-  min-height: 80dvh;
+  min-height: 0;
+}
+
+@media screen and (max-width: 989px) {
+  /* Studio PDP: content-height sections — avoid dead black bands between I/O and specs */
+  #MainContent .shopify-section.fc-pdp-studio-io-section,
+  #MainContent .shopify-section.fc-pdp-studio-specs-section {
+    min-height: 0;
+  }
+
+  #MainContent .shopify-section.fc-pdp-studio-driver-section:has(.fc-pdp-studio-driver--figma-woofer) {
+    min-height: 0;
+  }
 }
 
 /* Shop / search — natural content height, modest bottom rhythm before footer */
